@@ -18,6 +18,9 @@
 		6620BA9418E343FA00769C48 /* Shopping.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA8F18E343FA00769C48 /* Shopping.png */; };
 		6620BA9518E343FA00769C48 /* Social.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA9018E343FA00769C48 /* Social.png */; };
 		6620BA9818E348EA00769C48 /* Settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA9718E348EA00769C48 /* Settings.png */; };
+		6620BA9C18E38BE500769C48 /* Compose.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA9918E38BE500769C48 /* Compose.png */; };
+		6620BA9D18E38BE500769C48 /* Funnl.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA9A18E38BE500769C48 /* Funnl.png */; };
+		6620BA9E18E38BE500769C48 /* Mail.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA9B18E38BE500769C48 /* Mail.png */; };
 		66F2C46A18E3293E00CD593E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C46918E3293E00CD593E /* Foundation.framework */; };
 		66F2C46C18E3293E00CD593E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C46B18E3293E00CD593E /* CoreGraphics.framework */; };
 		66F2C46E18E3293E00CD593E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C46D18E3293E00CD593E /* UIKit.framework */; };
@@ -57,6 +60,9 @@
 		6620BA8F18E343FA00769C48 /* Shopping.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Shopping.png; sourceTree = "<group>"; };
 		6620BA9018E343FA00769C48 /* Social.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Social.png; sourceTree = "<group>"; };
 		6620BA9718E348EA00769C48 /* Settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Settings.png; sourceTree = "<group>"; };
+		6620BA9918E38BE500769C48 /* Compose.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Compose.png; sourceTree = "<group>"; };
+		6620BA9A18E38BE500769C48 /* Funnl.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Funnl.png; sourceTree = "<group>"; };
+		6620BA9B18E38BE500769C48 /* Mail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Mail.png; sourceTree = "<group>"; };
 		66F2C46618E3293E00CD593E /* FunnlMail.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FunnlMail.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66F2C46918E3293E00CD593E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		66F2C46B18E3293E00CD593E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -113,6 +119,9 @@
 		6620BA8A18E3439800769C48 /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				6620BA9918E38BE500769C48 /* Compose.png */,
+				6620BA9A18E38BE500769C48 /* Funnl.png */,
+				6620BA9B18E38BE500769C48 /* Mail.png */,
 				6620BA9718E348EA00769C48 /* Settings.png */,
 			);
 			name = Icons;
@@ -301,12 +310,15 @@
 				66F2C48218E3293E00CD593E /* Images.xcassets in Resources */,
 				66F2C47418E3293E00CD593E /* InfoPlist.strings in Resources */,
 				66F2C47D18E3293E00CD593E /* Main.storyboard in Resources */,
+				6620BA9D18E38BE500769C48 /* Funnl.png in Resources */,
+				6620BA9C18E38BE500769C48 /* Compose.png in Resources */,
 				6620BA9418E343FA00769C48 /* Shopping.png in Resources */,
 				6620BA8218E32FD700769C48 /* Payments.png in Resources */,
 				6620BA9518E343FA00769C48 /* Social.png in Resources */,
 				6620BA8018E32FD700769C48 /* Files.png in Resources */,
 				6620BA9818E348EA00769C48 /* Settings.png in Resources */,
 				6620BA8318E32FD700769C48 /* Travel.png in Resources */,
+				6620BA9E18E38BE500769C48 /* Mail.png in Resources */,
 				6620BA9318E343FA00769C48 /* Plus Sign.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

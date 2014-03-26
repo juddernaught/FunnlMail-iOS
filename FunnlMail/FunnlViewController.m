@@ -16,59 +16,89 @@
 @implementation FunnlViewController
 
 - (void)customToolbar {
-    /*UIToolbar* toolbar = [[UIToolbar alloc]
+    UIToolbar* toolbar = [[UIToolbar alloc]
                           initWithFrame:CGRectMake(0, 0, 320, 45)];
-    [toolbar setBarStyle: UIBarStyleBlackOpaque];
+    [toolbar setBarStyle: UIBarStyleDefault];
     
     // create an array for the buttons
-    NSMutableArray* buttons = [[NSMutableArray alloc] initWithCapacity:5];
+    NSMutableArray* buttons = [[NSMutableArray alloc] initWithCapacity:8];
     
-    // create a standard save button
-    UIBarButtonItem *saveButton = [[UIBarButtonItem alloc]
-                                   initWithImage:@"Settings.png"
-                                   style:UIBarButtonItemStylePlain
-                                   target:self
-                                   action:nil];
-    saveButton.style = UIBarButtonItemStyleBordered;
-    [buttons addObject:saveButton];
+    // create a settings button
+    //UIBarButtonItem *settingsButton = [self createImageButtonItemWithNoTitle:@"Settings.png" target:nil action:@selector(printHello)];
+    UIImage *settingsImage = [UIImage imageNamed:@"Settings.png"];
+    UIButton *settingsButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    settingsButton.frame = CGRectMake(0, 0, settingsImage.size.width, settingsImage.size.height);
+    [settingsButton setBackgroundImage:settingsImage forState:UIControlStateNormal];
     
-    // create a standard delete button with the trash icon
-    UIBarButtonItem *deleteButton = [[UIBarButtonItem alloc]
-                                     initWithBarButtonSystemItem:UIBarButtonSystemItemTrash
-                                     target:self
-                                     action:nil];
-    deleteButton.style = UIBarButtonItemStyleBordered;
-    [buttons addObject:deleteButton];
+    [buttons addObject:[[UIBarButtonItem alloc] initWithCustomView:settingsButton]];
     
-    UIBarButtonItem *addbutton = [[UIBarButtonItem alloc]
-                                  initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-                                  target:self
-                                  action:nil];
+    UIBarButtonItem *spaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    [buttons addObject:spaceItem];
+    
+    UIImage *mailImage = [UIImage imageNamed:@"Mail.png"];
+    UIButton *mailButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    mailButton.frame = CGRectMake(0, 0, settingsImage.size.width, mailImage.size.height);
+    [mailButton setBackgroundImage:mailImage forState:UIControlStateNormal];
+    
+    [buttons addObject:[[UIBarButtonItem alloc] initWithCustomView:mailButton]];
     // action:@selector(deleteAction:)];
-    addbutton.style = UIBarButtonItemStyleBordered;
-    [buttons addObject:addbutton];
     
-    UIBarButtonItem *editButton = [[UIBarButtonItem alloc]
-                                   initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
-                                   target:self
-                                   action:nil];
-    editButton.style = UIBarButtonItemStyleBordered;
-    [buttons addObject:editButton];
+    UIImage *funnlImage = [UIImage imageNamed:@"Funnl.png"];
+    UIButton *funnlButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    funnlButton.frame = CGRectMake(0, 0, settingsImage.size.width, funnlImage.size.height);
+    [funnlButton setBackgroundImage:funnlImage forState:UIControlStateNormal];
+    [buttons addObject:[[UIBarButtonItem alloc] initWithCustomView:funnlButton]];
     
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc]
-                                   initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                   target:self
-                                   action:nil];
-    doneButton.style = UIBarButtonItemStyleBordered;
-    [buttons addObject:doneButton];
+    UIBarButtonItem *spaceItem2 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    [buttons addObject:spaceItem2];
+    
+    UIImage *composeImage = [UIImage imageNamed:@"Compose.png"];
+    UIButton *composeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    composeButton.frame = CGRectMake(0, 0, settingsImage.size.width, composeImage.size.height);
+    [composeButton setBackgroundImage:composeImage forState:UIControlStateNormal];
+    [buttons addObject:[[UIBarButtonItem alloc] initWithCustomView:composeButton]];
+    
+    
+    UIBarButtonItem *rightMargin = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    rightMargin.width = 12.0f;
+    [buttons addObject:rightMargin];
+    
     
     // put the buttons in the toolbar and release them
     [toolbar setItems:buttons animated:NO];
     
     // place the toolbar into the navigation bar
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:toolbar];
-    NSLog(@"Here");
-    self.navigationController.toolbarHidden = NO;*/
+}
+
+
+-(UIBarButtonItem *)createImageButtonItemWithNoTitle:(NSString *)imagePath target:(id)tgt action:(SEL)a
+{
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    UIImage *buttonImage = [[UIImage imageNamed:@"button_slice.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
+    UIImage *buttonPressedImage = [[UIImage imageNamed:@"button_slice_over.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
+    
+    CGRect buttonFrame = [button frame];
+    buttonFrame.size.width = 32;
+    buttonFrame.size.height = 32;
+    [button setFrame:buttonFrame];
+    
+    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 32, 32)];
+    imageView.image = [UIImage imageNamed:imagePath];
+    [button addSubview:imageView];
+    
+    [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    [button setBackgroundImage:buttonPressedImage forState:UIControlStateHighlighted];
+    
+    [button addTarget:tgt action:a forControlEvents:UIControlEventTouchUpInside];
+    
+    UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+    return buttonItem;
+}
+
+- (void) printHello {
+    NSLog(@"got clicked");
 }
 
 - (void)viewDidLoad
