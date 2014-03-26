@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  Cell.h
 //  FunnlMail
 //
 //  Created by Daniel Judd on 3/26/14.
@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface Cell : UICollectionViewCell
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
 
 @end

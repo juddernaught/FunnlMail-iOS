@@ -7,6 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6620BA8018E32FD700769C48 /* Files.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA7C18E32FD700769C48 /* Files.png */; };
+		6620BA8118E32FD700769C48 /* Meetings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA7D18E32FD700769C48 /* Meetings.png */; };
+		6620BA8218E32FD700769C48 /* Payments.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA7E18E32FD700769C48 /* Payments.png */; };
+		6620BA8318E32FD700769C48 /* Travel.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA7F18E32FD700769C48 /* Travel.png */; };
+		6620BA8618E3334800769C48 /* Cell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6620BA8518E3334800769C48 /* Cell.m */; };
+		6620BA9118E343FA00769C48 /* Forums.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA8C18E343FA00769C48 /* Forums.png */; };
+		6620BA9218E343FA00769C48 /* News.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA8D18E343FA00769C48 /* News.png */; };
+		6620BA9318E343FA00769C48 /* Plus Sign.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA8E18E343FA00769C48 /* Plus Sign.png */; };
+		6620BA9418E343FA00769C48 /* Shopping.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA8F18E343FA00769C48 /* Shopping.png */; };
+		6620BA9518E343FA00769C48 /* Social.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA9018E343FA00769C48 /* Social.png */; };
+		6620BA9818E348EA00769C48 /* Settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA9718E348EA00769C48 /* Settings.png */; };
 		66F2C46A18E3293E00CD593E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C46918E3293E00CD593E /* Foundation.framework */; };
 		66F2C46C18E3293E00CD593E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C46B18E3293E00CD593E /* CoreGraphics.framework */; };
 		66F2C46E18E3293E00CD593E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C46D18E3293E00CD593E /* UIKit.framework */; };
@@ -14,7 +25,7 @@
 		66F2C47618E3293E00CD593E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F2C47518E3293E00CD593E /* main.m */; };
 		66F2C47A18E3293E00CD593E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F2C47918E3293E00CD593E /* AppDelegate.m */; };
 		66F2C47D18E3293E00CD593E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66F2C47B18E3293E00CD593E /* Main.storyboard */; };
-		66F2C48018E3293E00CD593E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F2C47F18E3293E00CD593E /* ViewController.m */; };
+		66F2C48018E3293E00CD593E /* FunnlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F2C47F18E3293E00CD593E /* FunnlViewController.m */; };
 		66F2C48218E3293E00CD593E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66F2C48118E3293E00CD593E /* Images.xcassets */; };
 		66F2C48918E3293F00CD593E /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C48818E3293F00CD593E /* XCTest.framework */; };
 		66F2C48A18E3293F00CD593E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C46918E3293E00CD593E /* Foundation.framework */; };
@@ -34,6 +45,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6620BA7C18E32FD700769C48 /* Files.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Files.png; sourceTree = "<group>"; };
+		6620BA7D18E32FD700769C48 /* Meetings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Meetings.png; sourceTree = "<group>"; };
+		6620BA7E18E32FD700769C48 /* Payments.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Payments.png; sourceTree = "<group>"; };
+		6620BA7F18E32FD700769C48 /* Travel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Travel.png; sourceTree = "<group>"; };
+		6620BA8418E3334800769C48 /* Cell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cell.h; sourceTree = "<group>"; };
+		6620BA8518E3334800769C48 /* Cell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Cell.m; sourceTree = "<group>"; };
+		6620BA8C18E343FA00769C48 /* Forums.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Forums.png; sourceTree = "<group>"; };
+		6620BA8D18E343FA00769C48 /* News.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = News.png; sourceTree = "<group>"; };
+		6620BA8E18E343FA00769C48 /* Plus Sign.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Plus Sign.png"; sourceTree = "<group>"; };
+		6620BA8F18E343FA00769C48 /* Shopping.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Shopping.png; sourceTree = "<group>"; };
+		6620BA9018E343FA00769C48 /* Social.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Social.png; sourceTree = "<group>"; };
+		6620BA9718E348EA00769C48 /* Settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Settings.png; sourceTree = "<group>"; };
 		66F2C46618E3293E00CD593E /* FunnlMail.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FunnlMail.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66F2C46918E3293E00CD593E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		66F2C46B18E3293E00CD593E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -45,8 +68,8 @@
 		66F2C47818E3293E00CD593E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		66F2C47918E3293E00CD593E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		66F2C47C18E3293E00CD593E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		66F2C47E18E3293E00CD593E /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		66F2C47F18E3293E00CD593E /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		66F2C47E18E3293E00CD593E /* FunnlViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FunnlViewController.h; sourceTree = "<group>"; };
+		66F2C47F18E3293E00CD593E /* FunnlViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FunnlViewController.m; sourceTree = "<group>"; };
 		66F2C48118E3293E00CD593E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		66F2C48718E3293F00CD593E /* FunnlMailTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FunnlMailTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		66F2C48818E3293F00CD593E /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -79,6 +102,47 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6620BA8918E3439000769C48 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				6620BA9618E348A800769C48 /* Images */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		6620BA8A18E3439800769C48 /* Icons */ = {
+			isa = PBXGroup;
+			children = (
+				6620BA9718E348EA00769C48 /* Settings.png */,
+			);
+			name = Icons;
+			sourceTree = "<group>";
+		};
+		6620BA8B18E343A100769C48 /* Funnls */ = {
+			isa = PBXGroup;
+			children = (
+				6620BA8C18E343FA00769C48 /* Forums.png */,
+				6620BA8D18E343FA00769C48 /* News.png */,
+				6620BA8E18E343FA00769C48 /* Plus Sign.png */,
+				6620BA8F18E343FA00769C48 /* Shopping.png */,
+				6620BA9018E343FA00769C48 /* Social.png */,
+				6620BA7C18E32FD700769C48 /* Files.png */,
+				6620BA7D18E32FD700769C48 /* Meetings.png */,
+				6620BA7E18E32FD700769C48 /* Payments.png */,
+				6620BA7F18E32FD700769C48 /* Travel.png */,
+			);
+			name = Funnls;
+			sourceTree = "<group>";
+		};
+		6620BA9618E348A800769C48 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				6620BA8A18E3439800769C48 /* Icons */,
+				6620BA8B18E343A100769C48 /* Funnls */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
 		66F2C45D18E3293E00CD593E = {
 			isa = PBXGroup;
 			children = (
@@ -86,6 +150,7 @@
 				66F2C48E18E3293F00CD593E /* FunnlMailTests */,
 				66F2C46818E3293E00CD593E /* Frameworks */,
 				66F2C46718E3293E00CD593E /* Products */,
+				6620BA8918E3439000769C48 /* Resources */,
 			);
 			sourceTree = "<group>";
 		};
@@ -115,8 +180,10 @@
 				66F2C47818E3293E00CD593E /* AppDelegate.h */,
 				66F2C47918E3293E00CD593E /* AppDelegate.m */,
 				66F2C47B18E3293E00CD593E /* Main.storyboard */,
-				66F2C47E18E3293E00CD593E /* ViewController.h */,
-				66F2C47F18E3293E00CD593E /* ViewController.m */,
+				66F2C47E18E3293E00CD593E /* FunnlViewController.h */,
+				66F2C47F18E3293E00CD593E /* FunnlViewController.m */,
+				6620BA8418E3334800769C48 /* Cell.h */,
+				6620BA8518E3334800769C48 /* Cell.m */,
 				66F2C48118E3293E00CD593E /* Images.xcassets */,
 				66F2C47018E3293E00CD593E /* Supporting Files */,
 			);
@@ -228,9 +295,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6620BA9218E343FA00769C48 /* News.png in Resources */,
+				6620BA8118E32FD700769C48 /* Meetings.png in Resources */,
+				6620BA9118E343FA00769C48 /* Forums.png in Resources */,
 				66F2C48218E3293E00CD593E /* Images.xcassets in Resources */,
 				66F2C47418E3293E00CD593E /* InfoPlist.strings in Resources */,
 				66F2C47D18E3293E00CD593E /* Main.storyboard in Resources */,
+				6620BA9418E343FA00769C48 /* Shopping.png in Resources */,
+				6620BA8218E32FD700769C48 /* Payments.png in Resources */,
+				6620BA9518E343FA00769C48 /* Social.png in Resources */,
+				6620BA8018E32FD700769C48 /* Files.png in Resources */,
+				6620BA9818E348EA00769C48 /* Settings.png in Resources */,
+				6620BA8318E32FD700769C48 /* Travel.png in Resources */,
+				6620BA9318E343FA00769C48 /* Plus Sign.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,7 +326,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				66F2C48018E3293E00CD593E /* ViewController.m in Sources */,
+				66F2C48018E3293E00CD593E /* FunnlViewController.m in Sources */,
+				6620BA8618E3334800769C48 /* Cell.m in Sources */,
 				66F2C47A18E3293E00CD593E /* AppDelegate.m in Sources */,
 				66F2C47618E3293E00CD593E /* main.m in Sources */,
 			);
@@ -460,6 +538,7 @@
 				66F2C49A18E3293F00CD593E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		66F2C49B18E3293F00CD593E /* Build configuration list for PBXNativeTarget "FunnlMailTests" */ = {
 			isa = XCConfigurationList;
@@ -468,6 +547,7 @@
 				66F2C49D18E3293F00CD593E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

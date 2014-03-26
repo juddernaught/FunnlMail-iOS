@@ -7,11 +7,14 @@
 //
 
 #import "AppDelegate.h"
+#import "FunnlViewController.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    //FunnlViewController *fvc = [[FunnlViewController alloc] init];
+    //self.window.rootViewController = fvc;
     // Override point for customization after application launch.
     return YES;
 }
