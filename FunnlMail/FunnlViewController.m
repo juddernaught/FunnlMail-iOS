@@ -7,6 +7,7 @@
 //
 
 #import "FunnlViewController.h"
+#import "MailViewController.h"
 #import "Cell.h"
 
 @interface FunnlViewController ()
@@ -20,6 +21,9 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     [self customToolbar];
+    
+    // offset collectionView so that status bar is viewable
+    self.collectionView.contentInset = UIEdgeInsetsMake(20.0f, 0.0f, 0.0f, 0.0f);
     
     _funnlIcons = @[@"Files.png", @"Meetings.png", @"Payments.png", @"Travel.png", @"News.png", @"Forums.png", @"Shopping.png", @"Social.png", @"Plus Sign.png"];
 }
@@ -52,10 +56,12 @@
     
     UIImage *mailImage = [UIImage imageNamed:@"Mail.png"];
     UIButton *mailButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [mailButton addTarget:nil action:@selector(viewMailController) forControlEvents:UIControlEventTouchUpInside];
     mailButton.frame = CGRectMake(0, 0, settingsImage.size.width, mailImage.size.height);
     [mailButton setBackgroundImage:mailImage forState:UIControlStateNormal];
-    
-    [buttons addObject:[[UIBarButtonItem alloc] initWithCustomView:mailButton]];
+    [mailButton addTarget:nil action:@selector(viewMailController) forControlEvents:UIControlEventAllTouchEvents];
+    UIBarButtonItem *mailBarButton = [[UIBarButtonItem alloc] initWithCustomView:mailButton];
+    [buttons addObject:mailBarButton];
     // action:@selector(deleteAction:)];
     
     UIImage *funnlImage = [UIImage imageNamed:@"Funnl.png"];
@@ -84,6 +90,13 @@
     
     // place the toolbar into the navigation bar
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:toolbar];
+    
+}
+
+- (void) viewMailController {
+    NSLog(@"heyaa");
+    MailViewController *mvc = [[MailViewController alloc] init];
+    [self presentViewController:mvc animated:NO completion:nil];
 }
 
 #pragma mark - Collection View

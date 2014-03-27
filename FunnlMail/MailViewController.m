@@ -13,7 +13,7 @@
 @end
 
 @implementation MailViewController
-
+/*
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -21,13 +21,16 @@
         // Custom initialization
     }
     return self;
-}
+}*/
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     _emails = [NSMutableArray arrayWithArray:@[@"Email 1.png", @"Email 2.png", @"Email 3.png", @"Email 4.png", @"Email 5.png"]];
+    
+    // offset tableview so that status bar is visible
+    self.tableView.contentInset = UIEdgeInsetsMake(20.0f, 0.0f, 0.0f, 0.0f);
 }
 
 - (void)didReceiveMemoryWarning
@@ -62,8 +65,9 @@
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"email_cell" forIndexPath:indexPath];
     
-    NSDate *object = _emails[indexPath.row];
-    cell.textLabel.text = [object description];
+    UIImage *emailImage = [[UIImage alloc] init];
+    emailImage = [UIImage imageNamed:[self.emails objectAtIndex:indexPath.row]];
+    cell.imageView.image = emailImage;
     return cell;
 }
 
@@ -81,6 +85,10 @@
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
     }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 94.0f;
 }
 
 /*

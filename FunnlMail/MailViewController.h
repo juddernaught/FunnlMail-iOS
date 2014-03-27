@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MailViewController : UITableViewController < UITableViewDelegate, UITableViewDataSource>
+@interface MailViewController : UITableViewController
 
 @property (strong, nonatomic) IBOutlet UITableView  *tableView;
 
