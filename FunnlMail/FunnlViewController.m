@@ -15,6 +15,21 @@
 
 @implementation FunnlViewController
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+	// Do any additional setup after loading the view, typically from a nib.
+    [self customToolbar];
+    
+    _funnlIcons = @[@"Files.png", @"Meetings.png", @"Payments.png", @"Travel.png", @"News.png", @"Forums.png", @"Shopping.png", @"Social.png", @"Plus Sign.png"];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
 - (void)customToolbar {
     UIToolbar* toolbar = [[UIToolbar alloc]
                           initWithFrame:CGRectMake(0, 0, 320, 45)];
@@ -71,52 +86,7 @@
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:toolbar];
 }
 
-
--(UIBarButtonItem *)createImageButtonItemWithNoTitle:(NSString *)imagePath target:(id)tgt action:(SEL)a
-{
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    
-    UIImage *buttonImage = [[UIImage imageNamed:@"button_slice.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
-    UIImage *buttonPressedImage = [[UIImage imageNamed:@"button_slice_over.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
-    
-    CGRect buttonFrame = [button frame];
-    buttonFrame.size.width = 32;
-    buttonFrame.size.height = 32;
-    [button setFrame:buttonFrame];
-    
-    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 32, 32)];
-    imageView.image = [UIImage imageNamed:imagePath];
-    [button addSubview:imageView];
-    
-    [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
-    [button setBackgroundImage:buttonPressedImage forState:UIControlStateHighlighted];
-    
-    [button addTarget:tgt action:a forControlEvents:UIControlEventTouchUpInside];
-    
-    UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-    return buttonItem;
-}
-
-- (void) printHello {
-    NSLog(@"got clicked");
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-    [self customToolbar];
-    
-    _funnlIcons = @[@"Files.png", @"Meetings.png", @"Payments.png", @"Travel.png", @"News.png", @"Forums.png", @"Shopping.png", @"Social.png", @"Plus Sign.png"];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-#pragma collection view
+#pragma mark - Collection View
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return _funnlIcons.count;
 }
