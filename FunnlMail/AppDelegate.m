@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "FunnlViewController.h"
+#import "MainVC.h"
 
 @implementation AppDelegate
 
@@ -15,6 +16,10 @@
 {
     //FunnlViewController *fvc = [[FunnlViewController alloc] init];
     //self.window.rootViewController = fvc;
+  
+    MainVC *vc = [[MainVC alloc]init];
+    self.window.rootViewController = vc;
+  
     // Override point for customization after application launch.
     return YES;
 }
