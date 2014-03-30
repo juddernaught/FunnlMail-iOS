@@ -18,7 +18,10 @@
     //self.window.rootViewController = fvc;
   
     MainVC *vc = [[MainVC alloc]init];
-    self.window.rootViewController = vc;
+  
+    UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:vc];
+
+    self.window.rootViewController = nav;
   
     // Override point for customization after application launch.
     return YES;
