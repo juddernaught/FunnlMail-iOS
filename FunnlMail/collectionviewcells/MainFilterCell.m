@@ -169,7 +169,7 @@
   filterTitleLabel.text = filterTitle;
 }
 
--(void) setNewMessageCount:(NSInteger *)newMessageCount{
+-(void) setNewMessageCount:(NSInteger)newMessageCount{
   _newMessageCount = newMessageCount;
   
   newMessageCountLabel.text = [NSString stringWithFormat:@"%zd", newMessageCount];
