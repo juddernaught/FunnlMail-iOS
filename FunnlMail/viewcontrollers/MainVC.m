@@ -107,6 +107,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
   FilterViewVC *vc = [[FilterViewVC alloc] init];
+  vc.filterModel = (FilterModel *)filterArray[indexPath.row];
   
   [self.navigationController pushViewController:vc animated:YES];
 }
