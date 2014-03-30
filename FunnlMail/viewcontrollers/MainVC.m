@@ -11,6 +11,8 @@
 #import "View+MASAdditions.h"
 #import "MainFilterCell.h"
 #import "FilterModel.h"
+#import "FilterViewVC.h"
+#import "EmailService.h"
 
 static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
@@ -33,20 +35,10 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
+  [super viewDidLoad];
   
-  //
-  // created inital hardcoded list of filters
-  //
-  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor greenColor] filterTitle:@"Primary" newMessageCount:16 dateOfLastMessage:[NSDate new]]];
-  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor purpleColor] filterTitle:@"Meetings" newMessageCount:5 dateOfLastMessage:[NSDate new]]];
-  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor orangeColor] filterTitle:@"Files" newMessageCount:24 dateOfLastMessage:[NSDate new]]];
-  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor purpleColor] filterTitle:@"Payments" newMessageCount:6 dateOfLastMessage:[NSDate new]]];
-  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor blueColor] filterTitle:@"Travel" newMessageCount:24 dateOfLastMessage:[NSDate new]]];
-  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor greenColor] filterTitle:@"News" newMessageCount:12 dateOfLastMessage:[NSDate new]]];
-  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor redColor] filterTitle:@"Forums" newMessageCount:5 dateOfLastMessage:[NSDate new]]];
-
-  
+  filterArray = [EmailService currentFilters];
+    
 	// Do any additional setup after loading the view.
   
   self.view.backgroundColor = [UIColor whiteColor];
@@ -111,6 +103,12 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
   else{
     return CGSizeMake((self.collectionView.frame.size.width-10)/2, 160);
   }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+  FilterViewVC *vc = [[FilterViewVC alloc] init];
+  
+  [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (BOOL)prefersStatusBarHidden{

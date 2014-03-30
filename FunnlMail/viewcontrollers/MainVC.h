@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface MainVC : UIViewController<UICollectionViewDelegate,UICollectionViewDataSource>{
-  NSMutableArray *filterArray;
+  NSArray *filterArray;
 }
 
 @property (strong) UICollectionView *collectionView;
