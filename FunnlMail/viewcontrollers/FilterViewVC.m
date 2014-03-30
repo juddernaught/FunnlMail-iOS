@@ -9,6 +9,7 @@
 #import "FilterViewVC.h"
 #import "FilterViewCell.h"
 #import "View+MASAdditions.h"
+#import "FilterModel.h"
 
 static NSString *FILTER_VIEW_CELL = @"FilterViewCell";
 
@@ -29,10 +30,44 @@ static NSString *FILTER_VIEW_CELL = @"FilterViewCell";
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
+  [super viewDidLoad];
 	// Do any additional setup after loading the view.
   
-  self.view.backgroundColor = [UIColor yellowColor];
+  filterNavigationView = [[UIView alloc]init];
+  filterNavigationView.backgroundColor = [UIColor orangeColor];
+  [self.view addSubview:filterNavigationView];
+  
+  [filterNavigationView mas_makeConstraints:^(MASConstraintMaker *make) {
+    make.top.equalTo(self.view.mas_top).with.offset(44+20); // we should calculate this (self.topLayoutGuide.length?)
+    make.left.equalTo(self.view.mas_left).with.offset(0);
+    make.right.equalTo(self.view.mas_right).with.offset(0);
+  }];
+  
+  // need to figure out how to do this with Masonry
+  NSLayoutConstraint *constraint;
+  constraint = [NSLayoutConstraint
+                constraintWithItem:filterNavigationView
+                attribute: NSLayoutAttributeHeight
+                relatedBy:NSLayoutRelationEqual
+                toItem:filterNavigationView
+                attribute:NSLayoutAttributeHeight
+                multiplier:0
+                constant:22];
+  
+  [self.view addConstraint:constraint];
+  
+  filterLabel = [[UILabel alloc] init];
+  filterLabel.textColor = [UIColor whiteColor];
+  filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor yellowColor]);
+  filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : @"");
+  filterLabel.textAlignment = NSTextAlignmentCenter;
+  [filterNavigationView addSubview:filterLabel];
+  [filterLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    make.top.equalTo(filterNavigationView.mas_top).with.offset(0);
+    make.left.equalTo(filterNavigationView.mas_left).with.offset(0);
+    make.right.equalTo(filterNavigationView.mas_right).with.offset(0);
+    make.bottom.equalTo(filterNavigationView.mas_bottom).with.offset(0);
+  }];
   
   self.tableView = [[UITableView alloc]init];
   self.tableView.dataSource = self;
@@ -42,11 +77,15 @@ static NSString *FILTER_VIEW_CELL = @"FilterViewCell";
   [self.tableView registerClass:[FilterViewCell class] forCellReuseIdentifier:FILTER_VIEW_CELL];
   
   [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-    make.top.equalTo(self.view.mas_top).with.offset(0);
+    make.top.equalTo(filterLabel.mas_bottom).with.offset(0);
     make.left.equalTo(self.view.mas_left).with.offset(0);
     make.right.equalTo(self.view.mas_right).with.offset(0);
     make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
   }];
+}
+
+-(void) setFilterModel:(FilterModel *)filterModel{
+  _filterModel = filterModel;
 }
 
 - (void)didReceiveMemoryWarning

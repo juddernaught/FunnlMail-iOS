@@ -7,9 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FilterModel.h"
 
-@interface FilterViewVC : UIViewController<UITableViewDataSource, UITableViewDelegate>
+@interface FilterViewVC : UIViewController<UITableViewDataSource, UITableViewDelegate>{
+  UIView *filterNavigationView;
+  UILabel *filterLabel;
+}
 
 @property (strong) UITableView *tableView;
+@property (strong,nonatomic) FilterModel *filterModel;
 
 @end
