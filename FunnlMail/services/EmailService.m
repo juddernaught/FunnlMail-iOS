@@ -8,6 +8,7 @@
 
 #import "EmailService.h"
 #import "FilterModel.h"
+#import "UIColor+HexString.h"
 
 static EmailService *instance;
 
@@ -50,13 +51,13 @@ static EmailService *instance;
   //
   // created inital hardcoded list of filters
   //
-  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor greenColor] filterTitle:@"Primary" newMessageCount:16 dateOfLastMessage:[NSDate new]]];
-  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor purpleColor] filterTitle:@"Meetings" newMessageCount:5 dateOfLastMessage:[NSDate new]]];
-  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor orangeColor] filterTitle:@"Files" newMessageCount:24 dateOfLastMessage:[NSDate new]]];
-  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor purpleColor] filterTitle:@"Payments" newMessageCount:6 dateOfLastMessage:[NSDate new]]];
-  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor blueColor] filterTitle:@"Travel" newMessageCount:24 dateOfLastMessage:[NSDate new]]];
-  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor greenColor] filterTitle:@"News" newMessageCount:12 dateOfLastMessage:[NSDate new]]];
-  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor redColor] filterTitle:@"Forums" newMessageCount:5 dateOfLastMessage:[NSDate new]]];
+  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#2EB82E"] filterTitle:@"Primary" newMessageCount:16 dateOfLastMessage:[NSDate new]]];
+  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#FF85FF"] filterTitle:@"Meetings" newMessageCount:5 dateOfLastMessage:[NSDate new]]];
+  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#FFB84D"] filterTitle:@"Files" newMessageCount:24 dateOfLastMessage:[NSDate new]]];
+  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#AD5CFF"] filterTitle:@"Payments" newMessageCount:6 dateOfLastMessage:[NSDate new]]];
+  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#33ADFF"] filterTitle:@"Travel" newMessageCount:24 dateOfLastMessage:[NSDate new]]];
+  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#85E085"] filterTitle:@"News" newMessageCount:12 dateOfLastMessage:[NSDate new]]];
+  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#B84D70"] filterTitle:@"Forums" newMessageCount:5 dateOfLastMessage:[NSDate new]]];
   
   return filterArray;
 }
