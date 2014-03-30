@@ -8,6 +8,7 @@
 
 #import "MainFilterCell.h"
 #import "View+MASAdditions.h"
+#import "UIColor+HexString.h"
 
 @implementation MainFilterCell
 
@@ -16,7 +17,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        self.backgroundColor = [UIColor lightGrayColor];
+        self.backgroundColor = [UIColor colorWithHexString:@"#E0E0EB"];
       
         coloredBarView = [[UIView alloc] init];
         coloredBarView.backgroundColor = self.barColor;
