@@ -86,6 +86,11 @@ static NSString *FILTER_VIEW_CELL = @"FilterViewCell";
 
 -(void) setFilterModel:(FilterModel *)filterModel{
   _filterModel = filterModel;
+  
+  if(filterLabel!=nil){
+    filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor yellowColor]);
+    filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : @"");
+  }
 }
 
 - (void)didReceiveMemoryWarning
