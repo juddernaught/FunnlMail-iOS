@@ -9,6 +9,7 @@
 #import "EmailService.h"
 #import "FilterModel.h"
 #import "UIColor+HexString.h"
+#import <mailcore/mailcore.h>
 
 static EmailService *instance;
 
@@ -35,6 +36,33 @@ static EmailService *instance;
     initialized = YES;
     instance = [[EmailService alloc] init];
   }
+}
+
++(void) login{
+    MCOIMAPSession *session = [[MCOIMAPSession alloc] init];
+    [session setHostname:@"imap.gmail.com"];
+    [session setPort:993];
+    [session setUsername:@"funnlmailapp@gmail.com"];
+    [session setPassword:@"funnlmail"];
+    [session setConnectionType:MCOConnectionTypeTLS];
+    
+    MCOIMAPMessagesRequestKind requestKind = MCOIMAPMessagesRequestKindHeaders;
+    NSString *folder = @"INBOX";
+    MCOIndexSet *uids = [MCOIndexSet indexSetWithRange:MCORangeMake(1, UINT64_MAX)];
+    
+    MCOIMAPFetchMessagesOperation *fetchOperation = [session fetchMessagesByUIDOperationWithFolder:folder requestKind:requestKind uids:uids];
+    
+    [fetchOperation start:^(NSError * error, NSArray * fetchedMessages, MCOIndexSet * vanishedMessages) {
+        //We've finished downloading the messages!
+        
+        //Let's check if there was an error:
+        if(error) {
+            NSLog(@"Error downloading message headers:%@", error);
+        }
+        
+        //And, let's print out the messages...
+        NSLog(@"The post man delivereth:%@", fetchedMessages);
+    }];
 }
 
 +(EmailService *)instance{

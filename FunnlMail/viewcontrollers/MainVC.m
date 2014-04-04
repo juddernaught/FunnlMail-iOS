@@ -64,6 +64,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     make.right.equalTo(self.view.mas_right).with.offset(0);
     make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
   }];
+    [EmailService login];
 }
 
 - (void)didReceiveMemoryWarning

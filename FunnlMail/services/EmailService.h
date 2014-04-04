@@ -12,5 +12,6 @@
 
 +(EmailService *)instance;
 +(NSArray *) currentFilters;
++(void) login;
 
 @end
