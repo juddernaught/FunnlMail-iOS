@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>C3861D13-93A1-423B-B0BD-12AC7C3A1F2B</string>
+	<key>IDESourceControlProjectName</key>
+	<string>FunnlMail</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>90282D2D-4E87-460C-83FE-96794E2EF458</key>
+		<string>https://github.com/juddernaught/FunnlMail-iOS.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>FunnlMail.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>90282D2D-4E87-460C-83FE-96794E2EF458</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/juddernaught/FunnlMail-iOS.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>90282D2D-4E87-460C-83FE-96794E2EF458</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>90282D2D-4E87-460C-83FE-96794E2EF458</string>
+			<key>IDESourceControlWCCName</key>
+			<string>FunnlMail</string>
+		</dict>
+	</array>
+</dict>
+</plist>
