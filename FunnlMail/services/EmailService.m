@@ -63,6 +63,7 @@ static EmailService *instance;
         //And, let's print out the messages...
         NSLog(@"The post man delivereth:%@", fetchedMessages);
     }];
+    
 }
 
 +(EmailService *)instance{
