@@ -18,7 +18,6 @@ static NSString *FILTER_VIEW_CELL = @"FilterViewCell";
 #import <MailCore/MailCore.h>
 #import "EmailCell.h"
 #import "MsgViewController.h"
-#import "MCTMsgViewController.h"
 
 #define CLIENT_ID @"the-client-id"
 #define CLIENT_SECRET @"the-client-secret"
@@ -165,8 +164,8 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
 - (void) startLogin
 {
-	NSString *username = @"juddernaught";
-	NSString *password = @"yellow22";   
+	NSString *username = @"funnlmailapp";
+	NSString *password = @"funnlmail";
 	NSString *hostname = @"imap.gmail.com";
     
    /* if (!username.length || !password.length) {
@@ -427,7 +426,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 		case 0:
 		{
 			MCOIMAPMessage *msg = self.messages[indexPath.row];
-			MCTMsgViewController *vc = [[MCTMsgViewController alloc] init];
+			MsgViewController *vc = [[MsgViewController alloc] init];
 			vc.folder = @"INBOX";
 			vc.message = msg;
 			vc.session = self.imapSession;

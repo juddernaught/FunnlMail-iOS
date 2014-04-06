@@ -74,7 +74,7 @@ pre {\
 
 - (id)initWithFrame:(CGRect)frame
 {
-    NSLog(@"here");
+    NSLog(@"THIS HAPPENED");
     self = [super initWithFrame:frame];
     
     _webView = [[UIWebView alloc] initWithFrame:[self bounds]];
@@ -93,6 +93,7 @@ pre {\
 - (void) setMessage:(MCOAbstractMessage *)message
 {
 //    _message = [message retain];
+    _message = message;
     
     [_webView stopLoading];
     [self _refresh];

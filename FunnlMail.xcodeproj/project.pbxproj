@@ -36,14 +36,12 @@
 		6677881718EF83F800EF1962 /* MCOMessageView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6677881618EF83F800EF1962 /* MCOMessageView.mm */; };
 		6677881A18EF84FB00EF1962 /* MCOCIDURLProtocol.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6677881918EF84FB00EF1962 /* MCOCIDURLProtocol.mm */; };
 		6677881C18F0797800EF1962 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6677881B18F0797800EF1962 /* ImageIO.framework */; };
-		6677882118F0AC1800EF1962 /* MCTMsgViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6677882018F0AC1800EF1962 /* MCTMsgViewController.mm */; };
 		6677882518F0ADBB00EF1962 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6677882418F0ADBB00EF1962 /* SystemConfiguration.framework */; };
 		6677882718F0AEED00EF1962 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6677882618F0AEED00EF1962 /* main.mm */; };
 		66F2C46A18E3293E00CD593E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C46918E3293E00CD593E /* Foundation.framework */; };
 		66F2C46C18E3293E00CD593E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C46B18E3293E00CD593E /* CoreGraphics.framework */; };
 		66F2C46E18E3293E00CD593E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C46D18E3293E00CD593E /* UIKit.framework */; };
 		66F2C47418E3293E00CD593E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66F2C47218E3293E00CD593E /* InfoPlist.strings */; };
-		66F2C47618E3293E00CD593E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F2C47518E3293E00CD593E /* main.m */; };
 		66F2C47A18E3293E00CD593E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F2C47918E3293E00CD593E /* AppDelegate.m */; };
 		66F2C47D18E3293E00CD593E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66F2C47B18E3293E00CD593E /* Main.storyboard */; };
 		66F2C48018E3293E00CD593E /* FunnlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F2C47F18E3293E00CD593E /* FunnlViewController.m */; };
@@ -160,8 +158,6 @@
 		6677881818EF84FB00EF1962 /* MCOCIDURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCOCIDURLProtocol.h; sourceTree = "<group>"; };
 		6677881918EF84FB00EF1962 /* MCOCIDURLProtocol.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MCOCIDURLProtocol.mm; sourceTree = "<group>"; };
 		6677881B18F0797800EF1962 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
-		6677881F18F0AC1800EF1962 /* MCTMsgViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCTMsgViewController.h; sourceTree = "<group>"; };
-		6677882018F0AC1800EF1962 /* MCTMsgViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MCTMsgViewController.mm; sourceTree = "<group>"; };
 		6677882418F0ADBB00EF1962 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		6677882618F0AEED00EF1962 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		66F2C46618E3293E00CD593E /* FunnlMail.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FunnlMail.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -170,7 +166,6 @@
 		66F2C46D18E3293E00CD593E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		66F2C47118E3293E00CD593E /* FunnlMail-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FunnlMail-Info.plist"; sourceTree = "<group>"; };
 		66F2C47318E3293E00CD593E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		66F2C47518E3293E00CD593E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		66F2C47718E3293E00CD593E /* FunnlMail-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FunnlMail-Prefix.pch"; sourceTree = "<group>"; };
 		66F2C47818E3293E00CD593E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		66F2C47918E3293E00CD593E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -319,6 +314,17 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		6677882818F1F3C900EF1962 /* MailCore */ = {
+			isa = PBXGroup;
+			children = (
+				6677881818EF84FB00EF1962 /* MCOCIDURLProtocol.h */,
+				6677881918EF84FB00EF1962 /* MCOCIDURLProtocol.mm */,
+				6677881518EF83F800EF1962 /* MCOMessageView.h */,
+				6677881618EF83F800EF1962 /* MCOMessageView.mm */,
+			);
+			name = MailCore;
+			sourceTree = "<group>";
+		};
 		66F2C45D18E3293E00CD593E = {
 			isa = PBXGroup;
 			children = (
@@ -388,7 +394,6 @@
 			children = (
 				66F2C47118E3293E00CD593E /* FunnlMail-Info.plist */,
 				66F2C47218E3293E00CD593E /* InfoPlist.strings */,
-				66F2C47518E3293E00CD593E /* main.m */,
 				66F2C47718E3293E00CD593E /* FunnlMail-Prefix.pch */,
 			);
 			name = "Supporting Files";
@@ -433,8 +438,6 @@
 		CC8C7EAA18E6EF8600E76AE8 /* viewcontrollers */ = {
 			isa = PBXGroup;
 			children = (
-				6677881F18F0AC1800EF1962 /* MCTMsgViewController.h */,
-				6677882018F0AC1800EF1962 /* MCTMsgViewController.mm */,
 				CC8C7EAB18E6F1C100E76AE8 /* MainVC.h */,
 				CC8C7EAC18E6F1C100E76AE8 /* MainVC.m */,
 				CC8A456018E834CD009FDBDB /* FilterViewVC.h */,
@@ -468,10 +471,7 @@
 		CC8C7EB018E6F34D00E76AE8 /* external */ = {
 			isa = PBXGroup;
 			children = (
-				6677881818EF84FB00EF1962 /* MCOCIDURLProtocol.h */,
-				6677881918EF84FB00EF1962 /* MCOCIDURLProtocol.mm */,
-				6677881518EF83F800EF1962 /* MCOMessageView.h */,
-				6677881618EF83F800EF1962 /* MCOMessageView.mm */,
+				6677882818F1F3C900EF1962 /* MailCore */,
 				CC8C7EB118E6F35400E76AE8 /* Masonry */,
 			);
 			name = external;
@@ -687,7 +687,6 @@
 				CC8C7EAD18E6F1C100E76AE8 /* MainVC.m in Sources */,
 				CC8C7ECC18E6F38100E76AE8 /* MASViewAttribute.m in Sources */,
 				CCC377A918E7113B004F7FC0 /* FilterModel.m in Sources */,
-				6677882118F0AC1800EF1962 /* MCTMsgViewController.mm in Sources */,
 				CC8C7ECF18E6F38100E76AE8 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
 				6620BAA418E3938700769C48 /* EmailTableViewCell.m in Sources */,
 				CC8C7EC818E6F38100E76AE8 /* MASCompositeConstraint.m in Sources */,
@@ -702,7 +701,6 @@
 				6677882718F0AEED00EF1962 /* main.mm in Sources */,
 				6677881718EF83F800EF1962 /* MCOMessageView.mm in Sources */,
 				CC39517218E6F9700093C787 /* MainFilterCell.m in Sources */,
-				66F2C47618E3293E00CD593E /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
