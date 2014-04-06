@@ -7,7 +7,6 @@
 //
 
 #import "AppDelegate.h"
-#import "FunnlViewController.h"
 #import "MainVC.h"
 
 @implementation AppDelegate

@@ -42,7 +42,6 @@
     _messageView = [[MCOMessageView alloc] initWithFrame:self.view.bounds];
     _messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.view addSubview:_messageView];
-    NSLog([_message description]);
     
     if (![[NSUserDefaults standardUserDefaults] boolForKey:@"FetchFullMessageEnabled"]) {
         [_messageView setDelegate:self];
