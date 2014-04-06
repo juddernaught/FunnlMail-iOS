@@ -1,19 +1,18 @@
 //
-//  MsgViewController.h
-//  FunnlMail
+//  MCTMsgViewController.h
+//  testUI
 //
-//  Created by Daniel Judd on 4/4/14.
-//  Copyright (c) 2014 FunnlMail. All rights reserved.
+//  Created by DINH Viêt Hoà on 1/20/13.
+//  Copyright (c) 2013 MailCore. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #include <MailCore/MailCore.h>
 
 @class MCOMessageView;
 @class MCOIMAPAsyncSession;
 @class MCOMAPMessage;
 
-@interface MsgViewController : UIViewController {
+@interface MCTMsgViewController : UIViewController {
     IBOutlet MCOMessageView * _messageView;
     NSMutableDictionary * _storage;
     NSMutableSet * _pending;

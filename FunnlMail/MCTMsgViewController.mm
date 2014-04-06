@@ -1,21 +1,21 @@
 //
-//  MsgViewController.m
-//  FunnlMail
+//  MCTMsgViewController.m
+//  testUI
 //
-//  Created by Daniel Judd on 4/4/14.
-//  Copyright (c) 2014 FunnlMail. All rights reserved.
+//  Created by DINH Viêt Hoà on 1/20/13.
+//  Copyright (c) 2013 MailCore. All rights reserved.
 //
 
-#import "MsgViewController.h"
+#import "MCTMsgViewController.h"
 #import <CoreGraphics/CoreGraphics.h>
 #import <ImageIO/ImageIO.h>
 #import "MCOMessageView.h"
 
-@interface MsgViewController () <MCOMessageViewDelegate>
+@interface MCTMsgViewController () <MCOMessageViewDelegate>
 
 @end
 
-@implementation MsgViewController
+@implementation MCTMsgViewController
 
 @synthesize folder = _folder;
 @synthesize session = _session;
@@ -42,7 +42,6 @@
     _messageView = [[MCOMessageView alloc] initWithFrame:self.view.bounds];
     _messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.view addSubview:_messageView];
-    NSLog([_message description]);
     
     if (![[NSUserDefaults standardUserDefaults] boolForKey:@"FetchFullMessageEnabled"]) {
         [_messageView setDelegate:self];
@@ -71,7 +70,6 @@
 - (void) setMessage:(MCOIMAPMessage *)message
 {
 	MCLog("set message : %s", message.description.UTF8String);
-    NSLog(@"set message : %s", message.description.UTF8String);
     for(MCOOperation * op in _ops) {
         [op cancel];
     }
@@ -135,12 +133,12 @@ typedef void (^DownloadCallback)(NSError * error);
 - (NSString *) MCOMessageView_templateForAttachment:(MCOMessageView *)view
 {
     return @"<div><img src=\"http://www.iconshock.com/img_jpg/OFFICE/general/jpg/128/attachment_icon.jpg\"/></div>\
-    {{#HASSIZE}}\
-    <div>- {{FILENAME}}, {{SIZE}}</div>\
-    {{/HASSIZE}}\
-    {{#NOSIZE}}\
-    <div>- {{FILENAME}}</div>\
-    {{/NOSIZE}}";
+{{#HASSIZE}}\
+<div>- {{FILENAME}}, {{SIZE}}</div>\
+{{/HASSIZE}}\
+{{#NOSIZE}}\
+<div>- {{FILENAME}}</div>\
+{{/NOSIZE}}";
 }
 
 - (NSString *) MCOMessageView_templateForMessage:(MCOMessageView *)view
@@ -235,45 +233,43 @@ typedef void (^DownloadCallback)(NSError * error);
 #define IMAGE_PREVIEW_WIDTH 500
 
 - (NSData *) _convertToJPEGData:(NSData *)data {
-    NSLog(@"Got here");
     CGImageSourceRef imageSource;
     CGImageRef thumbnail;
     NSMutableDictionary * info;
     int width;
     int height;
     float quality;
-    
+
     width = IMAGE_PREVIEW_WIDTH;
     height = IMAGE_PREVIEW_HEIGHT;
     quality = 1.0;
-    
+
     imageSource = CGImageSourceCreateWithData((__bridge CFDataRef) data, NULL);
     if (imageSource == NULL)
         return nil;
-    
+
     info = [[NSMutableDictionary alloc] init];
     [info setObject:(id) kCFBooleanTrue forKey:(id) kCGImageSourceCreateThumbnailWithTransform];
     [info setObject:(id) kCFBooleanTrue forKey:(id) kCGImageSourceCreateThumbnailFromImageAlways];
     [info setObject:(id) [NSNumber numberWithFloat:(float) IMAGE_PREVIEW_WIDTH] forKey:(id) kCGImageSourceThumbnailMaxPixelSize];
     thumbnail = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, (__bridge CFDictionaryRef) info);
-    
+
     CGImageDestinationRef destination;
     NSMutableData * destData = [NSMutableData data];
-    
+
     destination = CGImageDestinationCreateWithData((__bridge CFMutableDataRef) destData,
                                                    (CFStringRef) @"public.jpeg",
                                                    1, NULL);
     
     CGImageDestinationAddImage(destination, thumbnail, NULL);
     CGImageDestinationFinalize(destination);
-    
+
     CFRelease(destination);
-    
+
     CFRelease(thumbnail);
     CFRelease(imageSource);
-    
+
     return destData;
 }
-
 
 @end

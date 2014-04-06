@@ -32,6 +32,13 @@
 		667787FA18EF6E9400EF1962 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 667787F918EF6E9400EF1962 /* CFNetwork.framework */; };
 		667787FC18EF6E9900EF1962 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 667787FB18EF6E9900EF1962 /* Security.framework */; };
 		6677880118EF768B00EF1962 /* MsgViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6677880018EF768B00EF1962 /* MsgViewController.mm */; };
+		6677880C18EF80BF00EF1962 /* EmailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6677880B18EF80BF00EF1962 /* EmailCell.m */; };
+		6677881718EF83F800EF1962 /* MCOMessageView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6677881618EF83F800EF1962 /* MCOMessageView.mm */; };
+		6677881A18EF84FB00EF1962 /* MCOCIDURLProtocol.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6677881918EF84FB00EF1962 /* MCOCIDURLProtocol.mm */; };
+		6677881C18F0797800EF1962 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6677881B18F0797800EF1962 /* ImageIO.framework */; };
+		6677882118F0AC1800EF1962 /* MCTMsgViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6677882018F0AC1800EF1962 /* MCTMsgViewController.mm */; };
+		6677882518F0ADBB00EF1962 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6677882418F0ADBB00EF1962 /* SystemConfiguration.framework */; };
+		6677882718F0AEED00EF1962 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6677882618F0AEED00EF1962 /* main.mm */; };
 		66F2C46A18E3293E00CD593E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C46918E3293E00CD593E /* Foundation.framework */; };
 		66F2C46C18E3293E00CD593E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C46B18E3293E00CD593E /* CoreGraphics.framework */; };
 		66F2C46E18E3293E00CD593E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C46D18E3293E00CD593E /* UIKit.framework */; };
@@ -146,6 +153,17 @@
 		667787FB18EF6E9900EF1962 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		667787FF18EF768B00EF1962 /* MsgViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MsgViewController.h; path = viewcontrollers/MsgViewController.h; sourceTree = "<group>"; };
 		6677880018EF768B00EF1962 /* MsgViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MsgViewController.mm; path = viewcontrollers/MsgViewController.mm; sourceTree = "<group>"; };
+		6677880A18EF80BF00EF1962 /* EmailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmailCell.h; path = tablecells/EmailCell.h; sourceTree = "<group>"; };
+		6677880B18EF80BF00EF1962 /* EmailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EmailCell.m; path = tablecells/EmailCell.m; sourceTree = "<group>"; };
+		6677881518EF83F800EF1962 /* MCOMessageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCOMessageView.h; sourceTree = "<group>"; };
+		6677881618EF83F800EF1962 /* MCOMessageView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MCOMessageView.mm; sourceTree = "<group>"; };
+		6677881818EF84FB00EF1962 /* MCOCIDURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCOCIDURLProtocol.h; sourceTree = "<group>"; };
+		6677881918EF84FB00EF1962 /* MCOCIDURLProtocol.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MCOCIDURLProtocol.mm; sourceTree = "<group>"; };
+		6677881B18F0797800EF1962 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		6677881F18F0AC1800EF1962 /* MCTMsgViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCTMsgViewController.h; sourceTree = "<group>"; };
+		6677882018F0AC1800EF1962 /* MCTMsgViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MCTMsgViewController.mm; sourceTree = "<group>"; };
+		6677882418F0ADBB00EF1962 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		6677882618F0AEED00EF1962 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		66F2C46618E3293E00CD593E /* FunnlMail.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FunnlMail.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66F2C46918E3293E00CD593E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		66F2C46B18E3293E00CD593E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -208,6 +226,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6677882518F0ADBB00EF1962 /* SystemConfiguration.framework in Frameworks */,
+				6677881C18F0797800EF1962 /* ImageIO.framework in Frameworks */,
 				667787FC18EF6E9900EF1962 /* Security.framework in Frameworks */,
 				667787FA18EF6E9400EF1962 /* CFNetwork.framework in Frameworks */,
 				667787F818EF6E4500EF1962 /* libMailCore-ios.a in Frameworks */,
@@ -322,6 +342,8 @@
 		66F2C46818E3293E00CD593E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6677882418F0ADBB00EF1962 /* SystemConfiguration.framework */,
+				6677881B18F0797800EF1962 /* ImageIO.framework */,
 				667787FB18EF6E9900EF1962 /* Security.framework */,
 				667787F918EF6E9400EF1962 /* CFNetwork.framework */,
 				66F2C46918E3293E00CD593E /* Foundation.framework */,
@@ -336,6 +358,7 @@
 			isa = PBXGroup;
 			children = (
 				667787E418EF6D9700EF1962 /* mailcore2.xcodeproj */,
+				6677882618F0AEED00EF1962 /* main.mm */,
 				CC7F72F518E838C7008962C3 /* services */,
 				CCC377AA18E83216004F7FC0 /* categories */,
 				CC39517318E710CC0093C787 /* models */,
@@ -410,6 +433,8 @@
 		CC8C7EAA18E6EF8600E76AE8 /* viewcontrollers */ = {
 			isa = PBXGroup;
 			children = (
+				6677881F18F0AC1800EF1962 /* MCTMsgViewController.h */,
+				6677882018F0AC1800EF1962 /* MCTMsgViewController.mm */,
 				CC8C7EAB18E6F1C100E76AE8 /* MainVC.h */,
 				CC8C7EAC18E6F1C100E76AE8 /* MainVC.m */,
 				CC8A456018E834CD009FDBDB /* FilterViewVC.h */,
@@ -425,6 +450,8 @@
 			children = (
 				CC7F72F218E837C9008962C3 /* FilterViewCell.h */,
 				CC7F72F318E837C9008962C3 /* FilterViewCell.m */,
+				6677880A18EF80BF00EF1962 /* EmailCell.h */,
+				6677880B18EF80BF00EF1962 /* EmailCell.m */,
 			);
 			name = tablecells;
 			sourceTree = "<group>";
@@ -441,6 +468,10 @@
 		CC8C7EB018E6F34D00E76AE8 /* external */ = {
 			isa = PBXGroup;
 			children = (
+				6677881818EF84FB00EF1962 /* MCOCIDURLProtocol.h */,
+				6677881918EF84FB00EF1962 /* MCOCIDURLProtocol.mm */,
+				6677881518EF83F800EF1962 /* MCOMessageView.h */,
+				6677881618EF83F800EF1962 /* MCOMessageView.mm */,
 				CC8C7EB118E6F35400E76AE8 /* Masonry */,
 			);
 			name = external;
@@ -650,14 +681,17 @@
 				CC8C7ECA18E6F38100E76AE8 /* MASConstraintMaker.m in Sources */,
 				CC8C7ED018E6F38100E76AE8 /* View+MASAdditions.m in Sources */,
 				6620BAA118E38D9400769C48 /* MailViewController.m in Sources */,
+				6677881A18EF84FB00EF1962 /* MCOCIDURLProtocol.mm in Sources */,
 				CC8C7EC918E6F38100E76AE8 /* MASConstraint.m in Sources */,
 				6677880118EF768B00EF1962 /* MsgViewController.mm in Sources */,
 				CC8C7EAD18E6F1C100E76AE8 /* MainVC.m in Sources */,
 				CC8C7ECC18E6F38100E76AE8 /* MASViewAttribute.m in Sources */,
 				CCC377A918E7113B004F7FC0 /* FilterModel.m in Sources */,
+				6677882118F0AC1800EF1962 /* MCTMsgViewController.mm in Sources */,
 				CC8C7ECF18E6F38100E76AE8 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
 				6620BAA418E3938700769C48 /* EmailTableViewCell.m in Sources */,
 				CC8C7EC818E6F38100E76AE8 /* MASCompositeConstraint.m in Sources */,
+				6677880C18EF80BF00EF1962 /* EmailCell.m in Sources */,
 				CC7F72F418E837C9008962C3 /* FilterViewCell.m in Sources */,
 				CC8C7ECB18E6F38100E76AE8 /* MASLayoutConstraint.m in Sources */,
 				6620BA8618E3334800769C48 /* Cell.m in Sources */,
@@ -665,6 +699,8 @@
 				CC8A456218E834CD009FDBDB /* FilterViewVC.m in Sources */,
 				66F2C47A18E3293E00CD593E /* AppDelegate.m in Sources */,
 				CC8A455C18E832B8009FDBDB /* UIColor+HexString.m in Sources */,
+				6677882718F0AEED00EF1962 /* main.mm in Sources */,
+				6677881718EF83F800EF1962 /* MCOMessageView.mm in Sources */,
 				CC39517218E6F9700093C787 /* MainFilterCell.m in Sources */,
 				66F2C47618E3293E00CD593E /* main.m in Sources */,
 			);
