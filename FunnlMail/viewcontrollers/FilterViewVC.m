@@ -301,6 +301,21 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
               [NSMutableArray arrayWithArray:messages];
               [combinedMessages addObjectsFromArray:strongSelf.messages];
               
+              // TODO: remove the if statement. Primary is currently the same as the All Mail view.
+              NSLog(@"Our funnl name: %@", _filterModel.filterTitle);
+              if (![_filterModel.filterTitle isEqualToString: @"Primary"]) {
+                  NSSet *funnlEmailList = [FilterModel getEmailsForFunnl:_filterModel.filterTitle];
+                  for (int i = 0; i < [combinedMessages count]; i++) {
+                      MCOIMAPMessage *message = [combinedMessages objectAtIndex:i];
+                      MCOMessageHeader *header = [message header];
+                      NSString *emailAddress = [[header sender] mailbox];
+                      if (![funnlEmailList containsObject:emailAddress]) {
+                          [combinedMessages removeObjectAtIndex:i];
+                          // since we removed an element, all elements get pushed upwards by 1
+                          i --;
+                      }
+                  }
+              }
               strongSelf.messages =
               [combinedMessages sortedArrayUsingDescriptors:@[sort]];
               [strongSelf.tableView reloadData];

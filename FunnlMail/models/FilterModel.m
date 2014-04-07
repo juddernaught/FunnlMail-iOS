@@ -24,4 +24,16 @@
   return self;
 }
 
++ (NSSet*) getEmailsForFunnl: (NSString *) funnlName {
+    NSMutableDictionary *funnlDictionary = [[NSMutableDictionary alloc] init];
+    [funnlDictionary setObject: [NSSet setWithArray:@[@"juddernaught@gmail.com", @"djudd@wharton.upenn.edu", @"djudd@seas.upenn.edu", @"michael.raber@gmail.com", @"manpuria@wharton.upenn.edu", @"apoorvap@wharton.upenn.edu"]] forKey: @"FunnlMail"];
+    NSArray *filterEmails = [funnlDictionary objectForKey:funnlName];
+    if (filterEmails == nil) {
+        return [NSSet setWithArray:@[]];
+    }
+    else {
+        return [funnlDictionary objectForKey:funnlName];
+    }
+}
+
 @end

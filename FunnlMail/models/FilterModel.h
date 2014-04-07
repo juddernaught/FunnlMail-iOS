@@ -16,5 +16,6 @@
 @property (copy) NSDate *dateOfLastMessage;
 
 - (id)initWithBarColor:(UIColor *)barColor filterTitle:(NSString *)filterTitle newMessageCount:(NSInteger)newMessageCount dateOfLastMessage:(NSDate *)dateOfLastMessage;
++ (NSSet*) getEmailsForFunnl: (NSString *) funnlName;
 
 @end

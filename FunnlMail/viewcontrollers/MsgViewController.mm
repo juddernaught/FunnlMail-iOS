@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 FunnlMail. All rights reserved.
 //
 
+// a bunch of code taken from: https://github.com/MailCore/mailcore2
+
 #import "MsgViewController.h"
 #import <CoreGraphics/CoreGraphics.h>
 #import <ImageIO/ImageIO.h>
