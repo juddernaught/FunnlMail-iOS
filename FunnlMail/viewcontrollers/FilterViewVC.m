@@ -282,7 +282,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
           [MCOIndexSet indexSetWithRange:fetchRange]];
          
          [self.imapMessagesFetchOp setProgress:^(unsigned int progress) {
-             NSLog(@"Progress: %u of %u", progress, numberOfMessagesToLoad);
+             NSLog(@"Progress: %u of %lu", progress, (unsigned long)numberOfMessagesToLoad);
          }];
          
          __weak FilterViewVC *weakSelf = self;
@@ -394,7 +394,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 			if (self.messages.count < self.totalNumberOfInboxMessages)
 			{
 				cell.textLabel.text =
-				[NSString stringWithFormat:@"Load %d more",
+				[NSString stringWithFormat:@"Load %lu more",
 				 MIN(self.totalNumberOfInboxMessages - self.messages.count,
 					 NUMBER_OF_MESSAGES_TO_LOAD)];
 			}
@@ -404,8 +404,8 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 			}
 			
 			cell.detailTextLabel.text =
-			[NSString stringWithFormat:@"%d message(s)",
-			 self.totalNumberOfInboxMessages];
+			[NSString stringWithFormat:@"%ld message(s)",
+			 (long)self.totalNumberOfInboxMessages];
 			
 			cell.accessoryView = self.loadMoreActivityView;
 			
