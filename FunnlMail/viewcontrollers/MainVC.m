@@ -11,7 +11,6 @@
 #import "View+MASAdditions.h"
 #import "MainFilterCell.h"
 #import "FilterModel.h"
-#import "FilterViewVC.h"
 #import "EmailService.h"
 
 
@@ -31,7 +30,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     if (self) {
       // Custom initialization
       
-      filterArray = [[NSMutableArray alloc] init];
+      //filterArray = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -40,34 +39,50 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 {
   [super viewDidLoad];
   
-  filterArray = [EmailService currentFilters];
-    
-	// Do any additional setup after loading the view.
-  
   self.view.backgroundColor = [UIColor whiteColor];
   
-  UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-  layout.scrollDirection = UICollectionViewScrollDirectionVertical;
+  mainView = [[MainView alloc] init];
+  mainView.mainVCdelegate = self;
+  [self.view addSubview:mainView];
   
-  self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
-  //self.collectionView.backgroundColor = [UIColor greenColor];
-  self.collectionView.backgroundColor = [UIColor whiteColor];
-  self.collectionView.bounces = YES;
-  self.collectionView.alwaysBounceVertical = YES;
-  self.collectionView.delegate = self;
-  self.collectionView.dataSource = self;
-
-  [self.view addSubview:self.collectionView];
-  
-  [self.collectionView registerClass:[MainFilterCell class] forCellWithReuseIdentifier:MAIN_FILTER_CELL];
-  
-  [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+  [mainView mas_makeConstraints:^(MASConstraintMaker *make) {
     make.top.equalTo(self.view.mas_top).with.offset(0);
     make.left.equalTo(self.view.mas_left).with.offset(0);
     make.right.equalTo(self.view.mas_right).with.offset(0);
     make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
   }];
-    //[EmailService login];
+  
+  
+  UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 66, 28)];
+  centeredButtons.backgroundColor = [UIColor orangeColor];
+  
+  self.navigationItem.titleView = centeredButtons;
+  
+  UIButton *mailButton = [UIButton buttonWithType:UIButtonTypeCustom];
+  UIButton *filterButton = [UIButton buttonWithType:UIButtonTypeCustom];
+  
+  [mailButton addTarget:self action:@selector(mailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
+  mailButton.frame = CGRectMake(0, 0, 33, 28);
+  [mailButton setBackgroundImage:[UIImage imageNamed:@"Mail.png"] forState:UIControlStateNormal];
+  [centeredButtons addSubview:mailButton];
+  
+  [filterButton addTarget:self action:@selector(filterButtonSelected) forControlEvents:UIControlEventTouchUpInside];
+  filterButton.frame = CGRectMake(33, 0, 33, 28);
+  [filterButton setBackgroundImage:[UIImage imageNamed:@"Funnl.png"] forState:UIControlStateNormal];
+  [centeredButtons addSubview:filterButton];
+}
+
+-(void) mailButtonSelected{
+  NSLog(@"Mail button selected");
+  
+  [self filterSelected:nil];
+}
+
+-(void) filterButtonSelected{
+  NSLog(@"Filter button selected");
+  
+  filterView.hidden = YES;
+  mainView.hidden = NO;
 }
 
 - (void)didReceiveMemoryWarning
@@ -76,44 +91,33 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     // Dispose of any resources that can be recreated.
 }
 
-- (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section{
-  return [filterArray count];
-}
-
-- (NSInteger)numberOfSectionsInCollectionView: (UICollectionView *)collectionView{
-  return 1;
-}
-
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-  MainFilterCell *cell = (MainFilterCell *)[collectionView dequeueReusableCellWithReuseIdentifier:MAIN_FILTER_CELL forIndexPath:indexPath];
-  
-  cell.barColor = [UIColor yellowColor];
-  
-  FilterModel *fm = (FilterModel *)filterArray[indexPath.row];
-  
-  cell.barColor = fm.barColor;
-  cell.filterTitle = fm.filterTitle;
-  cell.newMessageCount = fm.newMessageCount;
-  cell.dateOfLastMessage = fm.dateOfLastMessage;
-  
-  return cell;
-}
-
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-  
-  if(indexPath.row==0){
-    return CGSizeMake((self.collectionView.frame.size.width-10), 160);
+-(void) filterSelected:(FilterModel *)filterModel{
+  if(filterModel!=nil){
+    currentFilterModel = filterModel;
   }
-  else{
-    return CGSizeMake((self.collectionView.frame.size.width-10)/2, 160);
+  
+  if(filterView==nil){
+    filterView = [[FilterView alloc]init];
+    filterView.mainVCdelegate = self;
+  
+    [self.view addSubview:filterView];
+  
+    [filterView mas_makeConstraints:^(MASConstraintMaker *make) {
+      make.top.equalTo(self.view.mas_top).with.offset(0);
+      make.left.equalTo(self.view.mas_left).with.offset(0);
+      make.right.equalTo(self.view.mas_right).with.offset(0);
+      make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
+    }];
   }
+
+  mainView.hidden = YES;
+  filterView.hidden = NO;
+  filterView.filterModel = currentFilterModel;
+  [filterView startLogin];  // TODO: (MSR) I'm guessing we don't want to call this again, may need to refactor retrieving of messages
 }
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-  FilterViewVC *vc = [[FilterViewVC alloc] init];
-  vc.filterModel = (FilterModel *)filterArray[indexPath.row];
-  
-  [self.navigationController pushViewController:vc animated:YES];
+-(void) pushViewController:(UIViewController *)viewController{
+  [self.navigationController pushViewController:viewController animated:YES];
 }
 
 - (BOOL)prefersStatusBarHidden{
