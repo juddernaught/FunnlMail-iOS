@@ -63,6 +63,8 @@
 		CC8C7ECF18E6F38100E76AE8 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = CC8C7EC418E6F38100E76AE8 /* NSLayoutConstraint+MASDebugAdditions.m */; };
 		CC8C7ED018E6F38100E76AE8 /* View+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = CC8C7EC618E6F38100E76AE8 /* View+MASAdditions.m */; };
 		CCC377A918E7113B004F7FC0 /* FilterModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC377A818E7113B004F7FC0 /* FilterModel.m */; };
+		CCD00B5118F54232007A675F /* FilterView.m in Sources */ = {isa = PBXBuildFile; fileRef = CCD00B5018F54232007A675F /* FilterView.m */; };
+		CCD00B5B18F54797007A675F /* MainView.m in Sources */ = {isa = PBXBuildFile; fileRef = CCD00B5A18F54797007A675F /* MainView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -166,6 +168,7 @@
 		66F2C49018E3293F00CD593E /* FunnlMailTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FunnlMailTests-Info.plist"; sourceTree = "<group>"; };
 		66F2C49218E3293F00CD593E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		66F2C49418E3293F00CD593E /* FunnlMailTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FunnlMailTests.m; sourceTree = "<group>"; };
+		CC1AD1DC18F54BE9000E356C /* MainVCDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainVCDelegate.h; path = viewcontrollers/MainVCDelegate.h; sourceTree = "<group>"; };
 		CC39517018E6F9700093C787 /* MainFilterCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainFilterCell.h; path = collectionviewcells/MainFilterCell.h; sourceTree = "<group>"; };
 		CC39517118E6F9700093C787 /* MainFilterCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainFilterCell.m; path = collectionviewcells/MainFilterCell.m; sourceTree = "<group>"; };
 		CC7F72F218E837C9008962C3 /* FilterViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FilterViewCell.h; path = tablecells/FilterViewCell.h; sourceTree = "<group>"; };
@@ -202,6 +205,10 @@
 		CC8C7EC718E6F38100E76AE8 /* View+MASShorthandAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "View+MASShorthandAdditions.h"; sourceTree = "<group>"; };
 		CCC377A718E7113B004F7FC0 /* FilterModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FilterModel.h; path = models/FilterModel.h; sourceTree = "<group>"; };
 		CCC377A818E7113B004F7FC0 /* FilterModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FilterModel.m; path = models/FilterModel.m; sourceTree = "<group>"; };
+		CCD00B4F18F54232007A675F /* FilterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FilterView.h; path = views/FilterView.h; sourceTree = "<group>"; };
+		CCD00B5018F54232007A675F /* FilterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FilterView.m; path = views/FilterView.m; sourceTree = "<group>"; };
+		CCD00B5918F54797007A675F /* MainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainView.h; path = views/MainView.h; sourceTree = "<group>"; };
+		CCD00B5A18F54797007A675F /* MainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainView.m; path = views/MainView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -358,6 +365,7 @@
 				CC39517318E710CC0093C787 /* models */,
 				CC8C7EB018E6F34D00E76AE8 /* external */,
 				CC8C7EAA18E6EF8600E76AE8 /* viewcontrollers */,
+				CCE45D8B18F5418C00C2BC64 /* views */,
 				CC8C7EAF18E6F1F400E76AE8 /* collectionviewcells */,
 				CC8C7EAE18E6F1DE00E76AE8 /* tablecells */,
 				66F2C47818E3293E00CD593E /* AppDelegate.h */,
@@ -420,6 +428,7 @@
 			children = (
 				CC8C7EAB18E6F1C100E76AE8 /* MainVC.h */,
 				CC8C7EAC18E6F1C100E76AE8 /* MainVC.m */,
+				CC1AD1DC18F54BE9000E356C /* MainVCDelegate.h */,
 				CC8A456018E834CD009FDBDB /* FilterViewVC.h */,
 				CC8A456118E834CD009FDBDB /* FilterViewVC.m */,
 				667787FF18EF768B00EF1962 /* MsgViewController.h */,
@@ -493,6 +502,17 @@
 				CC8A455B18E832B8009FDBDB /* UIColor+HexString.m */,
 			);
 			name = categories;
+			sourceTree = "<group>";
+		};
+		CCE45D8B18F5418C00C2BC64 /* views */ = {
+			isa = PBXGroup;
+			children = (
+				CCD00B5918F54797007A675F /* MainView.h */,
+				CCD00B5A18F54797007A675F /* MainView.m */,
+				CCD00B4F18F54232007A675F /* FilterView.h */,
+				CCD00B5018F54232007A675F /* FilterView.m */,
+			);
+			name = views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -660,6 +680,7 @@
 				CC8C7ECA18E6F38100E76AE8 /* MASConstraintMaker.m in Sources */,
 				CC8C7ED018E6F38100E76AE8 /* View+MASAdditions.m in Sources */,
 				6677881A18EF84FB00EF1962 /* MCOCIDURLProtocol.mm in Sources */,
+				CCD00B5B18F54797007A675F /* MainView.m in Sources */,
 				CC8C7EC918E6F38100E76AE8 /* MASConstraint.m in Sources */,
 				6677880118EF768B00EF1962 /* MsgViewController.mm in Sources */,
 				CC8C7EAD18E6F1C100E76AE8 /* MainVC.m in Sources */,
@@ -674,6 +695,7 @@
 				CC8A456218E834CD009FDBDB /* FilterViewVC.m in Sources */,
 				66F2C47A18E3293E00CD593E /* AppDelegate.m in Sources */,
 				CC8A455C18E832B8009FDBDB /* UIColor+HexString.m in Sources */,
+				CCD00B5118F54232007A675F /* FilterView.m in Sources */,
 				6677882718F0AEED00EF1962 /* main.mm in Sources */,
 				6677881718EF83F800EF1962 /* MCOMessageView.mm in Sources */,
 				CC39517218E6F9700093C787 /* MainFilterCell.m in Sources */,
