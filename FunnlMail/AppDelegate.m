@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "MainVC.h"
+#import "LoginViewController.h"
 
 @implementation AppDelegate
 
@@ -16,7 +16,7 @@
     //FunnlViewController *fvc = [[FunnlViewController alloc] init];
     //self.window.rootViewController = fvc;
   
-    MainVC *vc = [[MainVC alloc]init];
+    LoginViewController *vc = [[LoginViewController alloc]init];
   
     UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:vc];
 

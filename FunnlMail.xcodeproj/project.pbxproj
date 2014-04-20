@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		660BA98E1902CDEA00CDF86E /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 660BA98D1902CDEA00CDF86E /* LoginViewController.m */; };
 		6620BA8018E32FD700769C48 /* Files.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA7C18E32FD700769C48 /* Files.png */; };
 		6620BA8118E32FD700769C48 /* Meetings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA7D18E32FD700769C48 /* Meetings.png */; };
 		6620BA8218E32FD700769C48 /* Payments.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA7E18E32FD700769C48 /* Payments.png */; };
@@ -120,6 +121,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		660BA98C1902CDEA00CDF86E /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = viewcontrollers/LoginViewController.h; sourceTree = "<group>"; };
+		660BA98D1902CDEA00CDF86E /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = viewcontrollers/LoginViewController.m; sourceTree = "<group>"; };
 		6620BA7C18E32FD700769C48 /* Files.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Files.png; sourceTree = "<group>"; };
 		6620BA7D18E32FD700769C48 /* Meetings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Meetings.png; sourceTree = "<group>"; };
 		6620BA7E18E32FD700769C48 /* Payments.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Payments.png; sourceTree = "<group>"; };
@@ -428,6 +431,8 @@
 			children = (
 				CC8C7EAB18E6F1C100E76AE8 /* MainVC.h */,
 				CC8C7EAC18E6F1C100E76AE8 /* MainVC.m */,
+				660BA98C1902CDEA00CDF86E /* LoginViewController.h */,
+				660BA98D1902CDEA00CDF86E /* LoginViewController.m */,
 				CC1AD1DC18F54BE9000E356C /* MainVCDelegate.h */,
 				CC8A456018E834CD009FDBDB /* FilterViewVC.h */,
 				CC8A456118E834CD009FDBDB /* FilterViewVC.m */,
@@ -679,6 +684,7 @@
 				CC8C7ECD18E6F38100E76AE8 /* MASViewConstraint.m in Sources */,
 				CC8C7ECA18E6F38100E76AE8 /* MASConstraintMaker.m in Sources */,
 				CC8C7ED018E6F38100E76AE8 /* View+MASAdditions.m in Sources */,
+				660BA98E1902CDEA00CDF86E /* LoginViewController.m in Sources */,
 				6677881A18EF84FB00EF1962 /* MCOCIDURLProtocol.mm in Sources */,
 				CCD00B5B18F54797007A675F /* MainView.m in Sources */,
 				CC8C7EC918E6F38100E76AE8 /* MASConstraint.m in Sources */,
