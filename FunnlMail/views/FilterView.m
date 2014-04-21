@@ -13,6 +13,7 @@
 #import <MailCore/MailCore.h>
 #import "EmailCell.h"
 #import "MsgViewController.h"
+#import "KeychainItemWrapper.h"
 
 static NSString *FILTER_VIEW_CELL = @"FilterViewCell";
 
@@ -141,8 +142,11 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
 - (void) startLogin
 {
-	NSString *username = @"funnlmailapp";
-	NSString *password = @"funnlmail";
+    KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"UserLoginInfo" accessGroup:nil];
+
+    
+    NSString *username = [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
+	NSString *password = [keychainItem objectForKey:(__bridge id)(kSecAttrService)];
 	NSString *hostname = @"imap.gmail.com";
   
   /* if (!username.length || !password.length) {

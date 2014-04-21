@@ -10,4 +10,8 @@
 
 @interface LoginViewController : UIViewController
 
+@property (nonatomic, retain) UITextField *username;
+@property (nonatomic, retain) UITextField *password;
+
+
 @end

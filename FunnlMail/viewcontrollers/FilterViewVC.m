@@ -10,7 +10,7 @@
 #import "FilterViewCell.h"
 #import "View+MASAdditions.h"
 #import "FilterModel.h"
-
+#import "KeychainItemWrapper.h"
 
 
 static NSString *FILTER_VIEW_CELL = @"FilterViewCell";
@@ -164,9 +164,14 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
 - (void) startLogin
 {
-	NSString *username = @"funnlmailapp";
-	NSString *password = @"funnlmail";
-	NSString *hostname = @"imap.gmail.com";
+    KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"UserLoginInfo" accessGroup:nil];
+
+    NSString *username = [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
+	NSString *password = [keychainItem objectForKey:(__bridge id)(kSecValueData)];
+    NSLog(@"here");
+    NSLog(username);
+    NSLog(password);
+    NSString *hostname = @"imap.gmail.com";
     
    /* if (!username.length || !password.length) {
         [self performSelector:@selector(showSettingsViewController:) withObject:nil afterDelay:0.5];

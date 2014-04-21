@@ -36,6 +36,7 @@
 		6677881C18F0797800EF1962 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6677881B18F0797800EF1962 /* ImageIO.framework */; };
 		6677882518F0ADBB00EF1962 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6677882418F0ADBB00EF1962 /* SystemConfiguration.framework */; };
 		6677882718F0AEED00EF1962 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6677882618F0AEED00EF1962 /* main.mm */; };
+		66E669751904431E003F9305 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E669741904431E003F9305 /* KeychainItemWrapper.m */; };
 		66F2C46A18E3293E00CD593E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C46918E3293E00CD593E /* Foundation.framework */; };
 		66F2C46C18E3293E00CD593E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C46B18E3293E00CD593E /* CoreGraphics.framework */; };
 		66F2C46E18E3293E00CD593E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C46D18E3293E00CD593E /* UIKit.framework */; };
@@ -155,6 +156,8 @@
 		6677881B18F0797800EF1962 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		6677882418F0ADBB00EF1962 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		6677882618F0AEED00EF1962 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
+		66E669731904431E003F9305 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
+		66E669741904431E003F9305 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		66F2C46618E3293E00CD593E /* FunnlMail.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FunnlMail.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66F2C46918E3293E00CD593E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		66F2C46B18E3293E00CD593E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -323,6 +326,15 @@
 			name = MailCore;
 			sourceTree = "<group>";
 		};
+		66E6697A1904432B003F9305 /* KeychainItemWrapper */ = {
+			isa = PBXGroup;
+			children = (
+				66E669731904431E003F9305 /* KeychainItemWrapper.h */,
+				66E669741904431E003F9305 /* KeychainItemWrapper.m */,
+			);
+			name = KeychainItemWrapper;
+			sourceTree = "<group>";
+		};
 		66F2C45D18E3293E00CD593E = {
 			isa = PBXGroup;
 			children = (
@@ -465,6 +477,7 @@
 		CC8C7EB018E6F34D00E76AE8 /* external */ = {
 			isa = PBXGroup;
 			children = (
+				66E6697A1904432B003F9305 /* KeychainItemWrapper */,
 				6677882818F1F3C900EF1962 /* MailCore */,
 				CC8C7EB118E6F35400E76AE8 /* Masonry */,
 			);
@@ -694,6 +707,7 @@
 				CCC377A918E7113B004F7FC0 /* FilterModel.m in Sources */,
 				CC8C7ECF18E6F38100E76AE8 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
 				CC8C7EC818E6F38100E76AE8 /* MASCompositeConstraint.m in Sources */,
+				66E669751904431E003F9305 /* KeychainItemWrapper.m in Sources */,
 				6677880C18EF80BF00EF1962 /* EmailCell.m in Sources */,
 				CC7F72F418E837C9008962C3 /* FilterViewCell.m in Sources */,
 				CC8C7ECB18E6F38100E76AE8 /* MASLayoutConstraint.m in Sources */,

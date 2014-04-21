@@ -10,6 +10,7 @@
 #import "FilterModel.h"
 #import "MainVCDelegate.h"
 
+
 @interface FilterView : UIView<UITableViewDataSource, UITableViewDelegate>{
   UIView *filterNavigationView;
   UILabel *filterLabel;
