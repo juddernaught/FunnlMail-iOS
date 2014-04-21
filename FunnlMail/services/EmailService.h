@@ -12,6 +12,8 @@
 
 +(EmailService *)instance;
 +(NSArray *) currentFilters;
-+(void) login;
+- (void)loadLastNMessages:(NSUInteger)nMessages;
+- (void) startLogin;
+
 
 @end

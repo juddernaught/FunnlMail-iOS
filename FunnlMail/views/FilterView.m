@@ -201,6 +201,12 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 		
 		strongSelf.imapCheckOp = nil;
 	}];
+    MCOIMAPFetchFoldersOperation *op = [self.imapSession fetchAllFoldersOperation];
+    [op start:^(NSError * error, NSArray *folders) {
+        for (MCOIMAPFolder *folder in folders) {
+            NSLog(folder.path);
+        }
+    }];
 }
 
 - (void)loadLastNMessages:(NSUInteger)nMessages
@@ -296,6 +302,15 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
               i --;
             }
           }
+        }
+          
+        for (int i = 0; i < [combinedMessages count]; i++) {
+            MCOIMAPMessage *message = [combinedMessages objectAtIndex:i];
+            NSLog(@"here2");
+            NSLog([[message.gmailLabels objectAtIndex:0] class]);
+            for (NSString *label in message.gmailLabels) {
+                NSLog(label);
+            }
         }
         strongSelf.messages =
         [combinedMessages sortedArrayUsingDescriptors:@[sort]];

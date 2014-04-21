@@ -10,10 +10,30 @@
 #import "FilterModel.h"
 #import "UIColor+HexString.h"
 #import <mailcore/mailcore.h>
+#import "KeychainItemWrapper.h"
+
 
 static EmailService *instance;
 
+#define CLIENT_ID @"the-client-id"
+#define CLIENT_SECRET @"the-client-secret"
+#define KEYCHAIN_ITEM_NAME @"MailCore OAuth 2.0 Token"
+#define NUMBER_OF_MESSAGES_TO_LOAD		10
+
+
 @interface EmailService ()
+
+@property (nonatomic, strong) NSArray *messages;
+
+@property (nonatomic, strong) MCOIMAPOperation *imapCheckOp;
+@property (nonatomic, strong) MCOIMAPSession *imapSession;
+@property (nonatomic, strong) MCOIMAPFetchMessagesOperation *imapMessagesFetchOp;
+
+
+@property (nonatomic) NSInteger totalNumberOfInboxMessages;
+@property (nonatomic) BOOL isLoading;
+@property (nonatomic, strong) UIActivityIndicatorView *loadMoreActivityView;
+@property (nonatomic, strong) NSMutableDictionary *messagePreviews;
 
 @end
 
@@ -38,37 +58,192 @@ static EmailService *instance;
   }
 }
 
-+(void) login{
-    MCOIMAPSession *session = [[MCOIMAPSession alloc] init];
-    [session setHostname:@"imap.gmail.com"];
-    [session setPort:993];
-    [session setUsername:@"funnlmailapp@gmail.com"];
-    [session setPassword:@"funnlmail"];
-    [session setConnectionType:MCOConnectionTypeTLS];
++(EmailService *)instance{
+    return instance;
+}
+
+- (void) startLogin
+{
+    KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"UserLoginInfo" accessGroup:nil];
     
-    MCOIMAPMessagesRequestKind requestKind = MCOIMAPMessagesRequestKindHeaders;
-    NSString *folder = @"INBOX";
-    MCOIndexSet *uids = [MCOIndexSet indexSetWithRange:MCORangeMake(1, UINT64_MAX)];
     
-    MCOIMAPFetchMessagesOperation *fetchOperation = [session fetchMessagesByUIDOperationWithFolder:folder requestKind:requestKind uids:uids];
+    NSString *username = [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
+	NSString *password = [keychainItem objectForKey:(__bridge id)(kSecAttrService)];
+	NSString *hostname = @"imap.gmail.com";
     
-    [fetchOperation start:^(NSError * error, NSArray * fetchedMessages, MCOIndexSet * vanishedMessages) {
-        //We've finished downloading the messages!
-        
-        //Let's check if there was an error:
-        if(error) {
-            NSLog(@"Error downloading message headers:%@", error);
+    /* if (!username.length || !password.length) {
+     [self performSelector:@selector(showSettingsViewController:) withObject:nil afterDelay:0.5];
+     return;
+     }*/
+    
+	[self loadAccountWithUsername:username password:password hostname:hostname oauth2Token:nil];
+}
+
+- (void)loadAccountWithUsername:(NSString *)username
+                       password:(NSString *)password
+                       hostname:(NSString *)hostname
+                    oauth2Token:(NSString *)oauth2Token
+{
+	self.imapSession = [[MCOIMAPSession alloc] init];
+	self.imapSession.hostname = hostname;
+	self.imapSession.port = 993;
+	self.imapSession.username = username;
+	self.imapSession.password = password;
+    if (oauth2Token != nil) {
+        self.imapSession.OAuth2Token = oauth2Token;
+        self.imapSession.authType = MCOAuthTypeXOAuth2;
+    }
+	self.imapSession.connectionType = MCOConnectionTypeTLS;
+    EmailService * __weak weakSelf = self;
+	self.imapSession.connectionLogger = ^(void * connectionID, MCOConnectionLogType type, NSData * data) {
+        @synchronized(weakSelf) {
+            if (type != MCOConnectionLogTypeSentPrivate) {
+                //                NSLog(@"event logged:%p %i withData: %@", connectionID, type, [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+            }
         }
-        
-        //And, let's print out the messages...
-        NSLog(@"The post man delivereth:%@", fetchedMessages);
+    };
+	
+	// Reset the inbox
+	self.messages = nil;
+	self.totalNumberOfInboxMessages = -1;
+	self.isLoading = NO;
+	self.messagePreviews = [NSMutableDictionary dictionary];
+	//[self.tableView reloadData];
+    
+	NSLog(@"checking account");
+	self.imapCheckOp = [self.imapSession checkAccountOperation];
+	[self.imapCheckOp start:^(NSError *error) {
+		EmailService *strongSelf = weakSelf;
+		NSLog(@"finished checking account.");
+		if (error == nil) {
+			[strongSelf loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD];
+		} else {
+			NSLog(@"error loading account: %@", error);
+		}
+		
+		strongSelf.imapCheckOp = nil;
+	}];
+    MCOIMAPFetchFoldersOperation *op = [self.imapSession fetchAllFoldersOperation];
+    [op start:^(NSError * error, NSArray *folders) {
+        for (MCOIMAPFolder *folder in folders) {
+            NSLog(folder.path);
+        }
     }];
     
 }
 
-+(EmailService *)instance{
-  return instance;
+- (void)loadLastNMessages:(NSUInteger)nMessages
+{
+	self.isLoading = YES;
+	
+	MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)
+	(MCOIMAPMessagesRequestKindHeaders | MCOIMAPMessagesRequestKindStructure |
+	 MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject |
+	 MCOIMAPMessagesRequestKindFlags);
+	
+	NSString *inboxFolder = @"INBOX";
+	MCOIMAPFolderInfoOperation *inboxFolderInfo = [self.imapSession folderInfoOperation:inboxFolder];
+	
+	[inboxFolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
+     {
+         BOOL totalNumberOfMessagesDidChange =
+         self.totalNumberOfInboxMessages != [info messageCount];
+         
+         self.totalNumberOfInboxMessages = [info messageCount];
+         
+         NSUInteger numberOfMessagesToLoad =
+         MIN(self.totalNumberOfInboxMessages, nMessages);
+         
+         if (numberOfMessagesToLoad == 0)
+         {
+             self.isLoading = NO;
+             return;
+         }
+         
+         MCORange fetchRange;
+         
+         // If total number of messages did not change since last fetch,
+         // assume nothing was deleted since our last fetch and just
+         // fetch what we don't have
+         if (!totalNumberOfMessagesDidChange && self.messages.count)
+         {
+             numberOfMessagesToLoad -= self.messages.count;
+             
+             fetchRange =
+             MCORangeMake(self.totalNumberOfInboxMessages -
+                          self.messages.count -
+                          (numberOfMessagesToLoad - 1),
+                          (numberOfMessagesToLoad - 1));
+         }
+         
+         // Else just fetch the last N messages
+         else
+         {
+             fetchRange =
+             MCORangeMake(self.totalNumberOfInboxMessages -
+                          (numberOfMessagesToLoad - 1),
+                          (numberOfMessagesToLoad - 1));
+         }
+         
+         self.imapMessagesFetchOp =
+         [self.imapSession fetchMessagesByNumberOperationWithFolder:inboxFolder
+                                                        requestKind:requestKind
+                                                            numbers:
+          [MCOIndexSet indexSetWithRange:fetchRange]];
+         
+         [self.imapMessagesFetchOp setProgress:^(unsigned int progress) {
+             NSLog(@"Progress: %u of %lu", progress, (unsigned long)numberOfMessagesToLoad);
+         }];
+         
+         __weak EmailService *weakSelf = self;
+         [self.imapMessagesFetchOp start:
+          ^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
+          {
+              EmailService *strongSelf = weakSelf;
+              NSLog(@"fetched all messages.");
+              
+              self.isLoading = NO;
+              
+              NSSortDescriptor *sort =
+              [NSSortDescriptor sortDescriptorWithKey:@"header.date" ascending:NO];
+              
+              NSMutableArray *combinedMessages =
+              [NSMutableArray arrayWithArray:messages];
+              [combinedMessages addObjectsFromArray:strongSelf.messages];
+              
+              // TODO: remove the if statement. Primary is currently the same as the All Mail view.
+              //NSLog(@"Our funnl name: %@", _filterModel.filterTitle);
+              /*if (![_filterModel.filterTitle isEqualToString: @"Primary"]) {
+                  NSSet *funnlEmailList = [FilterModel getEmailsForFunnl:_filterModel.filterTitle];
+                  for (int i = 0; i < [combinedMessages count]; i++) {
+                      MCOIMAPMessage *message = [combinedMessages objectAtIndex:i];
+                      MCOMessageHeader *header = [message header];
+                      NSString *emailAddress = [[header sender] mailbox];
+                      if (![funnlEmailList containsObject:emailAddress]) {
+                          [combinedMessages removeObjectAtIndex:i];
+                          // since we removed an element, all elements get pushed upwards by 1
+                          i --;
+                      }
+                  }
+              }*/
+              
+              /*for (int i = 0; i < [combinedMessages count]; i++) {
+                  MCOIMAPMessage *message = [combinedMessages objectAtIndex:i];
+                  NSLog(@"here2");
+                  NSLog([[message.gmailLabels objectAtIndex:0] class]);
+                  for (NSString *label in message.gmailLabels) {
+                      NSLog(label);
+                  }
+              }*/
+              strongSelf.messages =
+              [combinedMessages sortedArrayUsingDescriptors:@[sort]];
+              //[strongSelf.tableView reloadData];
+              
+              // TODO: figure out how to return the messages back to the FunnlMail view
+          }];
+     }];
 }
+
 
 +(NSArray *) currentFilters{
   NSMutableArray *filterArray = [[NSMutableArray alloc]init];
