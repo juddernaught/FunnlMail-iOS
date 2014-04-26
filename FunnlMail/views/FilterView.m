@@ -312,11 +312,22 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 NSLog(label);
             }
         }
-        strongSelf.messages =
-        [combinedMessages sortedArrayUsingDescriptors:@[sort]];
-        [strongSelf.tableView reloadData];
+        
+        //strongSelf.messages =
+        //[combinedMessages sortedArrayUsingDescriptors:@[sort]];
+        //[strongSelf.tableView reloadData];
+        
+        //
+        // call this showMessage selector on the main thread
+        //
+        [self performSelectorOnMainThread:@selector(showNewMessage:) withObject:[combinedMessages sortedArrayUsingDescriptors:@[sort]] waitUntilDone:NO];
       }];
    }];
+}
+
+-(void) showNewMessage:(NSArray *)messageArray{
+  self.messages = messageArray;
+  [self.tableView reloadData];
 }
 
 #pragma mark - Table View
