@@ -66,7 +66,6 @@ static EmailService *instance;
 {
     KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"UserLoginInfo" accessGroup:nil];
     
-    
     NSString *username = [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
 	NSString *password = [keychainItem objectForKey:(__bridge id)(kSecAttrService)];
 	NSString *hostname = @"imap.gmail.com";
