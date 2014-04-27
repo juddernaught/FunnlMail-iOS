@@ -11,6 +11,7 @@
 #import "UIColor+HexString.h"
 #import <mailcore/mailcore.h>
 #import "KeychainItemWrapper.h"
+#import "FilterView.h"
 
 
 static EmailService *instance;
@@ -25,9 +26,7 @@ static EmailService *instance;
 
 @property (nonatomic, strong) NSArray *messages;
 
-@property (nonatomic, strong) MCOIMAPOperation *imapCheckOp;
-@property (nonatomic, strong) MCOIMAPSession *imapSession;
-@property (nonatomic, strong) MCOIMAPFetchMessagesOperation *imapMessagesFetchOp;
+
 
 
 @property (nonatomic) NSInteger totalNumberOfInboxMessages;
@@ -41,28 +40,28 @@ static EmailService *instance;
 
 - (id)init
 {
-  self = [super init];
-  if (self) {
-    // Initialization code
-  }
-  return self;
+    self = [super init];
+    if (self) {
+        // Initialization code
+    }
+    return self;
 }
 
 + (void)initialize
 {
-  static BOOL initialized = NO;
-  if(!initialized)
-  {
-    initialized = YES;
-    instance = [[EmailService alloc] init];
-  }
+    static BOOL initialized = NO;
+    if(!initialized)
+    {
+        initialized = YES;
+        instance = [[EmailService alloc] init];
+    }
 }
 
 +(EmailService *)instance{
     return instance;
 }
 
-- (void) startLogin
+- (void) startLogin : (FilterView *) fv
 {
     KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"UserLoginInfo" accessGroup:nil];
     
@@ -75,13 +74,14 @@ static EmailService *instance;
      return;
      }*/
     
-	[self loadAccountWithUsername:username password:password hostname:hostname oauth2Token:nil];
+	[self loadAccountWithUsername:username password:password hostname:hostname oauth2Token:nil filterview: fv];
 }
 
 - (void)loadAccountWithUsername:(NSString *)username
                        password:(NSString *)password
                        hostname:(NSString *)hostname
                     oauth2Token:(NSString *)oauth2Token
+                     filterview:(FilterView *) fv
 {
 	self.imapSession = [[MCOIMAPSession alloc] init];
 	self.imapSession.hostname = hostname;
@@ -103,11 +103,11 @@ static EmailService *instance;
     };
 	
 	// Reset the inbox
-	self.messages = nil;
-	self.totalNumberOfInboxMessages = -1;
+	fv.messages = nil;
+	fv.totalNumberOfInboxMessages = -1;
 	self.isLoading = NO;
-	self.messagePreviews = [NSMutableDictionary dictionary];
-	//[self.tableView reloadData];
+	fv.messagePreviews = [NSMutableDictionary dictionary];
+	[fv.tableView reloadData];
     
 	NSLog(@"checking account");
 	self.imapCheckOp = [self.imapSession checkAccountOperation];
@@ -115,7 +115,7 @@ static EmailService *instance;
 		EmailService *strongSelf = weakSelf;
 		NSLog(@"finished checking account.");
 		if (error == nil) {
-			[strongSelf loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD];
+			[strongSelf loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD : fv];
 		} else {
 			NSLog(@"error loading account: %@", error);
 		}
@@ -131,7 +131,7 @@ static EmailService *instance;
     
 }
 
-- (void)loadLastNMessages:(NSUInteger)nMessages
+- (void)loadLastNMessages:(NSUInteger)nMessages : (FilterView *) fv
 {
 	self.isLoading = YES;
 	
@@ -146,12 +146,12 @@ static EmailService *instance;
 	[inboxFolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
      {
          BOOL totalNumberOfMessagesDidChange =
-         self.totalNumberOfInboxMessages != [info messageCount];
+         fv.totalNumberOfInboxMessages != [info messageCount];
          
-         self.totalNumberOfInboxMessages = [info messageCount];
+         fv.totalNumberOfInboxMessages = [info messageCount];
          
          NSUInteger numberOfMessagesToLoad =
-         MIN(self.totalNumberOfInboxMessages, nMessages);
+         MIN(fv.totalNumberOfInboxMessages, nMessages);
          
          if (numberOfMessagesToLoad == 0)
          {
@@ -164,13 +164,13 @@ static EmailService *instance;
          // If total number of messages did not change since last fetch,
          // assume nothing was deleted since our last fetch and just
          // fetch what we don't have
-         if (!totalNumberOfMessagesDidChange && self.messages.count)
+         if (!totalNumberOfMessagesDidChange && fv.messages.count)
          {
-             numberOfMessagesToLoad -= self.messages.count;
+             numberOfMessagesToLoad -= fv.messages.count;
              
              fetchRange =
-             MCORangeMake(self.totalNumberOfInboxMessages -
-                          self.messages.count -
+             MCORangeMake(fv.totalNumberOfInboxMessages -
+                          fv.messages.count -
                           (numberOfMessagesToLoad - 1),
                           (numberOfMessagesToLoad - 1));
          }
@@ -179,7 +179,7 @@ static EmailService *instance;
          else
          {
              fetchRange =
-             MCORangeMake(self.totalNumberOfInboxMessages -
+             MCORangeMake(fv.totalNumberOfInboxMessages -
                           (numberOfMessagesToLoad - 1),
                           (numberOfMessagesToLoad - 1));
          }
@@ -208,35 +208,35 @@ static EmailService *instance;
               
               NSMutableArray *combinedMessages =
               [NSMutableArray arrayWithArray:messages];
-              [combinedMessages addObjectsFromArray:strongSelf.messages];
+              [combinedMessages addObjectsFromArray:fv.messages];
               
               // TODO: remove the if statement. Primary is currently the same as the All Mail view.
               //NSLog(@"Our funnl name: %@", _filterModel.filterTitle);
               /*if (![_filterModel.filterTitle isEqualToString: @"Primary"]) {
-                  NSSet *funnlEmailList = [FilterModel getEmailsForFunnl:_filterModel.filterTitle];
-                  for (int i = 0; i < [combinedMessages count]; i++) {
-                      MCOIMAPMessage *message = [combinedMessages objectAtIndex:i];
-                      MCOMessageHeader *header = [message header];
-                      NSString *emailAddress = [[header sender] mailbox];
-                      if (![funnlEmailList containsObject:emailAddress]) {
-                          [combinedMessages removeObjectAtIndex:i];
-                          // since we removed an element, all elements get pushed upwards by 1
-                          i --;
-                      }
-                  }
-              }*/
+               NSSet *funnlEmailList = [FilterModel getEmailsForFunnl:_filterModel.filterTitle];
+               for (int i = 0; i < [combinedMessages count]; i++) {
+               MCOIMAPMessage *message = [combinedMessages objectAtIndex:i];
+               MCOMessageHeader *header = [message header];
+               NSString *emailAddress = [[header sender] mailbox];
+               if (![funnlEmailList containsObject:emailAddress]) {
+               [combinedMessages removeObjectAtIndex:i];
+               // since we removed an element, all elements get pushed upwards by 1
+               i --;
+               }
+               }
+               }*/
               
               /*for (int i = 0; i < [combinedMessages count]; i++) {
-                  MCOIMAPMessage *message = [combinedMessages objectAtIndex:i];
-                  NSLog(@"here2");
-                  NSLog([[message.gmailLabels objectAtIndex:0] class]);
-                  for (NSString *label in message.gmailLabels) {
-                      NSLog(label);
-                  }
-              }*/
-              strongSelf.messages =
+               MCOIMAPMessage *message = [combinedMessages objectAtIndex:i];
+               NSLog(@"here2");
+               NSLog([[message.gmailLabels objectAtIndex:0] class]);
+               for (NSString *label in message.gmailLabels) {
+               NSLog(label);
+               }
+               }*/
+              fv.messages =
               [combinedMessages sortedArrayUsingDescriptors:@[sort]];
-              //[strongSelf.tableView reloadData];
+              [fv.tableView reloadData];
               
               // TODO: figure out how to return the messages back to the FunnlMail view
           }];
@@ -245,25 +245,25 @@ static EmailService *instance;
 
 
 +(NSArray *) currentFilters{
-  NSMutableArray *filterArray = [[NSMutableArray alloc]init];
-  
-  //
-  // Hardcoded, should come from the data store (i.e. sqlite)
-  //
-  
-  //
-  // created inital hardcoded list of filters
-  //
-  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#2EB82E"] filterTitle:@"Primary" newMessageCount:16 dateOfLastMessage:[NSDate new]]];
-  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#FF85FF"] filterTitle:@"Meetings" newMessageCount:5 dateOfLastMessage:[NSDate new]]];
-  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#FFB84D"] filterTitle:@"Files" newMessageCount:24 dateOfLastMessage:[NSDate new]]];
-  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#AD5CFF"] filterTitle:@"Payments" newMessageCount:6 dateOfLastMessage:[NSDate new]]];
-  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#33ADFF"] filterTitle:@"FunnlMail" newMessageCount:24 dateOfLastMessage:[NSDate new]]];
+    NSMutableArray *filterArray = [[NSMutableArray alloc]init];
+    
+    //
+    // Hardcoded, should come from the data store (i.e. sqlite)
+    //
+    
+    //
+    // created inital hardcoded list of filters
+    //
+    [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#2EB82E"] filterTitle:@"Primary" newMessageCount:16 dateOfLastMessage:[NSDate new]]];
+    [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#FF85FF"] filterTitle:@"Meetings" newMessageCount:5 dateOfLastMessage:[NSDate new]]];
+    [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#FFB84D"] filterTitle:@"Files" newMessageCount:24 dateOfLastMessage:[NSDate new]]];
+    [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#AD5CFF"] filterTitle:@"Payments" newMessageCount:6 dateOfLastMessage:[NSDate new]]];
+    [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#33ADFF"] filterTitle:@"FunnlMail" newMessageCount:24 dateOfLastMessage:[NSDate new]]];
     //[filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#33ADFF"] filterTitle:@"Travel" newMessageCount:24 dateOfLastMessage:[NSDate new]]];
-  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#85E085"] filterTitle:@"News" newMessageCount:12 dateOfLastMessage:[NSDate new]]];
-  [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#B84D70"] filterTitle:@"Forums" newMessageCount:5 dateOfLastMessage:[NSDate new]]];
-  
-  return filterArray;
+    [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#85E085"] filterTitle:@"News" newMessageCount:12 dateOfLastMessage:[NSDate new]]];
+    [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#B84D70"] filterTitle:@"Forums" newMessageCount:5 dateOfLastMessage:[NSDate new]]];
+    
+    return filterArray;
 }
 
 @end

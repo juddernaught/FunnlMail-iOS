@@ -113,7 +113,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
   mainView.hidden = YES;
   filterView.hidden = NO;
   filterView.filterModel = currentFilterModel;
-  [filterView startLogin];  // TODO: (MSR) I'm guessing we don't want to call this again, may need to refactor retrieving of messages
+  //[filterView startLogin];  // TODO: (MSR) I'm guessing we don't want to call this again, may need to refactor retrieving of messages
 }
 
 -(void) pushViewController:(UIViewController *)viewController{

@@ -7,13 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FilterView.h"
+#import <mailcore/mailcore.h>
 
 @interface EmailService : NSObject
 
 +(EmailService *)instance;
 +(NSArray *) currentFilters;
-- (void)loadLastNMessages:(NSUInteger)nMessages;
-- (void) startLogin;
+- (void)loadLastNMessages:(NSUInteger)nMessages : (FilterView *) fv;
+- (void) startLogin :(FilterView *) fv;
 
+
+@property (nonatomic, strong) MCOIMAPOperation *imapCheckOp;
+@property (nonatomic, strong) MCOIMAPSession *imapSession;
+@property (nonatomic, strong) MCOIMAPFetchMessagesOperation *imapMessagesFetchOp;
 
 @end
