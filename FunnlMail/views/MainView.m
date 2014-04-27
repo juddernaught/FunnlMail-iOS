@@ -64,7 +64,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
   [self.collectionView registerClass:[MainFilterCell class] forCellWithReuseIdentifier:MAIN_FILTER_CELL];
   
   [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-    make.top.equalTo(self.mas_top).with.offset(0);
+    make.top.equalTo(self.mas_top).with.offset(44);
     make.left.equalTo(self.mas_left).with.offset(0);
     make.right.equalTo(self.mas_right).with.offset(0);
     make.bottom.equalTo(self.mas_bottom).with.offset(0);

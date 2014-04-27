@@ -53,7 +53,6 @@
 		CC7F72F418E837C9008962C3 /* FilterViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CC7F72F318E837C9008962C3 /* FilterViewCell.m */; };
 		CC7F72F818E83925008962C3 /* EmailService.m in Sources */ = {isa = PBXBuildFile; fileRef = CC7F72F618E83925008962C3 /* EmailService.m */; };
 		CC8A455C18E832B8009FDBDB /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = CC8A455B18E832B8009FDBDB /* UIColor+HexString.m */; };
-		CC8A456218E834CD009FDBDB /* FilterViewVC.m in Sources */ = {isa = PBXBuildFile; fileRef = CC8A456118E834CD009FDBDB /* FilterViewVC.m */; };
 		CC8C7EAD18E6F1C100E76AE8 /* MainVC.m in Sources */ = {isa = PBXBuildFile; fileRef = CC8C7EAC18E6F1C100E76AE8 /* MainVC.m */; };
 		CC8C7EC818E6F38100E76AE8 /* MASCompositeConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = CC8C7EB318E6F38100E76AE8 /* MASCompositeConstraint.m */; };
 		CC8C7EC918E6F38100E76AE8 /* MASConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = CC8C7EB518E6F38100E76AE8 /* MASConstraint.m */; };
@@ -183,8 +182,6 @@
 		CC7F72F718E83925008962C3 /* EmailService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmailService.h; path = services/EmailService.h; sourceTree = "<group>"; };
 		CC8A455A18E832B8009FDBDB /* UIColor+HexString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+HexString.h"; path = "categories/UIColor+HexString.h"; sourceTree = "<group>"; };
 		CC8A455B18E832B8009FDBDB /* UIColor+HexString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+HexString.m"; path = "categories/UIColor+HexString.m"; sourceTree = "<group>"; };
-		CC8A456018E834CD009FDBDB /* FilterViewVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FilterViewVC.h; path = viewcontrollers/FilterViewVC.h; sourceTree = "<group>"; };
-		CC8A456118E834CD009FDBDB /* FilterViewVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FilterViewVC.m; path = viewcontrollers/FilterViewVC.m; sourceTree = "<group>"; };
 		CC8C7EAB18E6F1C100E76AE8 /* MainVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainVC.h; path = viewcontrollers/MainVC.h; sourceTree = "<group>"; };
 		CC8C7EAC18E6F1C100E76AE8 /* MainVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainVC.m; path = viewcontrollers/MainVC.m; sourceTree = "<group>"; };
 		CC8C7EB218E6F38100E76AE8 /* MASCompositeConstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MASCompositeConstraint.h; sourceTree = "<group>"; };
@@ -446,8 +443,6 @@
 				660BA98C1902CDEA00CDF86E /* LoginViewController.h */,
 				660BA98D1902CDEA00CDF86E /* LoginViewController.m */,
 				CC1AD1DC18F54BE9000E356C /* MainVCDelegate.h */,
-				CC8A456018E834CD009FDBDB /* FilterViewVC.h */,
-				CC8A456118E834CD009FDBDB /* FilterViewVC.m */,
 				667787FF18EF768B00EF1962 /* MsgViewController.h */,
 				6677880018EF768B00EF1962 /* MsgViewController.mm */,
 			);
@@ -712,7 +707,6 @@
 				CC7F72F418E837C9008962C3 /* FilterViewCell.m in Sources */,
 				CC8C7ECB18E6F38100E76AE8 /* MASLayoutConstraint.m in Sources */,
 				CC7F72F818E83925008962C3 /* EmailService.m in Sources */,
-				CC8A456218E834CD009FDBDB /* FilterViewVC.m in Sources */,
 				66F2C47A18E3293E00CD593E /* AppDelegate.m in Sources */,
 				CC8A455C18E832B8009FDBDB /* UIColor+HexString.m in Sources */,
 				CCD00B5118F54232007A675F /* FilterView.m in Sources */,

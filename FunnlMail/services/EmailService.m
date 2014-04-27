@@ -24,15 +24,8 @@ static EmailService *instance;
 
 @interface EmailService ()
 
-@property (nonatomic, strong) NSArray *messages;
-
-
-
-
-@property (nonatomic) NSInteger totalNumberOfInboxMessages;
 @property (nonatomic) BOOL isLoading;
 @property (nonatomic, strong) UIActivityIndicatorView *loadMoreActivityView;
-@property (nonatomic, strong) NSMutableDictionary *messagePreviews;
 
 @end
 
@@ -103,10 +96,10 @@ static EmailService *instance;
     };
 	
 	// Reset the inbox
-	fv.messages = nil;
-	fv.totalNumberOfInboxMessages = -1;
+	self.messages = nil;
+	self.totalNumberOfInboxMessages = -1;
 	self.isLoading = NO;
-	fv.messagePreviews = [NSMutableDictionary dictionary];
+	self.messagePreviews = [NSMutableDictionary dictionary];
 	[fv.tableView reloadData];
     
 	NSLog(@"checking account");
@@ -146,12 +139,12 @@ static EmailService *instance;
 	[inboxFolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
      {
          BOOL totalNumberOfMessagesDidChange =
-         fv.totalNumberOfInboxMessages != [info messageCount];
+         self.totalNumberOfInboxMessages != [info messageCount];
          
-         fv.totalNumberOfInboxMessages = [info messageCount];
+         self.totalNumberOfInboxMessages = [info messageCount];
          
          NSUInteger numberOfMessagesToLoad =
-         MIN(fv.totalNumberOfInboxMessages, nMessages);
+         MIN(self.totalNumberOfInboxMessages, nMessages);
          
          if (numberOfMessagesToLoad == 0)
          {
@@ -164,13 +157,13 @@ static EmailService *instance;
          // If total number of messages did not change since last fetch,
          // assume nothing was deleted since our last fetch and just
          // fetch what we don't have
-         if (!totalNumberOfMessagesDidChange && fv.messages.count)
+         if (!totalNumberOfMessagesDidChange && self.messages.count)
          {
-             numberOfMessagesToLoad -= fv.messages.count;
+             numberOfMessagesToLoad -= self.messages.count;
              
              fetchRange =
-             MCORangeMake(fv.totalNumberOfInboxMessages -
-                          fv.messages.count -
+             MCORangeMake(self.totalNumberOfInboxMessages -
+                          self.messages.count -
                           (numberOfMessagesToLoad - 1),
                           (numberOfMessagesToLoad - 1));
          }
@@ -179,7 +172,7 @@ static EmailService *instance;
          else
          {
              fetchRange =
-             MCORangeMake(fv.totalNumberOfInboxMessages -
+             MCORangeMake(self.totalNumberOfInboxMessages -
                           (numberOfMessagesToLoad - 1),
                           (numberOfMessagesToLoad - 1));
          }
@@ -208,7 +201,7 @@ static EmailService *instance;
               
               NSMutableArray *combinedMessages =
               [NSMutableArray arrayWithArray:messages];
-              [combinedMessages addObjectsFromArray:fv.messages];
+              [combinedMessages addObjectsFromArray:self.messages];
               
               // TODO: remove the if statement. Primary is currently the same as the All Mail view.
               //NSLog(@"Our funnl name: %@", _filterModel.filterTitle);
@@ -234,7 +227,7 @@ static EmailService *instance;
                NSLog(label);
                }
                }*/
-              fv.messages =
+              self.messages =
               [combinedMessages sortedArrayUsingDescriptors:@[sort]];
               [fv.tableView reloadData];
               

@@ -23,16 +23,9 @@
 @property (strong,nonatomic) FilterModel *filterModel;
 @property (weak) id<MainVCDelegate> mainVCdelegate;
 
-
-@property (nonatomic, strong) MCOIMAPOperation *imapCheckOp;
-@property (nonatomic, strong) MCOIMAPSession *imapSession;
-@property (nonatomic, strong) MCOIMAPFetchMessagesOperation *imapMessagesFetchOp;
-
-
 @property (nonatomic) NSInteger totalNumberOfInboxMessages;
 @property (nonatomic) BOOL isLoading;
 @property (nonatomic, strong) UIActivityIndicatorView *loadMoreActivityView;
-@property (nonatomic, strong) NSMutableDictionary *messagePreviews;
 
 
 - (void) startLogin;

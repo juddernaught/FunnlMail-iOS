@@ -39,8 +39,8 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     self = [super init];
     if (self) {
         [self setupView];
+        // This logs a user in and loads emails into the tableview
         [[EmailService instance] startLogin: self];
-        //[self startLogin];
     }
     return self;
 }
@@ -51,7 +51,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     self = [super initWithFrame:frame];
     if (self) {
         [self setupView];
-        //[[EmailService instance] startLogin: self];
     }
     return self;
 }
@@ -71,7 +70,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     }];
     
     // need to figure out how to do this with Masonry
-    NSLayoutConstraint *constraint;
+    /*NSLayoutConstraint *constraint;
     constraint = [NSLayoutConstraint
                   constraintWithItem:filterNavigationView
                   attribute: NSLayoutAttributeHeight
@@ -81,7 +80,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                   multiplier:0
                   constant:22];
     
-    [self addConstraint:constraint];
+    [self addConstraint:constraint];*/
     
     filterLabel = [[UILabel alloc] init];
     filterLabel.textColor = [UIColor whiteColor];
@@ -133,196 +132,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     }
 }
 
-- (void) startLogin
-{
-    KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"UserLoginInfo" accessGroup:nil];
-    
-    
-    NSString *username = [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
-	NSString *password = [keychainItem objectForKey:(__bridge id)(kSecAttrService)];
-	NSString *hostname = @"imap.gmail.com";
-    
-    /* if (!username.length || !password.length) {
-     [self performSelector:@selector(showSettingsViewController:) withObject:nil afterDelay:0.5];
-     return;
-     }*/
-    
-	[self loadAccountWithUsername:username password:password hostname:hostname oauth2Token:nil];
-}
-
-- (void)loadAccountWithUsername:(NSString *)username
-                       password:(NSString *)password
-                       hostname:(NSString *)hostname
-                    oauth2Token:(NSString *)oauth2Token
-{
-	self.imapSession = [[MCOIMAPSession alloc] init];
-	self.imapSession.hostname = hostname;
-	self.imapSession.port = 993;
-	self.imapSession.username = username;
-	self.imapSession.password = password;
-    if (oauth2Token != nil) {
-        self.imapSession.OAuth2Token = oauth2Token;
-        self.imapSession.authType = MCOAuthTypeXOAuth2;
-    }
-	self.imapSession.connectionType = MCOConnectionTypeTLS;
-    FilterView * __weak weakSelf = self;
-	self.imapSession.connectionLogger = ^(void * connectionID, MCOConnectionLogType type, NSData * data) {
-        @synchronized(weakSelf) {
-            if (type != MCOConnectionLogTypeSentPrivate) {
-                //                NSLog(@"event logged:%p %i withData: %@", connectionID, type, [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-            }
-        }
-    };
-	
-	// Reset the inbox
-	self.messages = nil;
-	self.totalNumberOfInboxMessages = -1;
-	self.isLoading = NO;
-	self.messagePreviews = [NSMutableDictionary dictionary];
-	[self.tableView reloadData];
-    
-	NSLog(@"checking account");
-	self.imapCheckOp = [self.imapSession checkAccountOperation];
-	[self.imapCheckOp start:^(NSError *error) {
-		FilterView *strongSelf = weakSelf;
-		NSLog(@"finished checking account.");
-		if (error == nil) {
-			[strongSelf loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD];
-		} else {
-			NSLog(@"error loading account: %@", error);
-		}
-		
-		strongSelf.imapCheckOp = nil;
-	}];
-    MCOIMAPFetchFoldersOperation *op = [self.imapSession fetchAllFoldersOperation];
-    [op start:^(NSError * error, NSArray *folders) {
-        for (MCOIMAPFolder *folder in folders) {
-            NSLog(folder.path);
-        }
-    }];
-}
-
-- (void)loadLastNMessages:(NSUInteger)nMessages
-{
-	self.isLoading = YES;
-	
-	MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)
-	(MCOIMAPMessagesRequestKindHeaders | MCOIMAPMessagesRequestKindStructure |
-	 MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject |
-	 MCOIMAPMessagesRequestKindFlags);
-	
-	NSString *inboxFolder = @"INBOX";
-	MCOIMAPFolderInfoOperation *inboxFolderInfo = [self.imapSession folderInfoOperation:inboxFolder];
-	
-	[inboxFolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
-     {
-         BOOL totalNumberOfMessagesDidChange =
-         self.totalNumberOfInboxMessages != [info messageCount];
-         
-         self.totalNumberOfInboxMessages = [info messageCount];
-         
-         NSUInteger numberOfMessagesToLoad =
-         MIN(self.totalNumberOfInboxMessages, nMessages);
-         
-         if (numberOfMessagesToLoad == 0)
-         {
-             self.isLoading = NO;
-             return;
-         }
-         
-         MCORange fetchRange;
-         
-         // If total number of messages did not change since last fetch,
-         // assume nothing was deleted since our last fetch and just
-         // fetch what we don't have
-         if (!totalNumberOfMessagesDidChange && self.messages.count)
-         {
-             numberOfMessagesToLoad -= self.messages.count;
-             
-             fetchRange =
-             MCORangeMake(self.totalNumberOfInboxMessages -
-                          self.messages.count -
-                          (numberOfMessagesToLoad - 1),
-                          (numberOfMessagesToLoad - 1));
-         }
-         
-         // Else just fetch the last N messages
-         else
-         {
-             fetchRange =
-             MCORangeMake(self.totalNumberOfInboxMessages -
-                          (numberOfMessagesToLoad - 1),
-                          (numberOfMessagesToLoad - 1));
-         }
-         
-         self.imapMessagesFetchOp =
-         [self.imapSession fetchMessagesByNumberOperationWithFolder:inboxFolder
-                                                        requestKind:requestKind
-                                                            numbers:
-          [MCOIndexSet indexSetWithRange:fetchRange]];
-         
-         [self.imapMessagesFetchOp setProgress:^(unsigned int progress) {
-             NSLog(@"Progress: %u of %lu", progress, (unsigned long)numberOfMessagesToLoad);
-         }];
-         
-         __weak FilterView *weakSelf = self;
-         [self.imapMessagesFetchOp start:
-          ^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
-          {
-              FilterView *strongSelf = weakSelf;
-              NSLog(@"fetched all messages.");
-              
-              self.isLoading = NO;
-              
-              NSSortDescriptor *sort =
-              [NSSortDescriptor sortDescriptorWithKey:@"header.date" ascending:NO];
-              
-              NSMutableArray *combinedMessages =
-              [NSMutableArray arrayWithArray:messages];
-              [combinedMessages addObjectsFromArray:strongSelf.messages];
-              
-              // TODO: remove the if statement. Primary is currently the same as the All Mail view.
-              NSLog(@"Our funnl name: %@", _filterModel.filterTitle);
-              if (![_filterModel.filterTitle isEqualToString: @"Primary"]) {
-                  NSSet *funnlEmailList = [FilterModel getEmailsForFunnl:_filterModel.filterTitle];
-                  for (int i = 0; i < [combinedMessages count]; i++) {
-                      MCOIMAPMessage *message = [combinedMessages objectAtIndex:i];
-                      MCOMessageHeader *header = [message header];
-                      NSString *emailAddress = [[header sender] mailbox];
-                      if (![funnlEmailList containsObject:emailAddress]) {
-                          [combinedMessages removeObjectAtIndex:i];
-                          // since we removed an element, all elements get pushed upwards by 1
-                          i --;
-                      }
-                  }
-              }
-              
-              for (int i = 0; i < [combinedMessages count]; i++) {
-                  MCOIMAPMessage *message = [combinedMessages objectAtIndex:i];
-                  NSLog(@"here2");
-                  NSLog([[message.gmailLabels objectAtIndex:0] class]);
-                  for (NSString *label in message.gmailLabels) {
-                      NSLog(label);
-                  }
-              }
-              
-              //strongSelf.messages =
-              //[combinedMessages sortedArrayUsingDescriptors:@[sort]];
-              //[strongSelf.tableView reloadData];
-              
-              //
-              // call this showMessage selector on the main thread
-              //
-              [self performSelectorOnMainThread:@selector(showNewMessage:) withObject:[combinedMessages sortedArrayUsingDescriptors:@[sort]] waitUntilDone:NO];
-          }];
-     }];
-}
-
--(void) showNewMessage:(NSArray *)messageArray{
-    self.messages = messageArray;
-    [self.tableView reloadData];
-}
-
 #pragma mark - Table View
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -332,13 +141,13 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	if (section == 1)
 	{
-		if (self.totalNumberOfInboxMessages >= 0)
+		if ([EmailService instance].totalNumberOfInboxMessages >= 0)
 			return 1;
 		
 		return 0;
 	}
 	
-	return self.messages.count;
+	return [EmailService instance].messages.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -348,12 +157,12 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 		case 0:
 		{
 			EmailCell *cell = [tableView dequeueReusableCellWithIdentifier:mailCellIdentifier forIndexPath:indexPath];
-			MCOIMAPMessage *message = self.messages[indexPath.row];
+			MCOIMAPMessage *message = [EmailService instance].messages[indexPath.row];
 			
 			cell.textLabel.text = message.header.subject;
 			
 			NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
-			NSString *cachedPreview = self.messagePreviews[uidKey];
+			NSString *cachedPreview = [EmailService instance].messagePreviews[uidKey];
 			
 			if (cachedPreview)
 			{
@@ -362,11 +171,10 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 			else
 			{
 				cell.messageRenderingOperation = [[EmailService instance].imapSession plainTextBodyRenderingOperationWithMessage:message folder:@"INBOX"];
-				//cell.messageRenderingOperation = [self.imapSession plainTextBodyRenderingOperationWithMessage:message folder:@"INBOX"];
 				[cell.messageRenderingOperation start:^(NSString * plainTextBodyString, NSError * error) {
 					cell.detailTextLabel.text = plainTextBodyString;
 					cell.messageRenderingOperation = nil;
-					self.messagePreviews[uidKey] = plainTextBodyString;
+					[EmailService instance].messagePreviews[uidKey] = plainTextBodyString;
 				}];
 			}
 			
@@ -390,11 +198,11 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 				cell.detailTextLabel.textAlignment = NSTextAlignmentCenter;
 			}
 			
-			if (self.messages.count < self.totalNumberOfInboxMessages)
+			if ([EmailService instance].messages.count < [EmailService instance].totalNumberOfInboxMessages)
 			{
 				cell.textLabel.text =
 				[NSString stringWithFormat:@"Load %lu more",
-				 MIN(self.totalNumberOfInboxMessages - self.messages.count,
+				 MIN([EmailService instance].totalNumberOfInboxMessages - [EmailService instance].messages.count,
                      NUMBER_OF_MESSAGES_TO_LOAD)];
 			}
 			else
@@ -404,7 +212,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 			
 			cell.detailTextLabel.text =
 			[NSString stringWithFormat:@"%ld message(s)",
-			 (long)self.totalNumberOfInboxMessages];
+			 (long)[EmailService instance].totalNumberOfInboxMessages];
 			
 			cell.accessoryView = self.loadMoreActivityView;
 			
@@ -424,28 +232,17 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 	
 }
 
-/*- (void)showSettingsViewController:(id)sender {
- [self.imapMessagesFetchOp cancel];
- 
- SettingsViewController *settingsViewController = [[SettingsViewController alloc] initWithNibName:nil bundle:nil];
- settingsViewController.delegate = self;
- UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
- [self presentViewController:nav animated:YES completion:nil];
- }
- */
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	
 	switch (indexPath.section)
 	{
 		case 0:
 		{
-            NSLog([[NSNumber numberWithInteger:indexPath.row] stringValue]);
-			MCOIMAPMessage *msg = self.messages[indexPath.row];
+			MCOIMAPMessage *msg = [EmailService instance].messages[indexPath.row];
 			MsgViewController *vc = [[MsgViewController alloc] init];
 			vc.folder = @"INBOX";
 			vc.message = msg;
 			vc.session = [EmailService instance].imapSession;
-            //vc.session = self.imapSession;
 
             //[self.navigationController pushViewController:vc animated:YES];
 			[self.mainVCdelegate pushViewController:vc];
@@ -458,10 +255,9 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 			UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
 			
 			if (!self.isLoading &&
-                self.messages.count < self.totalNumberOfInboxMessages)
+                [EmailService instance].messages.count < [EmailService instance].totalNumberOfInboxMessages)
 			{
-				[[EmailService instance] loadLastNMessages:self.messages.count + NUMBER_OF_MESSAGES_TO_LOAD : self];
-                //[self loadLastNMessages:self.messages.count + NUMBER_OF_MESSAGES_TO_LOAD];
+				[[EmailService instance] loadLastNMessages:[EmailService instance].messages.count + NUMBER_OF_MESSAGES_TO_LOAD : self];
 				cell.accessoryView = self.loadMoreActivityView;
 				[self.loadMoreActivityView startAnimating];
 			}

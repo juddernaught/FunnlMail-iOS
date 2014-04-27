@@ -21,5 +21,12 @@
 @property (nonatomic, strong) MCOIMAPOperation *imapCheckOp;
 @property (nonatomic, strong) MCOIMAPSession *imapSession;
 @property (nonatomic, strong) MCOIMAPFetchMessagesOperation *imapMessagesFetchOp;
+@property (nonatomic) NSInteger totalNumberOfInboxMessages;
+@property (nonatomic, strong) NSMutableDictionary *messagePreviews;
+
+
+
+@property (nonatomic, strong) NSArray *messages;
+
 
 @end
