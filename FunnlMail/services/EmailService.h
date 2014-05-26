@@ -10,23 +10,19 @@
 #import "FilterView.h"
 #import <mailcore/mailcore.h>
 
-@interface EmailService : NSObject
+@interface EmailService : NSObject{
+    NSMutableArray *filterArray;
+}
 
 +(EmailService *)instance;
-+(NSArray *) currentFilters;
++(NSArray *) getCurrentFilters;
++(void)setNewFilterModel:(FilterModel*)model;
 - (void)loadLastNMessages:(NSUInteger)nMessages : (FilterView *) fv;
 - (void) startLogin :(FilterView *) fv;
-
-
 @property (nonatomic, strong) MCOIMAPOperation *imapCheckOp;
 @property (nonatomic, strong) MCOIMAPSession *imapSession;
 @property (nonatomic, strong) MCOIMAPFetchMessagesOperation *imapMessagesFetchOp;
 @property (nonatomic) NSInteger totalNumberOfInboxMessages;
 @property (nonatomic, strong) NSMutableDictionary *messagePreviews;
-
-
-
 @property (nonatomic, strong) NSArray *messages;
-
-
 @end

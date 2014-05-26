@@ -35,6 +35,10 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     return self;
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    [mainView reloadView];
+}
+
 - (void)viewDidLoad
 {
   [super viewDidLoad];

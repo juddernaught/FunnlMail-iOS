@@ -66,6 +66,8 @@
 		CCC377A918E7113B004F7FC0 /* FilterModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC377A818E7113B004F7FC0 /* FilterModel.m */; };
 		CCD00B5118F54232007A675F /* FilterView.m in Sources */ = {isa = PBXBuildFile; fileRef = CCD00B5018F54232007A675F /* FilterView.m */; };
 		CCD00B5B18F54797007A675F /* MainView.m in Sources */ = {isa = PBXBuildFile; fileRef = CCD00B5A18F54797007A675F /* MainView.m */; };
+		FA2F433F193318BE00C1F119 /* CreateFunnlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2F433E193318BE00C1F119 /* CreateFunnlViewController.m */; };
+		FA8DDA551933A6420049F83F /* TextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8DDA541933A6420049F83F /* TextFieldCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -212,6 +214,10 @@
 		CCD00B5018F54232007A675F /* FilterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FilterView.m; path = views/FilterView.m; sourceTree = "<group>"; };
 		CCD00B5918F54797007A675F /* MainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainView.h; path = views/MainView.h; sourceTree = "<group>"; };
 		CCD00B5A18F54797007A675F /* MainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainView.m; path = views/MainView.m; sourceTree = "<group>"; };
+		FA2F433D193318BE00C1F119 /* CreateFunnlViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CreateFunnlViewController.h; path = viewcontrollers/CreateFunnlViewController.h; sourceTree = "<group>"; };
+		FA2F433E193318BE00C1F119 /* CreateFunnlViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CreateFunnlViewController.m; path = viewcontrollers/CreateFunnlViewController.m; sourceTree = "<group>"; };
+		FA8DDA531933A6420049F83F /* TextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFieldCell.h; sourceTree = "<group>"; };
+		FA8DDA541933A6420049F83F /* TextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextFieldCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -445,6 +451,8 @@
 				CC1AD1DC18F54BE9000E356C /* MainVCDelegate.h */,
 				667787FF18EF768B00EF1962 /* MsgViewController.h */,
 				6677880018EF768B00EF1962 /* MsgViewController.mm */,
+				FA2F433D193318BE00C1F119 /* CreateFunnlViewController.h */,
+				FA2F433E193318BE00C1F119 /* CreateFunnlViewController.m */,
 			);
 			name = viewcontrollers;
 			sourceTree = "<group>";
@@ -456,6 +464,8 @@
 				CC7F72F318E837C9008962C3 /* FilterViewCell.m */,
 				6677880A18EF80BF00EF1962 /* EmailCell.h */,
 				6677880B18EF80BF00EF1962 /* EmailCell.m */,
+				FA8DDA531933A6420049F83F /* TextFieldCell.h */,
+				FA8DDA541933A6420049F83F /* TextFieldCell.m */,
 			);
 			name = tablecells;
 			sourceTree = "<group>";
@@ -690,6 +700,7 @@
 			files = (
 				CC8C7ECE18E6F38100E76AE8 /* NSArray+MASAdditions.m in Sources */,
 				CC8C7ECD18E6F38100E76AE8 /* MASViewConstraint.m in Sources */,
+				FA2F433F193318BE00C1F119 /* CreateFunnlViewController.m in Sources */,
 				CC8C7ECA18E6F38100E76AE8 /* MASConstraintMaker.m in Sources */,
 				CC8C7ED018E6F38100E76AE8 /* View+MASAdditions.m in Sources */,
 				660BA98E1902CDEA00CDF86E /* LoginViewController.m in Sources */,
@@ -704,6 +715,7 @@
 				CC8C7EC818E6F38100E76AE8 /* MASCompositeConstraint.m in Sources */,
 				66E669751904431E003F9305 /* KeychainItemWrapper.m in Sources */,
 				6677880C18EF80BF00EF1962 /* EmailCell.m in Sources */,
+				FA8DDA551933A6420049F83F /* TextFieldCell.m in Sources */,
 				CC7F72F418E837C9008962C3 /* FilterViewCell.m in Sources */,
 				CC8C7ECB18E6F38100E76AE8 /* MASLayoutConstraint.m in Sources */,
 				CC7F72F818E83925008962C3 /* EmailService.m in Sources */,

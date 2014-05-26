@@ -40,10 +40,15 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
   filterArray = [[NSMutableArray alloc] init];
 }
 
+-(void)reloadView{
+    filterArray = [EmailService getCurrentFilters];
+    [self.collectionView reloadData];
+}
+
 - (void)setupViews
 {
-  filterArray = [EmailService currentFilters];
-  
+   
+  filterArray = [EmailService getCurrentFilters];
 	// Do any additional setup after loading the view.
   
   self.backgroundColor = [UIColor whiteColor];

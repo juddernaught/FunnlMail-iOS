@@ -21,6 +21,7 @@ static EmailService *instance;
 #define KEYCHAIN_ITEM_NAME @"MailCore OAuth 2.0 Token"
 #define NUMBER_OF_MESSAGES_TO_LOAD		10
 
+static NSMutableArray *filterArray = nil;
 
 @interface EmailService ()
 
@@ -47,6 +48,8 @@ static EmailService *instance;
     {
         initialized = YES;
         instance = [[EmailService alloc] init];
+        filterArray = [[NSMutableArray alloc] init];
+        [self addInitialFilter];
     }
 }
 
@@ -236,17 +239,11 @@ static EmailService *instance;
      }];
 }
 
++(void)setNewFilterModel:(FilterModel*)model{
+    [filterArray addObject:model];
+}
 
-+(NSArray *) currentFilters{
-    NSMutableArray *filterArray = [[NSMutableArray alloc]init];
-    
-    //
-    // Hardcoded, should come from the data store (i.e. sqlite)
-    //
-    
-    //
-    // created inital hardcoded list of filters
-    //
++(void)addInitialFilter{
     [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#2EB82E"] filterTitle:@"Primary" newMessageCount:16 dateOfLastMessage:[NSDate new]]];
     [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#FF85FF"] filterTitle:@"Meetings" newMessageCount:5 dateOfLastMessage:[NSDate new]]];
     [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#FFB84D"] filterTitle:@"Files" newMessageCount:24 dateOfLastMessage:[NSDate new]]];
@@ -255,7 +252,16 @@ static EmailService *instance;
     //[filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#33ADFF"] filterTitle:@"Travel" newMessageCount:24 dateOfLastMessage:[NSDate new]]];
     [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#85E085"] filterTitle:@"News" newMessageCount:12 dateOfLastMessage:[NSDate new]]];
     [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#B84D70"] filterTitle:@"Forums" newMessageCount:5 dateOfLastMessage:[NSDate new]]];
+}
+
++(NSArray *) getCurrentFilters{
+    //
+    // Hardcoded, should come from the data store (i.e. sqlite)
+    //
     
+    //
+    // created inital hardcoded list of filters
+    //
     return filterArray;
 }
 

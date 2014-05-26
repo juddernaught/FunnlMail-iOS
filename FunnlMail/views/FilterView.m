@@ -15,6 +15,7 @@
 #import "MsgViewController.h"
 #import "KeychainItemWrapper.h"
 #import "EmailService.h"
+#import "CreateFunnlviewController.h"
 
 static NSString *FILTER_VIEW_CELL = @"FilterViewCell";
 
@@ -27,8 +28,6 @@ static NSString *mailCellIdentifier = @"MailCell";
 static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
 @interface FilterView ()
-
-
 
 @end
 
@@ -178,6 +177,10 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 				}];
 			}
 			
+            UIButton *addButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
+            [addButton addTarget:self action:@selector(createAddFunnlView) forControlEvents:UIControlEventTouchUpInside];
+            cell.accessoryView = addButton;
+   
 			return cell;
 			break;
 		}
@@ -196,6 +199,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 				cell.textLabel.font = [UIFont boldSystemFontOfSize:14];
 				cell.textLabel.textAlignment = NSTextAlignmentCenter;
 				cell.detailTextLabel.textAlignment = NSTextAlignmentCenter;
+                cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 			}
 			
 			if ([EmailService instance].messages.count < [EmailService instance].totalNumberOfInboxMessages)
@@ -270,6 +274,16 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 			break;
 	}
     
+}
+
+-(void)createAddFunnlView{
+    CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] init];
+    [self.mainVCdelegate pushViewController:creatFunnlViewController];
+    creatFunnlViewController = nil;
+}
+
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
+    [self createAddFunnlView];
 }
 
 @end
