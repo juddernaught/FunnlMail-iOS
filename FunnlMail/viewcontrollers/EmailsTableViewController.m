@@ -95,6 +95,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     }];
     
     self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 100, self.view.frame.size.width, self.view.frame.size.height - 100)];
+    self.tableView.rowHeight = 71.0;
     self.tableView.dataSource = self;
     self.tableView.delegate = self;    
     [self.tableView registerClass:[FilterViewCell class] forCellReuseIdentifier:FILTER_VIEW_CELL];
@@ -273,10 +274,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] init];
     [self.mainVCdelegate pushViewController:creatFunnlViewController];
     creatFunnlViewController = nil;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 71.0;
 }
 
 /*
