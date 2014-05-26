@@ -45,7 +45,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
   
     self.view.backgroundColor = [UIColor whiteColor];
   
-    mainView = [[MainView alloc] init];
+    /*mainView = [[MainView alloc] init];
     mainView.hidden = YES;
     mainView.mainVCdelegate = self;
     [self.view addSubview:mainView];
@@ -55,7 +55,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
         make.left.equalTo(self.view.mas_left).with.offset(0);
         make.right.equalTo(self.view.mas_right).with.offset(0);
         make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
-    }];
+    }];*/
   
   
     UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 66, 28)];
@@ -75,6 +75,22 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     filterButton.frame = CGRectMake(33, 0, 33, 28);
     [filterButton setBackgroundImage:[UIImage imageNamed:@"Funnl.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:filterButton];
+    
+    if(emailsTableViewController==nil){
+        emailsTableViewController = [[EmailsTableViewController alloc]init];
+        emailsTableViewController.mainVCdelegate = self;
+        
+        [self addChildViewController:emailsTableViewController];
+        [self.view insertSubview:emailsTableViewController.view atIndex:0];
+        
+        [emailsTableViewController.view mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.view.mas_top).with.offset(0);
+            make.left.equalTo(self.view.mas_left).with.offset(0);
+            make.right.equalTo(self.view.mas_right).with.offset(0);
+            make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
+        }];
+    }
+
 }
 
 -(void) mailButtonSelected{
@@ -96,24 +112,11 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     // Dispose of any resources that can be recreated.
 }
 
+
+// FIXME: move somewhere else?
 -(void) filterSelected:(FilterModel *)filterModel{
     if(filterModel!=nil){
         currentFilterModel = filterModel;
-    }
-  
-    if(emailsTableViewController==nil){
-       emailsTableViewController = [[EmailsTableViewController alloc]init];
-        emailsTableViewController.mainVCdelegate = self;
-      
-        [self addChildViewController:emailsTableViewController];
-        [self.view insertSubview:emailsTableViewController.view atIndex:0];
-  
-        [emailsTableViewController.view mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.navigationItem.titleView.mas_bottom).with.offset(0);
-            make.left.equalTo(self.view.mas_left).with.offset(0);
-            make.right.equalTo(self.view.mas_right).with.offset(0);
-            make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
-        }];
     }
 
     //mainView.hidden = YES;
