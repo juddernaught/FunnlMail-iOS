@@ -11,7 +11,6 @@
 #import "UIColor+HexString.h"
 #import <mailcore/mailcore.h>
 #import "KeychainItemWrapper.h"
-#import "FilterView.h"
 
 
 static EmailService *instance;

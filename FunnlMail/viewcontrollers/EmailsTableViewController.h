@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "FilterView.h"
+
+// FIXME: are these two imports neccessary?
+#import "FilterModel.h"
+#import "MainVCDelegate.h"
 
 @interface EmailsTableViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate> {
-    FilterView *filterView;
     UIView *filterNavigationView;
     UILabel *filterLabel;
 }
