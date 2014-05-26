@@ -7,12 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "FilterView.h"
 #import "MainVCDelegate.h"
 
 @interface MainView : UIView<UICollectionViewDelegate,UICollectionViewDataSource>{
   NSArray *filterArray;
-  FilterView *filterView;
 }
 
 @property (strong) UICollectionView *collectionView;

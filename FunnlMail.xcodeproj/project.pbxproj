@@ -36,6 +36,7 @@
 		6677881C18F0797800EF1962 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6677881B18F0797800EF1962 /* ImageIO.framework */; };
 		6677882518F0ADBB00EF1962 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6677882418F0ADBB00EF1962 /* SystemConfiguration.framework */; };
 		6677882718F0AEED00EF1962 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6677882618F0AEED00EF1962 /* main.mm */; };
+		66AEEB811933002D00B6DBE5 /* EmailsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AEEB801933002D00B6DBE5 /* EmailsTableViewController.m */; };
 		66E669751904431E003F9305 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E669741904431E003F9305 /* KeychainItemWrapper.m */; };
 		66F2C46A18E3293E00CD593E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C46918E3293E00CD593E /* Foundation.framework */; };
 		66F2C46C18E3293E00CD593E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C46B18E3293E00CD593E /* CoreGraphics.framework */; };
@@ -64,7 +65,6 @@
 		CC8C7ECF18E6F38100E76AE8 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = CC8C7EC418E6F38100E76AE8 /* NSLayoutConstraint+MASDebugAdditions.m */; };
 		CC8C7ED018E6F38100E76AE8 /* View+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = CC8C7EC618E6F38100E76AE8 /* View+MASAdditions.m */; };
 		CCC377A918E7113B004F7FC0 /* FilterModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC377A818E7113B004F7FC0 /* FilterModel.m */; };
-		CCD00B5118F54232007A675F /* FilterView.m in Sources */ = {isa = PBXBuildFile; fileRef = CCD00B5018F54232007A675F /* FilterView.m */; };
 		CCD00B5B18F54797007A675F /* MainView.m in Sources */ = {isa = PBXBuildFile; fileRef = CCD00B5A18F54797007A675F /* MainView.m */; };
 		FA2F433F193318BE00C1F119 /* CreateFunnlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2F433E193318BE00C1F119 /* CreateFunnlViewController.m */; };
 		FA8DDA551933A6420049F83F /* TextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8DDA541933A6420049F83F /* TextFieldCell.m */; };
@@ -157,6 +157,8 @@
 		6677881B18F0797800EF1962 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		6677882418F0ADBB00EF1962 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		6677882618F0AEED00EF1962 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
+		66AEEB7F1933002D00B6DBE5 /* EmailsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmailsTableViewController.h; path = viewcontrollers/EmailsTableViewController.h; sourceTree = "<group>"; };
+		66AEEB801933002D00B6DBE5 /* EmailsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EmailsTableViewController.m; path = viewcontrollers/EmailsTableViewController.m; sourceTree = "<group>"; };
 		66E669731904431E003F9305 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		66E669741904431E003F9305 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		66F2C46618E3293E00CD593E /* FunnlMail.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FunnlMail.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -210,8 +212,6 @@
 		CC8C7EC718E6F38100E76AE8 /* View+MASShorthandAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "View+MASShorthandAdditions.h"; sourceTree = "<group>"; };
 		CCC377A718E7113B004F7FC0 /* FilterModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FilterModel.h; path = models/FilterModel.h; sourceTree = "<group>"; };
 		CCC377A818E7113B004F7FC0 /* FilterModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FilterModel.m; path = models/FilterModel.m; sourceTree = "<group>"; };
-		CCD00B4F18F54232007A675F /* FilterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FilterView.h; path = views/FilterView.h; sourceTree = "<group>"; };
-		CCD00B5018F54232007A675F /* FilterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FilterView.m; path = views/FilterView.m; sourceTree = "<group>"; };
 		CCD00B5918F54797007A675F /* MainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainView.h; path = views/MainView.h; sourceTree = "<group>"; };
 		CCD00B5A18F54797007A675F /* MainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainView.m; path = views/MainView.m; sourceTree = "<group>"; };
 		FA2F433D193318BE00C1F119 /* CreateFunnlViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CreateFunnlViewController.h; path = viewcontrollers/CreateFunnlViewController.h; sourceTree = "<group>"; };
@@ -444,6 +444,8 @@
 		CC8C7EAA18E6EF8600E76AE8 /* viewcontrollers */ = {
 			isa = PBXGroup;
 			children = (
+				66AEEB7F1933002D00B6DBE5 /* EmailsTableViewController.h */,
+				66AEEB801933002D00B6DBE5 /* EmailsTableViewController.m */,
 				CC8C7EAB18E6F1C100E76AE8 /* MainVC.h */,
 				CC8C7EAC18E6F1C100E76AE8 /* MainVC.m */,
 				660BA98C1902CDEA00CDF86E /* LoginViewController.h */,
@@ -532,8 +534,6 @@
 			children = (
 				CCD00B5918F54797007A675F /* MainView.h */,
 				CCD00B5A18F54797007A675F /* MainView.m */,
-				CCD00B4F18F54232007A675F /* FilterView.h */,
-				CCD00B5018F54232007A675F /* FilterView.m */,
 			);
 			name = views;
 			sourceTree = "<group>";
@@ -718,10 +718,10 @@
 				FA8DDA551933A6420049F83F /* TextFieldCell.m in Sources */,
 				CC7F72F418E837C9008962C3 /* FilterViewCell.m in Sources */,
 				CC8C7ECB18E6F38100E76AE8 /* MASLayoutConstraint.m in Sources */,
+				66AEEB811933002D00B6DBE5 /* EmailsTableViewController.m in Sources */,
 				CC7F72F818E83925008962C3 /* EmailService.m in Sources */,
 				66F2C47A18E3293E00CD593E /* AppDelegate.m in Sources */,
 				CC8A455C18E832B8009FDBDB /* UIColor+HexString.m in Sources */,
-				CCD00B5118F54232007A675F /* FilterView.m in Sources */,
 				6677882718F0AEED00EF1962 /* main.mm in Sources */,
 				6677881718EF83F800EF1962 /* MCOMessageView.mm in Sources */,
 				CC39517218E6F9700093C787 /* MainFilterCell.m in Sources */,

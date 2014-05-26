@@ -41,52 +41,53 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 - (void)viewDidLoad
 {
-  [super viewDidLoad];
+    [super viewDidLoad];
   
-  self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [UIColor whiteColor];
   
-  mainView = [[MainView alloc] init];
-  mainView.mainVCdelegate = self;
-  [self.view addSubview:mainView];
+    mainView = [[MainView alloc] init];
+    mainView.hidden = YES;
+    mainView.mainVCdelegate = self;
+    [self.view addSubview:mainView];
   
-  [mainView mas_makeConstraints:^(MASConstraintMaker *make) {
-    make.top.equalTo(self.view.mas_top).with.offset(0);
-    make.left.equalTo(self.view.mas_left).with.offset(0);
-    make.right.equalTo(self.view.mas_right).with.offset(0);
-    make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
-  }];
+    [mainView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.view.mas_top).with.offset(0);
+        make.left.equalTo(self.view.mas_left).with.offset(0);
+        make.right.equalTo(self.view.mas_right).with.offset(0);
+        make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
+    }];
   
   
-  UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 66, 28)];
-  centeredButtons.backgroundColor = [UIColor orangeColor];
+    UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 66, 28)];
+    centeredButtons.backgroundColor = [UIColor orangeColor];
   
-  self.navigationItem.titleView = centeredButtons;
+    self.navigationItem.titleView = centeredButtons;
   
-  UIButton *mailButton = [UIButton buttonWithType:UIButtonTypeCustom];
-  UIButton *filterButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIButton *mailButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIButton *filterButton = [UIButton buttonWithType:UIButtonTypeCustom];
   
-  [mailButton addTarget:self action:@selector(mailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-  mailButton.frame = CGRectMake(0, 0, 33, 28);
-  [mailButton setBackgroundImage:[UIImage imageNamed:@"Mail.png"] forState:UIControlStateNormal];
-  [centeredButtons addSubview:mailButton];
+    [mailButton addTarget:self action:@selector(mailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
+    mailButton.frame = CGRectMake(0, 0, 33, 28);
+    [mailButton setBackgroundImage:[UIImage imageNamed:@"Mail.png"] forState:UIControlStateNormal];
+    [centeredButtons addSubview:mailButton];
   
-  [filterButton addTarget:self action:@selector(filterButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-  filterButton.frame = CGRectMake(33, 0, 33, 28);
-  [filterButton setBackgroundImage:[UIImage imageNamed:@"Funnl.png"] forState:UIControlStateNormal];
-  [centeredButtons addSubview:filterButton];
+    [filterButton addTarget:self action:@selector(filterButtonSelected) forControlEvents:UIControlEventTouchUpInside];
+    filterButton.frame = CGRectMake(33, 0, 33, 28);
+    [filterButton setBackgroundImage:[UIImage imageNamed:@"Funnl.png"] forState:UIControlStateNormal];
+    [centeredButtons addSubview:filterButton];
 }
 
 -(void) mailButtonSelected{
-  NSLog(@"Mail button selected");
+    NSLog(@"Mail button selected");
   
-  [self filterSelected:nil];
+    [self filterSelected:nil];
 }
 
 -(void) filterButtonSelected{
   NSLog(@"Filter button selected");
   
-  filterView.hidden = YES;
-  mainView.hidden = NO;
+  //filterView.hidden = YES;
+  //mainView.hidden = NO;
 }
 
 - (void)didReceiveMemoryWarning
@@ -96,28 +97,29 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 }
 
 -(void) filterSelected:(FilterModel *)filterModel{
-  if(filterModel!=nil){
-    currentFilterModel = filterModel;
-  }
+    if(filterModel!=nil){
+        currentFilterModel = filterModel;
+    }
   
-  if(filterView==nil){
-    filterView = [[FilterView alloc]init];
-    filterView.mainVCdelegate = self;
+    if(emailsTableViewController==nil){
+       emailsTableViewController = [[EmailsTableViewController alloc]init];
+        emailsTableViewController.mainVCdelegate = self;
+      
+        [self addChildViewController:emailsTableViewController];
+        [self.view insertSubview:emailsTableViewController.view atIndex:0];
   
-    [self.view addSubview:filterView];
-  
-    [filterView mas_makeConstraints:^(MASConstraintMaker *make) {
-      make.top.equalTo(self.view.mas_top).with.offset(0);
-      make.left.equalTo(self.view.mas_left).with.offset(0);
-      make.right.equalTo(self.view.mas_right).with.offset(0);
-      make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
-    }];
-  }
+        [emailsTableViewController.view mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.navigationItem.titleView.mas_bottom).with.offset(0);
+            make.left.equalTo(self.view.mas_left).with.offset(0);
+            make.right.equalTo(self.view.mas_right).with.offset(0);
+            make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
+        }];
+    }
 
-  mainView.hidden = YES;
-  filterView.hidden = NO;
-  filterView.filterModel = currentFilterModel;
-  //[filterView startLogin];  // TODO: (MSR) I'm guessing we don't want to call this again, may need to refactor retrieving of messages
+    //mainView.hidden = YES;
+    //filterView.hidden = NO;
+    emailsTableViewController.filterModel = currentFilterModel;
+    //[filterView startLogin];  // TODO: (MSR) I'm guessing we don't want to call this again, may need to refactor retrieving of messages
 }
 
 -(void) pushViewController:(UIViewController *)viewController{

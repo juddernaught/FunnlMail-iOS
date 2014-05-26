@@ -1,12 +1,14 @@
 //
-//  FilterView.m
+//  EmailsTableViewController.m
 //  FunnlMail
 //
-//  Created by Michael Raber on 4/9/14.
+//  Created by Daniel Judd on 5/26/14.
 //  Copyright (c) 2014 FunnlMail. All rights reserved.
 //
 
-#import "FilterView.h"
+#import "EmailsTableViewController.h"
+#import "EmailService.h"
+
 #import "FilterViewCell.h"
 #import "View+MASAdditions.h"
 #import "FilterModel.h"
@@ -27,32 +29,40 @@ static NSString *FILTER_VIEW_CELL = @"FilterViewCell";
 static NSString *mailCellIdentifier = @"MailCell";
 static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
-@interface FilterView ()
-
+@interface EmailsTableViewController ()
 @end
 
-@implementation FilterView
+@implementation EmailsTableViewController
 
-- (id)init
+- (id)initWithStyle:(UITableViewStyle)style
 {
-    self = [super init];
+    self = [super initWithStyle:style];
     if (self) {
-        [self setupView];
-        // This logs a user in and loads emails into the tableview
-        [[EmailService instance] startLogin: self];
+        // Custom initialization
     }
     return self;
 }
 
-
-- (id)initWithFrame:(CGRect)frame
+- (void)viewDidLoad
 {
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self setupView];
-    }
-    return self;
+    [super viewDidLoad];
+    [[EmailService instance] startLogin: self];
+    [self setupView];
+
+    // Uncomment the following line to preserve selection between presentations.
+    // self.clearsSelectionOnViewWillAppear = NO;
+    
+    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Table view data source
 
 - (void)setupView
 {
@@ -60,26 +70,16 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     
     filterNavigationView = [[UIView alloc]init];
     filterNavigationView.backgroundColor = [UIColor orangeColor];
-    [self addSubview:filterNavigationView];
+    [self.view addSubview:filterNavigationView];
     
     [filterNavigationView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.mas_top).with.offset(44); // we should calculate this (self.topLayoutGuide.length?)
-        make.left.equalTo(self.mas_left).with.offset(0);
-        make.right.equalTo(self.mas_right).with.offset(0);
+        make.top.equalTo(self.view.mas_top).with.offset(44); // we should calculate this (self.topLayoutGuide.length?)
+        make.left.equalTo(self.view.mas_left).with.offset(0);
+        make.right.equalTo(self.view.mas_right).with.offset(0);
     }];
     
     // need to figure out how to do this with Masonry
-    /*NSLayoutConstraint *constraint;
-    constraint = [NSLayoutConstraint
-                  constraintWithItem:filterNavigationView
-                  attribute: NSLayoutAttributeHeight
-                  relatedBy:NSLayoutRelationEqual
-                  toItem:filterNavigationView
-                  attribute:NSLayoutAttributeHeight
-                  multiplier:0
-                  constant:22];
     
-    [self addConstraint:constraint];*/
     
     filterLabel = [[UILabel alloc] init];
     filterLabel.textColor = [UIColor whiteColor];
@@ -94,19 +94,18 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
         make.bottom.equalTo(filterNavigationView.mas_bottom).with.offset(0);
     }];
     
-    self.tableView = [[UITableView alloc]init];
+    self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 100, self.view.frame.size.width, self.view.frame.size.height - 100)];
     self.tableView.dataSource = self;
-    self.tableView.delegate = self;
-    [self addSubview:self.tableView];
-    
+    self.tableView.delegate = self;    
     [self.tableView registerClass:[FilterViewCell class] forCellReuseIdentifier:FILTER_VIEW_CELL];
     
-    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(filterLabel.mas_bottom).with.offset(0);
-        make.left.equalTo(self.mas_left).with.offset(0);
-        make.right.equalTo(self.mas_right).with.offset(0);
-        make.bottom.equalTo(self.mas_bottom).with.offset(0);
-    }];
+    // TODO: change self.view.mas_top to bottom of filter label
+    /*[self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        //make.top.equalTo(filterNavigationView.mas_top).with.offset(0);
+        make.left.equalTo(self.view.mas_left).with.offset(0);
+        make.right.equalTo(self	.view.mas_right).with.offset(0);
+        make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
+    }];*/
     
 	[self.tableView registerClass:[EmailCell class]
            forCellReuseIdentifier:mailCellIdentifier];
@@ -114,12 +113,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 	self.loadMoreActivityView =
 	[[UIActivityIndicatorView alloc]
 	 initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-	
-	//[[NSUserDefaults standardUserDefaults] registerDefaults:@{ HostnameKey: @"imap.gmail.com" }];
-	
-    /*if ([[NSUserDefaults standardUserDefaults] boolForKey:@"OAuth2Enabled"]) {
-     [self startOAuth2];
-     } else {}*/
 }
 
 -(void) setFilterModel:(FilterModel *)filterModel{
@@ -247,7 +240,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 			vc.folder = @"INBOX";
 			vc.message = msg;
 			vc.session = [EmailService instance].imapSession;
-
+            
             //[self.navigationController pushViewController:vc animated:YES];
 			[self.mainVCdelegate pushViewController:vc];
             
@@ -282,8 +275,68 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     creatFunnlViewController = nil;
 }
 
-- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
-    [self createAddFunnlView];
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 71.0;
 }
+
+/*
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
+    
+    // Configure the cell...
+    
+    return cell;
+}
+*/
+
+/*
+// Override to support conditional editing of the table view.
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Return NO if you do not want the specified item to be editable.
+    return YES;
+}
+*/
+
+/*
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        // Delete the row from the data source
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
+        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+    }   
+}
+*/
+
+/*
+// Override to support rearranging the table view.
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+{
+}
+*/
+
+/*
+// Override to support conditional rearranging of the table view.
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Return NO if you do not want the item to be re-orderable.
+    return YES;
+}
+*/
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
 
 @end

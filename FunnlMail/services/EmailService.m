@@ -11,7 +11,6 @@
 #import "UIColor+HexString.h"
 #import <mailcore/mailcore.h>
 #import "KeychainItemWrapper.h"
-#import "FilterView.h"
 
 
 static EmailService *instance;
@@ -57,7 +56,7 @@ static NSMutableArray *filterArray = nil;
     return instance;
 }
 
-- (void) startLogin : (FilterView *) fv
+- (void) startLogin : (EmailsTableViewController *) fv
 {
     KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"UserLoginInfo" accessGroup:nil];
     
@@ -77,7 +76,7 @@ static NSMutableArray *filterArray = nil;
                        password:(NSString *)password
                        hostname:(NSString *)hostname
                     oauth2Token:(NSString *)oauth2Token
-                     filterview:(FilterView *) fv
+                     filterview:(EmailsTableViewController *) fv
 {
 	self.imapSession = [[MCOIMAPSession alloc] init];
 	self.imapSession.hostname = hostname;
@@ -127,7 +126,7 @@ static NSMutableArray *filterArray = nil;
     
 }
 
-- (void)loadLastNMessages:(NSUInteger)nMessages : (FilterView *) fv
+- (void)loadLastNMessages:(NSUInteger)nMessages : (EmailsTableViewController *) fv
 {
 	self.isLoading = YES;
 	
