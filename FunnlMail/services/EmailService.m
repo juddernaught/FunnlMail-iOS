@@ -54,7 +54,7 @@ static EmailService *instance;
     return instance;
 }
 
-- (void) startLogin : (FilterView *) fv
+- (void) startLogin : (EmailsTableViewController *) fv
 {
     KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"UserLoginInfo" accessGroup:nil];
     
@@ -74,7 +74,7 @@ static EmailService *instance;
                        password:(NSString *)password
                        hostname:(NSString *)hostname
                     oauth2Token:(NSString *)oauth2Token
-                     filterview:(FilterView *) fv
+                     filterview:(EmailsTableViewController *) fv
 {
 	self.imapSession = [[MCOIMAPSession alloc] init];
 	self.imapSession.hostname = hostname;
@@ -124,7 +124,7 @@ static EmailService *instance;
     
 }
 
-- (void)loadLastNMessages:(NSUInteger)nMessages : (FilterView *) fv
+- (void)loadLastNMessages:(NSUInteger)nMessages : (EmailsTableViewController *) fv
 {
 	self.isLoading = YES;
 	
