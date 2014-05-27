@@ -158,7 +158,7 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
 }
 
 -(void)createAddFunnlView{
-  CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] init];
+  CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:nil subjects:nil];
   [self.mainVCdelegate pushViewController:creatFunnlViewController];
   creatFunnlViewController = nil;
 }

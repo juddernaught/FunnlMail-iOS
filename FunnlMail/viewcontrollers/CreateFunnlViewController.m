@@ -33,15 +33,29 @@
     [self.navigationItem setRightBarButtonItem:saveButton];
 }
 
--(void)initTableView
+-(id)initTableViewWithSenders:(NSMutableDictionary*)sendersDictionary subjects:(NSMutableDictionary*)subjectsDictionary
 {
+  self = [super init];
+  if (self) {
+    // Custom initialization
     funnlName = @"";
-    dictionaryOfConversations = [[NSMutableDictionary alloc] init];
-    dictionaryOfSubjects = [[NSMutableDictionary alloc] init];
+    if(sendersDictionary)
+      dictionaryOfConversations = [[NSMutableDictionary alloc] initWithDictionary:sendersDictionary];
+    else
+      dictionaryOfConversations = [[NSMutableDictionary alloc] init];
+    
+    if(subjectsDictionary)
+      dictionaryOfSubjects = [[NSMutableDictionary alloc] initWithDictionary:subjectsDictionary];
+    else
+      dictionaryOfSubjects = [[NSMutableDictionary alloc] init];
+    
     tableview = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStyleGrouped];
     [tableview setDataSource:self];
     [tableview setDelegate:self];
     [self.view addSubview:tableview];
+  }
+  return self;
+  
 }
 
 - (void)viewDidLoad
@@ -51,7 +65,6 @@
     self.title = @"Create Funnl";
     [self.view setBackgroundColor:[UIColor whiteColor]];
     [self initBarbuttonItem];
-    [self initTableView];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 }

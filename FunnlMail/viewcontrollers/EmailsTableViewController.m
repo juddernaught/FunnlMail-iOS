@@ -183,11 +183,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 					[EmailService instance].filterMessagePreviews[uidKey] = plainTextBodyString;
 				}];
 			}
-			
-            UIButton *addButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
-            [addButton addTarget:self action:@selector(createAddFunnlView) forControlEvents:UIControlEventTouchUpInside];
-            cell.accessoryView = addButton;
-   
 			return cell;
 			break;
 		}
@@ -288,12 +283,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     
 }
 
--(void)createAddFunnlView{
-    CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] init];
-    [self.mainVCdelegate pushViewController:creatFunnlViewController];
-    creatFunnlViewController = nil;
-}
-
 #pragma mark - Table View
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
 {
@@ -303,6 +292,43 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 71.0;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+  return @"Create Funnl";
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+  if (editingStyle == UITableViewCellEditingStyleDelete) {
+    if(indexPath.section == 0){
+      MCOIMAPMessage *message = [EmailService instance].filterMessages[indexPath.row];
+      MCOAddress *emailAddress = message.header.from;
+      NSMutableArray *mailArray = [[NSMutableArray alloc] init];
+      [mailArray addObject:emailAddress];
+      [mailArray addObjectsFromArray:message.header.cc];
+      
+      NSMutableDictionary *sendersDictionary = [[NSMutableDictionary alloc] init];
+      int count = 0;
+      for (MCOAddress *address in mailArray) {
+        NSString *email = [address.mailbox lowercaseString];
+        [sendersDictionary setObject:email forKey:[NSIndexPath indexPathForRow:count inSection:1]];
+        count ++;
+      }
+      
+      CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:nil];
+      [self.mainVCdelegate pushViewController:creatFunnlViewController];
+      creatFunnlViewController = nil;
+      self.tableView.editing = NO;
+    }
+  }
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+  if(indexPath.section == 0){
+    return YES;
+  }
+  return NO;
 }
 
 

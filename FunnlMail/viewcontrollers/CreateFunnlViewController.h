@@ -17,5 +17,6 @@
     id activeField;
     NSArray *randomColors;
 }
+-(id)initTableViewWithSenders:(NSMutableDictionary*)sendersDictionary subjects:(NSMutableDictionary*)subjectsDictionary;
 @end
 
