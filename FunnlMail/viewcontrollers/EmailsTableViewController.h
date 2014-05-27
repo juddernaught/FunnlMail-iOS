@@ -12,9 +12,11 @@
 #import "FilterModel.h"
 #import "MainVCDelegate.h"
 
-@interface EmailsTableViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate> {
+@interface EmailsTableViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate> {
     UIView *filterNavigationView;
     UILabel *filterLabel;
+    UISearchBar *searchBar;
+    UISearchDisplayController *searchDisplayController;
 }
 
 @property (nonatomic, strong) NSArray *messages;
@@ -25,9 +27,6 @@
 @property (nonatomic) NSInteger totalNumberOfInboxMessages;
 @property (nonatomic) BOOL isLoading;
 @property (nonatomic, strong) UIActivityIndicatorView *loadMoreActivityView;
-
-- (void) startLogin;
-
 
 
 @end

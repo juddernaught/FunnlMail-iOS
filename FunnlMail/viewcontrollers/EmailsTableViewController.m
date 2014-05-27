@@ -114,6 +114,16 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 	self.loadMoreActivityView =
 	[[UIActivityIndicatorView alloc]
 	 initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    
+    
+    searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
+    searchBar.delegate = self;
+    searchDisplayController = [[UISearchDisplayController alloc] initWithSearchBar:searchBar contentsController:self];
+    searchDisplayController.delegate = self;
+    searchDisplayController.searchResultsDataSource = self;
+    searchDisplayController.searchResultsDelegate = self;
+    //[self.tableView insertSubview:self.searchDisplayController.searchBar aboveSubview:self.tableView];
+    self.tableView.tableHeaderView = searchDisplayController.searchBar;
 }
 
 -(void) setFilterModel:(FilterModel *)filterModel{
@@ -123,6 +133,15 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
         filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor yellowColor]);
         filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : @"");
     }
+}
+
+/*- (void)searchDisplayControllerDidEndSearch:(UISearchDisplayController *)controller {
+    self.tableView.tableHeaderView = searchBar;
+}*/
+
+- (void)searchDisplayController:(UISearchDisplayController *)controller didLoadSearchResultsTableView:(UITableView *)tableView
+{
+	[tableView registerClass:[EmailCell class] forCellReuseIdentifier:mailCellIdentifier];
 }
 
 #pragma mark - Table View
@@ -229,6 +248,11 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 	}
 	
 }
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
+    NSLog(@"started editing");
+    [searchBar becomeFirstResponder];
+    //self.tableView.tableHeaderView = searchBar;
+}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	
@@ -274,6 +298,17 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] init];
     [self.mainVCdelegate pushViewController:creatFunnlViewController];
     creatFunnlViewController = nil;
+}
+
+#pragma mark - Table View
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
+{
+    // TODO: Implement this
+    return NO;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 71.0;
 }
 
 /*
