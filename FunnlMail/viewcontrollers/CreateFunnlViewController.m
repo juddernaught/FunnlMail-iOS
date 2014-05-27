@@ -167,6 +167,65 @@
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+  return @"Delete";
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+  if (editingStyle == UITableViewCellEditingStyleDelete) {
+    if(indexPath.section == 1){
+      [dictionaryOfConversations removeObjectForKey:indexPath];
+      [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
+      NSSortDescriptor *rowDescriptor = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
+      NSArray *sortedRows = [dictionaryOfConversations.allKeys sortedArrayUsingDescriptors:@[rowDescriptor]];
+      //NSLog(@"%@",sortedRows.description);
+      NSMutableDictionary *tmpDictionary = [[NSMutableDictionary alloc] init];
+      NSInteger count = 0;
+      for (NSIndexPath *path in sortedRows) {
+        [tmpDictionary setObject:[dictionaryOfConversations objectForKey:path] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
+        count++;
+      }
+      dictionaryOfConversations = [NSMutableDictionary dictionaryWithDictionary:tmpDictionary];
+      tmpDictionary = nil;
+    }
+    else if(indexPath.section == 2){
+      [dictionaryOfSubjects removeObjectForKey:indexPath];
+      [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
+      NSSortDescriptor *rowDescriptor = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
+      NSArray *sortedRows = [dictionaryOfSubjects.allKeys sortedArrayUsingDescriptors:@[rowDescriptor]];
+      //NSLog(@"%@",sortedRows.description);
+      NSMutableDictionary *tmpDictionary = [[NSMutableDictionary alloc] init];
+      NSInteger count = 0;
+      for (NSIndexPath *path in sortedRows) {
+        [tmpDictionary setObject:[dictionaryOfSubjects objectForKey:path] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
+        count++;
+      }
+      dictionaryOfSubjects = [NSMutableDictionary dictionaryWithDictionary:tmpDictionary];
+      tmpDictionary = nil;
+    }
+  }
+  [activeField resignFirstResponder];
+
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+  if(indexPath.section == 1){
+    if(dictionaryOfConversations.count > 0 && indexPath.row < dictionaryOfConversations.count ){
+      return YES;
+    }
+    return NO;
+  }
+  else  if(indexPath.section == 2){
+    if(dictionaryOfSubjects.count > 0 && indexPath.row < dictionaryOfSubjects.count ){
+      return YES;
+    }
+    return NO;
+  }
+  return NO;
+}
+
+
 #pragma mark -  Add Subject/Conversation Button Methods
 
 -(void)addButtonPressedForConversation:(UIButton *)sender
@@ -250,6 +309,7 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     [textField resignFirstResponder];
+    [tableview reloadData];
     return YES;
 }
 

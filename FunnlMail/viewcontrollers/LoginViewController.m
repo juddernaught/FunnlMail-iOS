@@ -52,7 +52,6 @@
     [self.view addSubview:_username];
     [self.view addSubview:_password];
 
-  
     /*UIButton *enterButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [[enterButton layer] setBorderWidth:2.0f];
     [[enterButton layer] setBorderColor:[UIColor ].CGColor];
