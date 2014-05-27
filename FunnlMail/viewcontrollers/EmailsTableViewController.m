@@ -18,14 +18,9 @@
 #import "KeychainItemWrapper.h"
 #import "EmailService.h"
 #import "CreateFunnlviewController.h"
+#import "UIColor+HexString.h"
 
 static NSString *FILTER_VIEW_CELL = @"FilterViewCell";
-
-#define CLIENT_ID @"the-client-id"
-#define CLIENT_SECRET @"the-client-secret"
-#define KEYCHAIN_ITEM_NAME @"MailCore OAuth 2.0 Token"
-
-#define NUMBER_OF_MESSAGES_TO_LOAD		10
 static NSString *mailCellIdentifier = @"MailCell";
 static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
@@ -62,39 +57,14 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     // Dispose of any resources that can be recreated.
 }
 
+
 #pragma mark - Table view data source
 
 - (void)setupView
 {
 	// Do any additional setup after loading the view.
-    
-    filterNavigationView = [[UIView alloc]init];
-    filterNavigationView.backgroundColor = [UIColor orangeColor];
-    [self.view addSubview:filterNavigationView];
-    
-    [filterNavigationView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view.mas_top).with.offset(44); // we should calculate this (self.topLayoutGuide.length?)
-        make.left.equalTo(self.view.mas_left).with.offset(0);
-        make.right.equalTo(self.view.mas_right).with.offset(0);
-    }];
-    
-    // need to figure out how to do this with Masonry
-    
-    
-    filterLabel = [[UILabel alloc] init];
-    filterLabel.textColor = [UIColor whiteColor];
-    filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor yellowColor]);
-    filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : @"");
-    filterLabel.textAlignment = NSTextAlignmentCenter;
-    [filterNavigationView addSubview:filterLabel];
-    [filterLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(filterNavigationView.mas_top).with.offset(0);
-        make.left.equalTo(filterNavigationView.mas_left).with.offset(0);
-        make.right.equalTo(filterNavigationView.mas_right).with.offset(0);
-        make.bottom.equalTo(filterNavigationView.mas_bottom).with.offset(0);
-    }];
-    
-    self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 100, self.view.frame.size.width, self.view.frame.size.height - 100)];
+    self.view.backgroundColor= [UIColor grayColor];
+    self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     self.tableView.rowHeight = 71.0;
     self.tableView.dataSource = self;
     self.tableView.delegate = self;    
@@ -108,30 +78,54 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
         make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
     }];*/
     
-	[self.tableView registerClass:[EmailCell class]
-           forCellReuseIdentifier:mailCellIdentifier];
+	[self.tableView registerClass:[EmailCell class] forCellReuseIdentifier:mailCellIdentifier];
+//    [self.tableView setContentInset:UIEdgeInsetsMake(40,0,0,0)];
+  
+    filterNavigationView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 320, 80)];
+    filterNavigationView.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:filterNavigationView];
     
-	self.loadMoreActivityView =
-	[[UIActivityIndicatorView alloc]
-	 initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    /*[filterNavigationView mas_makeConstraints:^(MASConstraintMaker *make) {
+      make.top.equalTo(self.view.mas_top).with.offset(44); // we should calculate this (self.topLayoutGuide.length?)
+      make.left.equalTo(self.view.mas_left).with.offset(0);
+      make.right.equalTo(self.view.mas_right).with.offset(0);
+    }];*/
+  
+    filterLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
+    filterLabel.textColor = [UIColor whiteColor];
+    filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#2EB82E"]);
+    filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : @"All");
+    filterLabel.textAlignment = NSTextAlignmentCenter;
+    [filterNavigationView addSubview:filterLabel];
+    [self.view bringSubviewToFront:filterLabel];
+    /*
+     [filterLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+     make.top.equalTo(filterNavigationView.mas_top).with.offset(0);
+     make.left.equalTo(filterNavigationView.mas_left).with.offset(0);
+     make.right.equalTo(filterNavigationView.mas_right).with.offset(0);
+     make.bottom.equalTo(filterNavigationView.mas_bottom).with.offset(0);
+     }];
+     */
+  
+	self.loadMoreActivityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     
-    
-    searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
+    searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 40, self.view.frame.size.width, 40)];
     searchBar.delegate = self;
     searchDisplayController = [[UISearchDisplayController alloc] initWithSearchBar:searchBar contentsController:self];
     searchDisplayController.delegate = self;
     searchDisplayController.searchResultsDataSource = self;
     searchDisplayController.searchResultsDelegate = self;
+    [filterNavigationView addSubview:searchDisplayController.searchBar];
     //[self.tableView insertSubview:self.searchDisplayController.searchBar aboveSubview:self.tableView];
-    self.tableView.tableHeaderView = searchDisplayController.searchBar;
+    self.tableView.tableHeaderView = filterNavigationView;
 }
 
 -(void) setFilterModel:(FilterModel *)filterModel{
     _filterModel = filterModel;
-    
     if(filterLabel!=nil){
-        filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor yellowColor]);
-        filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : @"");
+        filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#2EB82E"]);
+        filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : @"All");
+      [[EmailService instance] loadLastNMessages:[EmailService instance].messages.count + NUMBER_OF_MESSAGES_TO_LOAD : self];
     }
 }
 
@@ -159,7 +153,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 		return 0;
 	}
 	
-	return [EmailService instance].messages.count;
+	return [EmailService instance].filterMessages.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -169,12 +163,12 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 		case 0:
 		{
 			EmailCell *cell = [tableView dequeueReusableCellWithIdentifier:mailCellIdentifier forIndexPath:indexPath];
-			MCOIMAPMessage *message = [EmailService instance].messages[indexPath.row];
+			MCOIMAPMessage *message = [EmailService instance].filterMessages[indexPath.row];
 			
 			cell.textLabel.text = message.header.subject;
 			
 			NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
-			NSString *cachedPreview = [EmailService instance].messagePreviews[uidKey];
+			NSString *cachedPreview = [EmailService instance].filterMessagePreviews[uidKey];
 			
 			if (cachedPreview)
 			{
@@ -186,7 +180,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 				[cell.messageRenderingOperation start:^(NSString * plainTextBodyString, NSError * error) {
 					cell.detailTextLabel.text = plainTextBodyString;
 					cell.messageRenderingOperation = nil;
-					[EmailService instance].messagePreviews[uidKey] = plainTextBodyString;
+					[EmailService instance].filterMessagePreviews[uidKey] = plainTextBodyString;
 				}];
 			}
 			
@@ -260,7 +254,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 	{
 		case 0:
 		{
-			MCOIMAPMessage *msg = [EmailService instance].messages[indexPath.row];
+			MCOIMAPMessage *msg = [EmailService instance].filterMessages[indexPath.row];
 			MsgViewController *vc = [[MsgViewController alloc] init];
 			vc.folder = @"INBOX";
 			vc.message = msg;
@@ -311,64 +305,5 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     return 71.0;
 }
 
-/*
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
-    
-    // Configure the cell...
-    
-    return cell;
-}
-*/
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

@@ -16,3 +16,9 @@
 #endif
 
 #define ADD_FUNNL @"#@New@#"
+#define NUMBER_OF_MESSAGES_TO_LOAD		20
+#define CLIENT_ID @"the-client-id"
+#define CLIENT_SECRET @"the-client-secret"
+#define KEYCHAIN_ITEM_NAME @"MailCore OAuth 2.0 Token"
+
+#define GRADIENT_ARRAY [NSArray arrayWithObjects:@"#FFB84D",@"#AD5CFF",@"#33ADFF",@"#85E085",@"#B84D70",nil];

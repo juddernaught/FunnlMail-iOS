@@ -15,6 +15,7 @@
     NSMutableDictionary *dictionaryOfConversations,*dictionaryOfSubjects;
     NSString *funnlName;
     id activeField;
+    NSArray *randomColors;
 }
 @end
 

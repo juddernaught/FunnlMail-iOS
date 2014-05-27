@@ -11,14 +11,9 @@
 #import "UIColor+HexString.h"
 #import <mailcore/mailcore.h>
 #import "KeychainItemWrapper.h"
-
+#import "EMailsTableViewController.h"
 
 static EmailService *instance;
-
-#define CLIENT_ID @"the-client-id"
-#define CLIENT_SECRET @"the-client-secret"
-#define KEYCHAIN_ITEM_NAME @"MailCore OAuth 2.0 Token"
-#define NUMBER_OF_MESSAGES_TO_LOAD		10
 
 static NSMutableArray *filterArray = nil;
 
@@ -98,10 +93,12 @@ static NSMutableArray *filterArray = nil;
     };
 	
 	// Reset the inbox
-	self.messages = nil;
+	self.messages = [[NSMutableArray alloc] init];
+    self.filterMessages = [[NSMutableArray alloc] init];
 	self.totalNumberOfInboxMessages = -1;
 	self.isLoading = NO;
 	self.messagePreviews = [NSMutableDictionary dictionary];
+    self.filterMessagePreviews = [NSMutableDictionary dictionary];
 	[fv.tableView reloadData];
     
 	NSLog(@"checking account");
@@ -200,40 +197,49 @@ static NSMutableArray *filterArray = nil;
               
               NSSortDescriptor *sort =
               [NSSortDescriptor sortDescriptorWithKey:@"header.date" ascending:NO];
-              
-              NSMutableArray *combinedMessages =
-              [NSMutableArray arrayWithArray:messages];
-              [combinedMessages addObjectsFromArray:self.messages];
-              
+              NSArray *subjectFoundArray = [NSArray array];
+
+              for (MCOIMAPMessage *m in messages) {
+                [self.messages addObject:m];
+              }
+              NSMutableArray *combinedMessages = [NSMutableArray arrayWithArray:self.messages];
               // TODO: remove the if statement. Primary is currently the same as the All Mail view.
-              //NSLog(@"Our funnl name: %@", _filterModel.filterTitle);
-              /*if (![_filterModel.filterTitle isEqualToString: @"Primary"]) {
-               NSSet *funnlEmailList = [FilterModel getEmailsForFunnl:_filterModel.filterTitle];
-               for (int i = 0; i < [combinedMessages count]; i++) {
-               MCOIMAPMessage *message = [combinedMessages objectAtIndex:i];
-               MCOMessageHeader *header = [message header];
-               NSString *emailAddress = [[header sender] mailbox];
-               if (![funnlEmailList containsObject:emailAddress]) {
-               [combinedMessages removeObjectAtIndex:i];
-               // since we removed an element, all elements get pushed upwards by 1
-               i --;
+              NSLog(@"Our funnl name: %@ ---> %d", fv.filterModel.filterTitle,self.messages.count);
+              if (fv.filterModel && ![fv.filterModel.filterTitle isEqual:NULL] && ![fv.filterModel.filterTitle isEqualToString: @"All"] ) {
+                NSMutableDictionary *dictionary = [fv.filterModel getEmailsForFunnl:fv.filterModel.filterTitle];
+                NSSet *funnlEmailList = [dictionary objectForKey:@"senders"];
+                NSMutableSet *funnlSubjectList =  [NSMutableSet setWithArray:[dictionary objectForKey:@"subjects"]];
+                for (int i = 0; i < [combinedMessages count]; i++) {
+                   MCOIMAPMessage *message = [combinedMessages objectAtIndex:i];
+                   MCOMessageHeader *header = [message header];
+                   NSString *emailAddress = [[[header sender] mailbox] lowercaseString];
+                   NSString *subject = [[header subject] lowercaseString];
+
+                  if ([funnlEmailList containsObject:emailAddress] )
+                   {
+                     if(funnlSubjectList.count){
+                       NSMutableSet *intersection = [NSMutableSet setWithArray:[subject componentsSeparatedByString:@" "]];
+                       NSMutableSet *set = [NSMutableSet setWithSet:funnlSubjectList];
+                       [set intersectSet:intersection];
+                       subjectFoundArray =  [set allObjects];
+                       //NSLog(@"%@ : %d %@",subject,subjectFoundArray.count,emailAddress);
+                       if(subjectFoundArray.count == 0){
+                         [combinedMessages removeObjectAtIndex:i];
+                         i--;
+                       }
+                     }
+                   }else{
+                     [combinedMessages removeObjectAtIndex:i];
+                     // since we removed an element, all elements get pushed upwards by 1
+                     i --;
+                   }
+                }
+                self.filterMessages = (NSMutableArray*)[combinedMessages sortedArrayUsingDescriptors:@[sort]];
                }
-               }
-               }*/
-              
-              /*for (int i = 0; i < [combinedMessages count]; i++) {
-               MCOIMAPMessage *message = [combinedMessages objectAtIndex:i];
-               NSLog(@"here2");
-               NSLog([[message.gmailLabels objectAtIndex:0] class]);
-               for (NSString *label in message.gmailLabels) {
-               NSLog(label);
-               }
-               }*/
-              self.messages =
-              [combinedMessages sortedArrayUsingDescriptors:@[sort]];
+              else{
+                self.filterMessages = (NSMutableArray*)[combinedMessages sortedArrayUsingDescriptors:@[sort]];;
+              }
               [fv.tableView reloadData];
-              
-              // TODO: figure out how to return the messages back to the FunnlMail view
           }];
      }];
 }
@@ -244,6 +250,7 @@ static NSMutableArray *filterArray = nil;
 
 +(void)addInitialFilter{
     [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#2EB82E"] filterTitle:@"All" newMessageCount:16 dateOfLastMessage:[NSDate new]]];
+  
 //    [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#FF85FF"] filterTitle:@"Meetings" newMessageCount:5 dateOfLastMessage:[NSDate new]]];
 //    [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#FFB84D"] filterTitle:@"Files" newMessageCount:24 dateOfLastMessage:[NSDate new]]];
 //    [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#AD5CFF"] filterTitle:@"Payments" newMessageCount:6 dateOfLastMessage:[NSDate new]]];

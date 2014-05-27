@@ -59,7 +59,7 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
   UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
   layout.scrollDirection = UICollectionViewScrollDirectionVertical;
   
-  self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, 320, 240) collectionViewLayout:layout];
+  self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
   //self.collectionView.backgroundColor = [UIColor greenColor];
   self.collectionView.backgroundColor = [UIColor colorWithHexString:@"#E2E2E2"];
   self.collectionView.bounces = YES;
@@ -76,7 +76,7 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
     make.top.equalTo(self.mas_top).with.offset(44);
     make.left.equalTo(self.mas_left).with.offset(80);
     make.right.equalTo(self.mas_right).with.offset(0);
-    make.bottom.equalTo(self.mas_bottom).with.offset(-300);
+    make.bottom.equalTo(self.mas_bottom).with.offset(-250);
   }];
   
   

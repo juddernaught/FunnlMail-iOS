@@ -19,6 +19,5 @@
 
 - (id)initWithBarColor:(UIColor *)barColor filterTitle:(NSString *)filterTitle newMessageCount:(NSInteger)newMessageCount dateOfLastMessage:(NSDate *)dateOfLastMessage;
 - (id)initWithBarColor:(UIColor *)barColor filterTitle:(NSString *)filterTitle newMessageCount:(NSInteger)newMessageCount dateOfLastMessage:(NSDate *)dateOfLastMessage sendersArray:(NSMutableArray*)sendersArray subjectsArray:(NSMutableArray*)subjectsArray;
-+ (NSSet*) getEmailsForFunnl: (NSString *) funnlName;
-
+- (NSMutableDictionary*) getEmailsForFunnl: (NSString *) funnlName ;
 @end

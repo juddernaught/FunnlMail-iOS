@@ -95,7 +95,6 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 -(void) mailButtonSelected{
     NSLog(@"Mail button selected");
     mainView.hidden = YES;
-    [self filterSelected:nil];
 }
 
 -(void) filterButtonSelected{
@@ -121,6 +120,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     }
     mainView.hidden = YES;
     emailsTableViewController.filterModel = currentFilterModel;
+    [emailsTableViewController.tableView setContentOffset:CGPointMake(0, -40)];
     //[filterView startLogin];  // TODO: (MSR) I'm guessing we don't want to call this again, may need to refactor retrieving of messages
 }
 

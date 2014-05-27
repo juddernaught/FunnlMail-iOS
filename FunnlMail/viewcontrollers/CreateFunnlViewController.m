@@ -47,6 +47,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    randomColors = GRADIENT_ARRAY;
     self.title = @"Create Funnl";
     [self.view setBackgroundColor:[UIColor whiteColor]];
     [self initBarbuttonItem];
@@ -106,6 +107,8 @@
         cell.textField.frame = CGRectMake(10, 2,250, 40);
         cell.textField.tag = indexPath.section;
         cell.textField.delegate = self;
+        cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+        cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
         if(indexPath.row != dictionaryOfConversations.allKeys.count && dictionaryOfConversations.allKeys.count > 0){
             cell.textField.text = [dictionaryOfConversations objectForKey:indexPath];
         }
@@ -124,6 +127,8 @@
         cell.textField.frame = CGRectMake(10, 2,250, 40);
         cell.textField.tag = indexPath.section;
         cell.textField.delegate = self;
+        cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+        cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
         if(indexPath.row != dictionaryOfSubjects.count && dictionaryOfSubjects.count > 0){
             cell.textField.text = [dictionaryOfSubjects objectForKey:indexPath];
         }
@@ -180,9 +185,19 @@
     }
     NSLog(@"Save Butoon pressed");
     if(funnlName.length){
-        FilterModel *model = [[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#2EB82E"] filterTitle:funnlName newMessageCount:16 dateOfLastMessage:[NSDate new] sendersArray:(NSMutableArray*)[dictionaryOfConversations allValues] subjectsArray:(NSMutableArray*)[dictionaryOfSubjects allValues]];
-        [EmailService setNewFilterModel:model];
-        [self.navigationController popViewControllerAnimated:YES];
+        if(dictionaryOfConversations.allKeys.count){
+          NSInteger gradientInt = arc4random_uniform(randomColors.count);
+          UIColor *color = [UIColor colorWithHexString: [randomColors objectAtIndex:gradientInt]];
+          if(color == nil){
+            color = [UIColor colorWithHexString:@"#2EB82E"];
+          }
+          FilterModel *model = [[FilterModel alloc]initWithBarColor:color filterTitle:funnlName newMessageCount:0 dateOfLastMessage:[NSDate new] sendersArray:(NSMutableArray*)[dictionaryOfConversations allValues] subjectsArray:(NSMutableArray*)[dictionaryOfSubjects allValues]];
+          [EmailService setNewFilterModel:model];
+          [self.navigationController popViewControllerAnimated:YES];
+        }else{
+          UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Please add at least one email" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+          [alert show];
+        }
     }
     else{
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Please add name for Funnl" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -208,13 +223,13 @@
         CGPoint textFieldOrigin = [tableview convertPoint:textField.bounds.origin fromView:textField];
         NSIndexPath *indexPath = [tableview indexPathForRowAtPoint:textFieldOrigin];
         if(textField.text.length)
-            [dictionaryOfConversations setObject:textField.text forKey:indexPath];
+            [dictionaryOfConversations setObject:[textField.text lowercaseString] forKey:indexPath];
     }
     else if(textField.tag == 2){
         CGPoint textFieldOrigin = [tableview convertPoint:textField.bounds.origin fromView:textField];
         NSIndexPath *indexPath = [tableview indexPathForRowAtPoint:textFieldOrigin];
         if(textField.text.length)
-            [dictionaryOfSubjects setObject:textField.text forKey:indexPath];
+            [dictionaryOfSubjects setObject:[textField.text lowercaseString] forKey:indexPath];
     }
     [tableview reloadData];
     return YES;
