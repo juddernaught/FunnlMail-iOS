@@ -24,6 +24,21 @@
   return self;
 }
 
+- (id)initWithBarColor:(UIColor *)barColor filterTitle:(NSString *)filterTitle newMessageCount:(NSInteger)newMessageCount dateOfLastMessage:(NSDate *)dateOfLastMessage sendersArray:(NSMutableArray*)sendersArray subjectsArray:(NSMutableArray*)subjectsArray;
+{
+  self = [super init];
+  if (self) {
+    // Custom initialization
+    self.barColor = barColor;
+    self.filterTitle = filterTitle;
+    self.newMessageCount = newMessageCount;
+    self.dateOfLastMessage = dateOfLastMessage;
+    self.sendersArray = sendersArray;
+    self.subjectsArray = subjectsArray;
+  }
+  return self;
+}
+
 + (NSSet*) getEmailsForFunnl: (NSString *) funnlName {
     NSMutableDictionary *funnlDictionary = [[NSMutableDictionary alloc] init];
     [funnlDictionary setObject: [NSSet setWithArray:@[@"juddernaught@gmail.com", @"djudd@wharton.upenn.edu", @"djudd@seas.upenn.edu", @"michael.raber@gmail.com", @"manpuria@wharton.upenn.edu", @"apoorvap@wharton.upenn.edu"]] forKey: @"FunnlMail"];

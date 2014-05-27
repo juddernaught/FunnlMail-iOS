@@ -180,7 +180,7 @@
     }
     NSLog(@"Save Butoon pressed");
     if(funnlName.length){
-        FilterModel *model = [[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#2EB82E"] filterTitle:funnlName newMessageCount:16 dateOfLastMessage:[NSDate new]];
+        FilterModel *model = [[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#2EB82E"] filterTitle:funnlName newMessageCount:16 dateOfLastMessage:[NSDate new] sendersArray:(NSMutableArray*)[dictionaryOfConversations allValues] subjectsArray:(NSMutableArray*)[dictionaryOfSubjects allValues]];
         [EmailService setNewFilterModel:model];
         [self.navigationController popViewControllerAnimated:YES];
     }

@@ -70,22 +70,22 @@
         mailImageView.frame = CGRectMake(0, 0, 29, 23);
         [self addSubview:mailImageView];
       
-        [mailImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-          make.top.equalTo(filterTitleLabel.mas_bottom).with.offset(20);
-          make.left.equalTo(self.mas_centerX).with.offset(-(30/2));
-        }];
-      
-        // need to figure out how to do this with Masonry
-        constraint = [NSLayoutConstraint
-                      constraintWithItem:mailImageView
-                      attribute: NSLayoutAttributeHeight
-                      relatedBy:NSLayoutRelationEqual
-                      toItem:mailImageView
-                      attribute:NSLayoutAttributeHeight
-                      multiplier:0
-                      constant:23];
-      
-        [self addConstraint:constraint];
+//        [mailImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+//          make.top.equalTo(filterTitleLabel.mas_bottom).with.offset(0);
+//          make.left.equalTo(self.mas_centerX).with.offset(-(30/2));
+//        }];
+//      
+//        // need to figure out how to do this with Masonry
+//        constraint = [NSLayoutConstraint
+//                      constraintWithItem:mailImageView
+//                      attribute: NSLayoutAttributeHeight
+//                      relatedBy:NSLayoutRelationEqual
+//                      toItem:mailImageView
+//                      attribute:NSLayoutAttributeHeight
+//                      multiplier:0
+//                      constant:23];
+//      
+//        [self addConstraint:constraint];
       
         newMessageCountLabel = [[UILabel alloc] init];
         newMessageCountLabel.textAlignment = NSTextAlignmentCenter;
@@ -153,6 +153,10 @@
                       constant:25];
       
         [self addConstraint:constraint];
+      
+      
+
+      
     }
     return self;
 }
@@ -165,8 +169,24 @@
 
 -(void) setFilterTitle:(NSString *)filterTitle{
   _filterTitle = filterTitle;
-  
   filterTitleLabel.text = filterTitle;
+  if([filterTitleLabel.text isEqualToString:ADD_FUNNL]){
+    filterTitleLabel.text = @"";
+    newMessageCountLabel.hidden = YES;
+    typeLabel.hidden = YES;
+    dateOfLastMessageLabel.hidden = YES;
+    mailImageView.contentMode = UIViewContentModeCenter;
+    mailImageView.image = [UIImage imageNamed:@"add.png"];
+    [mailImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+      make.top.equalTo(filterTitleLabel.mas_bottom).with.offset(0);
+      make.left.equalTo(self.mas_centerX).with.offset(-(40/2));
+    }];
+  }else{
+        [mailImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+          make.top.equalTo(filterTitleLabel.mas_bottom).with.offset(0);
+          make.left.equalTo(self.mas_centerX).with.offset(-(30/2));
+        }];
+  }
 }
 
 -(void) setNewMessageCount:(NSInteger)newMessageCount{

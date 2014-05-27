@@ -14,8 +14,11 @@
 @property (copy) NSString *filterTitle;
 @property (assign) NSInteger newMessageCount;
 @property (copy) NSDate *dateOfLastMessage;
+@property (copy) NSMutableArray *sendersArray;
+@property (copy) NSMutableArray *subjectsArray;
 
 - (id)initWithBarColor:(UIColor *)barColor filterTitle:(NSString *)filterTitle newMessageCount:(NSInteger)newMessageCount dateOfLastMessage:(NSDate *)dateOfLastMessage;
+- (id)initWithBarColor:(UIColor *)barColor filterTitle:(NSString *)filterTitle newMessageCount:(NSInteger)newMessageCount dateOfLastMessage:(NSDate *)dateOfLastMessage sendersArray:(NSMutableArray*)sendersArray subjectsArray:(NSMutableArray*)subjectsArray;
 + (NSSet*) getEmailsForFunnl: (NSString *) funnlName;
 
 @end

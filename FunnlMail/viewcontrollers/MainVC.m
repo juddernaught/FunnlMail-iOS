@@ -45,23 +45,22 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
   
     self.view.backgroundColor = [UIColor whiteColor];
   
-    /*mainView = [[MainView alloc] init];
+    mainView = [[MainView alloc] init];
     mainView.hidden = YES;
     mainView.mainVCdelegate = self;
     [self.view addSubview:mainView];
-  
+    
     [mainView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view.mas_top).with.offset(0);
         make.left.equalTo(self.view.mas_left).with.offset(0);
         make.right.equalTo(self.view.mas_right).with.offset(0);
         make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
-    }];*/
-  
+    }];
   
     UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 66, 28)];
     centeredButtons.backgroundColor = [UIColor orangeColor];
-  
-    self.navigationItem.titleView = centeredButtons;
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:centeredButtons];
+    self.navigationItem.rightBarButtonItem = rightItem;
   
     UIButton *mailButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIButton *filterButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -95,15 +94,17 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 -(void) mailButtonSelected{
     NSLog(@"Mail button selected");
-  
+    mainView.hidden = YES;
     [self filterSelected:nil];
 }
 
 -(void) filterButtonSelected{
-  NSLog(@"Filter button selected");
-  
-  //filterView.hidden = YES;
-  //mainView.hidden = NO;
+    NSLog(@"Filter button selected");
+    if(mainView.hidden == YES){
+        mainView.hidden = NO;
+    }else{
+        mainView.hidden = YES;
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -118,9 +119,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     if(filterModel!=nil){
         currentFilterModel = filterModel;
     }
-
-    //mainView.hidden = YES;
-    //filterView.hidden = NO;
+    mainView.hidden = YES;
     emailsTableViewController.filterModel = currentFilterModel;
     //[filterView startLogin];  // TODO: (MSR) I'm guessing we don't want to call this again, may need to refactor retrieving of messages
 }

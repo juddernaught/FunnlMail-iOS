@@ -12,8 +12,11 @@
 #import "MainFilterCell.h"
 #import "FilterModel.h"
 #import "EmailService.h"
+#import "UIColor+HexString.h"
+#import "CreateFunnlViewController.h"
 
 static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
+static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
 
 @implementation MainView
 
@@ -31,7 +34,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 {
     self = [super initWithFrame:frame];
     if (self) {
-      [self setupViews];
+
     }
     return self;
 }
@@ -51,14 +54,14 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
   filterArray = [EmailService getCurrentFilters];
 	// Do any additional setup after loading the view.
   
-  self.backgroundColor = [UIColor whiteColor];
+  self.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
   
   UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
   layout.scrollDirection = UICollectionViewScrollDirectionVertical;
   
-  self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+  self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, 320, 240) collectionViewLayout:layout];
   //self.collectionView.backgroundColor = [UIColor greenColor];
-  self.collectionView.backgroundColor = [UIColor whiteColor];
+  self.collectionView.backgroundColor = [UIColor colorWithHexString:@"#E2E2E2"];
   self.collectionView.bounces = YES;
   self.collectionView.alwaysBounceVertical = YES;
   self.collectionView.delegate = self;
@@ -67,17 +70,43 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
   [self addSubview:self.collectionView];
   
   [self.collectionView registerClass:[MainFilterCell class] forCellWithReuseIdentifier:MAIN_FILTER_CELL];
+  [self.collectionView registerClass:[MainFilterCell class] forCellWithReuseIdentifier:ADD_MAIN_FILTER_CELL];
   
   [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
     make.top.equalTo(self.mas_top).with.offset(44);
-    make.left.equalTo(self.mas_left).with.offset(0);
+    make.left.equalTo(self.mas_left).with.offset(80);
     make.right.equalTo(self.mas_right).with.offset(0);
-    make.bottom.equalTo(self.mas_bottom).with.offset(0);
+    make.bottom.equalTo(self.mas_bottom).with.offset(-300);
   }];
+  
+  
+  UITapGestureRecognizer *singleFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
+  singleFingerTap.delegate = self;
+  singleFingerTap.cancelsTouchesInView = NO;
+
+  [self addGestureRecognizer:singleFingerTap];
 }
 
+//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+//{
+//  CGPoint point = [touch locationInView:touch.view];
+//  UIView *viewTouched = [touch.view hitTest:point withEvent:nil];
+//  if ([viewTouched isKindOfClass:[UICollectionView class]]) {
+//    // Do nothing;
+//    return NO;
+//  } else {
+//    // respond to touch action
+//    return YES;
+//  }
+//}
+
+- (void)handleSingleTap:(UITapGestureRecognizer *)recognizer {
+  [self setHidden:YES];
+}
+
+#pragma mark - Collection view datasource
 - (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section{
-  return [filterArray count];
+  return [filterArray count]+1;
 }
 
 - (NSInteger)numberOfSectionsInCollectionView: (UICollectionView *)collectionView{
@@ -85,28 +114,35 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-  MainFilterCell *cell = (MainFilterCell *)[collectionView dequeueReusableCellWithReuseIdentifier:MAIN_FILTER_CELL forIndexPath:indexPath];
+  MainFilterCell *cell;
   
-  cell.barColor = [UIColor yellowColor];
-  
-  FilterModel *fm = (FilterModel *)filterArray[indexPath.row];
-  
-  cell.barColor = fm.barColor;
-  cell.filterTitle = fm.filterTitle;
-  cell.newMessageCount = fm.newMessageCount;
-  cell.dateOfLastMessage = fm.dateOfLastMessage;
-  
+  if(indexPath.row == filterArray.count){
+    cell = (MainFilterCell *)[collectionView dequeueReusableCellWithReuseIdentifier:ADD_MAIN_FILTER_CELL forIndexPath:indexPath];
+    cell.barColor = [UIColor colorWithHexString:@"#636466"];
+    cell.filterTitle = ADD_FUNNL;
+    cell.newMessageCount = 0;
+    cell.dateOfLastMessage = 0;
+  }
+  else{
+    cell = (MainFilterCell *)[collectionView dequeueReusableCellWithReuseIdentifier:MAIN_FILTER_CELL forIndexPath:indexPath];
+    cell.barColor = [UIColor yellowColor];
+    FilterModel *fm = (FilterModel *)filterArray[indexPath.row];
+    cell.barColor = fm.barColor;
+    cell.filterTitle = fm.filterTitle;
+    cell.newMessageCount = fm.newMessageCount;
+    cell.dateOfLastMessage = fm.dateOfLastMessage;
+  }
+  cell.contentView.backgroundColor = [UIColor whiteColor];
   return cell;
 }
 
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+{
+  return UIEdgeInsetsMake(8, 8, 8, 8);
+}
+
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-  
-  if(indexPath.row==0){
-    return CGSizeMake((self.collectionView.frame.size.width-10), 160);
-  }
-  else{
-    return CGSizeMake((self.collectionView.frame.size.width-10)/2, 160);
-  }
+    return CGSizeMake((self.collectionView.frame.size.width-30)/2, 100);
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -114,8 +150,16 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
   //vc.filterModel = (FilterModel *)filterArray[indexPath.row];
   
   //[self.navigationController pushViewController:vc animated:YES];
-  
-  [self.mainVCdelegate filterSelected:(FilterModel *)filterArray[indexPath.row]];
+  if(indexPath.row == filterArray.count){
+    [self createAddFunnlView];
+  }else{
+    [self.mainVCdelegate filterSelected:(FilterModel *)filterArray[indexPath.row]];
+  }
 }
 
+-(void)createAddFunnlView{
+  CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] init];
+  [self.mainVCdelegate pushViewController:creatFunnlViewController];
+  creatFunnlViewController = nil;
+}
 @end
