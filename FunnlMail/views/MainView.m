@@ -131,6 +131,13 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
     cell.filterTitle = fm.filterTitle;
     cell.newMessageCount = fm.newMessageCount;
     cell.dateOfLastMessage = fm.dateOfLastMessage;
+  
+    cell.settingsButton.tag = indexPath.row;
+    [cell.settingsButton addTarget:self action:@selector(settingsButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+
+    cell.notificationButton.tag = indexPath.row;
+    //[cell.notificationButton addTarget:self action:@selector(notificationButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+
   }
   cell.contentView.backgroundColor = [UIColor whiteColor];
   return cell;
@@ -158,8 +165,37 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
 }
 
 -(void)createAddFunnlView{
-  CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:nil subjects:nil];
+  CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:nil subjects:nil filterModel:nil];
+  creatFunnlViewController.mainVCdelegate = self.mainVCdelegate;
   [self.mainVCdelegate pushViewController:creatFunnlViewController];
   creatFunnlViewController = nil;
 }
+
+-(void)settingsButtonClicked:(id)sender{
+  UIButton *b = (UIButton*)sender;
+  FilterModel *fm = (FilterModel *)filterArray[b.tag];
+  NSMutableDictionary *sendersDictionary = [[NSMutableDictionary alloc] init];
+  int count = 0;
+  for (NSString *address in fm.sendersArray) {
+    [sendersDictionary setObject:[address lowercaseString] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
+    count ++;
+  }
+  
+  NSMutableDictionary *subjectsDictionary = [[NSMutableDictionary alloc] init];
+  count = 0;
+  for (NSString *subject in fm.subjectsArray) {
+    [subjectsDictionary setObject:[subject lowercaseString] forKey:[NSIndexPath indexPathForRow:count inSection:2]];
+    count ++;
+  }
+  
+  CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:subjectsDictionary filterModel:fm];
+  creatFunnlViewController.mainVCdelegate = self.mainVCdelegate;
+  [self.mainVCdelegate pushViewController:creatFunnlViewController];
+  creatFunnlViewController = nil;
+}
+
+-(void)notificationButtonClicked:(id)sender{
+  UIButton *b = (UIButton*)sender;
+}
+
 @end

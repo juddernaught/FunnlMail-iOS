@@ -9,7 +9,7 @@
 #import "TextFieldCell.h"
 
 @implementation TextFieldCell
-@synthesize textField,addButton,isAddButton;
+@synthesize textField,addButton,isAddButton,cancelButton;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -18,9 +18,13 @@
         // Initialization code
         
         addButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
+        cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [cancelButton setImage:[UIImage imageNamed:@"close.png"] forState:UIControlStateNormal];
         textField = [[UITextField alloc] init];
         [addButton setHidden:YES];
+        [cancelButton setHidden:YES];
         [self addSubview:addButton];
+        [self addSubview:cancelButton];
         [self addSubview:textField];
     }
     return self;

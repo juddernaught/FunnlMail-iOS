@@ -17,6 +17,9 @@
 +(EmailService *)instance;
 +(NSArray *) getCurrentFilters;
 +(void)setNewFilterModel:(FilterModel*)model;
++(void)editFilter:(FilterModel*)model withOldFilter:(FilterModel*)oldFilter;
++(void)deleteFilter:(FilterModel*)oldFilter;
++(FilterModel*)getDefaultFilter;
 - (void)loadLastNMessages:(NSUInteger)nMessages : (EmailsTableViewController *) fv;
 - (void) startLogin :(EmailsTableViewController *) fv;
 @property (nonatomic, strong) MCOIMAPOperation *imapCheckOp;

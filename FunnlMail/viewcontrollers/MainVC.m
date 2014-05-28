@@ -29,8 +29,6 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
       // Custom initialization
-      
-      //filterArray = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -42,9 +40,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-  
     self.view.backgroundColor = [UIColor whiteColor];
-  
     mainView = [[MainView alloc] init];
     mainView.hidden = YES;
     mainView.mainVCdelegate = self;
@@ -115,12 +111,14 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 // FIXME: move somewhere else?
 -(void) filterSelected:(FilterModel *)filterModel{
-    if(filterModel!=nil){
+    if(filterModel != nil){
         currentFilterModel = filterModel;
+    }else{
+      [EmailService getCurrentFilters];
     }
     mainView.hidden = YES;
     emailsTableViewController.filterModel = currentFilterModel;
-    [emailsTableViewController.tableView setContentOffset:CGPointMake(0, -40)];
+//    [emailsTableViewController.tableView setContentOffset:CGPointMake(0, -40)];
     //[filterView startLogin];  // TODO: (MSR) I'm guessing we don't want to call this again, may need to refactor retrieving of messages
 }
 
