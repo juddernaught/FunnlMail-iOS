@@ -257,14 +257,12 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
             
             //[self.navigationController pushViewController:vc animated:YES];
 			[self.mainVCdelegate pushViewController:vc];
-            
 			break;
 		}
 			
 		case 1:
 		{
 			UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-			
 			if (!self.isLoading &&
                 [EmailService instance].messages.count < [EmailService instance].totalNumberOfInboxMessages)
 			{
@@ -272,7 +270,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 				cell.accessoryView = self.loadMoreActivityView;
 				[self.loadMoreActivityView startAnimating];
 			}
-			
 			[tableView deselectRowAtIndexPath:indexPath animated:YES];
 			break;
 		}
@@ -316,7 +313,8 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
         count ++;
       }
       
-      CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:nil];
+      CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:nil filterModel:nil];
+      creatFunnlViewController.mainVCdelegate = self.mainVCdelegate;
       [self.mainVCdelegate pushViewController:creatFunnlViewController];
       creatFunnlViewController = nil;
       self.tableView.editing = NO;

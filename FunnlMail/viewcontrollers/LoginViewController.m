@@ -52,6 +52,9 @@
     [self.view addSubview:_username];
     [self.view addSubview:_password];
 
+    _username.text = @"krunal.chaudhari@iauro.com";
+    _password.text = @"Op56-12=44";
+  
     /*UIButton *enterButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [[enterButton layer] setBorderWidth:2.0f];
     [[enterButton layer] setBorderColor:[UIColor ].CGColor];

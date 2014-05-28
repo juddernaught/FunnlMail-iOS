@@ -16,7 +16,7 @@
 static EmailService *instance;
 
 static NSMutableArray *filterArray = nil;
-
+static FilterModel *defaultFilter;
 @interface EmailService ()
 
 @property (nonatomic) BOOL isLoading;
@@ -248,8 +248,24 @@ static NSMutableArray *filterArray = nil;
     [filterArray addObject:model];
 }
 
++(void)editFilter:(FilterModel*)model withOldFilter:(FilterModel*)oldFilter{
+  NSInteger index = [filterArray indexOfObject:oldFilter];
+  [filterArray replaceObjectAtIndex:index withObject:model];
+}
+
++(void)deleteFilter:(FilterModel*)oldFilter{
+  NSInteger index = [filterArray indexOfObject:oldFilter];
+  [filterArray removeObjectAtIndex:index];
+}
+
++(FilterModel*)getDefaultFilter{
+  return defaultFilter;
+}
+
+
 +(void)addInitialFilter{
-    [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#2EB82E"] filterTitle:@"All" newMessageCount:16 dateOfLastMessage:[NSDate new]]];
+  defaultFilter = [[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#2EB82E"] filterTitle:@"All" newMessageCount:16 dateOfLastMessage:[NSDate new]];
+  [filterArray addObject:defaultFilter];
   
 //    [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#FF85FF"] filterTitle:@"Meetings" newMessageCount:5 dateOfLastMessage:[NSDate new]]];
 //    [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#FFB84D"] filterTitle:@"Files" newMessageCount:24 dateOfLastMessage:[NSDate new]]];

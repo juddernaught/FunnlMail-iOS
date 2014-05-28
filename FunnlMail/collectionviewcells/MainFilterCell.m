@@ -11,7 +11,7 @@
 #import "UIColor+HexString.h"
 
 @implementation MainFilterCell
-
+@synthesize notificationButton,settingsButton;
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -70,6 +70,16 @@
         mailImageView.frame = CGRectMake(0, 0, 29, 23);
         [self addSubview:mailImageView];
       
+        notificationButton = [[UIButton alloc] initWithFrame:CGRectMake(2, self.frame.size.height - 32, 30, 30)];
+        [notificationButton setImage:[UIImage imageNamed:@"notification.png"] forState:UIControlStateNormal];
+        [self addSubview:notificationButton];
+        notificationButton.hidden = YES;
+      
+        settingsButton = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width - 32, self.frame.size.height - 32, 30, 30)];
+        [settingsButton setImage:[UIImage imageNamed:@"settings.png"] forState:UIControlStateNormal];
+        [self addSubview:settingsButton];
+        settingsButton.hidden = YES;
+      
 //        [mailImageView mas_makeConstraints:^(MASConstraintMaker *make) {
 //          make.top.equalTo(filterTitleLabel.mas_bottom).with.offset(0);
 //          make.left.equalTo(self.mas_centerX).with.offset(-(30/2));
@@ -90,6 +100,7 @@
         newMessageCountLabel = [[UILabel alloc] init];
         newMessageCountLabel.textAlignment = NSTextAlignmentCenter;
         newMessageCountLabel.text = @"0";
+        newMessageCountLabel.font = [UIFont fontWithName:@"Helvetica" size:11];
         [self addSubview:newMessageCountLabel];
       
         [newMessageCountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -109,6 +120,7 @@
         [self addConstraint:constraint];
       
       
+      /*
         dateOfLastMessageLabel = [[UILabel alloc] init];
         dateOfLastMessageLabel.textAlignment = NSTextAlignmentLeft;
         dateOfLastMessageLabel.text = @"1 hour ago";
@@ -154,7 +166,7 @@
       
         [self addConstraint:constraint];
       
-      
+      */
 
       
     }
@@ -181,18 +193,26 @@
       make.top.equalTo(filterTitleLabel.mas_bottom).with.offset(0);
       make.left.equalTo(self.mas_centerX).with.offset(-(40/2));
     }];
+    settingsButton.hidden = YES;
   }else{
         [mailImageView mas_makeConstraints:^(MASConstraintMaker *make) {
           make.top.equalTo(filterTitleLabel.mas_bottom).with.offset(0);
           make.left.equalTo(self.mas_centerX).with.offset(-(30/2));
         }];
+    settingsButton.hidden = NO;
+    notificationButton.hidden = NO;
   }
+  
+  if([filterTitleLabel.text isEqualToString:@"All"]){
+    settingsButton.hidden = YES;
+    notificationButton.hidden = NO;
+  }
+  
 }
 
 -(void) setNewMessageCount:(NSInteger)newMessageCount{
   _newMessageCount = newMessageCount;
-  
-  newMessageCountLabel.text = [NSString stringWithFormat:@"%zd", newMessageCount];
+  newMessageCountLabel.text = [NSString stringWithFormat:@"%zd new", newMessageCount];
 }
 
 /*

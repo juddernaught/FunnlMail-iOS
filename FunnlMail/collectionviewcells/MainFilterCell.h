@@ -21,5 +21,6 @@
 @property (copy,nonatomic) NSString *filterTitle;
 @property (assign,nonatomic) NSInteger newMessageCount;
 @property (copy,nonatomic) NSDate *dateOfLastMessage;
+@property (copy,nonatomic) UIButton *notificationButton,*settingsButton;
 
 @end

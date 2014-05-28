@@ -17,7 +17,7 @@
 @end
 
 @implementation CreateFunnlViewController
-
+@synthesize mainVCdelegate;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -33,12 +33,19 @@
     [self.navigationItem setRightBarButtonItem:saveButton];
 }
 
--(id)initTableViewWithSenders:(NSMutableDictionary*)sendersDictionary subjects:(NSMutableDictionary*)subjectsDictionary
+-(id)initTableViewWithSenders:(NSMutableDictionary*)sendersDictionary subjects:(NSMutableDictionary*)subjectsDictionary filterModel:(FilterModel*)model;
 {
   self = [super init];
   if (self) {
     // Custom initialization
     funnlName = @"";
+    if(model){
+      //edit
+        funnlName = model.filterTitle;
+        oldModel = model;
+        isEdit = YES;
+    }
+
     if(sendersDictionary)
       dictionaryOfConversations = [[NSMutableDictionary alloc] initWithDictionary:sendersDictionary];
     else
@@ -53,6 +60,20 @@
     [tableview setDataSource:self];
     [tableview setDelegate:self];
     [self.view addSubview:tableview];
+    
+    if(isEdit){
+      UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(10, 0, 300, 40)];
+      UIButton *deleteButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 300, 40)];
+      [deleteButton setTitleColor:[UIColor colorWithHexString:@"#448DEC"] forState:UIControlStateNormal];
+      [deleteButton setTitleColor:[UIColor colorWithHexString:@"#6F7683"] forState:UIControlStateHighlighted];
+      [deleteButton setTitle:@"Delete Funnl" forState:UIControlStateNormal];
+      [deleteButton.layer setBorderColor:[UIColor colorWithHexString:@"#448DEC"].CGColor];
+      [deleteButton.layer setBorderWidth:1];
+      [footerView addSubview:deleteButton];
+      tableview.tableFooterView = footerView;
+      [deleteButton addTarget:self action:@selector(deleteButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    
   }
   return self;
   
@@ -108,7 +129,7 @@
     
     if(indexPath.section == 0)
     {
-        cell.textField.frame = CGRectMake(10, 2,280, 40);
+        cell.textField.frame = CGRectMake(10, 2,250, 40);
         cell.textField.placeholder = @"Enter name";
         cell.textField.text = funnlName;
         cell.textField.delegate = self;
@@ -129,9 +150,16 @@
         if(indexPath.row ==  dictionaryOfConversations.allKeys.count)
         {
             [cell.addButton setHidden:NO];
+            [cell.cancelButton setHidden:YES];
             [cell.addButton setFrame:CGRectMake(270, 2, 40, 40)];
             [cell.addButton addTarget:self action:@selector(addButtonPressedForConversation:) forControlEvents:UIControlEventTouchUpInside];
             cell.textField.placeholder = @"Enter Email ID";
+        }else{
+          [cell.addButton setHidden:YES];
+          [cell.cancelButton setHidden:NO];
+          [cell.cancelButton setFrame:CGRectMake(270, 2, 40, 40)];
+          cell.cancelButton.tag = indexPath.row;
+          [cell.cancelButton addTarget:self action:@selector(cancelButtonPressedForConversation:) forControlEvents:UIControlEventTouchUpInside];
         }
         cell.tag = cell.contentView.tag = indexPath.row;
     }
@@ -148,9 +176,18 @@
         if(indexPath.row == dictionaryOfSubjects.allKeys.count)
         {
             [cell.addButton setHidden:NO];
+            [cell.cancelButton setHidden:YES];
             [cell.addButton setFrame:CGRectMake(270, 2, 40, 40)];
             [cell.addButton addTarget:self action:@selector(addButtonPressedForSubject:) forControlEvents:UIControlEventTouchUpInside];
             cell.textField.placeholder = @"Enter Subject";
+        }
+        else{
+          [cell.addButton setHidden:YES];
+          [cell.cancelButton setHidden:NO];
+          [cell.cancelButton setFrame:CGRectMake(270, 2, 40, 40)];
+          cell.cancelButton.tag = indexPath.row;
+          [cell.cancelButton addTarget:self action:@selector(cancelButtonPressedForSubject:) forControlEvents:UIControlEventTouchUpInside];
+          
         }
         cell.tag = cell.contentView.tag = indexPath.row;
     }
@@ -250,12 +287,57 @@
     [tableview reloadData];
 }
 
+-(void)cancelButtonPressedForConversation:(id)sender{
+  UIButton *b = (UIButton*)sender;
+  NSIndexPath *indexPath = [NSIndexPath indexPathForRow:b.tag inSection:1];
+
+  [dictionaryOfConversations removeObjectForKey:indexPath];
+  [tableview deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
+  NSSortDescriptor *rowDescriptor = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
+  NSArray *sortedRows = [dictionaryOfConversations.allKeys sortedArrayUsingDescriptors:@[rowDescriptor]];
+  //NSLog(@"%@",sortedRows.description);
+  NSMutableDictionary *tmpDictionary = [[NSMutableDictionary alloc] init];
+  NSInteger count = 0;
+  for (NSIndexPath *path in sortedRows) {
+    [tmpDictionary setObject:[dictionaryOfConversations objectForKey:path] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
+    count++;
+  }
+  dictionaryOfConversations = [NSMutableDictionary dictionaryWithDictionary:tmpDictionary];
+  tmpDictionary = nil;
+}
+
+-(void)cancelButtonPressedForSubject:(id)sender{
+  UIButton *b = (UIButton*)sender;
+  NSIndexPath *indexPath = [NSIndexPath indexPathForRow:b.tag inSection:2];
+  
+  [dictionaryOfSubjects removeObjectForKey:indexPath];
+  [tableview deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
+  NSSortDescriptor *rowDescriptor = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
+  NSArray *sortedRows = [dictionaryOfSubjects.allKeys sortedArrayUsingDescriptors:@[rowDescriptor]];
+  //NSLog(@"%@",sortedRows.description);
+  NSMutableDictionary *tmpDictionary = [[NSMutableDictionary alloc] init];
+  NSInteger count = 0;
+  for (NSIndexPath *path in sortedRows) {
+    [tmpDictionary setObject:[dictionaryOfSubjects objectForKey:path] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
+    count++;
+  }
+  dictionaryOfSubjects = [NSMutableDictionary dictionaryWithDictionary:tmpDictionary];
+  tmpDictionary = nil;
+}
+
+-(void)deleteButtonClicked:(id)sender{
+  [EmailService deleteFilter:oldModel];
+  FilterModel *defaultFilter = [EmailService getDefaultFilter];
+  [self.mainVCdelegate filterSelected:defaultFilter];
+  [self.navigationController popViewControllerAnimated:YES];
+}
+
 -(void)saveButtonPressed
 {
-    if(activeField){
+    NSLog(@"Save Butoon pressed");
+  if(activeField){
         [activeField resignFirstResponder];
     }
-    NSLog(@"Save Butoon pressed");
     if(funnlName.length){
         if(dictionaryOfConversations.allKeys.count){
           NSInteger gradientInt = arc4random_uniform(randomColors.count);
@@ -263,8 +345,15 @@
           if(color == nil){
             color = [UIColor colorWithHexString:@"#2EB82E"];
           }
-          FilterModel *model = [[FilterModel alloc]initWithBarColor:color filterTitle:funnlName newMessageCount:0 dateOfLastMessage:[NSDate new] sendersArray:(NSMutableArray*)[dictionaryOfConversations allValues] subjectsArray:(NSMutableArray*)[dictionaryOfSubjects allValues]];
-          [EmailService setNewFilterModel:model];
+          FilterModel *model;
+          model = [[FilterModel alloc]initWithBarColor:color filterTitle:funnlName newMessageCount:0 dateOfLastMessage:[NSDate new] sendersArray:(NSMutableArray*)[dictionaryOfConversations allValues] subjectsArray:(NSMutableArray*)[dictionaryOfSubjects allValues]];
+          if(isEdit){
+            [EmailService editFilter:model withOldFilter:oldModel];
+          }else{
+            [EmailService setNewFilterModel:model];
+          }
+          [self.mainVCdelegate filterSelected:model];
+
           [self.navigationController popViewControllerAnimated:YES];
         }else{
           UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Please add at least one email" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
