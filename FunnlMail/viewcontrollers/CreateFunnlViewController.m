@@ -407,7 +407,6 @@
 {
     CGSize kbSize = [[[sender userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
     NSTimeInterval duration = [[[sender userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-    
     [UIView animateWithDuration:duration animations:^{
         UIEdgeInsets edgeInsets = UIEdgeInsetsMake(50, 0, kbSize.height, 0);
         [tableview setContentInset:edgeInsets];
@@ -418,7 +417,6 @@
 - (void)keyboardWillHide:(NSNotification *)sender
 {
     NSTimeInterval duration = [[[sender userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-    
     [UIView animateWithDuration:duration animations:^{
         UIEdgeInsets edgeInsets = UIEdgeInsetsMake(50, 0, 0, 0);;
         [tableview setContentInset:edgeInsets];

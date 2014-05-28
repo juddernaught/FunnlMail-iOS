@@ -371,31 +371,31 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
       NSLog(@"%@",error.description);
-    } else
-    {
-      // If we find any messages
-    NSLog(@"%d", [searchResult count]);
-    filterLabel.text = [NSString stringWithFormat:@"Search Results : %d",searchResult.count];
-    if (searchResult) {
-        MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)
-        (MCOIMAPMessagesRequestKindHeaders | MCOIMAPMessagesRequestKindStructure |
-         MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject |
-         MCOIMAPMessagesRequestKindFlags);
-          
-        MCOIMAPSession *session = [EmailService instance].imapSession;
-        MCOIMAPFetchMessagesOperation * op = [session fetchMessagesByUIDOperationWithFolder:@"INBOX" requestKind:requestKind uids:searchResult];
-        [op start:^(NSError * error, NSArray * messages, MCOIndexSet * vanishedMessages) {
-            NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"header.date" ascending:NO];
-            searchMessages = [[NSMutableArray alloc] initWithArray:[messages sortedArrayUsingDescriptors:@[sort]]];
-            isSearching = YES;
-            [self.tableView reloadData];
-            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        }];
-      }
-      else{
-          [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-      }
     }
+    else
+    {
+        NSLog(@"%d", [searchResult count]);
+        filterLabel.text = [NSString stringWithFormat:@"Search Results : %d",searchResult.count];
+        if (searchResult) {
+            MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)
+            (MCOIMAPMessagesRequestKindHeaders | MCOIMAPMessagesRequestKindStructure |
+             MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject |
+             MCOIMAPMessagesRequestKindFlags);
+              
+            MCOIMAPSession *session = [EmailService instance].imapSession;
+            MCOIMAPFetchMessagesOperation * op = [session fetchMessagesByUIDOperationWithFolder:@"INBOX" requestKind:requestKind uids:searchResult];
+            [op start:^(NSError * error, NSArray * messages, MCOIndexSet * vanishedMessages) {
+                NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"header.date" ascending:NO];
+                searchMessages = [[NSMutableArray alloc] initWithArray:[messages sortedArrayUsingDescriptors:@[sort]]];
+                isSearching = YES;
+                [self.tableView reloadData];
+                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            }];
+          }
+          else{
+              [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+          }
+        }
   }];
   [searchBar resignFirstResponder];
 }

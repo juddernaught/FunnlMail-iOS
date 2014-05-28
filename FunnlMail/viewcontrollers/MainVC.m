@@ -29,8 +29,6 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
       // Custom initialization
-      
-      //filterArray = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -42,9 +40,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-  
     self.view.backgroundColor = [UIColor whiteColor];
-  
     mainView = [[MainView alloc] init];
     mainView.hidden = YES;
     mainView.mainVCdelegate = self;
