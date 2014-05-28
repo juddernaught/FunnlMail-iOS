@@ -82,6 +82,7 @@
 		FA5627DA1935C92600238F40 /* notification.png in Resources */ = {isa = PBXBuildFile; fileRef = FA5627D61935C92600238F40 /* notification.png */; };
 		FA5627E11935E57700238F40 /* close.png in Resources */ = {isa = PBXBuildFile; fileRef = FA5627DF1935E57700238F40 /* close.png */; };
 		FA5627E21935E57700238F40 /* close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FA5627E01935E57700238F40 /* close@2x.png */; };
+		FA5627E61936136600238F40 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = FA5627E51936136600238F40 /* MBProgressHUD.m */; };
 		FA8DDA551933A6420049F83F /* TextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8DDA541933A6420049F83F /* TextFieldCell.m */; };
 /* End PBXBuildFile section */
 
@@ -253,6 +254,8 @@
 		FA5627D61935C92600238F40 /* notification.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notification.png; sourceTree = "<group>"; };
 		FA5627DF1935E57700238F40 /* close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = close.png; sourceTree = "<group>"; };
 		FA5627E01935E57700238F40 /* close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close@2x.png"; sourceTree = "<group>"; };
+		FA5627E41936136600238F40 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		FA5627E51936136600238F40 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		FA8DDA531933A6420049F83F /* TextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFieldCell.h; sourceTree = "<group>"; };
 		FA8DDA541933A6420049F83F /* TextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextFieldCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -430,6 +433,7 @@
 				CC39517318E710CC0093C787 /* models */,
 				CC8C7EB018E6F34D00E76AE8 /* external */,
 				CC8C7EAA18E6EF8600E76AE8 /* viewcontrollers */,
+				CCD00B5918F54797007A675F /* MainView.h */,
 				CCE45D8B18F5418C00C2BC64 /* views */,
 				CC8C7EAF18E6F1F400E76AE8 /* collectionviewcells */,
 				CC8C7EAE18E6F1DE00E76AE8 /* tablecells */,
@@ -559,6 +563,8 @@
 		CC8C7EB018E6F34D00E76AE8 /* external */ = {
 			isa = PBXGroup;
 			children = (
+				FA5627E41936136600238F40 /* MBProgressHUD.h */,
+				FA5627E51936136600238F40 /* MBProgressHUD.m */,
 				CC4263A01934B66900F3C5EB /* FMDatabase */,
 				66E6697A1904432B003F9305 /* KeychainItemWrapper */,
 				6677882818F1F3C900EF1962 /* MailCore */,
@@ -608,7 +614,6 @@
 		CCE45D8B18F5418C00C2BC64 /* views */ = {
 			isa = PBXGroup;
 			children = (
-				CCD00B5918F54797007A675F /* MainView.h */,
 				CCD00B5A18F54797007A675F /* MainView.m */,
 			);
 			name = views;
@@ -789,6 +794,7 @@
 				CC8C7ECA18E6F38100E76AE8 /* MASConstraintMaker.m in Sources */,
 				CC8C7ED018E6F38100E76AE8 /* View+MASAdditions.m in Sources */,
 				CC4263B41934B67A00F3C5EB /* FMResultSet.m in Sources */,
+				FA5627E61936136600238F40 /* MBProgressHUD.m in Sources */,
 				660BA98E1902CDEA00CDF86E /* LoginViewController.m in Sources */,
 				CC4263B21934B67A00F3C5EB /* FMDatabasePool.m in Sources */,
 				6677881A18EF84FB00EF1962 /* MCOCIDURLProtocol.mm in Sources */,

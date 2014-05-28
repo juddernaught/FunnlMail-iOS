@@ -12,11 +12,13 @@
 #import "FilterModel.h"
 #import "MainVCDelegate.h"
 
-@interface EmailsTableViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate> {
+@interface EmailsTableViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate> {
     UIView *filterNavigationView;
     UILabel *filterLabel;
-    UISearchBar *searchBar;
+    UISearchBar *mailSearchBar;
     UISearchDisplayController *searchDisplayController;
+    NSMutableArray *searchMessages;
+    BOOL isSearching;
 }
 
 @property (nonatomic, strong) NSArray *messages;
