@@ -410,7 +410,7 @@ static GTMOAuth2Keychain* gGTMOAuth2DefaultKeychain = nil;
         self.popViewBlock = nil;
 #endif
       } else {
-        [self.navigationController popViewControllerAnimated:YES];
+        //[self.navigationController popViewControllerAnimated:YES];
       }
       self.view.hidden = YES;
     }

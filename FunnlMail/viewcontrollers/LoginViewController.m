@@ -143,14 +143,15 @@
                                                          keychainItemName:kKeychainItemName
                                                                  delegate:self
                                                          finishedSelector:@selector(viewController:finishedWithAuth:error:)];
-    [[self navigationController] pushViewController:viewController
-                                           animated:YES];
+    [[self navigationController] pushViewController:viewController animated:YES];
+    //[[self navigationController] presentViewController:viewController animated:YES completion:nil];
 }
 
 - (void)viewController:(GTMOAuth2ViewControllerTouch *)viewController
       finishedWithAuth:(GTMOAuth2Authentication *)auth
                  error:(NSError *)error {
     if (error != nil) {
+        [[self navigationController] popViewControllerAnimated:YES];
         // Authentication failed
     } else {
         NSString * email = [auth userEmail];
