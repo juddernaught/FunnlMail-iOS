@@ -9,6 +9,9 @@
 #import "LoginViewController.h"
 #import "MainVC.h"
 #import "KeychainItemWrapper.h"
+#import "GTMOAuth2ViewControllerTouch.h"
+#import <mailcore/mailcore.h>
+#import "EmailService.h"
 
 @interface LoginViewController ()
 
@@ -84,13 +87,60 @@
 }
 
 - (void) doneButtonSelected {
-    KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"UserLoginInfo" accessGroup:nil];
+    /*KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"UserLoginInfo" accessGroup:nil];
     [keychainItem setObject:_username.text forKey:(__bridge id)(kSecAttrAccount)];
     [keychainItem setObject:_password.text forKey:(__bridge id)(kSecAttrService)];
 
     MainVC *mainvc = [[MainVC alloc] init];
     UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:mainvc];
-    [self.navigationController presentViewController:nav animated:YES completion:nil];
+    [self.navigationController presentViewController:nav animated:YES completion:nil];*/
+    [self oauthLogin];
+}
+
+- (void) oauthLogin {
+    static NSString *const kKeychainItemName = @"OAuth2 Sample: Gmail";
+    
+    NSString *kMyClientID = @"655269106649-rkom4nvj3m9ofdpg6sk53pi65mpivv7d.apps.googleusercontent.com";     // pre-assigned by service
+    NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt"; // pre-assigned by service
+    
+    NSString *scope = @"https://mail.google.com/"; // scope for Gmail
+    
+    GTMOAuth2ViewControllerTouch *viewController;
+    viewController = [[GTMOAuth2ViewControllerTouch alloc] initWithScope:scope
+                                                                 clientID:kMyClientID
+                                                             clientSecret:kMyClientSecret
+                                                         keychainItemName:kKeychainItemName
+                                                                 delegate:self
+                                                         finishedSelector:@selector(viewController:finishedWithAuth:error:)];
+    [[self navigationController] pushViewController:viewController
+                                           animated:YES];
+}
+
+- (void)viewController:(GTMOAuth2ViewControllerTouch *)viewController
+      finishedWithAuth:(GTMOAuth2Authentication *)auth
+                 error:(NSError *)error {
+    if (error != nil) {
+        // Authentication failed
+    } else {
+        NSString * email = [auth userEmail];
+        NSString * accessToken = [auth accessToken];
+        
+        MCOIMAPSession * imapSession = [[MCOIMAPSession alloc] init];
+        [EmailService instance].imapSession = imapSession;
+        [imapSession setAuthType:MCOAuthTypeXOAuth2];
+        [imapSession setOAuth2Token:accessToken];
+        [imapSession setUsername:email];
+        
+        MCOSMTPSession * smtpSession = [[MCOSMTPSession alloc] init];
+        [smtpSession setAuthType:MCOAuthTypeXOAuth2];
+        [smtpSession setOAuth2Token:accessToken];
+        [smtpSession setUsername:email];
+        
+        MainVC *mainvc = [[MainVC alloc] init];
+        UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:mainvc];
+        [self.navigationController presentViewController:nav animated:YES completion:nil];
+        // Authentication succeeded
+    }
 }
 
 /*

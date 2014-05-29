@@ -73,16 +73,18 @@ static FilterModel *defaultFilter;
                     oauth2Token:(NSString *)oauth2Token
                      filterview:(EmailsTableViewController *) fv
 {
-	self.imapSession = [[MCOIMAPSession alloc] init];
+	//self.imapSession = [[MCOIMAPSession alloc] init];
 	self.imapSession.hostname = hostname;
 	self.imapSession.port = 993;
-	self.imapSession.username = username;
-	self.imapSession.password = password;
-    if (oauth2Token != nil) {
-        self.imapSession.OAuth2Token = oauth2Token;
-        self.imapSession.authType = MCOAuthTypeXOAuth2;
-    }
-	self.imapSession.connectionType = MCOConnectionTypeTLS;
+	//self.imapSession.username = username;
+	//self.imapSession.password = password;
+    //if (oauth2Token != nil) {
+    //    self.imapSession.OAuth2Token = oauth2Token;
+    //    self.imapSession.authType = MCOAuthTypeXOAuth2;
+    //}*/
+	
+    // Dan asks: WHAT DOES THE BELOW LINE MEAN???
+    self.imapSession.connectionType = MCOConnectionTypeTLS;
     EmailService * __weak weakSelf = self;
 	self.imapSession.connectionLogger = ^(void * connectionID, MCOConnectionLogType type, NSData * data) {
         @synchronized(weakSelf) {

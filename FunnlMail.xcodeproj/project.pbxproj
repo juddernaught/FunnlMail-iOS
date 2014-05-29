@@ -37,6 +37,11 @@
 		6677882518F0ADBB00EF1962 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6677882418F0ADBB00EF1962 /* SystemConfiguration.framework */; };
 		6677882718F0AEED00EF1962 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6677882618F0AEED00EF1962 /* main.mm */; };
 		66AEEB811933002D00B6DBE5 /* EmailsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AEEB801933002D00B6DBE5 /* EmailsTableViewController.m */; };
+		66AEEBA41936B1FC00B6DBE5 /* GTMOAuth2Authentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AEEBA31936B1FC00B6DBE5 /* GTMOAuth2Authentication.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66AEEBA71936B24900B6DBE5 /* GTMOAuth2SignIn.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AEEBA61936B24900B6DBE5 /* GTMOAuth2SignIn.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66AEEBAB1936B26B00B6DBE5 /* GTMOAuth2ViewControllerTouch.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AEEBA91936B26B00B6DBE5 /* GTMOAuth2ViewControllerTouch.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66AEEBAC1936B26B00B6DBE5 /* GTMOAuth2ViewTouch.xib in Resources */ = {isa = PBXBuildFile; fileRef = 66AEEBAA1936B26B00B6DBE5 /* GTMOAuth2ViewTouch.xib */; };
+		66AEEBAF1936B5D100B6DBE5 /* GTMHTTPFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AEEBAE1936B5D100B6DBE5 /* GTMHTTPFetcher.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66E669751904431E003F9305 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E669741904431E003F9305 /* KeychainItemWrapper.m */; };
 		66F2C46A18E3293E00CD593E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C46918E3293E00CD593E /* Foundation.framework */; };
 		66F2C46C18E3293E00CD593E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C46B18E3293E00CD593E /* CoreGraphics.framework */; };
@@ -175,6 +180,15 @@
 		6677882618F0AEED00EF1962 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		66AEEB7F1933002D00B6DBE5 /* EmailsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmailsTableViewController.h; path = viewcontrollers/EmailsTableViewController.h; sourceTree = "<group>"; };
 		66AEEB801933002D00B6DBE5 /* EmailsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EmailsTableViewController.m; path = viewcontrollers/EmailsTableViewController.m; sourceTree = "<group>"; };
+		66AEEBA21936B1FC00B6DBE5 /* GTMOAuth2Authentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMOAuth2Authentication.h; sourceTree = "<group>"; };
+		66AEEBA31936B1FC00B6DBE5 /* GTMOAuth2Authentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMOAuth2Authentication.m; sourceTree = "<group>"; };
+		66AEEBA51936B24900B6DBE5 /* GTMOAuth2SignIn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMOAuth2SignIn.h; sourceTree = "<group>"; };
+		66AEEBA61936B24900B6DBE5 /* GTMOAuth2SignIn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMOAuth2SignIn.m; sourceTree = "<group>"; };
+		66AEEBA81936B26B00B6DBE5 /* GTMOAuth2ViewControllerTouch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMOAuth2ViewControllerTouch.h; sourceTree = "<group>"; };
+		66AEEBA91936B26B00B6DBE5 /* GTMOAuth2ViewControllerTouch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMOAuth2ViewControllerTouch.m; sourceTree = "<group>"; };
+		66AEEBAA1936B26B00B6DBE5 /* GTMOAuth2ViewTouch.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GTMOAuth2ViewTouch.xib; sourceTree = "<group>"; };
+		66AEEBAD1936B5D100B6DBE5 /* GTMHTTPFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMHTTPFetcher.h; sourceTree = "<group>"; };
+		66AEEBAE1936B5D100B6DBE5 /* GTMHTTPFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMHTTPFetcher.m; sourceTree = "<group>"; };
 		66E669731904431E003F9305 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		66E669741904431E003F9305 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		66F2C46618E3293E00CD593E /* FunnlMail.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FunnlMail.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -377,6 +391,22 @@
 			name = MailCore;
 			sourceTree = "<group>";
 		};
+		66AEEB9D1936B1DB00B6DBE5 /* gtm-oauth2 */ = {
+			isa = PBXGroup;
+			children = (
+				66AEEBAD1936B5D100B6DBE5 /* GTMHTTPFetcher.h */,
+				66AEEBAE1936B5D100B6DBE5 /* GTMHTTPFetcher.m */,
+				66AEEBA81936B26B00B6DBE5 /* GTMOAuth2ViewControllerTouch.h */,
+				66AEEBA91936B26B00B6DBE5 /* GTMOAuth2ViewControllerTouch.m */,
+				66AEEBAA1936B26B00B6DBE5 /* GTMOAuth2ViewTouch.xib */,
+				66AEEBA51936B24900B6DBE5 /* GTMOAuth2SignIn.h */,
+				66AEEBA61936B24900B6DBE5 /* GTMOAuth2SignIn.m */,
+				66AEEBA21936B1FC00B6DBE5 /* GTMOAuth2Authentication.h */,
+				66AEEBA31936B1FC00B6DBE5 /* GTMOAuth2Authentication.m */,
+			);
+			name = "gtm-oauth2";
+			sourceTree = "<group>";
+		};
 		66E6697A1904432B003F9305 /* KeychainItemWrapper */ = {
 			isa = PBXGroup;
 			children = (
@@ -564,6 +594,7 @@
 			children = (
 				FA5627E41936136600238F40 /* MBProgressHUD.h */,
 				FA5627E51936136600238F40 /* MBProgressHUD.m */,
+				66AEEB9D1936B1DB00B6DBE5 /* gtm-oauth2 */,
 				CC4263A01934B66900F3C5EB /* FMDatabase */,
 				66E6697A1904432B003F9305 /* KeychainItemWrapper */,
 				6677882818F1F3C900EF1962 /* MailCore */,
@@ -743,6 +774,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66AEEBAC1936B26B00B6DBE5 /* GTMOAuth2ViewTouch.xib in Resources */,
 				6620BA9218E343FA00769C48 /* News.png in Resources */,
 				FA5627E21935E57700238F40 /* close@2x.png in Resources */,
 				6620BA8118E32FD700769C48 /* Meetings.png in Resources */,
@@ -796,6 +828,7 @@
 				CC4263B01934B67A00F3C5EB /* FMDatabase.m in Sources */,
 				CC8C7ECA18E6F38100E76AE8 /* MASConstraintMaker.m in Sources */,
 				CC8C7ED018E6F38100E76AE8 /* View+MASAdditions.m in Sources */,
+				66AEEBAF1936B5D100B6DBE5 /* GTMHTTPFetcher.m in Sources */,
 				CC4263B41934B67A00F3C5EB /* FMResultSet.m in Sources */,
 				FA5627E61936136600238F40 /* MBProgressHUD.m in Sources */,
 				660BA98E1902CDEA00CDF86E /* LoginViewController.m in Sources */,
@@ -808,7 +841,9 @@
 				CC8C7ECC18E6F38100E76AE8 /* MASViewAttribute.m in Sources */,
 				CCC377A918E7113B004F7FC0 /* FilterModel.m in Sources */,
 				CC8C7ECF18E6F38100E76AE8 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
+				66AEEBAB1936B26B00B6DBE5 /* GTMOAuth2ViewControllerTouch.m in Sources */,
 				CC8C7EC818E6F38100E76AE8 /* MASCompositeConstraint.m in Sources */,
+				66AEEBA71936B24900B6DBE5 /* GTMOAuth2SignIn.m in Sources */,
 				66E669751904431E003F9305 /* KeychainItemWrapper.m in Sources */,
 				6677880C18EF80BF00EF1962 /* EmailCell.m in Sources */,
 				FA8DDA551933A6420049F83F /* TextFieldCell.m in Sources */,
@@ -822,6 +857,7 @@
 				CC8A455C18E832B8009FDBDB /* UIColor+HexString.m in Sources */,
 				CC4263B31934B67A00F3C5EB /* FMDatabaseQueue.m in Sources */,
 				6677882718F0AEED00EF1962 /* main.mm in Sources */,
+				66AEEBA41936B1FC00B6DBE5 /* GTMOAuth2Authentication.m in Sources */,
 				6677881718EF83F800EF1962 /* MCOMessageView.mm in Sources */,
 				CC39517218E6F9700093C787 /* MainFilterCell.m in Sources */,
 			);
