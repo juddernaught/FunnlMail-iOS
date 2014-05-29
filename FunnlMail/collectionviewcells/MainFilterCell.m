@@ -9,6 +9,7 @@
 #import "MainFilterCell.h"
 #import "View+MASAdditions.h"
 #import "UIColor+HexString.h"
+#import "MASConstraintMaker.h"
 
 @implementation MainFilterCell
 @synthesize notificationButton,settingsButton;

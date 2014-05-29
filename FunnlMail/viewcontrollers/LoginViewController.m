@@ -12,6 +12,10 @@
 #import "GTMOAuth2ViewControllerTouch.h"
 #import <mailcore/mailcore.h>
 #import "EmailService.h"
+#import "View+MASAdditions.h"
+#import "MASConstraintMaker.h"
+#import "UIColor+HexString.h"
+
 
 @interface LoginViewController ()
 
@@ -28,7 +32,7 @@
     return self;
 }
 
-- (void)viewDidLoad
+/*- (void)viewDidLoad
 {
 
     [super viewDidLoad];
@@ -55,13 +59,6 @@
     [self.view addSubview:_username];
     [self.view addSubview:_password];
 
-    /*UIButton *enterButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [[enterButton layer] setBorderWidth:2.0f];
-    [[enterButton layer] setBorderColor:[UIColor ].CGColor];
-    [enterButton setTitle:@"Done" forState:UIControlStateNormal];
-    enterButton.frame = CGRectMake(100, 400, 100, 50);
-     */
-    
     UIButton *enterButton = [UIButton buttonWithType:UIButtonTypeCustom];
     enterButton.frame = CGRectMake(100, 100, 100,50);
     [enterButton setTitle:@"Done" forState:UIControlStateNormal];
@@ -76,8 +73,42 @@
     
     [self.view addSubview:enterButton];
 
-    //[self.view addConstraint:[NSLayoutConstraint constraintWithItem:username attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0]];
-    //[self.view addConstraint:[NSLayoutConstraint constraintWithItem:username attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100]];
+}*/
+
+- (void) viewDidLoad {
+    [super viewDidLoad];
+    self.view.backgroundColor = [UIColor colorWithHexString:@"F6F6F6"];
+
+    UIImageView *funnlMailIntroView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"intro.png"]];
+    
+    [self.view addSubview:funnlMailIntroView];
+    
+    [funnlMailIntroView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.view.mas_top).with.offset(20);
+        make.left.equalTo(self.view.mas_left).with.offset(0);
+        make.right.equalTo(self.view.mas_right).with.offset(0);
+        make.bottom.equalTo(self.view.mas_bottom).with.offset(-150);
+    }];
+    UIImage *loginImage = [UIImage imageNamed:@"login.png"];
+    UIButton *loginButton = [[UIButton alloc] init];
+    [loginButton setImage:loginImage forState:UIControlStateNormal];
+    
+    [loginButton addTarget:self
+               action:@selector(loginButtonSelected)forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:loginButton];
+    
+    [loginButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(funnlMailIntroView.mas_bottom).with.offset(55);
+        make.left.equalTo(self.view.mas_left).with.offset(40);
+    }];
+}
+
+- (void) viewWillAppear:(BOOL)animated {
+    [[self navigationController] setNavigationBarHidden:YES animated:NO];
+}
+
+- (void) viewWillDisappear:(BOOL)animated {
+    [[self navigationController] setNavigationBarHidden:YES animated:NO];
 }
 
 - (void)didReceiveMemoryWarning
@@ -86,7 +117,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void) doneButtonSelected {
+- (void) loginButtonSelected {
     /*KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"UserLoginInfo" accessGroup:nil];
     [keychainItem setObject:_username.text forKey:(__bridge id)(kSecAttrAccount)];
     [keychainItem setObject:_password.text forKey:(__bridge id)(kSecAttrService)];

@@ -42,6 +42,8 @@
 		66AEEBAB1936B26B00B6DBE5 /* GTMOAuth2ViewControllerTouch.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AEEBA91936B26B00B6DBE5 /* GTMOAuth2ViewControllerTouch.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66AEEBAC1936B26B00B6DBE5 /* GTMOAuth2ViewTouch.xib in Resources */ = {isa = PBXBuildFile; fileRef = 66AEEBAA1936B26B00B6DBE5 /* GTMOAuth2ViewTouch.xib */; };
 		66AEEBAF1936B5D100B6DBE5 /* GTMHTTPFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AEEBAE1936B5D100B6DBE5 /* GTMHTTPFetcher.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66AEEBBC19370EAB00B6DBE5 /* intro.png in Resources */ = {isa = PBXBuildFile; fileRef = 66AEEBBB19370EAB00B6DBE5 /* intro.png */; };
+		66AEEBBE193719AF00B6DBE5 /* login.png in Resources */ = {isa = PBXBuildFile; fileRef = 66AEEBBD193719AF00B6DBE5 /* login.png */; };
 		66E669751904431E003F9305 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E669741904431E003F9305 /* KeychainItemWrapper.m */; };
 		66F2C46A18E3293E00CD593E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C46918E3293E00CD593E /* Foundation.framework */; };
 		66F2C46C18E3293E00CD593E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C46B18E3293E00CD593E /* CoreGraphics.framework */; };
@@ -189,6 +191,8 @@
 		66AEEBAA1936B26B00B6DBE5 /* GTMOAuth2ViewTouch.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GTMOAuth2ViewTouch.xib; sourceTree = "<group>"; };
 		66AEEBAD1936B5D100B6DBE5 /* GTMHTTPFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMHTTPFetcher.h; sourceTree = "<group>"; };
 		66AEEBAE1936B5D100B6DBE5 /* GTMHTTPFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMHTTPFetcher.m; sourceTree = "<group>"; };
+		66AEEBBB19370EAB00B6DBE5 /* intro.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = intro.png; sourceTree = "<group>"; };
+		66AEEBBD193719AF00B6DBE5 /* login.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login.png; sourceTree = "<group>"; };
 		66E669731904431E003F9305 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		66E669741904431E003F9305 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		66F2C46618E3293E00CD593E /* FunnlMail.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FunnlMail.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -361,6 +365,7 @@
 		6620BAA518E3999A00769C48 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				66AEEBB21937091F00B6DBE5 /* Login */,
 				6620BA8B18E343A100769C48 /* Funnls */,
 				6620BA8A18E3439800769C48 /* Icons */,
 				6620BA9618E348A800769C48 /* Emails */,
@@ -405,6 +410,15 @@
 				66AEEBA31936B1FC00B6DBE5 /* GTMOAuth2Authentication.m */,
 			);
 			name = "gtm-oauth2";
+			sourceTree = "<group>";
+		};
+		66AEEBB21937091F00B6DBE5 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				66AEEBBD193719AF00B6DBE5 /* login.png */,
+				66AEEBBB19370EAB00B6DBE5 /* intro.png */,
+			);
+			name = Login;
 			sourceTree = "<group>";
 		};
 		66E6697A1904432B003F9305 /* KeychainItemWrapper */ = {
@@ -784,11 +798,13 @@
 				66F2C47D18E3293E00CD593E /* Main.storyboard in Resources */,
 				FA5627D81935C92600238F40 /* settings.png in Resources */,
 				FA5627D91935C92600238F40 /* notification@2x.png in Resources */,
+				66AEEBBC19370EAB00B6DBE5 /* intro.png in Resources */,
 				6620BA9D18E38BE500769C48 /* Funnl.png in Resources */,
 				6620BA9C18E38BE500769C48 /* Compose.png in Resources */,
 				6620BAAC18E399C700769C48 /* Email 2.png in Resources */,
 				FA5627DA1935C92600238F40 /* notification.png in Resources */,
 				6620BA9418E343FA00769C48 /* Shopping.png in Resources */,
+				66AEEBBE193719AF00B6DBE5 /* login.png in Resources */,
 				6620BAAE18E399C700769C48 /* Email 4.png in Resources */,
 				CC4263BC1934BB6700F3C5EB /* dbschema.sql in Resources */,
 				6620BA8218E32FD700769C48 /* Payments.png in Resources */,
