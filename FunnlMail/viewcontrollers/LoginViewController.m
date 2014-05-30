@@ -98,8 +98,8 @@
     [self.view addSubview:loginButton];
     
     [loginButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(funnlMailIntroView.mas_bottom).with.offset(55);
-        make.left.equalTo(self.view.mas_left).with.offset(40);
+        make.top.equalTo(funnlMailIntroView.mas_bottom).with.offset(40);
+        make.left.equalTo(self.view.mas_left).with.offset(7);
     }];
 }
 
