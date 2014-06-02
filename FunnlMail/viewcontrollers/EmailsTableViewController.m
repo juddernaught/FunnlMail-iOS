@@ -167,19 +167,34 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
             {
                 EmailCell *cell = [tableView dequeueReusableCellWithIdentifier:mailCellIdentifier forIndexPath:indexPath];
                 MCOIMAPMessage *message = [EmailService instance].filterMessages[indexPath.row];
-                cell.textLabel.text = message.header.subject;
+                //cell.textLabel.text = message.header.subject;
+//                MCOMessageFlag newFlags = message.flags;
+//                newFlags |= MCOMessageFlagSeen;
+                
+                if(message.flags != MCOMessageFlagSeen){
+                    cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
+                }else{
+                    cell.readLabel.backgroundColor = [UIColor clearColor];
+                }
+
+                NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+                NSString *dateString = [dateFormatter stringFromDate:message.header.date];
+                cell.dateLabel.text = dateString;
+                cell.senderLabel.text = message.header.sender.mailbox;
+                cell.subjectLabel.text = message.header.subject;
 
                 NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
                 NSString *cachedPreview = [EmailService instance].filterMessagePreviews[uidKey];
                 if (cachedPreview)
                 {
-                    cell.detailTextLabel.text = cachedPreview;
+                    cell.bodyLabel.text = cachedPreview;
                 }
                 else
                 {
                     cell.messageRenderingOperation = [[EmailService instance].imapSession plainTextBodyRenderingOperationWithMessage:message folder:@"INBOX"];
                     [cell.messageRenderingOperation start:^(NSString * plainTextBodyString, NSError * error) {
-                        cell.detailTextLabel.text = plainTextBodyString;
+                        cell.bodyLabel.text = plainTextBodyString;
                         cell.messageRenderingOperation = nil;
                         [EmailService instance].filterMessagePreviews[uidKey] = plainTextBodyString;
                     }];
@@ -232,10 +247,18 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     else{
         EmailCell *cell = [tableView dequeueReusableCellWithIdentifier:mailCellIdentifier forIndexPath:indexPath];
         MCOIMAPMessage *message = searchMessages[indexPath.row];
-        cell.textLabel.text = message.header.subject;
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+        NSString *dateString = [dateFormatter stringFromDate:message.header.date];
+        cell.dateLabel.text = dateString;
+        cell.senderLabel.text = message.header.sender.mailbox;
+        cell.subjectLabel.text = message.header.subject;
+
+        //        cell.textLabel.text = message.header.subject;
         cell.messageRenderingOperation = [[EmailService instance].imapSession plainTextBodyRenderingOperationWithMessage:message folder:@"INBOX"];
         [cell.messageRenderingOperation start:^(NSString * plainTextBodyString, NSError * error) {
-            cell.detailTextLabel.text = plainTextBodyString;
+//            cell.detailTextLabel.text = plainTextBodyString;
+            cell.bodyLabel.text = plainTextBodyString;
             cell.messageRenderingOperation = nil;
         }];
         return cell;
@@ -298,7 +321,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 71.0;
+    return 90;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath

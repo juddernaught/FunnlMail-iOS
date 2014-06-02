@@ -90,6 +90,7 @@
 		FA5627E11935E57700238F40 /* close.png in Resources */ = {isa = PBXBuildFile; fileRef = FA5627DF1935E57700238F40 /* close.png */; };
 		FA5627E21935E57700238F40 /* close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FA5627E01935E57700238F40 /* close@2x.png */; };
 		FA5627E61936136600238F40 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = FA5627E51936136600238F40 /* MBProgressHUD.m */; };
+		FA5627FA193C5F5200238F40 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA5627F9193C5F5200238F40 /* QuartzCore.framework */; };
 		FA8DDA551933A6420049F83F /* TextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8DDA541933A6420049F83F /* TextFieldCell.m */; };
 /* End PBXBuildFile section */
 
@@ -274,6 +275,7 @@
 		FA5627E01935E57700238F40 /* close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close@2x.png"; sourceTree = "<group>"; };
 		FA5627E41936136600238F40 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		FA5627E51936136600238F40 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		FA5627F9193C5F5200238F40 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		FA8DDA531933A6420049F83F /* TextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFieldCell.h; sourceTree = "<group>"; };
 		FA8DDA541933A6420049F83F /* TextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextFieldCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -283,6 +285,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA5627FA193C5F5200238F40 /* QuartzCore.framework in Frameworks */,
 				CC4263B61934B68600F3C5EB /* libsqlite3.dylib in Frameworks */,
 				6677882518F0ADBB00EF1962 /* SystemConfiguration.framework in Frameworks */,
 				6677881C18F0797800EF1962 /* ImageIO.framework in Frameworks */,
@@ -453,6 +456,7 @@
 		66F2C46818E3293E00CD593E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FA5627F9193C5F5200238F40 /* QuartzCore.framework */,
 				CC4263B51934B68600F3C5EB /* libsqlite3.dylib */,
 				6677882418F0ADBB00EF1962 /* SystemConfiguration.framework */,
 				6677881B18F0797800EF1962 /* ImageIO.framework */,

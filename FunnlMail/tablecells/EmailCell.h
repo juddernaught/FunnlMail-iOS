@@ -10,7 +10,10 @@
 #import <MailCore/MailCore.h>
 
 @interface EmailCell : UITableViewCell
-
+{
+    
+}
+@property (nonatomic, strong) UILabel *senderLabel,*dateLabel,*subjectLabel,*readLabel,*bodyLabel;
 @property (nonatomic, strong) MCOIMAPMessageRenderingOperation * messageRenderingOperation;
 
 @end
