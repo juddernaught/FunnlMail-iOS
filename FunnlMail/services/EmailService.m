@@ -260,10 +260,10 @@ static FilterModel *defaultFilter;
                      i --;
                    }
                 }
-                self.filterMessages = (NSMutableArray*)[combinedMessages sortedArrayUsingDescriptors:@[sort]];
+                self.filterMessages = [[NSMutableArray alloc] initWithArray:[combinedMessages sortedArrayUsingDescriptors:@[sort]]];
                }
               else{
-                self.filterMessages = (NSMutableArray*)[combinedMessages sortedArrayUsingDescriptors:@[sort]];;
+                  self.filterMessages = [[NSMutableArray alloc] initWithArray:[combinedMessages sortedArrayUsingDescriptors:@[sort]]];
               }
               [fv.tableView reloadData];
           }];
