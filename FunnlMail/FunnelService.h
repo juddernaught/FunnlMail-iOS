@@ -11,6 +11,8 @@
 
 @interface FunnelService : NSObject
 
++(FunnelService *)instance;
+
 -(BOOL) insertEmailServer:(FunnelModel *)funnelModel;
 -(NSArray *) allFunnels;
 -(FunnelModel *) emailServersWithFunnelName:(NSString *)funnelName;

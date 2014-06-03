@@ -12,7 +12,32 @@
 #import "FMDatabase.h"
 #import "FMResultSet.h"
 
+static EmailServersService *instance;
+
 @implementation EmailServersService
+
+- (id)init
+{
+  self = [super init];
+  if (self) {
+    // Initialization code
+  }
+  return self;
+}
+
++ (void)initialize
+{
+  static BOOL initialized = NO;
+  if(!initialized)
+  {
+    initialized = YES;
+    instance = [[EmailServersService alloc] init];
+  }
+}
+
++(EmailServersService *)instance{
+  return instance;
+}
 
 -(BOOL) insertEmailServer:(EmailServerModel *)emailServerModel{
   __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];

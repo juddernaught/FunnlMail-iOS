@@ -11,6 +11,8 @@
 
 @interface EmailServersService : NSObject
 
++(EmailServersService *)instance;
+
 -(BOOL) insertEmailServer:(EmailServerModel *)emailServerModel;
 -(NSArray *) allEmailServers;
 -(EmailServerModel *) emailServersWithEmailAddress:(NSString *)emailAddress;

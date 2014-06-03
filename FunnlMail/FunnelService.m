@@ -12,7 +12,32 @@
 #import "FMDatabase.h"
 #import "FMResultSet.h"
 
+static FunnelService *instance;
+
 @implementation FunnelService
+
+- (id)init
+{
+  self = [super init];
+  if (self) {
+    // Initialization code
+  }
+  return self;
+}
+
++ (void)initialize
+{
+  static BOOL initialized = NO;
+  if(!initialized)
+  {
+    initialized = YES;
+    instance = [[FunnelService alloc] init];
+  }
+}
+
++(FunnelService *)instance{
+  return instance;
+}
 
 -(BOOL) insertEmailServer:(FunnelModel *)funnelModel{
   __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
