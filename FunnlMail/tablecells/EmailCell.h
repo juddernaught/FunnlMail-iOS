@@ -8,9 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import <MailCore/MailCore.h>
-
-@interface EmailCell : UITableViewCell
-
+#import "MCSwipeTableViewCell.h"
+@interface EmailCell : MCSwipeTableViewCell
+{
+    
+}
+@property (nonatomic, strong) UILabel *senderLabel,*dateLabel,*subjectLabel,*readLabel,*bodyLabel,*threadLabel;
 @property (nonatomic, strong) MCOIMAPMessageRenderingOperation * messageRenderingOperation;
 
 @end

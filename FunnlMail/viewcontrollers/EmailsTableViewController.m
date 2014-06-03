@@ -19,6 +19,7 @@
 #import "EmailService.h"
 #import "CreateFunnlviewController.h"
 #import "UIColor+HexString.h"
+#import "NSDate+TimeAgo.h"
 
 static NSString *FILTER_VIEW_CELL = @"FilterViewCell";
 static NSString *mailCellIdentifier = @"MailCell";
@@ -166,24 +167,106 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
             case 0:
             {
                 EmailCell *cell = [tableView dequeueReusableCellWithIdentifier:mailCellIdentifier forIndexPath:indexPath];
+                cell.delegate = self;
                 MCOIMAPMessage *message = [EmailService instance].filterMessages[indexPath.row];
-                cell.textLabel.text = message.header.subject;
+                
+                if(message.flags == MCOMessageFlagSeen){
+                    cell.readLabel.backgroundColor = [UIColor clearColor];
+                }else{
+                    cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
+                }
+
+                NSTimeInterval interval = [message.header.date timeIntervalSinceNow];
+                interval = -interval;
+                if([message.header.date isToday]){
+                    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                    [dateFormatter setDateFormat:@"hh:mm a"];
+                    NSString *dateString = [dateFormatter stringFromDate:message.header.date];
+                    cell.dateLabel.text = dateString;
+                }
+                else{
+                    cell.dateLabel.text = [message.header.date timeAgo];
+                }
+                if(message.header.sender.displayName.length)
+                    cell.senderLabel.text = message.header.sender.displayName;
+                else
+                    cell.senderLabel.text = message.header.sender.mailbox;
+                cell.subjectLabel.text = message.header.subject;
+                NSMutableSet *threadArray = [[EmailService instance].threadIdDictionary objectForKey:[NSString stringWithFormat:@"%qx",message.gmailThreadID]];
+                //NSLog(@"%@: %@ : %d %qx", message.header.sender.mailbox, message.header.subject, threadArray.count,message.gmailThreadID);
+                if(threadArray && threadArray.count > 1){
+                    //cell.threadLabel.text = [NSString stringWithFormat:@"%d",threadArray.count];
+                    cell.threadLabel.text = @"";
+                }
+                else{
+                    cell.threadLabel.text = @"";
+                }
 
                 NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
                 NSString *cachedPreview = [EmailService instance].filterMessagePreviews[uidKey];
                 if (cachedPreview)
                 {
-                    cell.detailTextLabel.text = cachedPreview;
+                    cell.bodyLabel.text = cachedPreview;
                 }
                 else
                 {
                     cell.messageRenderingOperation = [[EmailService instance].imapSession plainTextBodyRenderingOperationWithMessage:message folder:@"INBOX"];
                     [cell.messageRenderingOperation start:^(NSString * plainTextBodyString, NSError * error) {
-                        cell.detailTextLabel.text = plainTextBodyString;
+                        cell.bodyLabel.text = plainTextBodyString;
                         cell.messageRenderingOperation = nil;
                         [EmailService instance].filterMessagePreviews[uidKey] = plainTextBodyString;
                     }];
                 }
+                
+                UIView *archiveView = [self viewWithImageName:@"archive"];
+                UIColor *yellowColor = [UIColor colorWithHexString:@"#F9CA47"];
+                
+                UIView *deleteView = [self viewWithImageName:@"Funnl"];
+                UIColor *redColor = [UIColor colorWithHexString:@"#448DEC"];
+
+                [cell setSwipeGestureWithView:archiveView color:yellowColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+                    NSLog(@"Did swipe \"Archive\" cell");
+                    MCOIMAPOperation *msgOperation = [[EmailService instance].imapSession storeFlagsOperationWithFolder:@"INBOX" uids:[MCOIndexSet indexSetWithIndex:message.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagDeleted];
+                    [msgOperation start:^(NSError * error)
+                     {
+                         [tableView beginUpdates];
+                         [[EmailService instance].filterMessagePreviews removeObjectForKey:uidKey];
+                         [[EmailService instance].filterMessages removeObjectAtIndex:indexPath.row];
+                         [[EmailService instance].messages removeObjectIdenticalTo:message];
+                         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
+                         [tableView endUpdates];
+                         NSLog(@"selected message flags %u UID is %u",message.flags,message.uid );
+                    }];
+                    [cell swipeToOriginWithCompletion:nil];
+                }];
+                
+                [cell setSwipeGestureWithView:deleteView color:redColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+                    
+                    NSLog(@"Did swipe \"Delete\" cell");
+                    [cell swipeToOriginWithCompletion:nil];
+
+                    MCOIMAPMessage *message = [EmailService instance].filterMessages[indexPath.row];
+                    MCOAddress *emailAddress = message.header.from;
+                    NSMutableArray *mailArray = [[NSMutableArray alloc] init];
+                    [mailArray addObject:emailAddress];
+                    [mailArray addObjectsFromArray:message.header.cc];
+                    
+                    NSMutableDictionary *sendersDictionary = [[NSMutableDictionary alloc] init];
+                    int count = 0;
+                    for (MCOAddress *address in mailArray) {
+                        NSString *email = [address.mailbox lowercaseString];
+                        [sendersDictionary setObject:email forKey:[NSIndexPath indexPathForRow:count inSection:1]];
+                        count ++;
+                    }
+                    
+                    CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:nil filterModel:nil];
+                    creatFunnlViewController.mainVCdelegate = self.mainVCdelegate;
+                    [self.mainVCdelegate pushViewController:creatFunnlViewController];
+                    creatFunnlViewController = nil;
+
+                }];
+
+                
                 return cell;
                 break;
             }
@@ -232,10 +315,32 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     else{
         EmailCell *cell = [tableView dequeueReusableCellWithIdentifier:mailCellIdentifier forIndexPath:indexPath];
         MCOIMAPMessage *message = searchMessages[indexPath.row];
-        cell.textLabel.text = message.header.subject;
+//        NSTimeInterval interval = [message.header.date timeIntervalSinceNow];
+//        interval = -interval;
+//        if (interval > 86400) {
+        if([message.header.date isToday]){
+            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+            [dateFormatter setDateFormat:@"HH:mm"];
+            NSString *dateString = [dateFormatter stringFromDate:message.header.date];
+            cell.dateLabel.text = dateString;
+        }
+        else{
+            cell.dateLabel.text = [message.header.date timeAgo];
+        }
+        
+        if(message.header.sender.displayName.length)
+            cell.senderLabel.text = message.header.sender.displayName;
+        else
+            cell.senderLabel.text = message.header.sender.mailbox;
+
+        cell.subjectLabel.text = message.header.subject;
+        cell.threadLabel.text = @"";
+
         cell.messageRenderingOperation = [[EmailService instance].imapSession plainTextBodyRenderingOperationWithMessage:message folder:@"INBOX"];
         [cell.messageRenderingOperation start:^(NSString * plainTextBodyString, NSError * error) {
-            cell.detailTextLabel.text = plainTextBodyString;
+//        cell.textLabel.text = message.header.subject;
+//        cell.detailTextLabel.text = plainTextBodyString;
+            cell.bodyLabel.text = plainTextBodyString;
             cell.messageRenderingOperation = nil;
         }];
         return cell;
@@ -254,7 +359,12 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 vc.folder = @"INBOX";
                 vc.message = msg;
                 vc.session = [EmailService instance].imapSession;
-                
+                msg.flags = msg.flags | MCOMessageFlagSeen;
+                MCOIMAPOperation *msgOperation=[[EmailService instance].imapSession storeFlagsOperationWithFolder:@"INBOX" uids:[MCOIndexSet indexSetWithIndex:msg.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagSeen];
+                [msgOperation start:^(NSError * error)
+                {
+                    NSLog(@"selected message flags %u UID is %u",msg.flags,msg.uid );
+                }];
                 //[self.navigationController pushViewController:vc animated:YES];
                 [self.mainVCdelegate pushViewController:vc];
                 break;
@@ -293,12 +403,11 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 #pragma mark - Table View
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
 {
-    // TODO: Implement this
     return NO;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 71.0;
+    return 90;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -334,9 +443,34 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
   if(indexPath.section == 0){
-    return YES;
+    return NO;
   }
   return NO;
+}
+
+#pragma mark Helpers
+- (UIView *)viewWithImageName:(NSString *)imageName {
+    UIImage *image = [UIImage imageNamed:imageName];
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+    imageView.contentMode = UIViewContentModeCenter;
+    return imageView;
+}
+
+
+#pragma mark - MCSwipeTableViewCell delegates
+// When the user starts swiping the cell this method is called
+- (void)swipeTableViewCellDidStartSwiping:(MCSwipeTableViewCell *)cell {
+    // NSLog(@"Did start swiping the cell!");
+}
+
+// When the user ends swiping the cell this method is called
+- (void)swipeTableViewCellDidEndSwiping:(MCSwipeTableViewCell *)cell {
+    //NSLog(@"Did end swiping the cell!");
+}
+
+// When the user is dragging, this method is called and return the dragged percentage from the border
+- (void)swipeTableViewCell:(MCSwipeTableViewCell *)cell didSwipeWithPercentage:(CGFloat)percentage {
+    // NSLog(@"Did swipe with percentage : %f", percentage);
 }
 
 #pragma mark - SearchBar delegates
