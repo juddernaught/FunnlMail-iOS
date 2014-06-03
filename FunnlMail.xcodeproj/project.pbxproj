@@ -84,6 +84,8 @@
 		CCC9E416193D5CDF0028DC84 /* EmailServerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC9E415193D5CDF0028DC84 /* EmailServerModel.m */; };
 		CCC9E419193DF5550028DC84 /* FunnelModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC9E418193DF5550028DC84 /* FunnelModel.m */; };
 		CCC9E41C193DF5E80028DC84 /* FunnelService.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC9E41B193DF5E80028DC84 /* FunnelService.m */; };
+		CCC9E41F193DF91D0028DC84 /* MessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC9E41E193DF91D0028DC84 /* MessageModel.m */; };
+		CCC9E422193DF9B10028DC84 /* MessageService.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC9E421193DF9B10028DC84 /* MessageService.m */; };
 		CCD00B5B18F54797007A675F /* MainView.m in Sources */ = {isa = PBXBuildFile; fileRef = CCD00B5A18F54797007A675F /* MainView.m */; };
 		FA1AEB6C19346BE300E93907 /* add.png in Resources */ = {isa = PBXBuildFile; fileRef = FA1AEB6B19346BE300E93907 /* add.png */; };
 		FA2F433F193318BE00C1F119 /* CreateFunnlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2F433E193318BE00C1F119 /* CreateFunnlViewController.m */; };
@@ -273,6 +275,10 @@
 		CCC9E418193DF5550028DC84 /* FunnelModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FunnelModel.m; path = models/FunnelModel.m; sourceTree = "<group>"; };
 		CCC9E41A193DF5E80028DC84 /* FunnelService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FunnelService.h; sourceTree = "<group>"; };
 		CCC9E41B193DF5E80028DC84 /* FunnelService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FunnelService.m; sourceTree = "<group>"; };
+		CCC9E41D193DF91D0028DC84 /* MessageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageModel.h; path = models/MessageModel.h; sourceTree = "<group>"; };
+		CCC9E41E193DF91D0028DC84 /* MessageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageModel.m; path = models/MessageModel.m; sourceTree = "<group>"; };
+		CCC9E420193DF9B10028DC84 /* MessageService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageService.h; path = services/MessageService.h; sourceTree = "<group>"; };
+		CCC9E421193DF9B10028DC84 /* MessageService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageService.m; path = services/MessageService.m; sourceTree = "<group>"; };
 		CCD00B5918F54797007A675F /* MainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainView.h; path = views/MainView.h; sourceTree = "<group>"; };
 		CCD00B5A18F54797007A675F /* MainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainView.m; path = views/MainView.m; sourceTree = "<group>"; };
 		FA1AEB6B19346BE300E93907 /* add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add.png; sourceTree = "<group>"; };
@@ -539,6 +545,8 @@
 				CCC9E415193D5CDF0028DC84 /* EmailServerModel.m */,
 				CCC9E417193DF5550028DC84 /* FunnelModel.h */,
 				CCC9E418193DF5550028DC84 /* FunnelModel.m */,
+				CCC9E41D193DF91D0028DC84 /* MessageModel.h */,
+				CCC9E41E193DF91D0028DC84 /* MessageModel.m */,
 			);
 			name = models;
 			sourceTree = "<group>";
@@ -579,6 +587,8 @@
 				CCC9E40E193D5CC20028DC84 /* EmailServersService.m */,
 				CCC9E41A193DF5E80028DC84 /* FunnelService.h */,
 				CCC9E41B193DF5E80028DC84 /* FunnelService.m */,
+				CCC9E420193DF9B10028DC84 /* MessageService.h */,
+				CCC9E421193DF9B10028DC84 /* MessageService.m */,
 			);
 			name = services;
 			sourceTree = "<group>";
@@ -859,6 +869,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CC8C7ECE18E6F38100E76AE8 /* NSArray+MASAdditions.m in Sources */,
+				CCC9E41F193DF91D0028DC84 /* MessageModel.m in Sources */,
 				CCC9E40F193D5CC20028DC84 /* EmailServersService.m in Sources */,
 				CC8C7ECD18E6F38100E76AE8 /* MASViewConstraint.m in Sources */,
 				FA2F433F193318BE00C1F119 /* CreateFunnlViewController.m in Sources */,
@@ -894,6 +905,7 @@
 				CCC9E41C193DF5E80028DC84 /* FunnelService.m in Sources */,
 				CC7F72F818E83925008962C3 /* EmailService.m in Sources */,
 				66F2C47A18E3293E00CD593E /* AppDelegate.m in Sources */,
+				CCC9E422193DF9B10028DC84 /* MessageService.m in Sources */,
 				CC8A455C18E832B8009FDBDB /* UIColor+HexString.m in Sources */,
 				CC4263B31934B67A00F3C5EB /* FMDatabaseQueue.m in Sources */,
 				6677882718F0AEED00EF1962 /* main.mm in Sources */,
