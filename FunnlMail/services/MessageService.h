@@ -13,7 +13,7 @@
 
 +(MessageService *)instance;
 
--(BOOL) insertEmailServer:(MessageModel *)messageModel;
+-(BOOL) insertMessage:(MessageModel *)messageModel;
 -(NSArray *) messagesWithTop:(NSInteger)top;
 -(NSArray *) messagesWithStart:(NSInteger)start count:(NSInteger)count;
 -(BOOL) deleteMessage:(NSString *)messageID;

@@ -11,6 +11,8 @@
 #import "EmailServersService.h"
 #import "FunnelModel.h"
 #import "FunnelService.h"
+#import "MessageModel.h"
+#import "MessageService.h"
 
 @implementation ServiceTests
 
@@ -53,11 +55,11 @@
   // Test FunnelService
   //
   FunnelModel *funnelModel = [[FunnelModel alloc] init];
-  funnelModel.funnelName = @"";
-  funnelModel.emailAddresses = @"";
+  funnelModel.funnelName = @"test-inbox";
+  funnelModel.emailAddresses = @"test@test.com";
   funnelModel.phrases = @"";
   
-  inserted = [[FunnelService instance] insertEmailServer:funnelModel];
+  inserted = [[FunnelService instance] insertFunnel:funnelModel];
   
   if(inserted){
     NSLog(@"FunnelService insert worked");
@@ -82,6 +84,41 @@
   funnelArray = [[FunnelService instance] allFunnels];
   
   NSLog(@"funnelArray: %@", funnelArray);
+  
+  //
+  // Test MessageService
+  //
+  MessageModel *messageModel = [[MessageModel alloc] init];
+  messageModel.messageID = [[NSUUID UUID] UUIDString];
+  messageModel.messageJSON = @"JSON";
+  messageModel.read = NO;
+  messageModel.date = [NSDate new];
+  
+  inserted = [[MessageService instance] insertMessage:messageModel];
+  
+  if(inserted){
+    NSLog(@"MessageService insert worked");
+  }
+  else{
+    NSLog(@"MessageService insert failed");
+  }
+  
+  NSArray *messageArray = [[MessageService instance] messagesWithTop:10];
+  
+  NSLog(@"messageArray: %@", messageArray);
+  
+  deleted = [[MessageService instance] deleteMessage:messageModel.messageID];
+  
+  if(deleted){
+    NSLog(@"MessageService delete worked");
+  }
+  else{
+    NSLog(@"MessageService delete failed");
+  }
+  
+  messageArray = [[MessageService instance] messagesWithTop:10];
+  
+  NSLog(@"messageArray: %@", messageArray);
 }
 
 @end

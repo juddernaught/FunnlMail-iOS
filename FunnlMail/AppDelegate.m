@@ -26,7 +26,7 @@
     //
     // run database tests
     //
-    [ServiceTests runTests];
+    //[ServiceTests runTests];
   
     LoginViewController *vc = [[LoginViewController alloc]init];
   

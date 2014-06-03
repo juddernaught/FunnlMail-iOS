@@ -13,7 +13,7 @@
 
 +(FunnelService *)instance;
 
--(BOOL) insertEmailServer:(FunnelModel *)funnelModel;
+-(BOOL) insertFunnel:(FunnelModel *)funnelModel;
 -(NSArray *) allFunnels;
 -(FunnelModel *) emailServersWithFunnelName:(NSString *)funnelName;
 -(BOOL) deleteFunnel:(NSString *)funnelName;

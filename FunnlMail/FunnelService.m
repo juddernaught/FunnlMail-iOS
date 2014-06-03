@@ -39,7 +39,7 @@ static FunnelService *instance;
   return instance;
 }
 
--(BOOL) insertEmailServer:(FunnelModel *)funnelModel{
+-(BOOL) insertFunnel:(FunnelModel *)funnelModel{
   __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
   
   __block BOOL success = NO;
