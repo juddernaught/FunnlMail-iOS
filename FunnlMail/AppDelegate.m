@@ -21,7 +21,7 @@
     //
     // initialize the database by referencing the shared instance
     //
-    //[SQLiteDatabase sharedInstance];
+    [SQLiteDatabase sharedInstance];
   
     //
     // run database tests
