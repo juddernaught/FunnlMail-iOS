@@ -97,6 +97,7 @@ static FilterModel *defaultFilter;
 	// Reset the inbox
 	self.messages = [[NSMutableArray alloc] init];
     self.filterMessages = [[NSMutableArray alloc] init];
+    self.threadIdDictionary = [[NSMutableDictionary alloc] init];
 	self.totalNumberOfInboxMessages = -1;
 	self.isLoading = NO;
 	self.messagePreviews = [NSMutableDictionary dictionary];
@@ -131,10 +132,9 @@ static FilterModel *defaultFilter;
 	
 	MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)
 	(MCOIMAPMessagesRequestKindHeaders | MCOIMAPMessagesRequestKindStructure |
-	 MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject |
-	 MCOIMAPMessagesRequestKindFlags);
+	 MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject | MCOIMAPMessagesRequestKindGmailThreadID | MCOIMAPMessagesRequestKindGmailMessageID |	 MCOIMAPMessagesRequestKindFlags);
 	
-	NSString *inboxFolder = @"INBOX";
+    NSString *inboxFolder = @"INBOX";
 	MCOIMAPFolderInfoOperation *inboxFolderInfo = [self.imapSession folderInfoOperation:inboxFolder];
 	
 	[inboxFolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
@@ -202,7 +202,31 @@ static FilterModel *defaultFilter;
               NSArray *subjectFoundArray = [NSArray array];
 
               for (MCOIMAPMessage *m in messages) {
-                [self.messages addObject:m];
+                  NSPredicate *predicate = [NSPredicate predicateWithFormat:@"gmailMessageID == %qx ", m.gmailThreadID,m.gmailMessageID];
+                  NSArray *b = [self.messages filteredArrayUsingPredicate:predicate];
+                  if(b.count){
+                      //NSLog(@"%@",m.header.subject);
+                  }else{
+                      //NSLog(@"ThreadID: %qx, UID: %d mID: %qx",m.gmailThreadID, m.uid, m.gmailMessageID);
+                      
+                      NSString *gmailThreadIDStr = [NSString stringWithFormat:@"%qx",m.gmailThreadID];
+                      NSMutableSet *threadMessagesArray = [self.threadIdDictionary objectForKey:gmailThreadIDStr];
+                      if(threadMessagesArray == nil ){
+                          threadMessagesArray = [[NSMutableSet alloc] init];
+                          [threadMessagesArray addObject:m];
+                          [self.messages addObject:m];
+                          [self.threadIdDictionary setObject:threadMessagesArray forKey:gmailThreadIDStr];
+                      }
+                      else{
+                          NSPredicate *predicate = [NSPredicate predicateWithFormat:@"gmailThreadID == %qx AND uid != %d ", m.gmailThreadID,m.uid];
+                          NSArray *b = [self.messages filteredArrayUsingPredicate:predicate];
+                          [self.messages removeObjectsInArray:b];
+                          [self.messages addObject:m];
+                          [threadMessagesArray addObject:m];
+                          [self.threadIdDictionary setObject:threadMessagesArray forKey:gmailThreadIDStr];
+                      }
+                  }
+//                  NSLog(@"%@: %@ : %d", m.header.sender.mailbox, m.header.subject, threadMessagesArray.count);
               }
               NSMutableArray *combinedMessages = [NSMutableArray arrayWithArray:self.messages];
               // TODO: remove the if statement. Primary is currently the same as the All Mail view.
@@ -216,7 +240,7 @@ static FilterModel *defaultFilter;
                    MCOMessageHeader *header = [message header];
                    NSString *emailAddress = [[[header sender] mailbox] lowercaseString];
                    NSString *subject = [[header subject] lowercaseString];
-
+                    
                   if ([funnlEmailList containsObject:emailAddress] )
                    {
                      if(funnlSubjectList.count){

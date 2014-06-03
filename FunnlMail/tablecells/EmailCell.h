@@ -13,7 +13,7 @@
 {
     
 }
-@property (nonatomic, strong) UILabel *senderLabel,*dateLabel,*subjectLabel,*readLabel,*bodyLabel;
+@property (nonatomic, strong) UILabel *senderLabel,*dateLabel,*subjectLabel,*readLabel,*bodyLabel,*threadLabel;
 @property (nonatomic, strong) MCOIMAPMessageRenderingOperation * messageRenderingOperation;
 
 @end

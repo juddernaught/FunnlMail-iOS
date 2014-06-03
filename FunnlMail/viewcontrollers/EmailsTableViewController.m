@@ -19,6 +19,7 @@
 #import "EmailService.h"
 #import "CreateFunnlviewController.h"
 #import "UIColor+HexString.h"
+#import "NSDate+TimeAgo.h"
 
 static NSString *FILTER_VIEW_CELL = @"FilterViewCell";
 static NSString *mailCellIdentifier = @"MailCell";
@@ -167,9 +168,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
             {
                 EmailCell *cell = [tableView dequeueReusableCellWithIdentifier:mailCellIdentifier forIndexPath:indexPath];
                 MCOIMAPMessage *message = [EmailService instance].filterMessages[indexPath.row];
-                //cell.textLabel.text = message.header.subject;
-//                MCOMessageFlag newFlags = message.flags;
-//                newFlags |= MCOMessageFlagSeen;
                 
                 if(message.flags != MCOMessageFlagSeen){
                     cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
@@ -177,12 +175,27 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                     cell.readLabel.backgroundColor = [UIColor clearColor];
                 }
 
-                NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-                [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-                NSString *dateString = [dateFormatter stringFromDate:message.header.date];
-                cell.dateLabel.text = dateString;
+                NSTimeInterval interval = [message.header.date timeIntervalSinceNow];
+                interval = -interval;
+                if([message.header.date isToday]){
+                    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                    [dateFormatter setDateFormat:@"hh:mm a"];
+                    NSString *dateString = [dateFormatter stringFromDate:message.header.date];
+                    cell.dateLabel.text = dateString;
+                }
+                else{
+                    cell.dateLabel.text = [message.header.date timeAgo];
+                }
                 cell.senderLabel.text = message.header.sender.mailbox;
                 cell.subjectLabel.text = message.header.subject;
+                NSMutableSet *threadArray = [[EmailService instance].threadIdDictionary objectForKey:[NSString stringWithFormat:@"%qx",message.gmailThreadID]];
+                NSLog(@"%@: %@ : %d %qx", message.header.sender.mailbox, message.header.subject, threadArray.count,message.gmailThreadID);
+                if(threadArray && threadArray.count > 1){
+                    cell.threadLabel.text = [NSString stringWithFormat:@"%d",threadArray.count];
+                }
+                else{
+                    cell.threadLabel.text = @"";
+                }
 
                 NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
                 NSString *cachedPreview = [EmailService instance].filterMessagePreviews[uidKey];
@@ -247,17 +260,27 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     else{
         EmailCell *cell = [tableView dequeueReusableCellWithIdentifier:mailCellIdentifier forIndexPath:indexPath];
         MCOIMAPMessage *message = searchMessages[indexPath.row];
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-        NSString *dateString = [dateFormatter stringFromDate:message.header.date];
-        cell.dateLabel.text = dateString;
+//        NSTimeInterval interval = [message.header.date timeIntervalSinceNow];
+//        interval = -interval;
+//        if (interval > 86400) {
+        if([message.header.date isToday]){
+            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+            [dateFormatter setDateFormat:@"HH:mm"];
+            NSString *dateString = [dateFormatter stringFromDate:message.header.date];
+            cell.dateLabel.text = dateString;
+        }
+        else{
+            cell.dateLabel.text = [message.header.date timeAgo];
+        }
+        
         cell.senderLabel.text = message.header.sender.mailbox;
         cell.subjectLabel.text = message.header.subject;
+        cell.threadLabel.text = @"";
 
-        //        cell.textLabel.text = message.header.subject;
         cell.messageRenderingOperation = [[EmailService instance].imapSession plainTextBodyRenderingOperationWithMessage:message folder:@"INBOX"];
         [cell.messageRenderingOperation start:^(NSString * plainTextBodyString, NSError * error) {
-//            cell.detailTextLabel.text = plainTextBodyString;
+//        cell.textLabel.text = message.header.subject;
+//        cell.detailTextLabel.text = plainTextBodyString;
             cell.bodyLabel.text = plainTextBodyString;
             cell.messageRenderingOperation = nil;
         }];

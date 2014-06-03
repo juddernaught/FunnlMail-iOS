@@ -29,5 +29,6 @@
 @property (nonatomic, strong) NSMutableDictionary *messagePreviews;
 @property (nonatomic, strong) NSMutableArray *messages;
 @property (nonatomic, strong) NSMutableArray *filterMessages;
+@property (nonatomic, strong) NSMutableDictionary *threadIdDictionary;
 @property (nonatomic, strong) NSMutableDictionary *filterMessagePreviews;
 @end
