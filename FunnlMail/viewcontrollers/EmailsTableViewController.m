@@ -186,7 +186,10 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 else{
                     cell.dateLabel.text = [message.header.date timeAgo];
                 }
-                cell.senderLabel.text = message.header.sender.mailbox;
+                if(message.header.sender.displayName.length)
+                    cell.senderLabel.text = message.header.sender.displayName;
+                else
+                    cell.senderLabel.text = message.header.sender.mailbox;
                 cell.subjectLabel.text = message.header.subject;
                 NSMutableSet *threadArray = [[EmailService instance].threadIdDictionary objectForKey:[NSString stringWithFormat:@"%qx",message.gmailThreadID]];
                 //NSLog(@"%@: %@ : %d %qx", message.header.sender.mailbox, message.header.subject, threadArray.count,message.gmailThreadID);
@@ -274,7 +277,11 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
             cell.dateLabel.text = [message.header.date timeAgo];
         }
         
-        cell.senderLabel.text = message.header.sender.mailbox;
+        if(message.header.sender.displayName.length)
+            cell.senderLabel.text = message.header.sender.displayName;
+        else
+            cell.senderLabel.text = message.header.sender.mailbox;
+
         cell.subjectLabel.text = message.header.subject;
         cell.threadLabel.text = @"";
 
