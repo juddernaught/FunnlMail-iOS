@@ -169,10 +169,10 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 EmailCell *cell = [tableView dequeueReusableCellWithIdentifier:mailCellIdentifier forIndexPath:indexPath];
                 MCOIMAPMessage *message = [EmailService instance].filterMessages[indexPath.row];
                 
-                if(message.flags != MCOMessageFlagSeen){
-                    cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
-                }else{
+                if(message.flags == MCOMessageFlagSeen){
                     cell.readLabel.backgroundColor = [UIColor clearColor];
+                }else{
+                    cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
                 }
 
                 NSTimeInterval interval = [message.header.date timeIntervalSinceNow];
@@ -189,9 +189,10 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 cell.senderLabel.text = message.header.sender.mailbox;
                 cell.subjectLabel.text = message.header.subject;
                 NSMutableSet *threadArray = [[EmailService instance].threadIdDictionary objectForKey:[NSString stringWithFormat:@"%qx",message.gmailThreadID]];
-                NSLog(@"%@: %@ : %d %qx", message.header.sender.mailbox, message.header.subject, threadArray.count,message.gmailThreadID);
+                //NSLog(@"%@: %@ : %d %qx", message.header.sender.mailbox, message.header.subject, threadArray.count,message.gmailThreadID);
                 if(threadArray && threadArray.count > 1){
-                    cell.threadLabel.text = [NSString stringWithFormat:@"%d",threadArray.count];
+                    //cell.threadLabel.text = [NSString stringWithFormat:@"%d",threadArray.count];
+                    cell.threadLabel.text = @"";
                 }
                 else{
                     cell.threadLabel.text = @"";
@@ -300,7 +301,12 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 vc.folder = @"INBOX";
                 vc.message = msg;
                 vc.session = [EmailService instance].imapSession;
-                
+                msg.flags = msg.flags | MCOMessageFlagSeen;
+                MCOIMAPOperation *msgOperation=[[EmailService instance].imapSession storeFlagsOperationWithFolder:@"INBOX" uids:[MCOIndexSet indexSetWithIndex:msg.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagSeen];
+                [msgOperation start:^(NSError * error)
+                {
+                    NSLog(@"selected message flags %u UID is %u",msg.flags,msg.uid );
+                }];
                 //[self.navigationController pushViewController:vc animated:YES];
                 [self.mainVCdelegate pushViewController:vc];
                 break;
