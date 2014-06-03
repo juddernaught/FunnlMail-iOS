@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <MailCore/MailCore.h>
-
-@interface EmailCell : UITableViewCell
+#import "MCSwipeTableViewCell.h"
+@interface EmailCell : MCSwipeTableViewCell
 {
     
 }

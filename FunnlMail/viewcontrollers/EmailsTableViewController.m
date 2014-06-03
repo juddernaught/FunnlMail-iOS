@@ -216,6 +216,49 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                         [EmailService instance].filterMessagePreviews[uidKey] = plainTextBodyString;
                     }];
                 }
+                
+//                UIView *checkView = [self viewWithImageName:@"check"];
+//                UIColor *greenColor = [UIColor colorWithRed:85.0 / 255.0 green:213.0 / 255.0 blue:80.0 / 255.0 alpha:1.0];
+//                
+//                UIView *crossView = [self viewWithImageName:@"cross"];
+//                UIColor *redColor = [UIColor colorWithRed:232.0 / 255.0 green:61.0 / 255.0 blue:14.0 / 255.0 alpha:1.0];
+                
+                UIView *archiveView = [self viewWithImageName:@"archive"];
+                UIColor *yellowColor = [UIColor colorWithHexString:@"#F9CA47"];
+                
+                UIView *deleteView = [self viewWithImageName:@"cross"];
+                UIColor *redColor = [UIColor colorWithHexString:@"#E51400"];
+
+                
+                [cell setSwipeGestureWithView:archiveView color:yellowColor mode:MCSwipeTableViewCellModeSwitch state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+                    NSLog(@"Did swipe \"Archive\" cell");
+                    
+                }];
+                
+                [cell setSwipeGestureWithView:deleteView color:redColor mode:MCSwipeTableViewCellModeSwitch state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+                    NSLog(@"Did swipe \"Delete\" cell");
+                    MCOIMAPMessage *message = [EmailService instance].filterMessages[indexPath.row];
+                    MCOAddress *emailAddress = message.header.from;
+                    NSMutableArray *mailArray = [[NSMutableArray alloc] init];
+                    [mailArray addObject:emailAddress];
+                    [mailArray addObjectsFromArray:message.header.cc];
+                    
+                    NSMutableDictionary *sendersDictionary = [[NSMutableDictionary alloc] init];
+                    int count = 0;
+                    for (MCOAddress *address in mailArray) {
+                        NSString *email = [address.mailbox lowercaseString];
+                        [sendersDictionary setObject:email forKey:[NSIndexPath indexPathForRow:count inSection:1]];
+                        count ++;
+                    }
+                    
+                    CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:nil filterModel:nil];
+                    creatFunnlViewController.mainVCdelegate = self.mainVCdelegate;
+                    [self.mainVCdelegate pushViewController:creatFunnlViewController];
+                    creatFunnlViewController = nil;
+
+                }];
+
+                
                 return cell;
                 break;
             }
@@ -393,10 +436,38 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
   if(indexPath.section == 0){
-    return YES;
+    return NO;
   }
   return NO;
 }
+
+#pragma mark Helpers
+- (UIView *)viewWithImageName:(NSString *)imageName {
+    UIImage *image = [UIImage imageNamed:imageName];
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+    imageView.contentMode = UIViewContentModeCenter;
+    return imageView;
+}
+
+
+#pragma mark MCSwipe
+
+// When the user starts swiping the cell this method is called
+- (void)swipeTableViewCellDidStartSwiping:(MCSwipeTableViewCell *)cell {
+    // NSLog(@"Did start swiping the cell!");
+}
+
+// When the user ends swiping the cell this method is called
+- (void)swipeTableViewCellDidEndSwiping:(MCSwipeTableViewCell *)cell {
+    // NSLog(@"Did end swiping the cell!");
+}
+
+// When the user is dragging, this method is called and return the dragged percentage from the border
+- (void)swipeTableViewCell:(MCSwipeTableViewCell *)cell didSwipeWithPercentage:(CGFloat)percentage {
+    // NSLog(@"Did swipe with percentage : %f", percentage);
+}
+
+
 
 #pragma mark - SearchBar delegates
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar;{
