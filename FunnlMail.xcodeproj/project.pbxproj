@@ -87,6 +87,7 @@
 		CCC9E41F193DF91D0028DC84 /* MessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC9E41E193DF91D0028DC84 /* MessageModel.m */; };
 		CCC9E422193DF9B10028DC84 /* MessageService.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC9E421193DF9B10028DC84 /* MessageService.m */; };
 		CCC9E425193E414F0028DC84 /* ServiceUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC9E424193E414F0028DC84 /* ServiceUtils.m */; };
+		CCC9E428193E47980028DC84 /* ServiceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC9E427193E47980028DC84 /* ServiceTests.m */; };
 		CCD00B5B18F54797007A675F /* MainView.m in Sources */ = {isa = PBXBuildFile; fileRef = CCD00B5A18F54797007A675F /* MainView.m */; };
 		FA1AEB6C19346BE300E93907 /* add.png in Resources */ = {isa = PBXBuildFile; fileRef = FA1AEB6B19346BE300E93907 /* add.png */; };
 		FA2F433F193318BE00C1F119 /* CreateFunnlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2F433E193318BE00C1F119 /* CreateFunnlViewController.m */; };
@@ -282,6 +283,8 @@
 		CCC9E421193DF9B10028DC84 /* MessageService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageService.m; path = services/MessageService.m; sourceTree = "<group>"; };
 		CCC9E423193E414F0028DC84 /* ServiceUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ServiceUtils.h; path = services/ServiceUtils.h; sourceTree = "<group>"; };
 		CCC9E424193E414F0028DC84 /* ServiceUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ServiceUtils.m; path = services/ServiceUtils.m; sourceTree = "<group>"; };
+		CCC9E426193E47980028DC84 /* ServiceTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ServiceTests.h; path = services/ServiceTests.h; sourceTree = "<group>"; };
+		CCC9E427193E47980028DC84 /* ServiceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ServiceTests.m; path = services/ServiceTests.m; sourceTree = "<group>"; };
 		CCD00B5918F54797007A675F /* MainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainView.h; path = views/MainView.h; sourceTree = "<group>"; };
 		CCD00B5A18F54797007A675F /* MainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainView.m; path = views/MainView.m; sourceTree = "<group>"; };
 		FA1AEB6B19346BE300E93907 /* add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add.png; sourceTree = "<group>"; };
@@ -594,6 +597,8 @@
 				CCC9E421193DF9B10028DC84 /* MessageService.m */,
 				CCC9E423193E414F0028DC84 /* ServiceUtils.h */,
 				CCC9E424193E414F0028DC84 /* ServiceUtils.m */,
+				CCC9E426193E47980028DC84 /* ServiceTests.h */,
+				CCC9E427193E47980028DC84 /* ServiceTests.m */,
 			);
 			name = services;
 			sourceTree = "<group>";
@@ -874,6 +879,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CC8C7ECE18E6F38100E76AE8 /* NSArray+MASAdditions.m in Sources */,
+				CCC9E428193E47980028DC84 /* ServiceTests.m in Sources */,
 				CCC9E41F193DF91D0028DC84 /* MessageModel.m in Sources */,
 				CCC9E40F193D5CC20028DC84 /* EmailServersService.m in Sources */,
 				CC8C7ECD18E6F38100E76AE8 /* MASViewConstraint.m in Sources */,

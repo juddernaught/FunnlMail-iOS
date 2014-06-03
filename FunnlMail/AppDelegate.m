@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "LoginViewController.h"
 #import "SQLiteDatabase.h"
+#import "ServiceTests.h"
 
 @implementation AppDelegate
 
@@ -17,10 +18,15 @@
     //FunnlViewController *fvc = [[FunnlViewController alloc] init];
     //self.window.rootViewController = fvc;
   
-   //
-   // initialize the database by referencing the shared instance
-   //
-   [SQLiteDatabase sharedInstance];
+    //
+    // initialize the database by referencing the shared instance
+    //
+    //[SQLiteDatabase sharedInstance];
+  
+    //
+    // run database tests
+    //
+    [ServiceTests runTests];
   
     LoginViewController *vc = [[LoginViewController alloc]init];
   
