@@ -80,6 +80,8 @@
 		CC8C7ECF18E6F38100E76AE8 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = CC8C7EC418E6F38100E76AE8 /* NSLayoutConstraint+MASDebugAdditions.m */; };
 		CC8C7ED018E6F38100E76AE8 /* View+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = CC8C7EC618E6F38100E76AE8 /* View+MASAdditions.m */; };
 		CCC377A918E7113B004F7FC0 /* FilterModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC377A818E7113B004F7FC0 /* FilterModel.m */; };
+		CCC9E40F193D5CC20028DC84 /* EmailServersService.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC9E40E193D5CC20028DC84 /* EmailServersService.m */; };
+		CCC9E416193D5CDF0028DC84 /* EmailServerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC9E415193D5CDF0028DC84 /* EmailServerModel.m */; };
 		CCD00B5B18F54797007A675F /* MainView.m in Sources */ = {isa = PBXBuildFile; fileRef = CCD00B5A18F54797007A675F /* MainView.m */; };
 		FA1AEB6C19346BE300E93907 /* add.png in Resources */ = {isa = PBXBuildFile; fileRef = FA1AEB6B19346BE300E93907 /* add.png */; };
 		FA2F433F193318BE00C1F119 /* CreateFunnlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2F433E193318BE00C1F119 /* CreateFunnlViewController.m */; };
@@ -261,6 +263,10 @@
 		CC8C7EC718E6F38100E76AE8 /* View+MASShorthandAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "View+MASShorthandAdditions.h"; sourceTree = "<group>"; };
 		CCC377A718E7113B004F7FC0 /* FilterModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FilterModel.h; path = models/FilterModel.h; sourceTree = "<group>"; };
 		CCC377A818E7113B004F7FC0 /* FilterModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FilterModel.m; path = models/FilterModel.m; sourceTree = "<group>"; };
+		CCC9E40D193D5CC20028DC84 /* EmailServersService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmailServersService.h; path = services/EmailServersService.h; sourceTree = "<group>"; };
+		CCC9E40E193D5CC20028DC84 /* EmailServersService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EmailServersService.m; path = services/EmailServersService.m; sourceTree = "<group>"; };
+		CCC9E414193D5CDF0028DC84 /* EmailServerModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmailServerModel.h; path = models/EmailServerModel.h; sourceTree = "<group>"; };
+		CCC9E415193D5CDF0028DC84 /* EmailServerModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EmailServerModel.m; path = models/EmailServerModel.m; sourceTree = "<group>"; };
 		CCD00B5918F54797007A675F /* MainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainView.h; path = views/MainView.h; sourceTree = "<group>"; };
 		CCD00B5A18F54797007A675F /* MainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainView.m; path = views/MainView.m; sourceTree = "<group>"; };
 		FA1AEB6B19346BE300E93907 /* add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add.png; sourceTree = "<group>"; };
@@ -523,6 +529,8 @@
 			children = (
 				CCC377A718E7113B004F7FC0 /* FilterModel.h */,
 				CCC377A818E7113B004F7FC0 /* FilterModel.m */,
+				CCC9E414193D5CDF0028DC84 /* EmailServerModel.h */,
+				CCC9E415193D5CDF0028DC84 /* EmailServerModel.m */,
 			);
 			name = models;
 			sourceTree = "<group>";
@@ -559,6 +567,8 @@
 			children = (
 				CC7F72F718E83925008962C3 /* EmailService.h */,
 				CC7F72F618E83925008962C3 /* EmailService.m */,
+				CCC9E40D193D5CC20028DC84 /* EmailServersService.h */,
+				CCC9E40E193D5CC20028DC84 /* EmailServersService.m */,
 			);
 			name = services;
 			sourceTree = "<group>";
@@ -839,6 +849,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CC8C7ECE18E6F38100E76AE8 /* NSArray+MASAdditions.m in Sources */,
+				CCC9E40F193D5CC20028DC84 /* EmailServersService.m in Sources */,
 				CC8C7ECD18E6F38100E76AE8 /* MASViewConstraint.m in Sources */,
 				FA2F433F193318BE00C1F119 /* CreateFunnlViewController.m in Sources */,
 				CC4263B01934B67A00F3C5EB /* FMDatabase.m in Sources */,
@@ -866,6 +877,7 @@
 				CC4263BA1934BB2000F3C5EB /* SQLiteDatabase.m in Sources */,
 				CC7F72F418E837C9008962C3 /* FilterViewCell.m in Sources */,
 				CC8C7ECB18E6F38100E76AE8 /* MASLayoutConstraint.m in Sources */,
+				CCC9E416193D5CDF0028DC84 /* EmailServerModel.m in Sources */,
 				CC4263B11934B67A00F3C5EB /* FMDatabaseAdditions.m in Sources */,
 				66AEEB811933002D00B6DBE5 /* EmailsTableViewController.m in Sources */,
 				CC7F72F818E83925008962C3 /* EmailService.m in Sources */,
