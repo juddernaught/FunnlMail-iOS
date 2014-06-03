@@ -167,6 +167,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
             case 0:
             {
                 EmailCell *cell = [tableView dequeueReusableCellWithIdentifier:mailCellIdentifier forIndexPath:indexPath];
+                cell.delegate = self;
                 MCOIMAPMessage *message = [EmailService instance].filterMessages[indexPath.row];
                 
                 if(message.flags == MCOMessageFlagSeen){
@@ -217,26 +218,31 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                     }];
                 }
                 
-//                UIView *checkView = [self viewWithImageName:@"check"];
-//                UIColor *greenColor = [UIColor colorWithRed:85.0 / 255.0 green:213.0 / 255.0 blue:80.0 / 255.0 alpha:1.0];
-//                
-//                UIView *crossView = [self viewWithImageName:@"cross"];
-//                UIColor *redColor = [UIColor colorWithRed:232.0 / 255.0 green:61.0 / 255.0 blue:14.0 / 255.0 alpha:1.0];
-                
                 UIView *archiveView = [self viewWithImageName:@"archive"];
                 UIColor *yellowColor = [UIColor colorWithHexString:@"#F9CA47"];
                 
-                UIView *deleteView = [self viewWithImageName:@"cross"];
-                UIColor *redColor = [UIColor colorWithHexString:@"#E51400"];
+                UIView *deleteView = [self viewWithImageName:@"Funnl"];
+                UIColor *redColor = [UIColor colorWithHexString:@"#448DEC"];
 
-                
-                [cell setSwipeGestureWithView:archiveView color:yellowColor mode:MCSwipeTableViewCellModeSwitch state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+                [cell setSwipeGestureWithView:archiveView color:yellowColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
                     NSLog(@"Did swipe \"Archive\" cell");
+//                    MCOIMAPOperation *msgOperation = [[EmailService instance].imapSession storeFlagsOperationWithFolder:@"INBOX" uids:[MCOIndexSet indexSetWithIndex:message.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagDeleted];
+//                    [msgOperation start:^(NSError * error)
+//                     {
+//                         NSLog(@"selected message flags %u UID is %u",message.flags,message.uid );
+//                    }];
+//                    [[EmailService instance].filterMessagePreviews removeObjectForKey:uidKey];
+//                    [[EmailService instance].filterMessages removeObjectAtIndex:indexPath.row];
+//                    [self deleteCell:cell];
                     
+                    [cell swipeToOriginWithCompletion:nil];
                 }];
                 
-                [cell setSwipeGestureWithView:deleteView color:redColor mode:MCSwipeTableViewCellModeSwitch state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+                [cell setSwipeGestureWithView:deleteView color:redColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+                    
                     NSLog(@"Did swipe \"Delete\" cell");
+                    [cell swipeToOriginWithCompletion:nil];
+
                     MCOIMAPMessage *message = [EmailService instance].filterMessages[indexPath.row];
                     MCOAddress *emailAddress = message.header.from;
                     NSMutableArray *mailArray = [[NSMutableArray alloc] init];
@@ -391,6 +397,21 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     }
     
 }
+- (void)deleteCell:(MCSwipeTableViewCell *)cell {
+    
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+}
+
+- (void)swipeTableViewCell:(MCSwipeTableViewCell *)cell didTriggerState:(MCSwipeTableViewCellState)state withMode:(MCSwipeTableViewCellMode)mode
+{
+    if (mode == MCSwipeTableViewCellModeExit)
+    {
+        // Remove the item in your data array and then remove it with the following method
+        [self.tableView deleteRowsAtIndexPaths:@[[self.tableView indexPathForCell:cell]] withRowAnimation:UITableViewRowAnimationFade];
+    }
+}
+
 
 #pragma mark - Table View
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
@@ -459,7 +480,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
 // When the user ends swiping the cell this method is called
 - (void)swipeTableViewCellDidEndSwiping:(MCSwipeTableViewCell *)cell {
-    // NSLog(@"Did end swiping the cell!");
+    NSLog(@"Did end swiping the cell!");
 }
 
 // When the user is dragging, this method is called and return the dragged percentage from the border
@@ -467,6 +488,15 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     // NSLog(@"Did swipe with percentage : %f", percentage);
 }
 
+//- (void)swipeTableViewCell:(MCSwipeTableViewCell *)cell didTriggerState:(MCSwipeTableViewCellState)state withMode:(MCSwipeTableViewCellMode)mode
+//{
+//    if (mode == MCSwipeTableViewCellModeExit)
+//    {
+//        // Remove the item in your data array and then remove it with the following method
+//        [cell swipeToOriginWithCompletion:nil];
+//        //        [self.tableView deleteRowsAtIndexPaths:@[[self.tableView indexPathForCell:cell]] withRowAnimation:UITableViewRowAnimationFade];
+//    }
+//}
 
 
 #pragma mark - SearchBar delegates

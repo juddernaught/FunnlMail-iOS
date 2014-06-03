@@ -11,8 +11,9 @@
 // FIXME: are these two imports neccessary?
 #import "FilterModel.h"
 #import "MainVCDelegate.h"
+#import "MCSwipeTableViewCell.h"
 
-@interface EmailsTableViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate> {
+@interface EmailsTableViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate,MCSwipeTableViewCellDelegate> {
     UIView *filterNavigationView;
     UILabel *filterLabel;
     UISearchBar *mailSearchBar;
