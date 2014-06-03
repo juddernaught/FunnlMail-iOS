@@ -52,4 +52,45 @@
   return array;
 }
 
+-(EmailServerModel *) emailServersWithEmailAddress:(NSString *)emailAddress{
+  __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+  
+  __block EmailServerModel *model;
+  
+  paramDict[@"emailAddress"] = emailAddress;
+  
+  [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+    FMResultSet *resultSet = [db executeQuery:@"SELECT emailAddress,accessToken,refreshToken FROM emailServers WHERE emailAddress=:emailAddress" withParameterDictionary:paramDict];
+    
+    while ([resultSet next]) {
+      model = [[EmailServerModel alloc]init];
+      
+      model.emailAddress = [resultSet stringForColumn:@"emailAddress"];
+      model.accessToken = [resultSet stringForColumn:@"accessToken"];
+      model.refreshToken = [resultSet stringForColumn:@"refreshToken"];
+      
+      //
+      // we are expecting to only find one match
+      //
+      break;
+    }
+  }];
+  
+  return model;
+}
+
+-(BOOL) deleteEmailServer:(NSString *)emailAddress{
+  __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+  
+  __block BOOL success = NO;
+  
+  paramDict[@"emailAddress"] = emailAddress;
+  
+  [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+    success = [db executeUpdate:@"DELETE FROM emailServers WHERE emailAddress=:emailAddress" withParameterDictionary:paramDict];
+  }];
+  
+  return success;
+}
+
 @end
