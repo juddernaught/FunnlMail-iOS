@@ -12,6 +12,8 @@
 #import <mailcore/mailcore.h>
 #import "KeychainItemWrapper.h"
 #import "EMailsTableViewController.h"
+#import "SQLiteDatabase.h"
+#import "FMDatabase.h"
 
 static EmailService *instance;
 
@@ -203,6 +205,15 @@ static NSString *currentFolder;
               NSArray *subjectFoundArray = [NSArray array];
 
               for (MCOIMAPMessage *m in messages) {
+                //
+                // add mail to internal array
+                //
+                [self.messages addObject:m];
+                
+                //
+                // store message in database
+                //
+                [self saveMessageInDatabase:m];
                   NSPredicate *predicate = [NSPredicate predicateWithFormat:@"gmailMessageID == %qx ", m.gmailThreadID,m.gmailMessageID];
                   NSArray *b = [self.messages filteredArrayUsingPredicate:predicate];
                   if(b.count){
@@ -312,6 +323,35 @@ static NSString *currentFolder;
     // created inital hardcoded list of filters
     //
     return filterArray;
+}
+
+-(void) saveMessageInDatabase:(MCOIMAPMessage *)message{
+  __block NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+  
+  /*
+   
+  dict[@"messageID"] = message.header.messageID;
+  dict[@"date"] = message.header.date;
+  dict[@"receivedDate"] = message.header.receivedDate;
+  dict[@"sender"] = message.header.sender;
+  dict[@"from"] = message.header.from;
+  dict[@"to"] = message.header.to;
+  dict[@"cc"] = message.header.cc==nil ? @"" : message.header.cc;
+  dict[@"bcc"] = message.header.bcc ==nil ? @"" : message.header.bcc;
+  dict[@"replyTo"] = message.header.replyTo ==nil ? @"" : message.header.replyTo;
+  dict[@"subject"] = message.header.subject ==nil ? @"" : message.header.subject;
+  
+  NSLog(@"dict: %@", dict);
+
+  [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+    [db executeUpdate:@"INSERT INTO boxlyCell (messageID,date,receivedDate,sender,from,to,cc,bcc,replyTo,subject) VALUES (:messageID,:date,:receivedDate,:sender,:from,:to,:cc,:bcc,:replyTo,:subject)" withParameterDictionary:dict];
+  }];
+   
+   */
+  
+  //[[[SQLiteDatabase sharedInstance] databaseQueue] inDatabase:^(FMDatabase *dbInstance) {
+  //  [db executeUpdate:@"INSERT INTO boxlyCell (messageID,date,receivedDate,sender,from,to,cc,bcc,replyTo,subject) VALUES (:messageID,:date,:receivedDate,:sender,:from,:to,:cc,:bcc,:replyTo,:subject)" withParameterDictionary:dict];
+  //}
 }
 
 @end

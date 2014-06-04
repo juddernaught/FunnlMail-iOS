@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "LoginViewController.h"
 #import "SQLiteDatabase.h"
+#import "ServiceTests.h"
 
 @implementation AppDelegate
 @synthesize menuController,drawerController;
@@ -18,11 +19,16 @@
     //FunnlViewController *fvc = [[FunnlViewController alloc] init];
     //self.window.rootViewController = fvc;
   
-   //
-   // initialize the database by referencing the shared instance
-   //
+    //
+    // initialize the database by referencing the shared instance
+    //
     [SQLiteDatabase sharedInstance];
-
+  
+    //
+    // run database tests
+    //
+    //[ServiceTests runTests];
+  
     LoginViewController *vc = [[LoginViewController alloc]init];
     UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:vc];
     self.window.rootViewController = nav;
