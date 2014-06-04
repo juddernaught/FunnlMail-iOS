@@ -5,7 +5,7 @@ create table messages(
   messageID TEXT,
   messageJSON TEXT,
   read INTEGER,
-  date TEXT,
+  date REAL,
   PRIMARY KEY (messageID)
 );
 

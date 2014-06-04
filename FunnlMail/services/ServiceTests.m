@@ -98,6 +98,8 @@
   
   if(inserted){
     NSLog(@"MessageService insert worked");
+    
+    NSLog(@"messageModel: %@",  messageModel);
   }
   else{
     NSLog(@"MessageService insert failed");

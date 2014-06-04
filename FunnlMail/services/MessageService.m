@@ -44,12 +44,14 @@ static MessageService *instance;
   
   __block BOOL success = NO;
   
-  NSString *date = [ServiceUtils convertDateTOSQLiteString:messageModel.date];
+  //NSString *date = [ServiceUtils convertDateTOSQLiteString:messageModel.date];
+  
+  NSNumber *dateTimeInterval = [NSNumber numberWithDouble:[messageModel.date timeIntervalSince1970]];
   
   paramDict[@"messageID"] = messageModel.messageID;
   paramDict[@"messageJSON"] = messageModel.messageJSON;
   paramDict[@"read"] = [NSNumber numberWithBool:messageModel.read];
-  paramDict[@"date"] = date;
+  paramDict[@"date"] = dateTimeInterval;
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
     success = [db executeUpdate:@"INSERT INTO messages (messageID,messageJSON,read,date) VALUES (:messageID,:messageJSON,:read,:date)" withParameterDictionary:paramDict];
@@ -76,7 +78,10 @@ static MessageService *instance;
       model.messageID = [resultSet stringForColumn:@"messageID"];
       model.messageJSON = [resultSet stringForColumn:@"messageJSON"];
       model.read = [resultSet intForColumn:@"read"];
-      model.date = [resultSet dateForColumn:@"date"];
+      
+      double dateTimeInterval = [resultSet doubleForColumn:@"date"];
+      
+      model.date = [NSDate dateWithTimeIntervalSince1970:dateTimeInterval];
       
       [array addObject:model];
     }
