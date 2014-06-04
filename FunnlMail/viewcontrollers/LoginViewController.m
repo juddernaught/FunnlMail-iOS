@@ -15,7 +15,7 @@
 #import "View+MASAdditions.h"
 #import "MASConstraintMaker.h"
 #import "UIColor+HexString.h"
-
+#import "AppDelegate.h"
 
 @interface LoginViewController ()
 
@@ -168,9 +168,19 @@
         [smtpSession setOAuth2Token:accessToken];
         [smtpSession setUsername:email];
         
+   
         MainVC *mainvc = [[MainVC alloc] init];
         UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:mainvc];
-        [self.navigationController presentViewController:nav animated:YES completion:nil];
+        
+        AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        appDelegate.menuController = [[MenuViewController alloc] init];
+        appDelegate.drawerController = [[MMDrawerController alloc] initWithCenterViewController:nav leftDrawerViewController:appDelegate.menuController];
+        [appDelegate.drawerController setRestorationIdentifier:@"MMDrawer"];
+        [appDelegate.drawerController setMaximumLeftDrawerWidth:200.0];
+        [appDelegate.drawerController setOpenDrawerGestureModeMask:MMOpenDrawerGestureModeAll];
+        [appDelegate.drawerController setCloseDrawerGestureModeMask:MMCloseDrawerGestureModeAll];
+        
+        [self.navigationController presentViewController:appDelegate.drawerController animated:YES completion:nil];
         // Authentication succeeded
     }
 }

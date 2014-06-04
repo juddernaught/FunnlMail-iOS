@@ -17,6 +17,7 @@ static EmailService *instance;
 
 static NSMutableArray *filterArray = nil;
 static FilterModel *defaultFilter;
+static NSString *currentFolder;
 @interface EmailService ()
 
 @property (nonatomic) BOOL isLoading;

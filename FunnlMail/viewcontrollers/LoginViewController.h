@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "MenuViewController.h"
+#import "MMDrawerController.h"
 @interface LoginViewController : UIViewController
 
 @property (nonatomic, retain) UITextField *username;

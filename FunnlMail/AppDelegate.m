@@ -11,6 +11,7 @@
 #import "SQLiteDatabase.h"
 
 @implementation AppDelegate
+@synthesize menuController,drawerController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -20,14 +21,12 @@
    //
    // initialize the database by referencing the shared instance
    //
-   [SQLiteDatabase sharedInstance];
-  
-    LoginViewController *vc = [[LoginViewController alloc]init];
-  
-    UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:vc];
+    [SQLiteDatabase sharedInstance];
 
+    LoginViewController *vc = [[LoginViewController alloc]init];
+    UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:vc];
     self.window.rootViewController = nav;
-  
+
     // Override point for customization after application launch.
     return YES;
 }

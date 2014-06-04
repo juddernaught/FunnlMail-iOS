@@ -22,3 +22,64 @@
 #define KEYCHAIN_ITEM_NAME @"MailCore OAuth 2.0 Token"
 
 #define GRADIENT_ARRAY [NSArray arrayWithObjects:@"#FFB84D",@"#AD5CFF",@"#33ADFF",@"#85E085",@"#B84D70",nil];
+#define GRID_BUTTON_LIGHT UIColorFromRGB(0x2980B9)
+#define GRID_BUTTON_DARK UIColorFromRGB(0x3498DB)
+
+#define GRID_BUTTON2_LIGHT UIColorFromRGB(0x1ABC9C)
+#define GRID_BUTTON2_DARK UIColorFromRGB(0x16A085)
+
+#define GRID_BUTTON_LONG_PRESS UIColorFromRGB(0x7F8C8D)
+
+#define NAV_BG_COLOR UIColorFromRGB(0x52596B) //0x36D6BE
+#define BG_COLOR UIColorFromRGB(0xECF0F1)
+
+#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000)>>16))/255.0 green:((float)((rgbValue & 0xFF00)>> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+
+#define BOLD_FONT_XXL   [UIFont fontWithName:@"Helvetica-Bold" size:60]
+#define BOLD_FONT_H0    [UIFont fontWithName:@"Helvetica-Bold" size:28]
+#define BOLD_FONT_H1    [UIFont fontWithName:@"Helvetica-Bold" size:22]
+#define BOLD_FONT_H2    [UIFont fontWithName:@"Helvetica-Bold" size:18]
+#define BOLD_FONT_H3    [UIFont fontWithName:@"Helvetica-Bold" size:16]
+#define BOLD_FONT_H4    [UIFont fontWithName:@"Helvetica-Bold" size:14]
+#define BOLD_FONT_H5    [UIFont fontWithName:@"Helvetica-Bold" size:12]
+#define NORMAL_FONT_S2   [UIFont fontWithName:@"Helvetica-Regular" size:8]
+#define NORMAL_FONT_S   [UIFont fontWithName:@"Helvetica-Regular" size:14]
+#define NORMAL_FONT_M   [UIFont fontWithName:@"Helvetica-Regular" size:18]
+#define NORMAL_FONT_M2   [UIFont fontWithName:@"Helvetica-Regular" size:16]
+#define NORMAL_FONT_L   [UIFont fontWithName:@"Helvetica-Regular" size:20]
+#define NORMAL_FONT_L2   [UIFont fontWithName:@"Helvetica-Regular" size:22]
+#define NORMAL_FONT_L3   [UIFont fontWithName:@"Helvetica-Regular" size:24]
+#define NORMAL_FONT_XL   [UIFont fontWithName:@"Helvetica-Regular" size:26]
+#define NORMAL_FONT_XXL   [UIFont fontWithName:@"Helvetica-Regular" size:30]
+
+#define WHITE_CLR [UIColor whiteColor]
+#define BLACK_CLR [UIColor blackColor]
+#define BLUE_BUTTON_CLR UIColorFromRGB(0x6AA0E5)
+#define RED_BUTTON_CLR [UIColor redColor]
+#define RED_LIGHT_CLR UIColorFromRGB(0xE04A3F)
+
+#define TEXT_COLOR UIColorFromRGB(0x99AAB9)
+#define LIGHT_TEXT_COLOR UIColorFromRGB(0xC2C4C7)
+#define CLEAR_COLOR [UIColor clearColor]
+
+#define LIGHTEST_GRAY_COLOR UIColorFromRGB(0xD6DAE2)
+#define LIGHT_GRAY_COLOR UIColorFromRGB(0xB9B9B9)
+#define DARK_GRAY_COLOR UIColorFromRGB(0x8A8A8A)
+#define DARKEST_GRAY_COLOR UIColorFromRGB(0x323231)
+
+#define APP_ICON_COLOR UIColorFromRGB(0x00C2CD)
+#define AMBER_COLOR UIColorFromRGB(0xFF7F00)
+#define YELLOW_COLOR UIColorFromRGB(0xFBCB43)
+#define GREEN_LIGHT_COLOR UIColorFromRGB(0x6AA84F )
+#define ASSET_BY_SCREEN_HEIGHT(regular, longScreen) (([[UIScreen mainScreen] bounds].size.height <= 480.0) ? regular : longScreen)
+#define APPDELEGATE (AppDelegate*)[[UIApplication sharedApplication] delegate];
+#define INTERFACE_IS_PAD     ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+#define INTERFACE_IS_PHONE   ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v) ([[[UIDevice currentDevice] systemVersion] compare:(v) options:NSNumericSearch] != NSOrderedAscending)
+#define IOS_OLDER_THAN_6 ( [ [ [ UIDevice currentDevice ] systemVersion ] floatValue ] < 6.0 )
+#define IOS_NEWER_OR_EQUAL_TO_6 ( [ [ [ UIDevice currentDevice ] systemVersion ] floatValue ] >= 6.0 )
+#define IOS_NEWER_OR_EQUAL_TO_7 ( [ [ [ UIDevice currentDevice ] systemVersion ] floatValue ] >= 7.0 )
+#define IS_PHONE5() ([UIScreen mainScreen].bounds.size.height == 568.0f && [UIScreen mainScreen].scale == 2.f && UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+
+
+#define NIL_RELEASE(obj) { [obj release]; obj = nil; }

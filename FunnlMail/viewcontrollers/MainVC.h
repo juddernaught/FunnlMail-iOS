@@ -12,6 +12,7 @@
 #import "MainVCDelegate.h"
 #import "FilterModel.h"
 
+
 @interface MainVC : UIViewController<MainVCDelegate>{
   MainView *mainView;
   EmailsTableViewController *emailsTableViewController;
