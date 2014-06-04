@@ -12,6 +12,7 @@
 #import "ServiceTests.h"
 
 @implementation AppDelegate
+@synthesize menuController,drawerController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -29,11 +30,9 @@
     //[ServiceTests runTests];
   
     LoginViewController *vc = [[LoginViewController alloc]init];
-  
     UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:vc];
-
     self.window.rootViewController = nav;
-  
+
     // Override point for customization after application launch.
     return YES;
 }

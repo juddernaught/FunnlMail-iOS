@@ -78,7 +78,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
      make.right.equalTo(self.view.mas_right).with.offset(0);
      }];*/
     
-    filterLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 44, 320, 40)];
+    filterLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 44+20, 320, 40)];
     filterLabel.textColor = [UIColor whiteColor];
     filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#2EB82E"]);
     filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : @"All");
@@ -93,7 +93,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
      }];
      */
     
-    self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 84, self.view.frame.size.width, self.view.frame.size.height-84)];
+    self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 104, self.view.frame.size.width, self.view.frame.size.height-104)];
     self.tableView.rowHeight = 71.0;
     self.tableView.dataSource = self;
     self.tableView.delegate = self;    

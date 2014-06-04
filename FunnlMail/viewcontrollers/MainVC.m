@@ -12,7 +12,7 @@
 #import "MainFilterCell.h"
 #import "FilterModel.h"
 #import "EmailService.h"
-
+#import "AppDelegate.h"
 
 
 static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
@@ -23,7 +23,6 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 @end
 
 @implementation MainVC
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -47,12 +46,19 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [self.view addSubview:mainView];
     
     [mainView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view.mas_top).with.offset(0);
+        make.top.equalTo(self.view.mas_top).with.offset(20);
         make.left.equalTo(self.view.mas_left).with.offset(0);
         make.right.equalTo(self.view.mas_right).with.offset(0);
         make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
     }];
   
+    UIButton *menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [menuButton addTarget:self action:@selector(menuButtonSelected) forControlEvents:UIControlEventTouchUpInside];
+    menuButton.frame = CGRectMake(0, 0, 33, 28);
+    [menuButton setBackgroundImage:[UIImage imageNamed:@"Menu.png"] forState:UIControlStateNormal];
+    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
+    self.navigationItem.leftBarButtonItem = leftItem;
+    
     UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 66, 28)];
     centeredButtons.backgroundColor = [UIColor orangeColor];
     UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:centeredButtons];
@@ -85,6 +91,14 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
             make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
         }];
     }
+
+}
+
+-(void)menuButtonSelected{
+    NSLog(@"Menu button selected");
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+//    [appDelegate.drawerController openDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
+    [appDelegate.drawerController toggleDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
 
 }
 
@@ -126,8 +140,18 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
   [self.navigationController pushViewController:viewController animated:YES];
 }
 
+//-(UIStatusBarStyle)preferredStatusBarStyle{
+//    AppDelegate *appDelegate = (AppDelegate*) [[ UIApplication sharedApplication ] delegate ];
+//    if(appDelegate.drawerController.showsStatusBarBackgroundView){
+//        return UIStatusBarStyleLightContent;
+//    }
+//    else {
+//        return UIStatusBarStyleDefault;
+//    }
+//}
+
 - (BOOL)prefersStatusBarHidden{
-  return YES;
+  return NO;
 }
 
 @end
