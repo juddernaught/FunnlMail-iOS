@@ -16,6 +16,7 @@
 #import "MASConstraintMaker.h"
 #import "UIColor+HexString.h"
 #import "AppDelegate.h"
+#import "EmailServersService.h"
 
 @interface LoginViewController ()
 
@@ -160,6 +161,7 @@
         [[self navigationController] popViewControllerAnimated:YES];
         // Authentication failed
     } else {
+        if ([EmailServersService]
         NSString * email = [auth userEmail];
         NSString * accessToken = [auth accessToken];
         
