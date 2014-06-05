@@ -219,7 +219,7 @@ static NSString *currentFolder;
                   if(b.count){
                       //NSLog(@"%@",m.header.subject);
                   }else{
-                      //NSLog(@"ThreadID: %qx, UID: %d mID: %qx",m.gmailThreadID, m.uid, m.gmailMessageID);
+                      //NSLog(@"ThreadID: %qx, UID: %d mID: x%qx",m.gmailThreadID, m.uid, m.gmailMessageID);
                       
                       NSString *gmailThreadIDStr = [NSString stringWithFormat:@"%qx",m.gmailThreadID];
                       NSMutableSet *threadMessagesArray = [self.threadIdDictionary objectForKey:gmailThreadIDStr];
