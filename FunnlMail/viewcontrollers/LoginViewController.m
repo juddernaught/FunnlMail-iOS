@@ -75,6 +75,7 @@
 
 }*/
 
+
 - (void) viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor colorWithHexString:@"F6F6F6"];
@@ -107,15 +108,18 @@
     [[self navigationController] setNavigationBarHidden:YES animated:NO];
 }
 
+
 - (void) viewWillDisappear:(BOOL)animated {
     [[self navigationController] setNavigationBarHidden:YES animated:NO];
 }
+
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 
 - (void) loginButtonSelected {
     /*KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"UserLoginInfo" accessGroup:nil];
@@ -127,6 +131,7 @@
     [self.navigationController presentViewController:nav animated:YES completion:nil];*/
     [self oauthLogin];
 }
+
 
 - (void) oauthLogin {
     static NSString *const kKeychainItemName = @"OAuth2 Sample: Gmail";
@@ -146,6 +151,7 @@
     [[self navigationController] pushViewController:viewController animated:YES];
     //[[self navigationController] presentViewController:viewController animated:YES completion:nil];
 }
+
 
 - (void)viewController:(GTMOAuth2ViewControllerTouch *)viewController
       finishedWithAuth:(GTMOAuth2Authentication *)auth
@@ -184,6 +190,7 @@
         // Authentication succeeded
     }
 }
+
 
 /*
 #pragma mark - Navigation

@@ -56,6 +56,9 @@
 		66F2C48B18E3293F00CD593E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C46D18E3293E00CD593E /* UIKit.framework */; };
 		66F2C49318E3293F00CD593E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66F2C49118E3293F00CD593E /* InfoPlist.strings */; };
 		66F2C49518E3293F00CD593E /* FunnlMailTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F2C49418E3293F00CD593E /* FunnlMailTests.m */; };
+		B751C88D1940FD620051DF0B /* SendEmailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B751C88C1940FD620051DF0B /* SendEmailViewController.m */; };
+		B751C88F1940FDFF0051DF0B /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B751C88E1940FDFF0051DF0B /* MessageUI.framework */; };
+		B751C89119410E780051DF0B /* UiBYJdc.png in Resources */ = {isa = PBXBuildFile; fileRef = B751C89019410E780051DF0B /* UiBYJdc.png */; };
 		CC39517218E6F9700093C787 /* MainFilterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CC39517118E6F9700093C787 /* MainFilterCell.m */; };
 		CC4263B01934B67A00F3C5EB /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = CC4263A61934B67A00F3C5EB /* FMDatabase.m */; };
 		CC4263B11934B67A00F3C5EB /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = CC4263A81934B67A00F3C5EB /* FMDatabaseAdditions.m */; };
@@ -233,6 +236,10 @@
 		66F2C49018E3293F00CD593E /* FunnlMailTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FunnlMailTests-Info.plist"; sourceTree = "<group>"; };
 		66F2C49218E3293F00CD593E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		66F2C49418E3293F00CD593E /* FunnlMailTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FunnlMailTests.m; sourceTree = "<group>"; };
+		B751C88B1940FD620051DF0B /* SendEmailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendEmailViewController.h; sourceTree = "<group>"; };
+		B751C88C1940FD620051DF0B /* SendEmailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SendEmailViewController.m; sourceTree = "<group>"; };
+		B751C88E1940FDFF0051DF0B /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		B751C89019410E780051DF0B /* UiBYJdc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UiBYJdc.png; sourceTree = "<group>"; };
 		CC1AD1DC18F54BE9000E356C /* MainVCDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainVCDelegate.h; path = viewcontrollers/MainVCDelegate.h; sourceTree = "<group>"; };
 		CC39517018E6F9700093C787 /* MainFilterCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainFilterCell.h; path = collectionviewcells/MainFilterCell.h; sourceTree = "<group>"; };
 		CC39517118E6F9700093C787 /* MainFilterCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainFilterCell.m; path = collectionviewcells/MainFilterCell.m; sourceTree = "<group>"; };
@@ -347,6 +354,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B751C88F1940FDFF0051DF0B /* MessageUI.framework in Frameworks */,
 				FA5627FA193C5F5200238F40 /* QuartzCore.framework in Frameworks */,
 				CC4263B61934B68600F3C5EB /* libsqlite3.dylib in Frameworks */,
 				6677882518F0ADBB00EF1962 /* SystemConfiguration.framework in Frameworks */,
@@ -398,6 +406,7 @@
 				6620BA9918E38BE500769C48 /* Compose.png */,
 				6620BA9A18E38BE500769C48 /* Funnl.png */,
 				6620BA9B18E38BE500769C48 /* Mail.png */,
+				B751C89019410E780051DF0B /* UiBYJdc.png */,
 				6620BA9718E348EA00769C48 /* Menu.png */,
 			);
 			name = Icons;
@@ -522,6 +531,7 @@
 		66F2C46818E3293E00CD593E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B751C88E1940FDFF0051DF0B /* MessageUI.framework */,
 				FA5627F9193C5F5200238F40 /* QuartzCore.framework */,
 				CC4263B51934B68600F3C5EB /* libsqlite3.dylib */,
 				6677882418F0ADBB00EF1962 /* SystemConfiguration.framework */,
@@ -658,6 +668,8 @@
 				66AEEB801933002D00B6DBE5 /* EmailsTableViewController.m */,
 				CC8C7EAB18E6F1C100E76AE8 /* MainVC.h */,
 				CC8C7EAC18E6F1C100E76AE8 /* MainVC.m */,
+				B751C88B1940FD620051DF0B /* SendEmailViewController.h */,
+				B751C88C1940FD620051DF0B /* SendEmailViewController.m */,
 				660BA98C1902CDEA00CDF86E /* LoginViewController.h */,
 				660BA98D1902CDEA00CDF86E /* LoginViewController.m */,
 				CC1AD1DC18F54BE9000E356C /* MainVCDelegate.h */,
@@ -944,6 +956,7 @@
 				6620BA8218E32FD700769C48 /* Payments.png in Resources */,
 				FA5627D71935C92600238F40 /* settings@2x.png in Resources */,
 				6620BA9518E343FA00769C48 /* Social.png in Resources */,
+				B751C89119410E780051DF0B /* UiBYJdc.png in Resources */,
 				FA5627E11935E57700238F40 /* close.png in Resources */,
 				FA2C9BB3193DF57700866BEE /* cross@2x.png in Resources */,
 				6620BA8018E32FD700769C48 /* Files.png in Resources */,
@@ -1018,6 +1031,7 @@
 				CCC9E41C193DF5E80028DC84 /* FunnelService.m in Sources */,
 				CCC9E425193E414F0028DC84 /* ServiceUtils.m in Sources */,
 				CC7F72F818E83925008962C3 /* EmailService.m in Sources */,
+				B751C88D1940FD620051DF0B /* SendEmailViewController.m in Sources */,
 				66F2C47A18E3293E00CD593E /* AppDelegate.m in Sources */,
 				CCC9E422193DF9B10028DC84 /* MessageService.m in Sources */,
 				CC8A455C18E832B8009FDBDB /* UIColor+HexString.m in Sources */,
