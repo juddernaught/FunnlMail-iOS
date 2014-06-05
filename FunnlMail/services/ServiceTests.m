@@ -72,7 +72,11 @@
   
   NSLog(@"funnelArray: %@", funnelArray);
   
-  deleted = [[FunnelService instance] deleteFunnel:funnelModel.funnelName];
+  funnelModel = funnelArray[0];
+  
+  NSLog(@"funnelModel: %@", funnelModel);
+  
+  deleted = [[FunnelService instance] deleteFunnel:funnelModel.funnelId];
   
   if(deleted){
     NSLog(@"EmailServersService delete worked");

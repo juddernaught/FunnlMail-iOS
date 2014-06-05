@@ -10,6 +10,7 @@
 
 @interface FunnelModel : NSObject
 
+@property (copy) NSString *funnelId;
 @property (copy) NSString *funnelName;
 @property (copy) NSString *emailAddresses;
 @property (copy) NSString *phrases;
