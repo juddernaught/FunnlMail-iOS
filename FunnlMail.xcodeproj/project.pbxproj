@@ -58,7 +58,6 @@
 		66F2C49518E3293F00CD593E /* FunnlMailTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F2C49418E3293F00CD593E /* FunnlMailTests.m */; };
 		B751C88D1940FD620051DF0B /* SendEmailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B751C88C1940FD620051DF0B /* SendEmailViewController.m */; };
 		B751C88F1940FDFF0051DF0B /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B751C88E1940FDFF0051DF0B /* MessageUI.framework */; };
-		B751C89119410E780051DF0B /* UiBYJdc.png in Resources */ = {isa = PBXBuildFile; fileRef = B751C89019410E780051DF0B /* UiBYJdc.png */; };
 		CC39517218E6F9700093C787 /* MainFilterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CC39517118E6F9700093C787 /* MainFilterCell.m */; };
 		CC4263B01934B67A00F3C5EB /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = CC4263A61934B67A00F3C5EB /* FMDatabase.m */; };
 		CC4263B11934B67A00F3C5EB /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = CC4263A81934B67A00F3C5EB /* FMDatabaseAdditions.m */; };
@@ -239,7 +238,6 @@
 		B751C88B1940FD620051DF0B /* SendEmailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendEmailViewController.h; sourceTree = "<group>"; };
 		B751C88C1940FD620051DF0B /* SendEmailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SendEmailViewController.m; sourceTree = "<group>"; };
 		B751C88E1940FDFF0051DF0B /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
-		B751C89019410E780051DF0B /* UiBYJdc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UiBYJdc.png; sourceTree = "<group>"; };
 		CC1AD1DC18F54BE9000E356C /* MainVCDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainVCDelegate.h; path = viewcontrollers/MainVCDelegate.h; sourceTree = "<group>"; };
 		CC39517018E6F9700093C787 /* MainFilterCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainFilterCell.h; path = collectionviewcells/MainFilterCell.h; sourceTree = "<group>"; };
 		CC39517118E6F9700093C787 /* MainFilterCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainFilterCell.m; path = collectionviewcells/MainFilterCell.m; sourceTree = "<group>"; };
@@ -406,7 +404,6 @@
 				6620BA9918E38BE500769C48 /* Compose.png */,
 				6620BA9A18E38BE500769C48 /* Funnl.png */,
 				6620BA9B18E38BE500769C48 /* Mail.png */,
-				B751C89019410E780051DF0B /* UiBYJdc.png */,
 				6620BA9718E348EA00769C48 /* Menu.png */,
 			);
 			name = Icons;
@@ -956,7 +953,6 @@
 				6620BA8218E32FD700769C48 /* Payments.png in Resources */,
 				FA5627D71935C92600238F40 /* settings@2x.png in Resources */,
 				6620BA9518E343FA00769C48 /* Social.png in Resources */,
-				B751C89119410E780051DF0B /* UiBYJdc.png in Resources */,
 				FA5627E11935E57700238F40 /* close.png in Resources */,
 				FA2C9BB3193DF57700866BEE /* cross@2x.png in Resources */,
 				6620BA8018E32FD700769C48 /* Files.png in Resources */,

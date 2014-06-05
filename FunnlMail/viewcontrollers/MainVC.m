@@ -80,7 +80,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     
     [composeEmailButton addTarget:self action:@selector(composeEmailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
     composeEmailButton.frame = CGRectMake(66, 0, 33, 28);
-    [composeEmailButton setBackgroundImage:[UIImage imageNamed:@"UiBYJdc.png"] forState:UIControlStateNormal];
+    [composeEmailButton setBackgroundImage:[UIImage imageNamed:@"Mail.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:composeEmailButton];
     
     if(emailsTableViewController==nil){
