@@ -13,7 +13,7 @@
 #import "FilterModel.h"
 #import "EmailService.h"
 #import "AppDelegate.h"
-
+#import <MessageUI/MessageUI.h>
 
 static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
@@ -59,13 +59,14 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
     self.navigationItem.leftBarButtonItem = leftItem;
     
-    UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 66, 28)];
+    UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 99, 28)];
     centeredButtons.backgroundColor = [UIColor orangeColor];
     UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:centeredButtons];
     self.navigationItem.rightBarButtonItem = rightItem;
   
     UIButton *mailButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIButton *filterButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIButton *composeEmailButton = [UIButton buttonWithType:UIButtonTypeCustom];
   
     [mailButton addTarget:self action:@selector(mailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
     mailButton.frame = CGRectMake(0, 0, 33, 28);
@@ -76,6 +77,11 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     filterButton.frame = CGRectMake(33, 0, 33, 28);
     [filterButton setBackgroundImage:[UIImage imageNamed:@"Funnl.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:filterButton];
+    
+    [composeEmailButton addTarget:self action:@selector(composeEmailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
+    composeEmailButton.frame = CGRectMake(66, 0, 33, 28);
+    [composeEmailButton setBackgroundImage:[UIImage imageNamed:@"UiBYJdc.png"] forState:UIControlStateNormal];
+    [centeredButtons addSubview:composeEmailButton];
     
     if(emailsTableViewController==nil){
         emailsTableViewController = [[EmailsTableViewController alloc]init];
@@ -94,6 +100,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 }
 
+
 -(void)menuButtonSelected{
     NSLog(@"Menu button selected");
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -102,10 +109,12 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 }
 
+
 -(void) mailButtonSelected{
     NSLog(@"Mail button selected");
     mainView.hidden = YES;
 }
+
 
 -(void) filterButtonSelected{
     NSLog(@"Filter button selected");
@@ -115,6 +124,42 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
         mainView.hidden = YES;
     }
 }
+
+
+-(void) composeEmailButtonSelected{
+    NSLog(@"Compose Email selected");
+    mainView.hidden = YES;
+    MFMailComposeViewController *mc = [[MFMailComposeViewController alloc] init];
+    mc.mailComposeDelegate = self;
+    // Present mail view controller on screen
+    [self presentViewController:mc animated:YES completion:NULL];
+}
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller
+          didFinishWithResult:(MFMailComposeResult)result
+                        error:(NSError*)error;
+{
+    switch (result)
+    {
+        case MFMailComposeResultCancelled:
+            NSLog(@"Cancelled sending");
+            break;
+        case MFMailComposeResultSaved:
+            NSLog(@"Message Saved");
+            break;
+        case MFMailComposeResultSent:
+            NSLog(@"Message Sent");
+            break;
+        case MFMailComposeResultFailed:
+            NSLog(@"Sending Failed");
+            break;
+        default:
+            NSLog(@"Message not sent");
+            break;
+    }
+    [self dismissModalViewControllerAnimated:YES];
+}
+
 
 - (void)didReceiveMemoryWarning
 {

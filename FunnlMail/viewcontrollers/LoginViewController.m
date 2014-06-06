@@ -16,6 +16,7 @@
 #import "MASConstraintMaker.h"
 #import "UIColor+HexString.h"
 #import "AppDelegate.h"
+#import "EmailServersService.h"
 
 @interface LoginViewController ()
 
@@ -75,6 +76,7 @@
 
 }*/
 
+
 - (void) viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor colorWithHexString:@"F6F6F6"];
@@ -107,15 +109,18 @@
     [[self navigationController] setNavigationBarHidden:YES animated:NO];
 }
 
+
 - (void) viewWillDisappear:(BOOL)animated {
     [[self navigationController] setNavigationBarHidden:YES animated:NO];
 }
+
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 
 - (void) loginButtonSelected {
     /*KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"UserLoginInfo" accessGroup:nil];
@@ -128,24 +133,47 @@
     [self oauthLogin];
 }
 
+
 - (void) oauthLogin {
-    static NSString *const kKeychainItemName = @"OAuth2 Sample: Gmail";
+    // THIS DOESN'T WORK YET...REFRESH KEY IS LIKELY NEEDED AFTER A CERTAIN PERIOD OF TIME
+    //if ([[[EmailServersService instance] allEmailServers] count] == 0 && false) {
+    if (YES == YES) {
+        static NSString *const kKeychainItemName = @"OAuth2 Sample: Gmail";
+        
+        NSString *kMyClientID = @"655269106649-rkom4nvj3m9ofdpg6sk53pi65mpivv7d.apps.googleusercontent.com";     // pre-assigned by service
+        NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt"; // pre-assigned by service
+        
+        NSString *scope = @"https://mail.google.com/"; // scope for Gmail
+        
+        GTMOAuth2ViewControllerTouch *viewController;
+        viewController = [[GTMOAuth2ViewControllerTouch alloc] initWithScope:scope
+                                                                     clientID:kMyClientID
+                                                                 clientSecret:kMyClientSecret
+                                                             keychainItemName:kKeychainItemName
+                                                                     delegate:self
+                                                             finishedSelector:@selector(viewController:finishedWithAuth:error:)];
+        [[self navigationController] pushViewController:viewController animated:YES];
+    }
+    else {
+        // right now there is only 1 email address allowed
+        EmailServerModel *emailServer = [[[EmailServersService instance] allEmailServers] objectAtIndex:0];
+        MCOIMAPSession * imapSession = [[MCOIMAPSession alloc] init];
+        [EmailService instance].imapSession = imapSession;
+        [imapSession setAuthType:MCOAuthTypeXOAuth2];
+        [imapSession setOAuth2Token:emailServer.accessToken];
+        [imapSession setUsername:emailServer.emailAddress];
+        
+        MCOSMTPSession * smtpSession = [[MCOSMTPSession alloc] init];
+        [smtpSession setAuthType:MCOAuthTypeXOAuth2];
+        [smtpSession setOAuth2Token:emailServer.accessToken];
+        [smtpSession setUsername:emailServer.emailAddress];
+
+        [self loadHomeScreen];
+    }
     
-    NSString *kMyClientID = @"655269106649-rkom4nvj3m9ofdpg6sk53pi65mpivv7d.apps.googleusercontent.com";     // pre-assigned by service
-    NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt"; // pre-assigned by service
-    
-    NSString *scope = @"https://mail.google.com/"; // scope for Gmail
-    
-    GTMOAuth2ViewControllerTouch *viewController;
-    viewController = [[GTMOAuth2ViewControllerTouch alloc] initWithScope:scope
-                                                                 clientID:kMyClientID
-                                                             clientSecret:kMyClientSecret
-                                                         keychainItemName:kKeychainItemName
-                                                                 delegate:self
-                                                         finishedSelector:@selector(viewController:finishedWithAuth:error:)];
-    [[self navigationController] pushViewController:viewController animated:YES];
     //[[self navigationController] presentViewController:viewController animated:YES completion:nil];
 }
+
 
 - (void)viewController:(GTMOAuth2ViewControllerTouch *)viewController
       finishedWithAuth:(GTMOAuth2Authentication *)auth
@@ -156,7 +184,15 @@
     } else {
         NSString * email = [auth userEmail];
         NSString * accessToken = [auth accessToken];
+        EmailServerModel *emailServer = [[EmailServerModel alloc] init];
+        emailServer.emailAddress = email;
+        emailServer.accessToken = accessToken;
+        emailServer.refreshToken = @"nil";
         
+        // MUSTFIX: remove at some point:
+        //[[EmailServersService instance] deleteEmailServer:emailServer.emailAddress];
+
+        //[[EmailServersService instance] insertEmailServer:emailServer];
         MCOIMAPSession * imapSession = [[MCOIMAPSession alloc] init];
         [EmailService instance].imapSession = imapSession;
         [imapSession setAuthType:MCOAuthTypeXOAuth2];
@@ -167,23 +203,27 @@
         [smtpSession setAuthType:MCOAuthTypeXOAuth2];
         [smtpSession setOAuth2Token:accessToken];
         [smtpSession setUsername:email];
+        [self loadHomeScreen];
         
-   
-        MainVC *mainvc = [[MainVC alloc] init];
-        UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:mainvc];
-        
-        AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-        appDelegate.menuController = [[MenuViewController alloc] init];
-        appDelegate.drawerController = [[MMDrawerController alloc] initWithCenterViewController:nav leftDrawerViewController:appDelegate.menuController];
-        [appDelegate.drawerController setRestorationIdentifier:@"MMDrawer"];
-        [appDelegate.drawerController setMaximumLeftDrawerWidth:200.0];
-        [appDelegate.drawerController setOpenDrawerGestureModeMask:MMOpenDrawerGestureModeAll];
-        [appDelegate.drawerController setCloseDrawerGestureModeMask:MMCloseDrawerGestureModeAll];
-        
-        [self.navigationController presentViewController:appDelegate.drawerController animated:YES completion:nil];
         // Authentication succeeded
     }
 }
+
+-(void)loadHomeScreen {
+    MainVC *mainvc = [[MainVC alloc] init];
+    UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:mainvc];
+    
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    appDelegate.menuController = [[MenuViewController alloc] init];
+    appDelegate.drawerController = [[MMDrawerController alloc] initWithCenterViewController:nav leftDrawerViewController:appDelegate.menuController];
+    [appDelegate.drawerController setRestorationIdentifier:@"MMDrawer"];
+    [appDelegate.drawerController setMaximumLeftDrawerWidth:200.0];
+    [appDelegate.drawerController setOpenDrawerGestureModeMask:MMOpenDrawerGestureModeAll];
+    [appDelegate.drawerController setCloseDrawerGestureModeMask:MMCloseDrawerGestureModeAll];
+    
+    [self.navigationController presentViewController:appDelegate.drawerController animated:YES completion:nil];
+}
+
 
 /*
 #pragma mark - Navigation
