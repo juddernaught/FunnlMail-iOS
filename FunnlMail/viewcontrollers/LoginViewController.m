@@ -135,7 +135,7 @@
 
 
 - (void) oauthLogin {
-    if ([[[EmailServersService instance] allEmailServers] count] == 0) {
+    if ([[[EmailServersService instance] allEmailServers] count] != 0) {
         static NSString *const kKeychainItemName = @"OAuth2 Sample: Gmail";
         
         NSString *kMyClientID = @"655269106649-rkom4nvj3m9ofdpg6sk53pi65mpivv7d.apps.googleusercontent.com";     // pre-assigned by service

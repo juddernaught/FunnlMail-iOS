@@ -208,7 +208,8 @@ static NSString *currentFolder;
                 //
                 // add mail to internal array
                 //
-                [self.messages addObject:m];
+                  
+                  [self.messages addObject:m];
                 
                 //
                 // store message in database
@@ -226,19 +227,19 @@ static NSString *currentFolder;
                       if(threadMessagesArray == nil ){
                           threadMessagesArray = [[NSMutableSet alloc] init];
                           [threadMessagesArray addObject:m];
-                          [self.messages addObject:m];
+                          //[self.messages addObject:m];
                           [self.threadIdDictionary setObject:threadMessagesArray forKey:gmailThreadIDStr];
                       }
                       else{
                           NSPredicate *predicate = [NSPredicate predicateWithFormat:@"gmailThreadID == %qx AND uid != %d ", m.gmailThreadID,m.uid];
                           NSArray *b = [self.messages filteredArrayUsingPredicate:predicate];
                           [self.messages removeObjectsInArray:b];
-                          [self.messages addObject:m];
+                          //[self.messages addObject:m];
                           [threadMessagesArray addObject:m];
                           [self.threadIdDictionary setObject:threadMessagesArray forKey:gmailThreadIDStr];
                       }
                   }
-//                  NSLog(@"%@: %@ : %d", m.header.sender.mailbox, m.header.subject, threadMessagesArray.count);
+    //                  NSLog(@"%@: %@ : %d", m.header.sender.mailbox, m.header.subject, threadMessagesArray.count);
               }
               NSMutableArray *combinedMessages = [NSMutableArray arrayWithArray:self.messages];
               // TODO: remove the if statement. Primary is currently the same as the All Mail view.
