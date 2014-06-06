@@ -25,10 +25,11 @@ create table emailServers(
 );
 
 create table messageFilterXRef(
-  funnelId TEXT,
-  messageID TEXT
+  messageID TEXT,
+  funnelId TEXT
 );
 
-CREATE INDEX funnelIdIndex ON messageFilterXRef (funnelId);
 CREATE INDEX messageIDIndex ON messageFilterXRef (messageID);
+CREATE INDEX funnelIdIndex ON messageFilterXRef (funnelId);
+
 

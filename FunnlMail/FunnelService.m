@@ -53,6 +53,28 @@ static FunnelService *instance;
     success = [db executeUpdate:@"INSERT INTO funnels (funnelId,funnelName,emailAddresses,phrases) VALUES (:funnelId,:funnelName,:emailAddresses,:phrases)" withParameterDictionary:paramDict];
   }];
   
+  if(success){
+    funnelModel.funnelId = paramDict[@"funnelId"];
+  }
+  
+  return success;
+}
+
+-(BOOL) updateFunnel:(FunnelModel *)funnelModel{
+  __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+  
+  __block BOOL success = NO;
+  
+  paramDict[@"funnelId"] = funnelModel.funnelId;
+  paramDict[@"funnelName"] = funnelModel.funnelName;
+  paramDict[@"emailAddresses"] = funnelModel.emailAddresses;
+  paramDict[@"phrases"] = funnelModel.phrases;
+  
+  [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+    success = [db executeUpdate:@"UPDATE funnels SET funnelName=:funnelName,emailAddresses=:emailAddresses,phrases=:phrases WHERE funnelId=:funnelId" withParameterDictionary:paramDict];
+    
+  }];
+  
   return success;
 }
 
