@@ -100,11 +100,13 @@ static NSString *currentFolder;
 	// Reset the inbox
 	self.messages = [[NSMutableArray alloc] init];
     self.filterMessages = [[NSMutableArray alloc] init];
+    self.sentMessages = [[NSMutableArray alloc] init];
     self.threadIdDictionary = [[NSMutableDictionary alloc] init];
 	self.totalNumberOfInboxMessages = -1;
 	self.isLoading = NO;
 	self.messagePreviews = [NSMutableDictionary dictionary];
     self.filterMessagePreviews = [NSMutableDictionary dictionary];
+    self.sentMessagePreviews = [NSMutableDictionary dictionary];
 	[fv.tableView reloadData];
     
 	NSLog(@"checking account");
@@ -113,7 +115,7 @@ static NSString *currentFolder;
 		EmailService *strongSelf = weakSelf;
 		NSLog(@"finished checking account.");
 		if (error == nil) {
-			[strongSelf loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD : fv];
+			[strongSelf loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD withTableController:fv withFolder:@"INBOX"];
 		} else {
 			NSLog(@"error loading account: %@", error);
 		}
@@ -129,7 +131,7 @@ static NSString *currentFolder;
     
 }
 
-- (void)loadLastNMessages:(NSUInteger)nMessages : (EmailsTableViewController *) fv
+- (void)loadLastNMessages:(NSUInteger)nMessages  withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName
 {
 	self.isLoading = YES;
 	

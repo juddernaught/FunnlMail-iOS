@@ -26,10 +26,11 @@
 @property (nonatomic, strong) UITableView *tableView;
 @property (strong,nonatomic) FilterModel *filterModel;
 @property (weak) id<MainVCDelegate> mainVCdelegate;
+@property (strong,nonatomic) NSString *emailFolder;
 
 @property (nonatomic) NSInteger totalNumberOfInboxMessages;
 @property (nonatomic) BOOL isLoading;
 @property (nonatomic, strong) UIActivityIndicatorView *loadMoreActivityView;
-
+-(void) setFilterModel:(FilterModel *)filterModel;
 
 @end

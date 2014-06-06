@@ -122,10 +122,14 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
 -(void) setFilterModel:(FilterModel *)filterModel{
     _filterModel = filterModel;
+    if(self.emailFolder == nil || self.emailFolder.length <= 0){
+        self.emailFolder = INBOX;
+    }
+    
     if(filterLabel!=nil){
         filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#2EB82E"]);
         filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : @"All");
-      [[EmailService instance] loadLastNMessages:[EmailService instance].messages.count + NUMBER_OF_MESSAGES_TO_LOAD : self];
+      [[EmailService instance] loadLastNMessages:[EmailService instance].messages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:self withFolder:self.emailFolder];
     }
 }
 
@@ -210,7 +214,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 }
                 else
                 {
-                    cell.messageRenderingOperation = [[EmailService instance].imapSession plainTextBodyRenderingOperationWithMessage:message folder:@"INBOX"];
+                    cell.messageRenderingOperation = [[EmailService instance].imapSession plainTextBodyRenderingOperationWithMessage:message folder:self.emailFolder];
                     [cell.messageRenderingOperation start:^(NSString * plainTextBodyString, NSError * error) {
                         cell.bodyLabel.text = plainTextBodyString;
                         cell.messageRenderingOperation = nil;
@@ -226,7 +230,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
                 [cell setSwipeGestureWithView:archiveView color:yellowColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
                     NSLog(@"Did swipe \"Archive\" cell");
-                    MCOIMAPOperation *msgOperation = [[EmailService instance].imapSession storeFlagsOperationWithFolder:@"INBOX" uids:[MCOIndexSet indexSetWithIndex:message.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagDeleted];
+                    MCOIMAPOperation *msgOperation = [[EmailService instance].imapSession storeFlagsOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:message.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagDeleted];
                     [msgOperation start:^(NSError * error)
                      {
                          [tableView beginUpdates];
@@ -336,7 +340,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
         cell.subjectLabel.text = message.header.subject;
         cell.threadLabel.text = @"";
 
-        cell.messageRenderingOperation = [[EmailService instance].imapSession plainTextBodyRenderingOperationWithMessage:message folder:@"INBOX"];
+        cell.messageRenderingOperation = [[EmailService instance].imapSession plainTextBodyRenderingOperationWithMessage:message folder:self.emailFolder];
         [cell.messageRenderingOperation start:^(NSString * plainTextBodyString, NSError * error) {
 //        cell.textLabel.text = message.header.subject;
 //        cell.detailTextLabel.text = plainTextBodyString;
@@ -356,11 +360,11 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
             {
                 MCOIMAPMessage *msg = [EmailService instance].filterMessages[indexPath.row];
                 MsgViewController *vc = [[MsgViewController alloc] init];
-                vc.folder = @"INBOX";
+                vc.folder = self.emailFolder;
                 vc.message = msg;
                 vc.session = [EmailService instance].imapSession;
                 msg.flags = msg.flags | MCOMessageFlagSeen;
-                MCOIMAPOperation *msgOperation=[[EmailService instance].imapSession storeFlagsOperationWithFolder:@"INBOX" uids:[MCOIndexSet indexSetWithIndex:msg.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagSeen];
+                MCOIMAPOperation *msgOperation=[[EmailService instance].imapSession storeFlagsOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:msg.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagSeen];
                 [msgOperation start:^(NSError * error)
                 {
                     NSLog(@"selected message flags %u UID is %u",msg.flags,msg.uid );
@@ -376,7 +380,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 if (!self.isLoading &&
                     [EmailService instance].messages.count < [EmailService instance].totalNumberOfInboxMessages)
                 {
-                    [[EmailService instance] loadLastNMessages:[EmailService instance].messages.count + NUMBER_OF_MESSAGES_TO_LOAD : self];
+                    [[EmailService instance] loadLastNMessages:[EmailService instance].messages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:self withFolder:INBOX];
                     cell.accessoryView = self.loadMoreActivityView;
                     [self.loadMoreActivityView startAnimating];
                 }
@@ -391,7 +395,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     else{
         MCOIMAPMessage *msg = searchMessages[indexPath.row];
         MsgViewController *vc = [[MsgViewController alloc] init];
-        vc.folder = @"INBOX";
+        vc.folder = self.emailFolder;
         vc.message = msg;
         vc.session = [EmailService instance].imapSession;
         //[self.navigationController pushViewController:vc animated:YES];
@@ -499,7 +503,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
    filterLabel.text = @"Search Results";
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [searchMessages removeAllObjects];
-    MCOIMAPSearchOperation *searchOperation = [[EmailService instance].imapSession searchOperationWithFolder:@"INBOX" kind:MCOIMAPSearchKindFrom searchString:searchBar.text];
+    MCOIMAPSearchOperation *searchOperation = [[EmailService instance].imapSession searchOperationWithFolder:self.emailFolder kind:MCOIMAPSearchKindFrom searchString:searchBar.text];
   [searchOperation start:^(NSError *error, MCOIndexSet *searchResult) {
     if (error)
     {
@@ -517,7 +521,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
              MCOIMAPMessagesRequestKindFlags);
               
             MCOIMAPSession *session = [EmailService instance].imapSession;
-            MCOIMAPFetchMessagesOperation * op = [session fetchMessagesByUIDOperationWithFolder:@"INBOX" requestKind:requestKind uids:searchResult];
+            MCOIMAPFetchMessagesOperation * op = [session fetchMessagesByUIDOperationWithFolder:self.emailFolder requestKind:requestKind uids:searchResult];
             [op start:^(NSError * error, NSArray * messages, MCOIndexSet * vanishedMessages) {
                 NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"header.date" ascending:NO];
                 searchMessages = [[NSMutableArray alloc] initWithArray:[messages sortedArrayUsingDescriptors:@[sort]]];

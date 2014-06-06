@@ -37,7 +37,6 @@
     [self.view addSubview:listView];
 //    [listView setBackgroundView:[[UIView alloc] init]];
     listArray =[[NSMutableArray alloc] initWithObjects:@"EMail ID ",@"Edit Funnl Settings",@"Funnl Alerts", @"Share Funnls", @"Sent Mail", @"Archive", @"Trash", @"Help",nil];
-
 }
 
 
