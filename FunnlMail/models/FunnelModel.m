@@ -11,7 +11,7 @@
 @implementation FunnelModel
 
 -(NSString *) description{
-  return [NSString stringWithFormat:@"{funnelName:%@, emailAddresses:%@, phrases:%@}", self.funnelName, self.emailAddresses, self.phrases];
+  return [NSString stringWithFormat:@"{funnelId:%@, funnelName:%@, emailAddresses:%@, phrases:%@}", self.funnelId, self.funnelName, self.emailAddresses, self.phrases];
 }
 
 @end

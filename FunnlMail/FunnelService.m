@@ -44,12 +44,35 @@ static FunnelService *instance;
   
   __block BOOL success = NO;
   
+  paramDict[@"funnelId"] = [[NSUUID UUID] UUIDString];
   paramDict[@"funnelName"] = funnelModel.funnelName;
   paramDict[@"emailAddresses"] = funnelModel.emailAddresses;
   paramDict[@"phrases"] = funnelModel.phrases;
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    success = [db executeUpdate:@"INSERT INTO funnels (funnelName,emailAddresses,phrases) VALUES (:funnelName,:emailAddresses,:phrases)" withParameterDictionary:paramDict];
+    success = [db executeUpdate:@"INSERT INTO funnels (funnelId,funnelName,emailAddresses,phrases) VALUES (:funnelId,:funnelName,:emailAddresses,:phrases)" withParameterDictionary:paramDict];
+  }];
+  
+  if(success){
+    funnelModel.funnelId = paramDict[@"funnelId"];
+  }
+  
+  return success;
+}
+
+-(BOOL) updateFunnel:(FunnelModel *)funnelModel{
+  __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+  
+  __block BOOL success = NO;
+  
+  paramDict[@"funnelId"] = funnelModel.funnelId;
+  paramDict[@"funnelName"] = funnelModel.funnelName;
+  paramDict[@"emailAddresses"] = funnelModel.emailAddresses;
+  paramDict[@"phrases"] = funnelModel.phrases;
+  
+  [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+    success = [db executeUpdate:@"UPDATE funnels SET funnelName=:funnelName,emailAddresses=:emailAddresses,phrases=:phrases WHERE funnelId=:funnelId" withParameterDictionary:paramDict];
+    
   }];
   
   return success;
@@ -59,13 +82,14 @@ static FunnelService *instance;
   __block NSMutableArray *array = [[NSMutableArray alloc] init];
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    FMResultSet *resultSet = [db executeQuery:@"SELECT funnelName,emailAddresses,phrases FROM funnels"];
+    FMResultSet *resultSet = [db executeQuery:@"SELECT funnelId,funnelName,emailAddresses,phrases FROM funnels"];
     
     FunnelModel *model;
     
     while ([resultSet next]) {
       model = [[FunnelModel alloc]init];
       
+      model.funnelId = [resultSet stringForColumn:@"funnelId"];
       model.funnelName = [resultSet stringForColumn:@"funnelName"];
       model.emailAddresses = [resultSet stringForColumn:@"emailAddresses"];
       model.phrases = [resultSet stringForColumn:@"phrases"];
@@ -85,11 +109,12 @@ static FunnelService *instance;
   paramDict[@"funnelName"] = funnelName;
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    FMResultSet *resultSet = [db executeQuery:@"SELECT funnelName,emailAddresses,phrases FROM funnels WHERE funnelName=:funnelName" withParameterDictionary:paramDict];
+    FMResultSet *resultSet = [db executeQuery:@"SELECT funnelId,funnelName,emailAddresses,phrases FROM funnels WHERE funnelName=:funnelName" withParameterDictionary:paramDict];
     
     while ([resultSet next]) {
       model = [[FunnelModel alloc]init];
       
+      model.funnelId = [resultSet stringForColumn:@"funnelId"];
       model.funnelName = [resultSet stringForColumn:@"funnelName"];
       model.emailAddresses = [resultSet stringForColumn:@"emailAddresses"];
       model.phrases = [resultSet stringForColumn:@"phrases"];
@@ -104,15 +129,15 @@ static FunnelService *instance;
   return model;
 }
 
--(BOOL) deleteFunnel:(NSString *)funnelName{
+-(BOOL) deleteFunnel:(NSString *)funnelId{
   __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
   
   __block BOOL success = NO;
   
-  paramDict[@"funnelName"] = funnelName;
+  paramDict[@"funnelId"] = funnelId;
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    success = [db executeUpdate:@"DELETE FROM funnels WHERE funnelName=:funnelName" withParameterDictionary:paramDict];
+    success = [db executeUpdate:@"DELETE FROM funnels WHERE funnelId=:funnelId" withParameterDictionary:paramDict];
   }];
   
   return success;
