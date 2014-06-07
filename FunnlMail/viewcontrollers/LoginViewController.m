@@ -207,10 +207,12 @@
         NSString * email = [auth userEmail];
         NSString * accessToken = [auth accessToken];
         NSString * refreshToken = [auth refreshToken];
+
         self.emailServerModel = [[EmailServerModel alloc] init];
         self.emailServerModel.emailAddress = email;
         self.emailServerModel.accessToken = accessToken;
         self.emailServerModel.refreshToken = refreshToken;
+
         
         // MUSTFIX: remove at some point:
         //[[EmailServersService instance] deleteEmailServer:emailServer.emailAddress];
