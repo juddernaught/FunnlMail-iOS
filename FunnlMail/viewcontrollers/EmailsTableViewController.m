@@ -45,6 +45,8 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     [super viewDidLoad];
     [[EmailService instance] startLogin: self];
     [self setupView];
+    // MUSTFIX: code doesn't work without below line, but it doesn't seem like it really belongs
+    self.emailFolder = INBOX;
     searchMessages = [[NSMutableArray alloc] init];
     isSearching = NO;
     // Uncomment the following line to preserve selection between presentations.
@@ -65,6 +67,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
 - (void)setupView
 {
+
 	// Do any additional setup after loading the view.
     self.view.backgroundColor= [UIColor grayColor];
   

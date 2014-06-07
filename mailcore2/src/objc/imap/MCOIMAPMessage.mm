@@ -38,7 +38,6 @@
 
 - (id) init
 {
-    NSLog(@"here1");
     msg = new mailcore::IMAPMessage();
     self = [self initWithMCMessage:msg];
     msg->release();
@@ -47,7 +46,6 @@
 
 + (NSObject *) mco_objectWithMCObject:(mailcore::Object *)object
 {
-    NSLog(@"here2");
     mailcore::IMAPMessage * msg = (mailcore::IMAPMessage *) object;
     return [[[self alloc] initWithMCMessage:msg] autorelease];
 }
