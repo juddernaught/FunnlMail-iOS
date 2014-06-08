@@ -18,6 +18,8 @@
 #import "AppDelegate.h"
 #import "EmailServersService.h"
 
+#define accessTokenEndpoint @"https://accounts.google.com/o/oauth2/token"
+
 @interface LoginViewController ()
 
 @end
@@ -79,6 +81,9 @@
 
 - (void) viewDidLoad {
     [super viewDidLoad];
+    _receivedData = [[NSMutableData alloc] init];
+    _isRefreshing = NO;
+    
     self.view.backgroundColor = [UIColor colorWithHexString:@"F6F6F6"];
 
     UIImageView *funnlMailIntroView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"intro.png"]];
@@ -137,11 +142,19 @@
 - (void) oauthLogin {
     // THIS DOESN'T WORK YET...REFRESH KEY IS LIKELY NEEDED AFTER A CERTAIN PERIOD OF TIME
     //if ([[[EmailServersService instance] allEmailServers] count] == 0 && false) {
-    if (YES == YES) {
+    NSString *kMyClientID = @"655269106649-rkom4nvj3m9ofdpg6sk53pi65mpivv7d.apps.googleusercontent.com";     // pre-assigned by service
+    NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
+    NSArray *allServers = [[EmailServersService instance] allEmailServers];
+    if ([allServers count] == 0 || [((EmailServerModel *)[allServers objectAtIndex:0]).refreshToken isEqualToString:@"nil"]) {
+        if ([[[EmailServersService instance] allEmailServers] count] > 0) {
+            for (EmailServerModel *m in [[EmailServersService instance] allEmailServers]) {
+                [[EmailServersService instance] deleteEmailServer:m.emailAddress];
+            }
+        }
+        
         static NSString *const kKeychainItemName = @"OAuth2 Sample: Gmail";
         
-        NSString *kMyClientID = @"655269106649-rkom4nvj3m9ofdpg6sk53pi65mpivv7d.apps.googleusercontent.com";     // pre-assigned by service
-        NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt"; // pre-assigned by service
+        // pre-assigned by service
         
         NSString *scope = @"https://mail.google.com/"; // scope for Gmail
         
@@ -156,19 +169,28 @@
     }
     else {
         // right now there is only 1 email address allowed
-        EmailServerModel *emailServer = [[[EmailServersService instance] allEmailServers] objectAtIndex:0];
-        MCOIMAPSession * imapSession = [[MCOIMAPSession alloc] init];
-        [EmailService instance].imapSession = imapSession;
-        [imapSession setAuthType:MCOAuthTypeXOAuth2];
-        [imapSession setOAuth2Token:emailServer.accessToken];
-        [imapSession setUsername:emailServer.emailAddress];
+         self.emailServerModel = [[[EmailServersService instance] allEmailServers] objectAtIndex:0];
         
-        MCOSMTPSession * smtpSession = [[MCOSMTPSession alloc] init];
-        [smtpSession setAuthType:MCOAuthTypeXOAuth2];
-        [smtpSession setOAuth2Token:emailServer.accessToken];
-        [smtpSession setUsername:emailServer.emailAddress];
-
-        [self loadHomeScreen];
+        // Set the HTTP POST parameters required for refreshing the access token.
+        NSString *refreshPostParams = [NSString stringWithFormat:@"refresh_token=%@&client_id=%@&client_secret=%@&grant_type=refresh_token",
+                                       self.emailServerModel.refreshToken,
+                                       kMyClientID,
+                                       kMyClientSecret
+                                       ];
+        
+        // Indicate that an access token refresh process is on the way.
+        self.isRefreshing = YES;
+        
+        // Create the request object and set its properties.
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:accessTokenEndpoint]];
+        [request setHTTPMethod:@"POST"];
+        [request setHTTPBody:[refreshPostParams dataUsingEncoding:NSUTF8StringEncoding]];
+        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        
+        // Make the request.
+        [self makeRequest:request];
+        
+        
     }
     
     //[[self navigationController] presentViewController:viewController animated:YES completion:nil];
@@ -184,15 +206,16 @@
     } else {
         NSString * email = [auth userEmail];
         NSString * accessToken = [auth accessToken];
-        EmailServerModel *emailServer = [[EmailServerModel alloc] init];
-        emailServer.emailAddress = email;
-        emailServer.accessToken = accessToken;
-        emailServer.refreshToken = @"nil";
+        NSString * refreshToken = [auth refreshToken];
+        self.emailServerModel = [[EmailServerModel alloc] init];
+        self.emailServerModel.emailAddress = email;
+        self.emailServerModel.accessToken = accessToken;
+        self.emailServerModel.refreshToken = refreshToken;
         
         // MUSTFIX: remove at some point:
         //[[EmailServersService instance] deleteEmailServer:emailServer.emailAddress];
 
-        //[[EmailServersService instance] insertEmailServer:emailServer];
+        [[EmailServersService instance] insertEmailServer:self.emailServerModel];
         MCOIMAPSession * imapSession = [[MCOIMAPSession alloc] init];
         [EmailService instance].imapSession = imapSession;
         [imapSession setAuthType:MCOAuthTypeXOAuth2];
@@ -236,4 +259,70 @@
 }
 */
 
+-(void)makeRequest:(NSMutableURLRequest *)request{
+    // Set the length of the _receivedData mutableData object to zero.
+    [_receivedData setLength:0];
+    
+    // Make the request.
+    _urlConnection = [NSURLConnection connectionWithRequest:request delegate:self];
+}
+
+#pragma NSURLConnection delegate methdods
+
+-(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+    [_receivedData appendData:data];
+}
+-(void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    // This object will be used to store the converted received JSON data to string.
+    NSString *responseJSON;
+    
+    // This flag indicates whether the response was received after an API call and out of the
+    // following cases.
+    BOOL isAPIResponse = YES;
+    
+    // Convert the received data in NSString format.
+    responseJSON = [[NSString alloc] initWithData:(NSData *)_receivedData encoding:NSUTF8StringEncoding];
+    
+    // Check for access token.
+    if ([responseJSON rangeOfString:@"access_token"].location != NSNotFound) {
+        // This is the case where the access token has been fetched.
+        NSError *error;
+        if (error) {
+            NSLog(@"%@", error);
+        }
+        NSDictionary *accessTokenInfoDictionary = [NSJSONSerialization JSONObjectWithData:_receivedData options:NSJSONReadingMutableContainers error:&error];
+        self.emailServerModel.accessToken = [accessTokenInfoDictionary objectForKey:@"access_token"];
+        
+        // update database with new access token
+        [[EmailServersService instance] updateEmailServer:self.emailServerModel];
+        
+        if (self.isRefreshing) {
+            self.isRefreshing = NO;
+        }
+        
+        // Notify the caller class that the authorization was successful.
+        NSLog(@"%@", @"successfully fetched access token from refresh token");
+        isAPIResponse = NO;
+    }
+    
+    MCOIMAPSession * imapSession = [[MCOIMAPSession alloc] init];
+    [EmailService instance].imapSession = imapSession;
+    
+    [imapSession setAuthType:MCOAuthTypeXOAuth2];
+    [imapSession setOAuth2Token:self.emailServerModel.accessToken];
+    [imapSession setUsername:self.emailServerModel.emailAddress];
+    
+    MCOSMTPSession * smtpSession = [[MCOSMTPSession alloc] init];
+    [smtpSession setAuthType:MCOAuthTypeXOAuth2];
+    [smtpSession setOAuth2Token:self.emailServerModel.accessToken];
+    [smtpSession setUsername:self.emailServerModel.emailAddress];
+    
+    [self loadHomeScreen];
+
+}
+-(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    
+}
+-(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+}
 @end
