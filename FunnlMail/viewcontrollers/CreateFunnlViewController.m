@@ -11,6 +11,7 @@
 #import "EmailService.h"
 #import "FilterModel.h"
 #import "UIColor+HexString.h"
+#import "FunnelService.h"
 
 @interface CreateFunnlViewController ()
 
@@ -349,8 +350,14 @@
           model = [[FilterModel alloc]initWithBarColor:color filterTitle:funnlName newMessageCount:0 dateOfLastMessage:[NSDate new] sendersArray:(NSMutableArray*)[dictionaryOfConversations allValues] subjectsArray:(NSMutableArray*)[dictionaryOfSubjects allValues]];
           if(isEdit){
             [EmailService editFilter:model withOldFilter:oldModel];
+              // save to db
+              [[FunnelService instance] updateFunnel:model];
+              
           }else{
             [EmailService setNewFilterModel:model];
+              // save to db
+              [[FunnelService instance] insertFunnel:model];
+
           }
           [self.mainVCdelegate filterSelected:model];
 

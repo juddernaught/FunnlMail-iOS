@@ -12,6 +12,7 @@
 #import "FMResultSet.h"
 #import "ServiceUtils.h"
 #import "FunnelModel.h"
+#import <MailCore/MailCore.h>
 
 static MessageService *instance;
 
@@ -102,7 +103,7 @@ static MessageService *instance;
       
       model.date = [NSDate dateWithTimeIntervalSince1970:dateTimeInterval];
       
-      [array addObject:model];
+      [array addObject:[MCOIMAPMessage importSerializable:model.messageJSON]];
     }
   }];
   
@@ -130,7 +131,7 @@ static MessageService *instance;
       model.read = [resultSet intForColumn:@"read"];
       model.date = [resultSet dateForColumn:@"date"];
       
-      [array addObject:model];
+      [array addObject:[MCOIMAPMessage importSerializable:model.messageJSON]];
     }
   }];
   

@@ -14,6 +14,7 @@
 #import "EMailsTableViewController.h"
 #import "SQLiteDatabase.h"
 #import "FMDatabase.h"
+#import "EmailServersService.h"
 
 static EmailService *instance;
 
@@ -198,6 +199,7 @@ static NSString *currentFolder;
           ^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
           {
               EmailService *strongSelf = weakSelf;
+              EmailServersService *emailServersService = [EmailServersService instance];
               NSLog(@"fetched all messages.");
               
               self.isLoading = NO;
@@ -213,10 +215,12 @@ static NSString *currentFolder;
                   
                   [self.messages addObject:m];
                 
-                //
-                // store message in database
-                //
-                [self saveMessageInDatabase:m];
+                  //
+                  // store message in database
+                  //
+                  //[self saveMessageInDatabase:m];
+                  
+                  
                   NSPredicate *predicate = [NSPredicate predicateWithFormat:@"gmailMessageID == %qx ", m.gmailThreadID,m.gmailMessageID];
                   NSArray *b = [self.messages filteredArrayUsingPredicate:predicate];
                   if(b.count){
