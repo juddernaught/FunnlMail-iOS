@@ -10,10 +10,11 @@ create table messages(
 );
 
 create table funnels(
+  funnelId TEXT,
   funnelName TEXT,
   emailAddresses TEXT,
   phrases TEXT,
-  PRIMARY KEY (funnelName)
+  PRIMARY KEY (funnelId)
 );
 
 create table emailServers(
@@ -24,10 +25,11 @@ create table emailServers(
 );
 
 create table messageFilterXRef(
-  funnelName TEXT,
-  messageID TEXT
+  messageID TEXT,
+  funnelId TEXT
 );
 
-CREATE INDEX funnelNameIndex ON messageFilterXRef (funnelName);
 CREATE INDEX messageIDIndex ON messageFilterXRef (messageID);
+CREATE INDEX funnelIdIndex ON messageFilterXRef (funnelId);
+
 

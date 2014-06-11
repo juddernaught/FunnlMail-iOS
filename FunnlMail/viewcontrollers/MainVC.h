@@ -10,13 +10,14 @@
 #import "EmailsTableViewController.h"
 #import "MainView.h"
 #import "MainVCDelegate.h"
-#import "FilterModel.h"
+//#import "FilterModel.h"
+#import "FunnelModel.h"
 
 
 @interface MainVC : UIViewController<MainVCDelegate>{
-  MainView *mainView;
+//  MainView *mainView;
   EmailsTableViewController *emailsTableViewController;
-  FilterModel *currentFilterModel;
+  FunnelModel *currentFilterModel;
 }
-
+@property (nonatomic, retain) MainView *mainView;
 @end

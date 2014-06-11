@@ -10,7 +10,8 @@
 #import "MASConstraintMaker.h"
 #import "View+MASAdditions.h"
 #import "MainFilterCell.h"
-#import "FilterModel.h"
+//#import "FilterModel.h"
+#import "FunnelModel.h"
 #import "EmailService.h"
 #import "AppDelegate.h"
 #import <MessageUI/MessageUI.h>
@@ -23,6 +24,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 @end
 
 @implementation MainVC
+@synthesize mainView;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -157,7 +159,8 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
             NSLog(@"Message not sent");
             break;
     }
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
+//    [self dismissModalViewControllerAnimated:YES];
 }
 
 
@@ -169,7 +172,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 
 // FIXME: move somewhere else?
--(void) filterSelected:(FilterModel *)filterModel{
+-(void) filterSelected:(FunnelModel *)filterModel{
     if(filterModel != nil){
         currentFilterModel = filterModel;
     }else{
@@ -177,8 +180,11 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     }
     mainView.hidden = YES;
     emailsTableViewController.filterModel = currentFilterModel;
+    [[EmailService instance] loadLastNMessages:[EmailService instance].messages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:emailsTableViewController withFolder:emailsTableViewController.emailFolder];
+//    [emailsTableViewController.tableView reloadData];
+//    [mainView reloadView];
 //    [emailsTableViewController.tableView setContentOffset:CGPointMake(0, -40)];
-    //[filterView startLogin];  // TODO: (MSR) I'm guessing we don't want to call this again, may need to refactor retrieving of messages
+//    [filterView startLogin];  // TODO: (MSR) I'm guessing we don't want to call this again, may need to refactor retrieving of messages
 }
 
 -(void) pushViewController:(UIViewController *)viewController{

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5A1FF53D1948263B0056750F /* FunnelModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1FF53C1948263B0056750F /* FunnelModel.m */; };
 		660BA98E1902CDEA00CDF86E /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 660BA98D1902CDEA00CDF86E /* LoginViewController.m */; };
 		6620BA8018E32FD700769C48 /* Files.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA7C18E32FD700769C48 /* Files.png */; };
 		6620BA8118E32FD700769C48 /* Meetings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA7D18E32FD700769C48 /* Meetings.png */; };
@@ -80,10 +81,8 @@
 		CC8C7ECE18E6F38100E76AE8 /* NSArray+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = CC8C7EC118E6F38100E76AE8 /* NSArray+MASAdditions.m */; };
 		CC8C7ECF18E6F38100E76AE8 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = CC8C7EC418E6F38100E76AE8 /* NSLayoutConstraint+MASDebugAdditions.m */; };
 		CC8C7ED018E6F38100E76AE8 /* View+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = CC8C7EC618E6F38100E76AE8 /* View+MASAdditions.m */; };
-		CCC377A918E7113B004F7FC0 /* FilterModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC377A818E7113B004F7FC0 /* FilterModel.m */; };
 		CCC9E40F193D5CC20028DC84 /* EmailServersService.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC9E40E193D5CC20028DC84 /* EmailServersService.m */; };
 		CCC9E416193D5CDF0028DC84 /* EmailServerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC9E415193D5CDF0028DC84 /* EmailServerModel.m */; };
-		CCC9E419193DF5550028DC84 /* FunnelModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC9E418193DF5550028DC84 /* FunnelModel.m */; };
 		CCC9E41C193DF5E80028DC84 /* FunnelService.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC9E41B193DF5E80028DC84 /* FunnelService.m */; };
 		CCC9E41F193DF91D0028DC84 /* MessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC9E41E193DF91D0028DC84 /* MessageModel.m */; };
 		CCC9E422193DF9B10028DC84 /* MessageService.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC9E421193DF9B10028DC84 /* MessageService.m */; };
@@ -171,6 +170,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5A1FF53B1948263B0056750F /* FunnelModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FunnelModel.h; path = models/FunnelModel.h; sourceTree = "<group>"; };
+		5A1FF53C1948263B0056750F /* FunnelModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FunnelModel.m; path = models/FunnelModel.m; sourceTree = "<group>"; };
 		660BA98C1902CDEA00CDF86E /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = viewcontrollers/LoginViewController.h; sourceTree = "<group>"; };
 		660BA98D1902CDEA00CDF86E /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = viewcontrollers/LoginViewController.m; sourceTree = "<group>"; };
 		6620BA7C18E32FD700769C48 /* Files.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Files.png; sourceTree = "<group>"; };
@@ -286,14 +287,10 @@
 		CC8C7EC518E6F38100E76AE8 /* View+MASAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "View+MASAdditions.h"; sourceTree = "<group>"; };
 		CC8C7EC618E6F38100E76AE8 /* View+MASAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "View+MASAdditions.m"; sourceTree = "<group>"; };
 		CC8C7EC718E6F38100E76AE8 /* View+MASShorthandAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "View+MASShorthandAdditions.h"; sourceTree = "<group>"; };
-		CCC377A718E7113B004F7FC0 /* FilterModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FilterModel.h; path = models/FilterModel.h; sourceTree = "<group>"; };
-		CCC377A818E7113B004F7FC0 /* FilterModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FilterModel.m; path = models/FilterModel.m; sourceTree = "<group>"; };
 		CCC9E40D193D5CC20028DC84 /* EmailServersService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmailServersService.h; path = services/EmailServersService.h; sourceTree = "<group>"; };
 		CCC9E40E193D5CC20028DC84 /* EmailServersService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EmailServersService.m; path = services/EmailServersService.m; sourceTree = "<group>"; };
 		CCC9E414193D5CDF0028DC84 /* EmailServerModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmailServerModel.h; path = models/EmailServerModel.h; sourceTree = "<group>"; };
 		CCC9E415193D5CDF0028DC84 /* EmailServerModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EmailServerModel.m; path = models/EmailServerModel.m; sourceTree = "<group>"; };
-		CCC9E417193DF5550028DC84 /* FunnelModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FunnelModel.h; path = models/FunnelModel.h; sourceTree = "<group>"; };
-		CCC9E418193DF5550028DC84 /* FunnelModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FunnelModel.m; path = models/FunnelModel.m; sourceTree = "<group>"; };
 		CCC9E41A193DF5E80028DC84 /* FunnelService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FunnelService.h; sourceTree = "<group>"; };
 		CCC9E41B193DF5E80028DC84 /* FunnelService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FunnelService.m; sourceTree = "<group>"; };
 		CCC9E41D193DF91D0028DC84 /* MessageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageModel.h; path = models/MessageModel.h; sourceTree = "<group>"; };
@@ -598,12 +595,10 @@
 		CC39517318E710CC0093C787 /* models */ = {
 			isa = PBXGroup;
 			children = (
-				CCC377A718E7113B004F7FC0 /* FilterModel.h */,
-				CCC377A818E7113B004F7FC0 /* FilterModel.m */,
+				5A1FF53B1948263B0056750F /* FunnelModel.h */,
+				5A1FF53C1948263B0056750F /* FunnelModel.m */,
 				CCC9E414193D5CDF0028DC84 /* EmailServerModel.h */,
 				CCC9E415193D5CDF0028DC84 /* EmailServerModel.m */,
-				CCC9E417193DF5550028DC84 /* FunnelModel.h */,
-				CCC9E418193DF5550028DC84 /* FunnelModel.m */,
 				CCC9E41D193DF91D0028DC84 /* MessageModel.h */,
 				CCC9E41E193DF91D0028DC84 /* MessageModel.m */,
 			);
@@ -1007,7 +1002,6 @@
 				FA2C9BD2193EDFCB00866BEE /* MMDrawerController.m in Sources */,
 				FA2C9BDB193EE66400866BEE /* MenuViewController.m in Sources */,
 				CC8C7ECC18E6F38100E76AE8 /* MASViewAttribute.m in Sources */,
-				CCC377A918E7113B004F7FC0 /* FilterModel.m in Sources */,
 				CC8C7ECF18E6F38100E76AE8 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
 				66AEEBAB1936B26B00B6DBE5 /* GTMOAuth2ViewControllerTouch.m in Sources */,
 				CC8C7EC818E6F38100E76AE8 /* MASCompositeConstraint.m in Sources */,
@@ -1015,10 +1009,10 @@
 				66E669751904431E003F9305 /* KeychainItemWrapper.m in Sources */,
 				6677880C18EF80BF00EF1962 /* EmailCell.m in Sources */,
 				FA7A445C193F2FE300ABCB29 /* MenuCell.m in Sources */,
+				5A1FF53D1948263B0056750F /* FunnelModel.m in Sources */,
 				FA2C9BD1193EDFCB00866BEE /* MMDrawerBarButtonItem.m in Sources */,
 				FA8DDA551933A6420049F83F /* TextFieldCell.m in Sources */,
 				CC4263BA1934BB2000F3C5EB /* SQLiteDatabase.m in Sources */,
-				CCC9E419193DF5550028DC84 /* FunnelModel.m in Sources */,
 				CC7F72F418E837C9008962C3 /* FilterViewCell.m in Sources */,
 				CC8C7ECB18E6F38100E76AE8 /* MASLayoutConstraint.m in Sources */,
 				CCC9E416193D5CDF0028DC84 /* EmailServerModel.m in Sources */,
@@ -1108,7 +1102,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1126,6 +1121,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "8F4EEEE6-6DB0-47B1-9B48-2DC66AD6ACE4";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -1146,7 +1142,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1157,6 +1154,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PROVISIONING_PROFILE = "8F4EEEE6-6DB0-47B1-9B48-2DC66AD6ACE4";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1168,8 +1166,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "libstdc++";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FunnlMail/FunnlMail-Prefix.pch";
 				INFOPLIST_FILE = "FunnlMail/FunnlMail-Info.plist";
@@ -1190,7 +1188,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "4B6CF296-D421-47D5-AABE-5E82A80EFEE3";
+				PROVISIONING_PROFILE = "8F4EEEE6-6DB0-47B1-9B48-2DC66AD6ACE4";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1201,8 +1199,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "libstdc++";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FunnlMail/FunnlMail-Prefix.pch";
 				INFOPLIST_FILE = "FunnlMail/FunnlMail-Info.plist";
@@ -1223,7 +1221,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "31EDDD06-0F75-43FE-A3AA-9246DCB835A1";
+				PROVISIONING_PROFILE = "8F4EEEE6-6DB0-47B1-9B48-2DC66AD6ACE4";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

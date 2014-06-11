@@ -10,7 +10,10 @@
 #import "MASConstraintMaker.h"
 #import "View+MASAdditions.h"
 #import "MainFilterCell.h"
-#import "FilterModel.h"
+//#import "FilterModel.h"
+#import "FunnelModel.h"
+//newly added by iauro001 on 10th June 2014
+#import "FunnelService.h"
 #import "EmailService.h"
 #import "UIColor+HexString.h"
 #import "CreateFunnlViewController.h"
@@ -44,16 +47,29 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
 }
 
 -(void)reloadView{
-    filterArray = [EmailService getCurrentFilters];
+    filterArray = [[FunnelService instance] allFunnels];
     [self.collectionView reloadData];
 }
 
 - (void)setupViews
 {
-   
-  filterArray = [EmailService getCurrentFilters];
 	// Do any additional setup after loading the view.
-  
+    //changes made by iauro001 on 11 June 2014
+    //inserting default @"All" filter
+    FunnelModel *defaultFilter = [[FunnelModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#2EB82E"] filterTitle:@"All" newMessageCount:16 dateOfLastMessage:[NSDate new]];
+    defaultFilter.funnelName = @"All";
+    defaultFilter.funnelId = @"0";
+    defaultFilter.emailAddresses = @"";
+    defaultFilter.phrases = @"";
+    [[FunnelService instance] insertFunnel:defaultFilter];
+    defaultFilter = nil;
+//  filterArray = [EmailService getCurrentFilters];
+//  NSArray *filterArray1 = [[FunnelService instance] allFunnels];
+//    if (filterArray1.count >= filterArray.count) {
+//        filterArray = [[FunnelService instance] allFunnels];
+//        [EmailService instance].filterArray = (NSMutableArray*)filterArray1;
+//    }
+    filterArray = [[FunnelService instance] allFunnels];
   self.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
   
   UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
@@ -126,7 +142,7 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
   else{
     cell = (MainFilterCell *)[collectionView dequeueReusableCellWithReuseIdentifier:MAIN_FILTER_CELL forIndexPath:indexPath];
     cell.barColor = [UIColor yellowColor];
-    FilterModel *fm = (FilterModel *)filterArray[indexPath.row];
+    FunnelModel *fm = (FunnelModel *)filterArray[indexPath.row];
     cell.barColor = fm.barColor;
     cell.filterTitle = fm.filterTitle;
     cell.newMessageCount = fm.newMessageCount;
@@ -160,7 +176,7 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
   if(indexPath.row == filterArray.count){
     [self createAddFunnlView];
   }else{
-    [self.mainVCdelegate filterSelected:(FilterModel *)filterArray[indexPath.row]];
+    [self.mainVCdelegate filterSelected:(FunnelModel *)filterArray[indexPath.row]];
   }
 }
 
@@ -173,7 +189,7 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
 
 -(void)settingsButtonClicked:(id)sender{
   UIButton *b = (UIButton*)sender;
-  FilterModel *fm = (FilterModel *)filterArray[b.tag];
+  FunnelModel *fm = (FunnelModel *)filterArray[b.tag];
   NSMutableDictionary *sendersDictionary = [[NSMutableDictionary alloc] init];
   int count = 0;
   for (NSString *address in fm.sendersArray) {
@@ -195,7 +211,7 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
 }
 
 -(void)notificationButtonClicked:(id)sender{
-  UIButton *b = (UIButton*)sender;
+//  UIButton *b = (UIButton*)sender;
 }
 
 @end

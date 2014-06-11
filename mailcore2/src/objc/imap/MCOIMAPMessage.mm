@@ -9,6 +9,10 @@
 #import "MCOIMAPMessage.h"
 
 #include "MCIMAP.h"
+#include "MCIMAPMessage.h"
+#include "MCJSONParser.h"
+#import "NSString+MCO.h"
+
 
 #import "MCOAbstractMessage+Private.h"
 #import "MCOUtils.h"
@@ -16,6 +20,13 @@
 #import "MCOHTMLRendererDelegate.h"
 #import "MCOHTMLRendererIMAPDelegate.h"
 
+@interface MCOIMAPMessage () {
+
+    mailcore::IMAPMessage * msg;
+}
+
+
+@end
 @implementation MCOIMAPMessage
 
 #define nativeType mailcore::IMAPMessage
@@ -27,11 +38,11 @@
 
 - (id) init
 {
-    mailcore::IMAPMessage * msg = new mailcore::IMAPMessage();
+    msg = new mailcore::IMAPMessage();
     self = [self initWithMCMessage:msg];
     msg->release();
     return self;
-}
+} 
 
 + (NSObject *) mco_objectWithMCObject:(mailcore::Object *)object
 {
@@ -54,6 +65,7 @@ MCO_OBJC_SYNTHESIZE_SCALAR(uint64_t, uint64_t, setGmailMessageID, gmailMessageID
 
 - (MCOAbstractPart *) partForPartID:(NSString *)partID
 {
+    
     return MCO_TO_OBJC(MCO_NATIVE_INSTANCE->partForPartID([partID mco_mcString]));
 }
 
@@ -65,6 +77,19 @@ MCO_OBJC_SYNTHESIZE_SCALAR(uint64_t, uint64_t, setGmailMessageID, gmailMessageID
     htmlRenderCallback->release();
     
     return result;
+}
+
+- (NSString *) serializable {
+    
+    return [NSString mco_stringWithMCString:mailcore::JSON::objectToJSONString(super.mco_mcObject->serializable())];
+}
+
++ (MCOIMAPMessage *) importSerializable : (NSString *) serializable {
+    mailcore::IMAPMessage *msg = new mailcore::IMAPMessage();
+    msg->importSerializable((mailcore::HashMap *)mailcore::JSON::objectFromJSONString(mailcore::String::stringWithUTF8Characters([serializable cStringUsingEncoding:NSUTF8StringEncoding])));
+    MCOIMAPMessage *mcoMessage = [[MCOIMAPMessage alloc] initWithMCMessage:msg];
+    msg->release();
+    return mcoMessage;
 }
 
 @end

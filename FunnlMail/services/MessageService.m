@@ -11,6 +11,8 @@
 #import "FMDatabase.h"
 #import "FMResultSet.h"
 #import "ServiceUtils.h"
+#import "FunnelModel.h"
+#import <MailCore/MailCore.h>
 
 static MessageService *instance;
 
@@ -44,8 +46,6 @@ static MessageService *instance;
   
   __block BOOL success = NO;
   
-  //NSString *date = [ServiceUtils convertDateTOSQLiteString:messageModel.date];
-  
   NSNumber *dateTimeInterval = [NSNumber numberWithDouble:[messageModel.date timeIntervalSince1970]];
   
   paramDict[@"messageID"] = messageModel.messageID;
@@ -55,6 +55,26 @@ static MessageService *instance;
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
     success = [db executeUpdate:@"INSERT INTO messages (messageID,messageJSON,read,date) VALUES (:messageID,:messageJSON,:read,:date)" withParameterDictionary:paramDict];
+  }];
+  
+  return success;
+}
+
+-(BOOL) updateMessage:(MessageModel *)messageModel{
+  __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+  
+  __block BOOL success = NO;
+  
+  NSNumber *dateTimeInterval = [NSNumber numberWithDouble:[messageModel.date timeIntervalSince1970]];
+  
+  paramDict[@"messageID"] = messageModel.messageID;
+  paramDict[@"messageJSON"] = messageModel.messageJSON;
+  paramDict[@"read"] = [NSNumber numberWithBool:messageModel.read];
+  paramDict[@"date"] = dateTimeInterval;
+  
+  [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+    success = [db executeUpdate:@"UPDATE messages SET messageJSON=:messageJSON,read=:read,date=:date WHERE messageID=:messageID" withParameterDictionary:paramDict];
+    
   }];
   
   return success;
@@ -83,7 +103,7 @@ static MessageService *instance;
       
       model.date = [NSDate dateWithTimeIntervalSince1970:dateTimeInterval];
       
-      [array addObject:model];
+      [array addObject:[MCOIMAPMessage importSerializable:model.messageJSON]];
     }
   }];
   
@@ -111,7 +131,7 @@ static MessageService *instance;
       model.read = [resultSet intForColumn:@"read"];
       model.date = [resultSet dateForColumn:@"date"];
       
-      [array addObject:model];
+      [array addObject:[MCOIMAPMessage importSerializable:model.messageJSON]];
     }
   }];
   
@@ -130,6 +150,96 @@ static MessageService *instance;
   }];
   
   return success;
+}
+
+-(NSArray *) messagesWithFunnelId:(NSString *)funnelId top:(NSInteger)top{
+  __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+  
+  paramDict[@"funnelId"] = funnelId;
+  paramDict[@"limit"] = [NSNumber numberWithInteger:top];
+  
+  __block NSMutableArray *array = [[NSMutableArray alloc] init];
+  
+  [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+    FMResultSet *resultSet = [db executeQuery:@"SELECT * FROM messageFilterXRef,messages WHERE messages.messageID==messageFilterXRef.messageID and messageFilterXRef.funnelId=:funnelId limit :limit" withParameterDictionary:paramDict];
+    
+    MessageModel *model;
+    
+    while ([resultSet next]) {
+      model = [[MessageModel alloc]init];
+      
+      model.messageID = [resultSet stringForColumn:@"messageID"];
+      model.messageJSON = [resultSet stringForColumn:@"messageJSON"];
+      model.read = [resultSet intForColumn:@"read"];
+      
+      double dateTimeInterval = [resultSet doubleForColumn:@"date"];
+      
+      model.date = [NSDate dateWithTimeIntervalSince1970:dateTimeInterval];
+      
+      [array addObject:model];
+    }
+  }];
+  
+  return array;
+}
+
+-(NSArray *) messagesWithFunnelId:(NSString *)funnelId top:(NSInteger)top count:(NSInteger)count{
+  __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+  
+  paramDict[@"funnelId"] = funnelId;
+  paramDict[@"limit"] = [NSNumber numberWithInteger:top];
+  paramDict[@"count"] = [NSNumber numberWithInteger:count];
+  
+  __block NSMutableArray *array = [[NSMutableArray alloc] init];
+  
+  [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+    FMResultSet *resultSet = [db executeQuery:@"SELECT * FROM messageFilterXRef,messages WHERE messages.messageID==messageFilterXRef.messageID and messageFilterXRef.funnelId=:funnelId limit :limit, :count" withParameterDictionary:paramDict];
+    
+    MessageModel *model;
+    
+    while ([resultSet next]) {
+      model = [[MessageModel alloc]init];
+      
+      model.messageID = [resultSet stringForColumn:@"messageID"];
+      model.messageJSON = [resultSet stringForColumn:@"messageJSON"];
+      model.read = [resultSet intForColumn:@"read"];
+      
+      double dateTimeInterval = [resultSet doubleForColumn:@"date"];
+      
+      model.date = [NSDate dateWithTimeIntervalSince1970:dateTimeInterval];
+      
+      [array addObject:model];
+    }
+  }];
+  
+  return array;
+}
+
+-(NSArray *) funnelsWithMessageID:(NSString *)messageID{
+  __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+  
+  paramDict[@"messageID"] = messageID;
+  
+  __block NSMutableArray *array = [[NSMutableArray alloc] init];
+  
+  [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+    FMResultSet *resultSet = [db executeQuery:@"SELECT * FROM messageFilterXRef, funnels WHERE messageFilterXRef.messageID==:messageID and messageFilterXRef.funnelId=funnels.funnelId" withParameterDictionary:paramDict];
+    
+    FunnelModel *model;
+    
+    while ([resultSet next]) {
+      model = [[FunnelModel alloc]init];
+      
+      model.funnelId = [resultSet stringForColumn:@"funnelId"];
+      model.funnelName = [resultSet stringForColumn:@"funnelName"];
+      model.emailAddresses = [resultSet stringForColumn:@"emailAddresses"];
+      model.phrases = [resultSet stringForColumn:@"phrases"];
+      
+      [array addObject:model];
+    }
+  }];
+  
+  return array;
 }
 
 @end

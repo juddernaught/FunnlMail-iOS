@@ -14,6 +14,7 @@
 +(EmailServersService *)instance;
 
 -(BOOL) insertEmailServer:(EmailServerModel *)emailServerModel;
+-(BOOL) updateEmailServer:(EmailServerModel *)emailServerModel;
 -(NSArray *) allEmailServers;
 -(EmailServerModel *) emailServersWithEmailAddress:(NSString *)emailAddress;
 -(BOOL) deleteEmailServer:(NSString *)emailAddress;

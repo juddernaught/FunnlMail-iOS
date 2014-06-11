@@ -13,6 +13,7 @@
 #import "FunnelService.h"
 #import "MessageModel.h"
 #import "MessageService.h"
+#import "MessageFilterXRefService.h"
 
 @implementation ServiceTests
 
@@ -72,7 +73,11 @@
   
   NSLog(@"funnelArray: %@", funnelArray);
   
-  deleted = [[FunnelService instance] deleteFunnel:funnelModel.funnelName];
+  funnelModel = funnelArray[0];
+  
+  NSLog(@"funnelModel: %@", funnelModel);
+  
+  deleted = [[FunnelService instance] deleteFunnel:funnelModel.funnelId];
   
   if(deleted){
     NSLog(@"EmailServersService delete worked");
@@ -121,6 +126,89 @@
   messageArray = [[MessageService instance] messagesWithTop:10];
   
   NSLog(@"messageArray: %@", messageArray);
+  
+  //
+  // Test retrieving messages by funnel name
+  //
+  
+  funnelModel = [[FunnelModel alloc] init];
+  funnelModel.funnelName = @"TestFunnel-1";
+  funnelModel.emailAddresses = @"test@test.com";
+  funnelModel.phrases = @"phrase1,phrase2";
+    
+  inserted = [[FunnelService instance] insertFunnel:funnelModel];
+  
+  NSString *funnelId1 = funnelModel.funnelId;
+  
+  funnelModel = [[FunnelModel alloc] init];
+  funnelModel.funnelName = @"TestFunnel-2";
+  funnelModel.emailAddresses = @"test@test.com";
+  funnelModel.phrases = @"phrase1,phrase2";
+  
+  inserted = [[FunnelService instance] insertFunnel:funnelModel];
+  
+  NSString *funnelId2 = funnelModel.funnelId;
+  
+  funnelModel.funnelName = @"TestFunnel-2-updated";
+  BOOL updated = [[FunnelService instance] updateFunnel:funnelModel];
+  
+  NSLog(@"funnelModel updated: %@:%i", funnelModel, updated);
+  
+  NSString *messageID_1 = [[NSUUID UUID] UUIDString];
+  messageModel = [[MessageModel alloc] init];
+  messageModel.messageID = messageID_1;
+  messageModel.messageJSON = @"JSON";
+  messageModel.read = NO;
+  messageModel.date = [NSDate new];
+  
+  inserted = [[MessageService instance] insertMessage:messageModel];
+  
+  NSString *messageID_2 = [[NSUUID UUID] UUIDString];
+  messageModel = [[MessageModel alloc] init];
+  messageModel.messageID = messageID_2;
+  messageModel.messageJSON = @"JSON";
+  messageModel.read = NO;
+  messageModel.date = [NSDate new];
+  
+  inserted = [[MessageService instance] insertMessage:messageModel];
+  
+  inserted = [[MessageFilterXRefService instance] insertMessageXRefMessageID:messageID_1 funnelId:funnelId1];
+  inserted = [[MessageFilterXRefService instance] insertMessageXRefMessageID:messageID_1 funnelId:funnelId2];
+  
+  inserted = [[MessageFilterXRefService instance] insertMessageXRefMessageID:messageID_2 funnelId:funnelId1];
+  
+  NSArray *xrefRows = [[MessageFilterXRefService instance] xrefWithMessageID:messageID_1];
+  
+  NSLog(@"xrefRows: %@", xrefRows);
+  
+  xrefRows = [[MessageFilterXRefService instance] xrefWithFunnelId:funnelId1];
+  
+  NSLog(@"xrefRows: %@", xrefRows);
+  
+  funnelArray = [[MessageService instance]funnelsWithMessageID:messageID_1];
+  
+  NSLog(@"funnelArray: %@", funnelArray);
+  
+  messageArray = [[MessageService instance] messagesWithFunnelId:funnelId1 top:100];
+  NSLog(@"messageArray: %@", messageArray);
+  
+  messageArray = [[MessageService instance] messagesWithFunnelId:funnelId2 top:100];
+  NSLog(@"messageArray: %@", messageArray);
+  
+  messageArray = [[MessageService instance] messagesWithFunnelId:funnelId1 top:1 count:100];
+  NSLog(@"messageArray: %@", messageArray);
+  
+  //
+  // clean up
+  //
+  
+  deleted = [[MessageService instance] deleteMessage:messageID_1];
+  deleted = [[MessageService instance] deleteMessage:messageID_2];
+  deleted = [[FunnelService instance]deleteFunnel:funnelId1];
+  deleted = [[FunnelService instance]deleteFunnel:funnelId2];
+  deleted = [[MessageFilterXRefService instance] deleteXRefWithMessageID:messageID_1 funnelId:funnelId1];
+  deleted = [[MessageFilterXRefService instance] deleteXRefWithMessageID:messageID_1 funnelId:funnelId2];
+  deleted = [[MessageFilterXRefService instance] deleteXRefWithMessageID:messageID_2 funnelId:funnelId1];
 }
 
 @end

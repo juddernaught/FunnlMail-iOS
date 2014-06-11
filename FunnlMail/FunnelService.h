@@ -8,14 +8,15 @@
 
 #import <Foundation/Foundation.h>
 #import "FunnelModel.h"
-
+//#import "FilterModel.h"
 @interface FunnelService : NSObject
 
 +(FunnelService *)instance;
 
 -(BOOL) insertFunnel:(FunnelModel *)funnelModel;
+-(BOOL) updateFunnel:(FunnelModel *)funnelModel;
 -(NSArray *) allFunnels;
 -(FunnelModel *) emailServersWithFunnelName:(NSString *)funnelName;
--(BOOL) deleteFunnel:(NSString *)funnelName;
+-(BOOL) deleteFunnel:(NSString *)funnelId;
 
 @end

@@ -7,18 +7,19 @@
 //
 
 #import "EmailService.h"
-#import "FilterModel.h"
+#import "FunnelModel.h"
 #import "UIColor+HexString.h"
 #import <mailcore/mailcore.h>
 #import "KeychainItemWrapper.h"
 #import "EMailsTableViewController.h"
 #import "SQLiteDatabase.h"
 #import "FMDatabase.h"
+#import "EmailServersService.h"
 
 static EmailService *instance;
 
 static NSMutableArray *filterArray = nil;
-static FilterModel *defaultFilter;
+static FunnelModel *defaultFilter;
 static NSString *currentFolder;
 @interface EmailService ()
 
@@ -28,6 +29,8 @@ static NSString *currentFolder;
 @end
 
 @implementation EmailService
+
+@synthesize filterArray;
 
 - (id)init
 {
@@ -100,11 +103,13 @@ static NSString *currentFolder;
 	// Reset the inbox
 	self.messages = [[NSMutableArray alloc] init];
     self.filterMessages = [[NSMutableArray alloc] init];
+    self.sentMessages = [[NSMutableArray alloc] init];
     self.threadIdDictionary = [[NSMutableDictionary alloc] init];
 	self.totalNumberOfInboxMessages = -1;
 	self.isLoading = NO;
 	self.messagePreviews = [NSMutableDictionary dictionary];
     self.filterMessagePreviews = [NSMutableDictionary dictionary];
+    self.sentMessagePreviews = [NSMutableDictionary dictionary];
 	[fv.tableView reloadData];
     
 	NSLog(@"checking account");
@@ -113,7 +118,7 @@ static NSString *currentFolder;
 		EmailService *strongSelf = weakSelf;
 		NSLog(@"finished checking account.");
 		if (error == nil) {
-			[strongSelf loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD : fv];
+			[strongSelf loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD withTableController:fv withFolder:@"INBOX"];
 		} else {
 			NSLog(@"error loading account: %@", error);
 		}
@@ -122,14 +127,14 @@ static NSString *currentFolder;
 	}];
     MCOIMAPFetchFoldersOperation *op = [self.imapSession fetchAllFoldersOperation];
     [op start:^(NSError * error, NSArray *folders) {
-        for (MCOIMAPFolder *folder in folders) {
-            NSLog(folder.path);
-        }
+//        for (MCOIMAPFolder *folder in folders) {
+//            NSLog(folder.path);
+//        }
     }];
     
 }
 
-- (void)loadLastNMessages:(NSUInteger)nMessages : (EmailsTableViewController *) fv
+- (void)loadLastNMessages:(NSUInteger)nMessages  withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName
 {
 	self.isLoading = YES;
 	
@@ -191,118 +196,143 @@ static NSString *currentFolder;
              NSLog(@"Progress: %u of %lu", progress, (unsigned long)numberOfMessagesToLoad);
          }];
          
-         __weak EmailService *weakSelf = self;
+//         __weak EmailService *weakSelf = self;
          [self.imapMessagesFetchOp start:
           ^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
           {
-              EmailService *strongSelf = weakSelf;
-              NSLog(@"fetched all messages.");
-              
-              self.isLoading = NO;
-              
-              NSSortDescriptor *sort =
-              [NSSortDescriptor sortDescriptorWithKey:@"header.date" ascending:NO];
-              NSArray *subjectFoundArray = [NSArray array];
-
-              for (MCOIMAPMessage *m in messages) {
-                //
-                // add mail to internal array
-                //
-                [self.messages addObject:m];
-                
-                //
-                // store message in database
-                //
-                [self saveMessageInDatabase:m];
-                  NSPredicate *predicate = [NSPredicate predicateWithFormat:@"gmailMessageID == %qx ", m.gmailThreadID,m.gmailMessageID];
-                  NSArray *b = [self.messages filteredArrayUsingPredicate:predicate];
-                  if(b.count){
-                      //NSLog(@"%@",m.header.subject);
-                  }else{
-                      //NSLog(@"ThreadID: %qx, UID: %d mID: x%qx",m.gmailThreadID, m.uid, m.gmailMessageID);
-                      
-                      NSString *gmailThreadIDStr = [NSString stringWithFormat:@"%qx",m.gmailThreadID];
-                      NSMutableSet *threadMessagesArray = [self.threadIdDictionary objectForKey:gmailThreadIDStr];
-                      if(threadMessagesArray == nil ){
-                          threadMessagesArray = [[NSMutableSet alloc] init];
-                          [threadMessagesArray addObject:m];
-                          [self.messages addObject:m];
-                          [self.threadIdDictionary setObject:threadMessagesArray forKey:gmailThreadIDStr];
-                      }
-                      else{
-                          NSPredicate *predicate = [NSPredicate predicateWithFormat:@"gmailThreadID == %qx AND uid != %d ", m.gmailThreadID,m.uid];
-                          NSArray *b = [self.messages filteredArrayUsingPredicate:predicate];
-                          [self.messages removeObjectsInArray:b];
-                          [self.messages addObject:m];
-                          [threadMessagesArray addObject:m];
-                          [self.threadIdDictionary setObject:threadMessagesArray forKey:gmailThreadIDStr];
-                      }
-                  }
-//                  NSLog(@"%@: %@ : %d", m.header.sender.mailbox, m.header.subject, threadMessagesArray.count);
-              }
-              NSMutableArray *combinedMessages = [NSMutableArray arrayWithArray:self.messages];
-              // TODO: remove the if statement. Primary is currently the same as the All Mail view.
-              NSLog(@"Our funnl name: %@ ---> %d", fv.filterModel.filterTitle,self.messages.count);
-              if (fv.filterModel && ![fv.filterModel.filterTitle isEqual:NULL] && ![fv.filterModel.filterTitle isEqualToString: @"All"] ) {
-                NSMutableDictionary *dictionary = [fv.filterModel getEmailsForFunnl:fv.filterModel.filterTitle];
-                NSSet *funnlEmailList = [dictionary objectForKey:@"senders"];
-                NSMutableSet *funnlSubjectList =  [NSMutableSet setWithArray:[dictionary objectForKey:@"subjects"]];
-                for (int i = 0; i < [combinedMessages count]; i++) {
-                   MCOIMAPMessage *message = [combinedMessages objectAtIndex:i];
-                   MCOMessageHeader *header = [message header];
-                   NSString *emailAddress = [[[header sender] mailbox] lowercaseString];
-                   NSString *subject = [[header subject] lowercaseString];
-                    
-                  if ([funnlEmailList containsObject:emailAddress] )
-                   {
-                     if(funnlSubjectList.count){
-                       NSMutableSet *intersection = [NSMutableSet setWithArray:[subject componentsSeparatedByString:@" "]];
-                       NSMutableSet *set = [NSMutableSet setWithSet:funnlSubjectList];
-                       [set intersectSet:intersection];
-                       subjectFoundArray =  [set allObjects];
-                       //NSLog(@"%@ : %d %@",subject,subjectFoundArray.count,emailAddress);
-                       if(subjectFoundArray.count == 0){
-                         [combinedMessages removeObjectAtIndex:i];
-                         i--;
-                       }
-                     }
-                   }else{
-                     [combinedMessages removeObjectAtIndex:i];
-                     // since we removed an element, all elements get pushed upwards by 1
-                     i --;
-                   }
-                }
-                self.filterMessages = [[NSMutableArray alloc] initWithArray:[combinedMessages sortedArrayUsingDescriptors:@[sort]]];
-               }
-              else{
-                  self.filterMessages = [[NSMutableArray alloc] initWithArray:[combinedMessages sortedArrayUsingDescriptors:@[sort]]];
-              }
-              [fv.tableView reloadData];
+              [self filterAlgotithm:messages withTableController:fv];
           }];
      }];
 }
 
-+(void)setNewFilterModel:(FilterModel*)model{
+#pragma mark -
+#pragma mark filterAlgotithm:
+- (void)filterAlgotithm:(NSArray*)messages withTableController:(EmailsTableViewController *)fv
+{
+//      EmailService *strongSelf = weakSelf;
+//      EmailServersService *emailServersService = [EmailServersService instance];
+    NSLog(@"fetched all messages.");
+    
+    self.isLoading = NO;
+    
+    NSSortDescriptor *sort =
+    [NSSortDescriptor sortDescriptorWithKey:@"header.date" ascending:NO];
+    NSArray *subjectFoundArray = [NSArray array];
+    
+    for (MCOIMAPMessage *m in messages) {
+        //
+        // add mail to internal array
+        //
+        MessageModel *tempMessageModel = [[MessageModel alloc] init];
+        tempMessageModel.read = m.flags;
+        tempMessageModel.date = m.header.date;
+        tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
+        tempMessageModel.messageJSON = @"{\"Appname\":\"Funnel Mail\"}";
+        
+        [[MessageService instance] insertMessage:tempMessageModel];
+        
+        [self.messages addObject:m];
+        
+        //
+        // store message in database
+        //
+        //[self saveMessageInDatabase:m];
+        
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"gmailMessageID == %qx ", m.gmailThreadID,m.gmailMessageID];
+        NSArray *b = [self.messages filteredArrayUsingPredicate:predicate];
+        if(b.count){
+            //NSLog(@"%@",m.header.subject);
+        }else{
+            //NSLog(@"ThreadID: %qx, UID: %d mID: x%qx",m.gmailThreadID, m.uid, m.gmailMessageID);
+            
+            NSString *gmailThreadIDStr = [NSString stringWithFormat:@"%qx",m.gmailThreadID];
+            NSMutableSet *threadMessagesArray = [self.threadIdDictionary objectForKey:gmailThreadIDStr];
+            if(threadMessagesArray == nil ){
+                threadMessagesArray = [[NSMutableSet alloc] init];
+                [threadMessagesArray addObject:m];
+                //[self.messages addObject:m];
+                [self.threadIdDictionary setObject:threadMessagesArray forKey:gmailThreadIDStr];
+            }
+            else{
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"gmailThreadID == %qx AND uid != %d ", m.gmailThreadID,m.uid];
+                NSArray *b = [self.messages filteredArrayUsingPredicate:predicate];
+                [self.messages removeObjectsInArray:b];
+                //[self.messages addObject:m];
+                [threadMessagesArray addObject:m];
+                [self.threadIdDictionary setObject:threadMessagesArray forKey:gmailThreadIDStr];
+            }
+        }
+        //                  NSLog(@"%@: %@ : %d", m.header.sender.mailbox, m.header.subject, threadMessagesArray.count);
+    }
+    NSMutableArray *combinedMessages = [NSMutableArray arrayWithArray:self.messages];
+    // TODO: remove the if statement. Primary is currently the same as the All Mail view.
+    NSLog(@"Our funnl name: %@ ---> %d", fv.filterModel.filterTitle,self.messages.count);
+    if (fv.filterModel && ![fv.filterModel.filterTitle isEqual:NULL] && ![fv.filterModel.filterTitle isEqualToString: @"All"] ) {
+        NSMutableDictionary *dictionary = [fv.filterModel getEmailsForFunnl:fv.filterModel.filterTitle];
+        NSSet *funnlEmailList = [dictionary objectForKey:@"senders"];
+        NSMutableSet *funnlSubjectList =  [NSMutableSet setWithArray:[dictionary objectForKey:@"subjects"]];
+        for (int i = 0; i < [combinedMessages count]; i++) {
+            MCOIMAPMessage *message = [combinedMessages objectAtIndex:i];
+            MCOMessageHeader *header = [message header];
+            NSString *emailAddress = [[[header sender] mailbox] lowercaseString];
+            NSString *subject = [[header subject] lowercaseString];
+            
+            if ([funnlEmailList containsObject:emailAddress] )
+            {
+                if(funnlSubjectList.count){
+                    NSMutableSet *intersection = [NSMutableSet setWithArray:[subject componentsSeparatedByString:@" "]];
+                    NSMutableSet *set = [NSMutableSet setWithSet:funnlSubjectList];
+                    [set intersectSet:intersection];
+                    subjectFoundArray =  [set allObjects];
+                    //NSLog(@"%@ : %d %@",subject,subjectFoundArray.count,emailAddress);
+//                    if(subjectFoundArray.count == 0)
+//                    {
+//                        [combinedMessages removeObjectAtIndex:i];
+//                        i--;
+//                    }
+                }
+            }else{
+                [combinedMessages removeObjectAtIndex:i];
+                // since we removed an element, all elements get pushed upwards by 1
+                i --;
+            }
+        }
+        self.filterMessages = [[NSMutableArray alloc] initWithArray:[combinedMessages sortedArrayUsingDescriptors:@[sort]]];
+    }
+    else{
+        self.filterMessages = [[NSMutableArray alloc] initWithArray:[combinedMessages sortedArrayUsingDescriptors:@[sort]]];
+    }
+    [fv.tableView reloadData];
+}
+
++(void)setNewFilterModel:(FunnelModel*)model{
     [filterArray addObject:model];
 }
 
-+(void)editFilter:(FilterModel*)model withOldFilter:(FilterModel*)oldFilter{
++(void)editFilter:(FunnelModel*)model withOldFilter:(FunnelModel*)oldFilter{
   NSInteger index = [filterArray indexOfObject:oldFilter];
   [filterArray replaceObjectAtIndex:index withObject:model];
 }
 
-+(void)deleteFilter:(FilterModel*)oldFilter{
++(void)editFilterWith:(FunnelModel*)model withOldFilter:(int)oldFilter{
+//    NSInteger index = [filterArray indexOfObject:oldFilter];
+    [filterArray replaceObjectAtIndex:oldFilter withObject:model];
+}
+
++(void)deleteFilter:(FunnelModel*)oldFilter{
   NSInteger index = [filterArray indexOfObject:oldFilter];
   [filterArray removeObjectAtIndex:index];
 }
 
-+(FilterModel*)getDefaultFilter{
++(FunnelModel*)getDefaultFilter{
   return defaultFilter;
 }
 
 
 +(void)addInitialFilter{
-  defaultFilter = [[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#2EB82E"] filterTitle:@"All" newMessageCount:16 dateOfLastMessage:[NSDate new]];
+    
+  defaultFilter = [[FunnelModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#2EB82E"] filterTitle:@"All" newMessageCount:16 dateOfLastMessage:[NSDate new]];
   [filterArray addObject:defaultFilter];
   
 //    [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#FF85FF"] filterTitle:@"Meetings" newMessageCount:5 dateOfLastMessage:[NSDate new]]];
@@ -322,11 +352,12 @@ static NSString *currentFolder;
     //
     // created inital hardcoded list of filters
     //
+    
     return filterArray;
 }
 
 -(void) saveMessageInDatabase:(MCOIMAPMessage *)message{
-  __block NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+//  __block NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
   
   /*
    

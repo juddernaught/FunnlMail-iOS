@@ -7,11 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "FilterModel.h"
+#import "FunnelModel.h"
+//#import "FilterModel.h"
 
 @protocol MainVCDelegate <NSObject>
 
--(void) filterSelected:(FilterModel *)filterModel;
+-(void) filterSelected:(FunnelModel *)filterModel;
 -(void) pushViewController:(UIViewController *)viewController;
 
 @end

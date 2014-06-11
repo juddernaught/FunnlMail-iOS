@@ -55,6 +55,23 @@ static EmailServersService *instance;
   return success;
 }
 
+-(BOOL) updateEmailServer:(EmailServerModel *)emailServerModel{
+  __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+  
+  __block BOOL success = NO;
+  
+  paramDict[@"emailAddress"] = emailServerModel.emailAddress;
+  paramDict[@"accessToken"] = emailServerModel.accessToken;
+  paramDict[@"refreshToken"] = emailServerModel.refreshToken;
+  
+  [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+    success = [db executeUpdate:@"UPDATE emailServers SET accessToken=:accessToken,refreshToken=:refreshToken WHERE emailAddress=:emailAddress" withParameterDictionary:paramDict];
+    
+  }];
+  
+  return success;
+}
+
 -(NSArray *) allEmailServers{
   __block NSMutableArray *array = [[NSMutableArray alloc] init];
   
