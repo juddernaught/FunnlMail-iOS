@@ -16,6 +16,8 @@
 #endif
 
 #define ADD_FUNNL @"#@New@#"
+#define ALL_FUNNL @"#@All@#"
+
 #define NUMBER_OF_MESSAGES_TO_LOAD		20
 #define INBOX @"INBOX"
 #define SENT @"[Gmail]/Sent Mail"

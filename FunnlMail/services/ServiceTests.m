@@ -135,7 +135,7 @@
   funnelModel.funnelName = @"TestFunnel-1";
   funnelModel.emailAddresses = @"test@test.com";
   funnelModel.phrases = @"phrase1,phrase2";
-  
+    
   inserted = [[FunnelService instance] insertFunnel:funnelModel];
   
   NSString *funnelId1 = funnelModel.funnelId;

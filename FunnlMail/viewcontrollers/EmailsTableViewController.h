@@ -9,9 +9,10 @@
 #import <UIKit/UIKit.h>
 
 // FIXME: are these two imports neccessary?
-#import "FilterModel.h"
+#import "FunnelModel.h"
 #import "MainVCDelegate.h"
 #import "MCSwipeTableViewCell.h"
+#import "MessageService.h"
 
 @interface EmailsTableViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate,MCSwipeTableViewCellDelegate> {
     UIView *filterNavigationView;
@@ -24,13 +25,13 @@
 
 @property (nonatomic, strong) NSArray *messages;
 @property (nonatomic, strong) UITableView *tableView;
-@property (strong,nonatomic) FilterModel *filterModel;
+@property (strong,nonatomic) FunnelModel *filterModel;
 @property (weak) id<MainVCDelegate> mainVCdelegate;
 @property (strong,nonatomic) NSString *emailFolder;
 
 @property (nonatomic) NSInteger totalNumberOfInboxMessages;
 @property (nonatomic) BOOL isLoading;
 @property (nonatomic, strong) UIActivityIndicatorView *loadMoreActivityView;
--(void) setFilterModel:(FilterModel *)filterModel;
+-(void) setFilterModel:(FunnelModel *)filterModel;
 
 @end

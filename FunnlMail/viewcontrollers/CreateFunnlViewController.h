@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "View+MASAdditions.h"
 #import "MainVC.h"
+#import "AppDelegate.h"
 
 @class FilterModel;
 @interface CreateFunnlViewController : UIViewController<UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate>
@@ -20,9 +21,9 @@
     id activeField;
     NSArray *randomColors;
     BOOL isEdit;
-    FilterModel *oldModel;
+    FunnelModel *oldModel;
 }
 @property (weak) id<MainVCDelegate> mainVCdelegate;
--(id)initTableViewWithSenders:(NSMutableDictionary*)sendersDictionary subjects:(NSMutableDictionary*)subjectsDictionary filterModel:(FilterModel*)model;
+-(id)initTableViewWithSenders:(NSMutableDictionary*)sendersDictionary subjects:(NSMutableDictionary*)subjectsDictionary filterModel:(FunnelModel*)model;
 @end
 

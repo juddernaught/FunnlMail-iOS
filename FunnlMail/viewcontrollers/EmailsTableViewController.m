@@ -11,7 +11,8 @@
 #import "MBProgressHUD.h"
 #import "FilterViewCell.h"
 #import "View+MASAdditions.h"
-#import "FilterModel.h"
+//#import "FilterModel.h"
+#import "FunnelModel.h"
 #import <MailCore/MailCore.h>
 #import "EmailCell.h"
 #import "MsgViewController.h"
@@ -123,7 +124,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
   //[self.tableView insertSubview:self.searchDisplayController.searchBar aboveSubview:self.tableView];
 }
 
--(void) setFilterModel:(FilterModel *)filterModel{
+-(void) setFilterModel:(FunnelModel *)filterModel{
     _filterModel = filterModel;
     if(self.emailFolder == nil || self.emailFolder.length <= 0){
         self.emailFolder = INBOX;
@@ -131,6 +132,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     
     if(filterLabel!=nil){
         filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#2EB82E"]);
+//        NSLog(@"[EmailsTableViewController setFilterModel]  %@",(self.filterModel!=nil ? self.filterModel.filterTitle : @"All"));
         filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : @"All");
       [[EmailService instance] loadLastNMessages:[EmailService instance].messages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:self withFolder:self.emailFolder];
     }
@@ -292,7 +294,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 
                 if ([EmailService instance].messages.count < [EmailService instance].totalNumberOfInboxMessages)
                 {
-                    cell.textLabel.text = [NSString stringWithFormat:@"Load %lu more",MIN([EmailService instance].totalNumberOfInboxMessages - [EmailService instance].messages.count, NUMBER_OF_MESSAGES_TO_LOAD)];
+                    cell.textLabel.text = [NSString stringWithFormat:@"Load %u more",MIN([EmailService instance].totalNumberOfInboxMessages - [EmailService instance].messages.count, NUMBER_OF_MESSAGES_TO_LOAD)];
                 }
                 else
                 {

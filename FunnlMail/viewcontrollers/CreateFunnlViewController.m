@@ -9,7 +9,9 @@
 #import "CreateFunnlViewController.h"
 #import "TextFieldCell.h"
 #import "EmailService.h"
-#import "FilterModel.h"
+//#import "FilterModel.h"
+//newly added by iauro001 on 10th June 2014
+#import "FunnelModel.h"
 #import "UIColor+HexString.h"
 #import "FunnelService.h"
 
@@ -34,7 +36,7 @@
     [self.navigationItem setRightBarButtonItem:saveButton];
 }
 
--(id)initTableViewWithSenders:(NSMutableDictionary*)sendersDictionary subjects:(NSMutableDictionary*)subjectsDictionary filterModel:(FilterModel*)model;
+-(id)initTableViewWithSenders:(NSMutableDictionary*)sendersDictionary subjects:(NSMutableDictionary*)subjectsDictionary filterModel:(FunnelModel*)model;
 {
   self = [super init];
   if (self) {
@@ -328,7 +330,7 @@
 
 -(void)deleteButtonClicked:(id)sender{
   [EmailService deleteFilter:oldModel];
-  FilterModel *defaultFilter = [EmailService getDefaultFilter];
+  FunnelModel *defaultFilter = [EmailService getDefaultFilter];
   [self.mainVCdelegate filterSelected:defaultFilter];
   [self.navigationController popViewControllerAnimated:YES];
 }
@@ -341,30 +343,66 @@
     }
     if(funnlName.length){
         if(dictionaryOfConversations.allKeys.count){
-          NSInteger gradientInt = arc4random_uniform(randomColors.count);
-          UIColor *color = [UIColor colorWithHexString: [randomColors objectAtIndex:gradientInt]];
-          if(color == nil){
-            color = [UIColor colorWithHexString:@"#2EB82E"];
-          }
-          FilterModel *model;
-          model = [[FilterModel alloc]initWithBarColor:color filterTitle:funnlName newMessageCount:0 dateOfLastMessage:[NSDate new] sendersArray:(NSMutableArray*)[dictionaryOfConversations allValues] subjectsArray:(NSMutableArray*)[dictionaryOfSubjects allValues]];
-          if(isEdit){
-            [EmailService editFilter:model withOldFilter:oldModel];
-              // save to db
-              [[FunnelService instance] updateFunnel:model];
-              
-          }else{
-            [EmailService setNewFilterModel:model];
-              // save to db
-              [[FunnelService instance] insertFunnel:model];
+      
+            NSInteger gradientInt = arc4random_uniform(randomColors.count);
+            UIColor *color = [UIColor colorWithHexString: [randomColors objectAtIndex:gradientInt]];
+            if(color == nil){
+                color = [UIColor colorWithHexString:@"#2EB82E"];
+            }
+            FunnelModel *model;
+            model = [[FunnelModel alloc]initWithBarColor:color filterTitle:funnlName newMessageCount:0 dateOfLastMessage:[NSDate new] sendersArray:(NSMutableArray*)[dictionaryOfConversations allValues] subjectsArray:(NSMutableArray*)[dictionaryOfSubjects allValues]];
+            model.funnelId = oldModel.funnelId;
+            FunnelModel *modelForFunnl = [[FunnelModel alloc] init];
+            modelForFunnl.funnelName = model.filterTitle;
+            
+            NSArray *tempArrayForSender = [dictionaryOfConversations allValues];
+            NSMutableString *senderEmailIds = [[NSMutableString alloc] init];
+            for (NSString *tempString in tempArrayForSender) {
+                [senderEmailIds appendString:tempString];
+                [senderEmailIds appendString:@","];
+            }
+            if (senderEmailIds.length > 0) {
+                senderEmailIds = (NSMutableString*)[senderEmailIds substringWithRange:NSMakeRange(0, senderEmailIds.length-1)];
+                modelForFunnl.emailAddresses = senderEmailIds;
+            }
+            else
+                modelForFunnl.emailAddresses = @"";
+            senderEmailIds = nil;
+            tempArrayForSender = nil;
+            
+            tempArrayForSender = [dictionaryOfSubjects allValues];
+            senderEmailIds = [[NSMutableString alloc] init];
+            for (NSString *tempString in tempArrayForSender) {
+                [senderEmailIds appendString:tempString];
+                [senderEmailIds appendString:@","];
+            }
+            if (senderEmailIds.length > 0) {
+                senderEmailIds = (NSMutableString*)[senderEmailIds substringWithRange:NSMakeRange(0, senderEmailIds.length-1)];
+                modelForFunnl.phrases = senderEmailIds;
+            }
+            else
+                modelForFunnl.phrases = @"";
+            senderEmailIds = nil;
+            tempArrayForSender = nil;
+            
+            if(isEdit){
+//                [EmailService editFilter:model withOldFilter:oldModel];
+                // save to db
+                [[FunnelService instance] updateFunnel:model];
+            }else{
+                [EmailService setNewFilterModel:model];
+                // save to db
+                [[FunnelService instance] insertFunnel:model];
+            }
+            
+            [self.mainVCdelegate filterSelected:model];
 
-          }
-          [self.mainVCdelegate filterSelected:model];
-
-          [self.navigationController popViewControllerAnimated:YES];
+            model = nil;
+            modelForFunnl = nil;
+            [self.navigationController popViewControllerAnimated:YES];
         }else{
-          UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Please add at least one email" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-          [alert show];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Please add at least one email" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            [alert show];
         }
     }
     else{

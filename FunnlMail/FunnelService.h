@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FunnelModel.h"
-
+//#import "FilterModel.h"
 @interface FunnelService : NSObject
 
 +(FunnelService *)instance;

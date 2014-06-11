@@ -9,10 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "EmailsTableViewController.h"
 #import <mailcore/mailcore.h>
+#import "MessageService.h"
+#import "MessageModel.h"
 
 @interface EmailService : NSObject{
-    NSMutableArray *filterArray;
+//    NSMutableArray *filterArray;
 }
+@property (nonatomic, strong) NSMutableArray *filterArray;
 @property (nonatomic, strong) MCOIMAPOperation *imapCheckOp;
 @property (nonatomic, strong) MCOIMAPSession *imapSession;
 @property (nonatomic, strong) MCOIMAPFetchMessagesOperation *imapMessagesFetchOp;
@@ -26,10 +29,11 @@
 @property (nonatomic, strong) NSMutableDictionary *sentMessagePreviews;
 +(EmailService *)instance;
 +(NSArray *) getCurrentFilters;
-+(void)setNewFilterModel:(FilterModel*)model;
-+(void)editFilter:(FilterModel*)model withOldFilter:(FilterModel*)oldFilter;
-+(void)deleteFilter:(FilterModel*)oldFilter;
-+(FilterModel*)getDefaultFilter;
++(void)setNewFilterModel:(FunnelModel*)model;
++(void)editFilter:(FunnelModel*)model withOldFilter:(FunnelModel*)oldFilter;
++(void)deleteFilter:(FunnelModel*)oldFilter;
++(void)editFilterWith:(FunnelModel*)model withOldFilter:(int)oldFilter;
++(FunnelModel*)getDefaultFilter;
 - (void) startLogin :(EmailsTableViewController *) fv;
 - (void)loadLastNMessages:(NSUInteger)nMessages  withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName;
 @end

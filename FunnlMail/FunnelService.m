@@ -8,9 +8,11 @@
 
 #import "FunnelService.h"
 #import "FunnelModel.h"
+//#import "FilterModel.h"
 #import "SQLiteDatabase.h"
 #import "FMDatabase.h"
 #import "FMResultSet.h"
+#import "UIColor+HexString.h"
 
 static FunnelService *instance;
 
@@ -43,8 +45,11 @@ static FunnelService *instance;
   __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
   
   __block BOOL success = NO;
-  
-  paramDict[@"funnelId"] = [[NSUUID UUID] UUIDString];
+    if ([funnelModel.funnelId isEqualToString:@"0"]) {
+        paramDict[@"funnelId"] = @"0";
+    }
+    else
+        paramDict[@"funnelId"] = [[NSUUID UUID] UUIDString];
   paramDict[@"funnelName"] = funnelModel.funnelName;
   paramDict[@"emailAddresses"] = funnelModel.emailAddresses;
   paramDict[@"phrases"] = funnelModel.phrases;
@@ -72,7 +77,6 @@ static FunnelService *instance;
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
     success = [db executeUpdate:@"UPDATE funnels SET funnelName=:funnelName,emailAddresses=:emailAddresses,phrases=:phrases WHERE funnelId=:funnelId" withParameterDictionary:paramDict];
-    
   }];
   
   return success;
@@ -80,21 +84,33 @@ static FunnelService *instance;
 
 -(NSArray *) allFunnels{
   __block NSMutableArray *array = [[NSMutableArray alloc] init];
-  
+    
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
     FMResultSet *resultSet = [db executeQuery:@"SELECT funnelId,funnelName,emailAddresses,phrases FROM funnels"];
     
     FunnelModel *model;
-    
+//      FilterModel *modelForFilter;
+      int counter = 1;
     while ([resultSet next]) {
       model = [[FunnelModel alloc]init];
+//        modelForFilter = [[FilterModel alloc] init];
       
+        
       model.funnelId = [resultSet stringForColumn:@"funnelId"];
       model.funnelName = [resultSet stringForColumn:@"funnelName"];
+      model.filterTitle = [resultSet stringForColumn:@"funnelName"];
+//        modelForFilter.filterTitle = [resultSet stringForColumn:@"funnelName"];
       model.emailAddresses = [resultSet stringForColumn:@"emailAddresses"];
+      model.sendersArray = (NSMutableArray *)[[resultSet stringForColumn:@"emailAddresses"] componentsSeparatedByString:@","];
       model.phrases = [resultSet stringForColumn:@"phrases"];
-      
+      model.subjectsArray = (NSMutableArray *)[[resultSet stringForColumn:@"phrases"] componentsSeparatedByString:@","];
+      NSArray *tempArray = GRADIENT_ARRAY;
+//      NSInteger gradientInt = arc4random_uniform(tempArray.count);
+      model.barColor = [UIColor colorWithHexString:[tempArray objectAtIndex:counter%5]];
+      model.dateOfLastMessage = [NSDate date];
       [array addObject:model];
+      model = nil;
+        counter ++;
     }
   }];
   

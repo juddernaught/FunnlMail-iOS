@@ -16,4 +16,5 @@
 @property (strong) UICollectionView *collectionView;
 @property (weak) id<MainVCDelegate> mainVCdelegate;
 -(void)reloadView;
+- (void)setupViews;
 @end
