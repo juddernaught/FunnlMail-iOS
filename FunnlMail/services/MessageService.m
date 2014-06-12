@@ -88,7 +88,7 @@ static MessageService *instance;
   __block NSMutableArray *array = [[NSMutableArray alloc] init];
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    FMResultSet *resultSet = [db executeQuery:@"SELECT messageID,messageJSON,read,date FROM messages limit :limit" withParameterDictionary:paramDict];
+    FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, date FROM messages order by messageID DESC limit :limit" withParameterDictionary:paramDict];
     
     MessageModel *model;
     
@@ -161,22 +161,19 @@ static MessageService *instance;
   __block NSMutableArray *array = [[NSMutableArray alloc] init];
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    FMResultSet *resultSet = [db executeQuery:@"SELECT * FROM messageFilterXRef,messages WHERE messages.messageID==messageFilterXRef.messageID and messageFilterXRef.funnelId=:funnelId limit :limit" withParameterDictionary:paramDict];
+    FMResultSet *resultSet = [db executeQuery:@"SELECT DISTINCT * FROM messageFilterXRef,messages WHERE messages.messageID==messageFilterXRef.messageID and messageFilterXRef.funnelId=:funnelId order by messageID DESC limit :limit" withParameterDictionary:paramDict];
     
     MessageModel *model;
     
     while ([resultSet next]) {
-      model = [[MessageModel alloc]init];
-      
-      model.messageID = [resultSet stringForColumn:@"messageID"];
-      model.messageJSON = [resultSet stringForColumn:@"messageJSON"];
-      model.read = [resultSet intForColumn:@"read"];
-      
-      double dateTimeInterval = [resultSet doubleForColumn:@"date"];
-      
-      model.date = [NSDate dateWithTimeIntervalSince1970:dateTimeInterval];
-      
-      [array addObject:model];
+        model = [[MessageModel alloc]init];
+        
+        model.messageID = [resultSet stringForColumn:@"messageID"];
+        model.messageJSON = [resultSet stringForColumn:@"messageJSON"];
+        model.read = [resultSet intForColumn:@"read"];
+        model.date = [resultSet dateForColumn:@"date"];
+        
+        [array addObject:[MCOIMAPMessage importSerializable:model.messageJSON]];
     }
   }];
   

@@ -134,7 +134,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
         filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#2EB82E"]);
 //        NSLog(@"[EmailsTableViewController setFilterModel]  %@",(self.filterModel!=nil ? self.filterModel.filterTitle : @"All"));
         filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : @"All");
-      [[EmailService instance] loadLastNMessages:[EmailService instance].messages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:self withFolder:self.emailFolder];
+      [[EmailService instance] loadLastNMessages:[EmailService instance].messages.count withTableController:self withFolder:self.emailFolder];
     }
 }
 
@@ -150,7 +150,10 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 #pragma mark - Table View
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 2;
+    if ([filterLabel.text isEqualToString:@"All"]) {
+        return 2;
+    }
+	return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -161,6 +164,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 return 1;
             return 0;
         }
+        NSLog(@"[EmailsTableViewController numberOfRowsInSection] -- %d",[EmailService instance].filterMessages.count);
         return [EmailService instance].filterMessages.count;
     }
     else{
@@ -385,7 +389,8 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 if (!self.isLoading &&
                     [EmailService instance].messages.count < [EmailService instance].totalNumberOfInboxMessages)
                 {
-                    [[EmailService instance] loadLastNMessages:[EmailService instance].messages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:self withFolder:INBOX];
+                    NSLog(@"%d",[EmailService instance].filterMessages.count + NUMBER_OF_MESSAGES_TO_LOAD);
+                    [[EmailService instance] loadLastNMessages:[EmailService instance].filterMessages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:self withFolder:INBOX];
                     cell.accessoryView = self.loadMoreActivityView;
                     [self.loadMoreActivityView startAnimating];
                 }

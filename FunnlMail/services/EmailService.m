@@ -118,7 +118,8 @@ static NSString *currentFolder;
 		EmailService *strongSelf = weakSelf;
 		NSLog(@"finished checking account.");
 		if (error == nil) {
-			[strongSelf loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD withTableController:fv withFolder:@"INBOX"];
+            //dowmloading from server
+			[strongSelf loadLastNMessages:_filterMessages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:fv withFolder:@"INBOX"];
 		} else {
 			NSLog(@"error loading account: %@", error);
 		}
@@ -136,6 +137,7 @@ static NSString *currentFolder;
 
 - (void)loadLastNMessages:(NSUInteger)nMessages  withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName
 {
+    __block EmailsTableViewController *emailTableViewController = fv;
 	self.isLoading = YES;
 	
 	MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)
@@ -200,9 +202,75 @@ static NSString *currentFolder;
          [self.imapMessagesFetchOp start:
           ^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
           {
-              [self filterAlgotithm:messages withTableController:fv];
+              //newly added by iauro001 on 12th June 2014
+              [self insertMessage:messages];
+              //retrieving the message from database
+              NSArray *tempArray = [[MessageService instance] messagesWithTop:2000];
+              NSLog(@"tempArray.count -- %d\n_filterMessages.count %d",tempArray.count,_filterMessages.count);
+//              [self performSelectorInBackground:@selector(applyingFilters:) withObject:tempArray];
+              [self applyingFilters:tempArray];
+              _filterMessages = (NSMutableArray*)tempArray;
+              [emailTableViewController.tableView reloadData];
+//              if (tempArray) {
+//                  [self filterAlgotithm:tempArray withTableController:fv];
+//              }
           }];
      }];
+}
+
+//storing messages according to funnels preasent.
+#pragma mark -
+#pragma mark applyingFilters
+- (void)applyingFilters:(NSArray*)messages
+{
+    NSArray *funnels = [[FunnelService instance] allFunnels];
+    for (FunnelModel *tempFunnelModel in funnels) {
+        [[MessageFilterXRefService instance] deleteXRefWithMessageID:@"" funnelId:tempFunnelModel.funnelId];
+        for (int count = 0; count < messages.count; count++) {
+            MCOIMAPMessage *message = [messages objectAtIndex:count];
+            if ([self checkForFunnel:tempFunnelModel forMessage:message]) {
+                NSString *funnelID = tempFunnelModel.funnelId;
+                NSString *messageID = [NSString stringWithFormat:@"%d",message.uid];
+                [[MessageFilterXRefService instance] insertMessageXRefMessageID:messageID funnelId:funnelID];
+            }
+        }
+    }
+    funnels = nil;
+}
+
+#pragma mark -
+#pragma mark checkForFilter
+- (BOOL)checkForFunnel:(FunnelModel*)funnel forMessage:(MCOIMAPMessage*)message
+{
+    MCOMessageHeader *header = [message header];
+    for (NSString *senderEmailID in funnel.sendersArray) {
+        if ([senderEmailID.lowercaseString isEqualToString:[[[header sender] mailbox] lowercaseString]]) {
+            return TRUE;
+        }
+    }
+    for (NSString *phrase in funnel.subjectsArray) {
+        if ([phrase.lowercaseString isEqualToString:[[header subject] lowercaseString]]) {
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+//insert's message in to the database
+#pragma mark -
+#pragma mark insertMessage
+- (void)insertMessage:(NSArray*)messages
+{
+    for (MCOIMAPMessage *m in messages) {
+        MessageModel *tempMessageModel = [[MessageModel alloc] init];
+        tempMessageModel.read = m.flags;
+        tempMessageModel.date = m.header.date;
+        tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
+        tempMessageModel.messageJSON = [m serializable];
+        
+        [[MessageService instance] insertMessage:tempMessageModel];
+        tempMessageModel = nil;
+    }
 }
 
 #pragma mark -
@@ -219,17 +287,19 @@ static NSString *currentFolder;
     [NSSortDescriptor sortDescriptorWithKey:@"header.date" ascending:NO];
     NSArray *subjectFoundArray = [NSArray array];
     
+    [self.messages removeAllObjects];
+    
     for (MCOIMAPMessage *m in messages) {
         //
         // add mail to internal array
         //
-        MessageModel *tempMessageModel = [[MessageModel alloc] init];
-        tempMessageModel.read = m.flags;
-        tempMessageModel.date = m.header.date;
-        tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
-        tempMessageModel.messageJSON = @"{\"Appname\":\"Funnel Mail\"}";
-        
-        [[MessageService instance] insertMessage:tempMessageModel];
+//        MessageModel *tempMessageModel = [[MessageModel alloc] init];
+//        tempMessageModel.read = m.flags;
+//        tempMessageModel.date = m.header.date;
+//        tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
+//        tempMessageModel.messageJSON = [m serializable];
+//        
+//        [[MessageService instance] insertMessage:tempMessageModel];
         
         [self.messages addObject:m];
         

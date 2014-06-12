@@ -180,9 +180,17 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     }
     mainView.hidden = YES;
     emailsTableViewController.filterModel = currentFilterModel;
-    [[EmailService instance] loadLastNMessages:[EmailService instance].messages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:emailsTableViewController withFolder:emailsTableViewController.emailFolder];
-//    [emailsTableViewController.tableView reloadData];
-//    [mainView reloadView];
+    //fetching from net
+//    [[EmailService instance] loadLastNMessages:[EmailService instance].messages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:emailsTableViewController withFolder:emailsTableViewController.emailFolder];
+    //fetching from database
+    if ([filterModel.funnelId isEqualToString:@"0"]) {
+        [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithTop:2000];
+    }
+    else
+        [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:filterModel.funnelId top:2000];
+    NSLog(@"%d",[EmailService instance].filterMessages.count);
+    [emailsTableViewController.tableView reloadData];
+    
 //    [emailsTableViewController.tableView setContentOffset:CGPointMake(0, -40)];
 //    [filterView startLogin];  // TODO: (MSR) I'm guessing we don't want to call this again, may need to refactor retrieving of messages
 }
