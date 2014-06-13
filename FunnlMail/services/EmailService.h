@@ -36,7 +36,9 @@
 +(void)deleteFilter:(FunnelModel*)oldFilter;
 +(void)editFilterWith:(FunnelModel*)model withOldFilter:(int)oldFilter;
 +(FunnelModel*)getDefaultFilter;
+- (void)applyingFunnel:(FunnelModel*)funnel toMessages:(NSArray*)messages;
 - (void)applyingFilters:(NSArray*)messages;
 - (void) startLogin :(EmailsTableViewController *) fv;
 - (void)loadLastNMessages:(NSUInteger)nMessages  withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName;
+- (void)loadLatestMail:(NSUInteger)nMessages  withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName;
 @end

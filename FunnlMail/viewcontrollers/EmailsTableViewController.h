@@ -22,7 +22,7 @@
     NSMutableArray *searchMessages;
     BOOL isSearching;
 }
-
+@property (nonatomic, strong) UITableViewController *tablecontroller;
 @property (nonatomic, strong) NSArray *messages;
 @property (nonatomic, strong) UITableView *tableView;
 @property (strong,nonatomic) FunnelModel *filterModel;

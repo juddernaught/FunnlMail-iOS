@@ -15,15 +15,13 @@
 
 -(BOOL) insertMessage:(MessageModel *)messageModel;
 -(BOOL) updateMessage:(MessageModel *)messageModel;
-
 -(NSArray *) messagesWithTop:(NSInteger)top;
 -(NSArray *) messagesWithStart:(NSInteger)start count:(NSInteger)count;
-
 -(NSArray *) messagesWithFunnelId:(NSString *)funnelId top:(NSInteger)top;
 -(NSArray *) messagesWithFunnelId:(NSString *)funnelId top:(NSInteger)top count:(NSInteger)count;
-
 -(NSArray *) funnelsWithMessageID:(NSString *)messageID;
-
 -(BOOL) deleteMessage:(NSString *)messageID;
-
+//newly added on 13th June 2014 by iauro001
+-(NSArray *) retrieveAllMessages;
+- (NSArray *) retrieveLatestMessages;
 @end

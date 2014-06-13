@@ -30,7 +30,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 @end
 
 @implementation EmailsTableViewController
-
+@synthesize tablecontroller;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
   self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -97,12 +97,19 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
      }];
      */
     
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    
+    refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull to Refresh"];
+    [refreshControl addTarget:self action:@selector(fetchLatestEmail) forControlEvents:UIControlEventValueChanged];
+    tablecontroller = [[UITableViewController alloc] init];
     self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 104, self.view.frame.size.width, self.view.frame.size.height-104)];
+    tablecontroller.tableView = self.tableView;
+    tablecontroller.refreshControl = refreshControl;
     self.tableView.rowHeight = 71.0;
     self.tableView.dataSource = self;
     self.tableView.delegate = self;    
     [self.tableView registerClass:[FilterViewCell class] forCellReuseIdentifier:FILTER_VIEW_CELL];
-    [self.view addSubview:self.tableView];
+    [self.view addSubview:tablecontroller.view];
     // TODO: change self.view.mas_top to bottom of filter label
     /*[self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         //make.top.equalTo(filterNavigationView.mas_top).with.offset(0);
@@ -122,6 +129,11 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
   //    searchDisplayController.searchResultsDataSource = self;
   //    searchDisplayController.searchResultsDelegate = self;
   //[self.tableView insertSubview:self.searchDisplayController.searchBar aboveSubview:self.tableView];
+}
+
+- (void)fetchLatestEmail
+{
+    [[EmailService instance] loadLatestMail:1 withTableController:self withFolder:INBOX];
 }
 
 -(void) setFilterModel:(FunnelModel *)filterModel{
@@ -160,7 +172,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 	if(isSearching == NO){
         if (section == 1)
         {
-            if ([EmailService instance].totalNumberOfInboxMessages >= 0)
+            if ([EmailService instance].totalNumberOfInboxMessages >= 0 || [EmailService instance].filterMessages.count > 0)
                 return 1;
             return 0;
         }
@@ -304,10 +316,10 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 {
                     cell.textLabel.text = nil;
                 }
-                
-                cell.detailTextLabel.text =
-                [NSString stringWithFormat:@"%ld message(s)",
-                 (long)[EmailService instance].totalNumberOfInboxMessages];
+                if ([EmailService instance].totalNumberOfInboxMessages > 0)
+                {
+                    cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld message(s)",(long)[EmailService instance].totalNumberOfInboxMessages];
+                }
                 
                 cell.accessoryView = self.loadMoreActivityView;
                 

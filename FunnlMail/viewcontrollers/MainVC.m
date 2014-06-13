@@ -188,7 +188,9 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithTop:2000];
     }
     else
+    {
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:filterModel.funnelId top:2000];
+    }
     NSLog(@"%d",[EmailService instance].filterMessages.count);
     [emailsTableViewController.tableView reloadData];
     
