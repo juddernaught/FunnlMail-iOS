@@ -26,7 +26,8 @@ create table emailServers(
 
 create table messageFilterXRef(
   messageID TEXT,
-  funnelId TEXT
+  funnelId TEXT,
+  primary key (messageID, funnelId)
 );
 
 CREATE INDEX messageIDIndex ON messageFilterXRef (messageID);

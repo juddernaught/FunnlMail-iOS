@@ -110,7 +110,10 @@ static NSString *currentFolder;
 	self.messagePreviews = [NSMutableDictionary dictionary];
     self.filterMessagePreviews = [NSMutableDictionary dictionary];
     self.sentMessagePreviews = [NSMutableDictionary dictionary];
-	[fv.tableView reloadData];
+    [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
+    if ([EmailService instance].filterMessages.count == 0) {
+        [fv.tableView reloadData];
+    }
     
 	NSLog(@"checking account");
 	self.imapCheckOp = [self.imapSession checkAccountOperation];
@@ -118,8 +121,19 @@ static NSString *currentFolder;
 		EmailService *strongSelf = weakSelf;
 		NSLog(@"finished checking account.");
 		if (error == nil) {
-            //dowmloading from server
-			[strongSelf loadLastNMessages:_filterMessages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:fv withFolder:@"INBOX"];
+            //newly added by iauro001 on 13th June 2014
+//            [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
+//            NSLog(@"[EmailService loadAccountWithUsername] -- [EmailService instance].filterMessages %d",[EmailService instance].filterMessages.count);
+//            if ([EmailService instance].filterMessages.count == 0) {
+//                //dowmloading from server
+//                
+//            }
+//            else
+//            {
+////                [fv.tableView reloadData];
+//            }
+            [self performSelectorInBackground:@selector(sampleFunctionWithObject:) withObject:fv];
+//            [strongSelf loadLastNMessages:_filterMessages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:fv withFolder:@"INBOX"];
 		} else {
 			NSLog(@"error loading account: %@", error);
 		}
@@ -133,6 +147,13 @@ static NSString *currentFolder;
 //        }
     }];
     
+}
+
+//function to be called in background
+- (void)sampleFunctionWithObject:(EmailsTableViewController*)fv
+{
+//    [[EmailService instance] loadLastNMessages:_filterMessages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:fv withFolder:@"INBOX"];
+    [[EmailService instance] loadLatestMail:1 withTableController:fv withFolder:INBOX];
 }
 
 - (void)loadLastNMessages:(NSUInteger)nMessages  withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName
@@ -202,18 +223,98 @@ static NSString *currentFolder;
          [self.imapMessagesFetchOp start:
           ^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
           {
+              [fv.tablecontroller.refreshControl endRefreshing];
               //newly added by iauro001 on 12th June 2014
               [self insertMessage:messages];
               //retrieving the message from database
               NSArray *tempArray = [[MessageService instance] messagesWithTop:2000];
               NSLog(@"tempArray.count -- %d\n_filterMessages.count %d",tempArray.count,_filterMessages.count);
-//              [self performSelectorInBackground:@selector(applyingFilters:) withObject:tempArray];
-              [self applyingFilters:tempArray];
+              [self performSelectorInBackground:@selector(applyingFilters:) withObject:tempArray];
+//              [self applyingFilters:tempArray];
               _filterMessages = (NSMutableArray*)tempArray;
               [emailTableViewController.tableView reloadData];
-//              if (tempArray) {
-//                  [self filterAlgotithm:tempArray withTableController:fv];
-//              }
+          }];
+     }];
+}
+
+//loading latest mail
+#pragma mark -
+#pragma mark loadLatestMail
+- (void)loadLatestMail:(NSUInteger)nMessages  withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName
+{
+//	self.isLoading = YES;
+	
+	MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)
+	(MCOIMAPMessagesRequestKindHeaders | MCOIMAPMessagesRequestKindStructure |
+	 MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject | MCOIMAPMessagesRequestKindGmailThreadID | MCOIMAPMessagesRequestKindGmailMessageID |	 MCOIMAPMessagesRequestKindFlags);
+	
+    NSString *inboxFolder = @"INBOX";
+	MCOIMAPFolderInfoOperation *inboxFolderInfo = [self.imapSession folderInfoOperation:inboxFolder];
+	
+	[inboxFolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
+     {
+         BOOL totalNumberOfMessagesDidChange =
+         self.totalNumberOfInboxMessages != [info messageCount];
+         self.totalNumberOfInboxMessages = [info messageCount];
+         NSUInteger numberOfMessagesToLoad =
+         MIN(self.totalNumberOfInboxMessages, nMessages);
+         
+         if (numberOfMessagesToLoad == 0)
+         {
+//             self.isLoading = NO;
+             return;
+         }
+         
+         MCORange fetchRange;
+         if (!totalNumberOfMessagesDidChange && self.messages.count)
+         {
+             numberOfMessagesToLoad -= self.messages.count;
+             
+             fetchRange =
+             MCORangeMake(self.totalNumberOfInboxMessages - self.messages.count - (numberOfMessagesToLoad - 1),
+                          (numberOfMessagesToLoad - 1));
+         }
+         // Else just fetch the last N messages
+         else
+         {
+             fetchRange =
+             MCORangeMake(self.totalNumberOfInboxMessages -
+                          (numberOfMessagesToLoad - 1),
+                          (numberOfMessagesToLoad - 1));
+         }
+         
+         self.imapMessagesFetchOp =
+         [self.imapSession fetchMessagesByNumberOperationWithFolder:inboxFolder
+                                                        requestKind:requestKind
+                                                            numbers:
+          [MCOIndexSet indexSetWithRange:fetchRange]];
+         
+         [self.imapMessagesFetchOp setProgress:^(unsigned int progress) {
+             NSLog(@"Progress: %u of %lu", progress, (unsigned long)numberOfMessagesToLoad);
+         }];
+         
+         //         __weak EmailService *weakSelf = self;
+         [self.imapMessagesFetchOp start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
+          {
+              if (messages.count > 0) {
+                  MCOIMAPMessage *tempVariable = [messages objectAtIndex:0];
+                  NSArray *tempArray = [[MessageService instance] retrieveLatestMessages];
+                  if (tempArray.count > 0) {
+                      if ([[tempArray objectAtIndex:0] integerValue] < tempVariable.uid) {
+                          NSLog(@"[EmailService loadLatestMail] %d",tempVariable.uid - [[tempArray objectAtIndex:0] integerValue]);
+                          [self loadLastNMessages:tempVariable.uid - [[tempArray objectAtIndex:0] integerValue]withTableController:fv withFolder:INBOX];
+                      }
+                      else
+                      {
+                          [fv.tablecontroller.refreshControl endRefreshing];
+                          NSLog(@"[EmailService loadLatestMail] no call to make enjoying in else.");
+                      }
+                  }
+                  else
+                  {
+                      [self loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD withTableController:fv withFolder:INBOX];
+                  }
+              }
           }];
      }];
 }
@@ -225,7 +326,7 @@ static NSString *currentFolder;
 {
     NSArray *funnels = [[FunnelService instance] allFunnels];
     for (FunnelModel *tempFunnelModel in funnels) {
-        [[MessageFilterXRefService instance] deleteXRefWithMessageID:@"" funnelId:tempFunnelModel.funnelId];
+//        [[MessageFilterXRefService instance] deleteXRefWithMessageID:@"" funnelId:tempFunnelModel.funnelId];
         for (int count = 0; count < messages.count; count++) {
             MCOIMAPMessage *message = [messages objectAtIndex:count];
             if ([self checkForFunnel:tempFunnelModel forMessage:message]) {
@@ -236,6 +337,18 @@ static NSString *currentFolder;
         }
     }
     funnels = nil;
+}
+
+- (void)applyingFunnel:(FunnelModel*)funnel toMessages:(NSArray*)messages
+{
+    for (int count = 0; count < messages.count; count++) {
+        MCOIMAPMessage *message = [messages objectAtIndex:count];
+        if ([self checkForFunnel:funnel forMessage:message]) {
+            NSString *funnelID = funnel.funnelId;
+            NSString *messageID = [NSString stringWithFormat:@"%d",message.uid];
+            [[MessageFilterXRefService instance] insertMessageXRefMessageID:messageID funnelId:funnelID];
+        }
+    }
 }
 
 #pragma mark -

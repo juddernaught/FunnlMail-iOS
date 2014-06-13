@@ -88,8 +88,10 @@ static MessageService *instance;
   __block NSMutableArray *array = [[NSMutableArray alloc] init];
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, date FROM messages order by messageID DESC limit :limit" withParameterDictionary:paramDict];
-    
+//    FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, date FROM messages order by messageID DESC limit :limit" withParameterDictionary:paramDict];
+    //retriving all messages
+    FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, date FROM messages order by messageID DESC" withParameterDictionary:paramDict];
+      
     MessageModel *model;
     
     while ([resultSet next]) {
@@ -108,6 +110,60 @@ static MessageService *instance;
   }];
   
   return array;
+}
+
+//newly added function by iauro001 on 13th June 2014
+-(NSArray *) retrieveAllMessages{
+    __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+    
+    paramDict[@"limit"] = @"20";
+    
+    __block NSMutableArray *array = [[NSMutableArray alloc] init];
+    
+    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+        //    FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, date FROM messages order by messageID DESC limit :limit" withParameterDictionary:paramDict];
+        //retriving all messages
+        FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, date FROM messages order by messageID DESC" withParameterDictionary:paramDict];
+        
+        MessageModel *model;
+        
+        while ([resultSet next]) {
+            model = [[MessageModel alloc]init];
+            
+            model.messageID = [resultSet stringForColumn:@"messageID"];
+            model.messageJSON = [resultSet stringForColumn:@"messageJSON"];
+            model.read = [resultSet intForColumn:@"read"];
+            
+            double dateTimeInterval = [resultSet doubleForColumn:@"date"];
+            
+            model.date = [NSDate dateWithTimeIntervalSince1970:dateTimeInterval];
+            
+            [array addObject:[MCOIMAPMessage importSerializable:model.messageJSON]];
+        }
+    }];
+    
+    return array;
+}
+
+- (NSArray *) retrieveLatestMessages{
+    __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+    
+    paramDict[@"limit"] = @"20";
+    
+    __block NSMutableArray *array = [[NSMutableArray alloc] init];
+    
+    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *resultSet = [db executeQuery:@"SELECT max(messageID) as maxID FROM messages" withParameterDictionary:paramDict];
+        while ([resultSet next]) {
+            NSString *tempString = [resultSet stringForColumn:@"maxID"];
+            if (tempString) {
+                [array addObject:tempString];
+            }
+            tempString = nil;
+        }
+    }];
+    
+    return array;
 }
 
 -(NSArray *) messagesWithStart:(NSInteger)start count:(NSInteger)count{
