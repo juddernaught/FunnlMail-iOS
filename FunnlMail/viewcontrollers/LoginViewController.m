@@ -170,6 +170,7 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
         [smtpSession setOAuth2Token:accessToken];
         [smtpSession setUsername:email];
         // Authentication succeeded
+        [self loadHomeScreen];
     }
 }
 
