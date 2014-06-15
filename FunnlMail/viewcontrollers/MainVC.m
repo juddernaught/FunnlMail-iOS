@@ -80,12 +80,12 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [centeredButtons addSubview:mailButton];*/
   
     [filterButton addTarget:self action:@selector(filterButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    filterButton.frame = CGRectMake(33, 0, 33, 28);
+    filterButton.frame = CGRectMake(15, 0, 33, 33);
     [filterButton setBackgroundImage:[UIImage imageNamed:@"FunnlNew1.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:filterButton];
     
     [composeEmailButton addTarget:self action:@selector(composeEmailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    composeEmailButton.frame = CGRectMake(66, 0, 28, 28);
+    composeEmailButton.frame = CGRectMake(66, -6, 33, 34);
     [composeEmailButton setBackgroundImage:[UIImage imageNamed:@"ComposeNew.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:composeEmailButton];
     
