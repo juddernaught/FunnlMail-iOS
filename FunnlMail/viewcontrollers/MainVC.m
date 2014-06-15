@@ -63,18 +63,18 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     self.navigationItem.leftBarButtonItem = leftItem;
     
     UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 99, 28)];
-    centeredButtons.backgroundColor = [UIColor orangeColor];
+    //centeredButtons.backgroundColor = [UIColor orangeColor];
     UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:centeredButtons];
     self.navigationItem.rightBarButtonItem = rightItem;
   
-    UIButton *mailButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    //UIButton *mailButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIButton *filterButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIButton *composeEmailButton = [UIButton buttonWithType:UIButtonTypeCustom];
   
-    [mailButton addTarget:self action:@selector(mailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
+    /*[mailButton addTarget:self action:@selector(mailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
     mailButton.frame = CGRectMake(0, 0, 33, 28);
     [mailButton setBackgroundImage:[UIImage imageNamed:@"Mail.png"] forState:UIControlStateNormal];
-    [centeredButtons addSubview:mailButton];
+    [centeredButtons addSubview:mailButton];*/
   
     [filterButton addTarget:self action:@selector(filterButtonSelected) forControlEvents:UIControlEventTouchUpInside];
     filterButton.frame = CGRectMake(33, 0, 33, 28);
