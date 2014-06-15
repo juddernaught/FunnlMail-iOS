@@ -48,6 +48,9 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     mainView.mainVCdelegate = self;
     [self.view addSubview:mainView];
     
+    // Set the navigation bar to white
+    [self.navigationController.navigationBar setBarTintColor:[UIColor whiteColor]];
+    
     [mainView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view.mas_top).with.offset(20);
         make.left.equalTo(self.view.mas_left).with.offset(0);
@@ -78,12 +81,12 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
   
     [filterButton addTarget:self action:@selector(filterButtonSelected) forControlEvents:UIControlEventTouchUpInside];
     filterButton.frame = CGRectMake(33, 0, 33, 28);
-    [filterButton setBackgroundImage:[UIImage imageNamed:@"Funnl.png"] forState:UIControlStateNormal];
+    [filterButton setBackgroundImage:[UIImage imageNamed:@"FunnlNew1.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:filterButton];
     
     [composeEmailButton addTarget:self action:@selector(composeEmailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    composeEmailButton.frame = CGRectMake(66, 0, 33, 28);
-    [composeEmailButton setBackgroundImage:[UIImage imageNamed:@"UiBYJdc.png"] forState:UIControlStateNormal];
+    composeEmailButton.frame = CGRectMake(66, 0, 28, 28);
+    [composeEmailButton setBackgroundImage:[UIImage imageNamed:@"ComposeNew.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:composeEmailButton];
     
     if(emailsTableViewController==nil){
