@@ -82,12 +82,21 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
      make.right.equalTo(self.view.mas_right).with.offset(0);
      }];*/
     
+    
+    // This is the green or purple All bar
+    
+     
+     
     filterLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 44+20, 320, 40)];
     filterLabel.textColor = [UIColor whiteColor];
     filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#2EB82E"]);
     filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : @"All");
     filterLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:filterLabel];
+    
+     
+    
+    
     /*
      [filterLabel mas_makeConstraints:^(MASConstraintMaker *make) {
      make.top.equalTo(filterNavigationView.mas_top).with.offset(0);
@@ -95,7 +104,10 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
      make.right.equalTo(filterNavigationView.mas_right).with.offset(0);
      make.bottom.equalTo(filterNavigationView.mas_bottom).with.offset(0);
      }];
+     
      */
+    
+    
     
     self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 104, self.view.frame.size.width, self.view.frame.size.height-104)];
     self.tableView.rowHeight = 71.0;
@@ -103,6 +115,12 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     self.tableView.delegate = self;    
     [self.tableView registerClass:[FilterViewCell class] forCellReuseIdentifier:FILTER_VIEW_CELL];
     [self.view addSubview:self.tableView];
+     
+     
+     
+     
+    
+    
     // TODO: change self.view.mas_top to bottom of filter label
     /*[self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         //make.top.equalTo(filterNavigationView.mas_top).with.offset(0);
