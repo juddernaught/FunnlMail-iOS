@@ -107,16 +107,16 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
      
      */
     
-<<<<<<< HEAD
+//<<<<<<< HEAD
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     
     refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull to Refresh"];
     [refreshControl addTarget:self action:@selector(fetchLatestEmail) forControlEvents:UIControlEventValueChanged];
     tablecontroller = [[UITableViewController alloc] init];
-=======
+//=======
     
     
->>>>>>> newbranch
+//>>>>>>> newbranch
     self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 104, self.view.frame.size.width, self.view.frame.size.height-104)];
     tablecontroller.tableView = self.tableView;
     tablecontroller.refreshControl = refreshControl;
@@ -124,9 +124,9 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     self.tableView.dataSource = self;
     self.tableView.delegate = self;    
     [self.tableView registerClass:[FilterViewCell class] forCellReuseIdentifier:FILTER_VIEW_CELL];
-<<<<<<< HEAD
+//<<<<<<< HEAD
     [self.view addSubview:tablecontroller.view];
-=======
+//=======
     [self.view addSubview:self.tableView];
      
      
@@ -134,7 +134,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
      
     
     
->>>>>>> newbranch
+//>>>>>>> newbranch
     // TODO: change self.view.mas_top to bottom of filter label
     /*[self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         //make.top.equalTo(filterNavigationView.mas_top).with.offset(0);
