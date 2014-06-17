@@ -10,6 +10,7 @@
 #import "MASConstraintMaker.h"
 #import "View+MASAdditions.h"
 #import "MainFilterCell.h"
+#import "PreviewEmailViewController.h"
 //#import "FilterModel.h"
 #import "FunnelModel.h"
 #import "EmailService.h"
@@ -85,8 +86,8 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [centeredButtons addSubview:filterButton];
     
     [composeEmailButton addTarget:self action:@selector(composeEmailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    composeEmailButton.frame = CGRectMake(66, 0, 33, 28);
-    [composeEmailButton setBackgroundImage:[UIImage imageNamed:@"compose.png"] forState:UIControlStateNormal];
+    composeEmailButton.frame = CGRectMake(66, -6, 33, 34);
+    [composeEmailButton setBackgroundImage:[UIImage imageNamed:@"ComposeNew.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:composeEmailButton];
     
     if(emailsTableViewController==nil){
@@ -135,8 +136,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 -(void) composeEmailButtonSelected{
     NSLog(@"Compose Email selected");
     mainView.hidden = YES;
-    MFMailComposeViewController *mc = [[MFMailComposeViewController alloc] init];
-    mc.mailComposeDelegate = self;
+    PreviewEmailViewController *mc = [[PreviewEmailViewController alloc] init];
     // Present mail view controller on screen
     [self presentViewController:mc animated:YES completion:NULL];
 }
