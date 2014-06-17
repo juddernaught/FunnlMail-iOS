@@ -6,6 +6,7 @@ create table messages(
   messageJSON TEXT,
   read INTEGER,
   date REAL,
+  gmailthreadid TEXT,
   PRIMARY KEY (messageID)
 );
 

@@ -24,4 +24,7 @@
 //newly added on 13th June 2014 by iauro001
 -(NSArray *) retrieveAllMessages;
 - (NSArray *) retrieveLatestMessages;
+//newly added on 17th June 2014 by iauro001
+-(NSArray *) retrieveAllMessagesForThread:(NSString*)gmailthreadID;
+-(NSArray *) retrieveAllMessagesWithSameGmailID:(NSString*)gmailID;
 @end

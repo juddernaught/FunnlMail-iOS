@@ -114,7 +114,6 @@ static NSString *currentFolder;
     if ([EmailService instance].filterMessages.count == 0) {
         [fv.tableView reloadData];
     }
-    
 	NSLog(@"checking account");
 	self.imapCheckOp = [self.imapSession checkAccountOperation];
 	[self.imapCheckOp start:^(NSError *error) {
@@ -227,12 +226,18 @@ static NSString *currentFolder;
               //newly added by iauro001 on 12th June 2014
               [self insertMessage:messages];
               //retrieving the message from database
-              NSArray *tempArray = [[MessageService instance] messagesWithTop:2000];
-              NSLog(@"tempArray.count -- %d\n_filterMessages.count %d",tempArray.count,_filterMessages.count);
+              NSArray *tempArray = [[MessageService instance] retrieveAllMessages];
               [self performSelectorInBackground:@selector(applyingFilters:) withObject:tempArray];
-//              [self applyingFilters:tempArray];
               _filterMessages = (NSMutableArray*)tempArray;
               [emailTableViewController.tableView reloadData];
+              [fv.activityIndicator stopAnimating];
+              if (tempArray.count > kNUMBER_OF_MESSAGES_TO_DOWNLOAD_IN_BACKGROUND) {
+            
+              }
+              else
+              {
+                  [self loadLastNMessages:self.filterMessages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:fv withFolder:INBOX];
+              }
           }];
      }];
 }
@@ -301,13 +306,17 @@ static NSString *currentFolder;
                   NSArray *tempArray = [[MessageService instance] retrieveLatestMessages];
                   if (tempArray.count > 0) {
                       if ([[tempArray objectAtIndex:0] integerValue] < tempVariable.uid) {
-                          NSLog(@"[EmailService loadLatestMail] %d",tempVariable.uid - [[tempArray objectAtIndex:0] integerValue]);
                           [self loadLastNMessages:tempVariable.uid - [[tempArray objectAtIndex:0] integerValue]withTableController:fv withFolder:INBOX];
                       }
                       else
                       {
                           [fv.tablecontroller.refreshControl endRefreshing];
-                          NSLog(@"[EmailService loadLatestMail] no call to make enjoying in else.");
+                          if (self.filterMessages.count > kNUMBER_OF_MESSAGES_TO_DOWNLOAD_IN_BACKGROUND) {
+                              [fv.activityIndicator stopAnimating];
+                          }
+                          else{
+                              [self loadLastNMessages:self.filterMessages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:fv withFolder:INBOX];
+                          }
                       }
                   }
                   else
@@ -328,7 +337,7 @@ static NSString *currentFolder;
     for (FunnelModel *tempFunnelModel in funnels) {
 //        [[MessageFilterXRefService instance] deleteXRefWithMessageID:@"" funnelId:tempFunnelModel.funnelId];
         for (int count = 0; count < messages.count; count++) {
-            MCOIMAPMessage *message = [messages objectAtIndex:count];
+            MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[messages objectAtIndex:count] messageJSON]];
             if ([self checkForFunnel:tempFunnelModel forMessage:message]) {
                 NSString *funnelID = tempFunnelModel.funnelId;
                 NSString *messageID = [NSString stringWithFormat:@"%d",message.uid];
@@ -342,7 +351,7 @@ static NSString *currentFolder;
 - (void)applyingFunnel:(FunnelModel*)funnel toMessages:(NSArray*)messages
 {
     for (int count = 0; count < messages.count; count++) {
-        MCOIMAPMessage *message = [messages objectAtIndex:count];
+        MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[messages objectAtIndex:count] messageJSON]];
         if ([self checkForFunnel:funnel forMessage:message]) {
             NSString *funnelID = funnel.funnelId;
             NSString *messageID = [NSString stringWithFormat:@"%d",message.uid];
@@ -380,6 +389,7 @@ static NSString *currentFolder;
         tempMessageModel.date = m.header.date;
         tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
         tempMessageModel.messageJSON = [m serializable];
+        tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
         
         [[MessageService instance] insertMessage:tempMessageModel];
         tempMessageModel = nil;
@@ -388,14 +398,10 @@ static NSString *currentFolder;
 
 #pragma mark -
 #pragma mark filterAlgotithm:
+//currently not in use
 - (void)filterAlgotithm:(NSArray*)messages withTableController:(EmailsTableViewController *)fv
 {
-//      EmailService *strongSelf = weakSelf;
-//      EmailServersService *emailServersService = [EmailServersService instance];
-    NSLog(@"fetched all messages.");
-    
     self.isLoading = NO;
-    
     NSSortDescriptor *sort =
     [NSSortDescriptor sortDescriptorWithKey:@"header.date" ascending:NO];
     NSArray *subjectFoundArray = [NSArray array];
@@ -406,51 +412,35 @@ static NSString *currentFolder;
         //
         // add mail to internal array
         //
-//        MessageModel *tempMessageModel = [[MessageModel alloc] init];
-//        tempMessageModel.read = m.flags;
-//        tempMessageModel.date = m.header.date;
-//        tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
-//        tempMessageModel.messageJSON = [m serializable];
-//        
-//        [[MessageService instance] insertMessage:tempMessageModel];
         
         [self.messages addObject:m];
         
         //
         // store message in database
         //
-        //[self saveMessageInDatabase:m];
-        
-        
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"gmailMessageID == %qx ", m.gmailThreadID,m.gmailMessageID];
         NSArray *b = [self.messages filteredArrayUsingPredicate:predicate];
         if(b.count){
-            //NSLog(@"%@",m.header.subject);
-        }else{
-            //NSLog(@"ThreadID: %qx, UID: %d mID: x%qx",m.gmailThreadID, m.uid, m.gmailMessageID);
             
+        }else{
             NSString *gmailThreadIDStr = [NSString stringWithFormat:@"%qx",m.gmailThreadID];
             NSMutableSet *threadMessagesArray = [self.threadIdDictionary objectForKey:gmailThreadIDStr];
             if(threadMessagesArray == nil ){
                 threadMessagesArray = [[NSMutableSet alloc] init];
                 [threadMessagesArray addObject:m];
-                //[self.messages addObject:m];
                 [self.threadIdDictionary setObject:threadMessagesArray forKey:gmailThreadIDStr];
             }
             else{
                 NSPredicate *predicate = [NSPredicate predicateWithFormat:@"gmailThreadID == %qx AND uid != %d ", m.gmailThreadID,m.uid];
                 NSArray *b = [self.messages filteredArrayUsingPredicate:predicate];
                 [self.messages removeObjectsInArray:b];
-                //[self.messages addObject:m];
                 [threadMessagesArray addObject:m];
                 [self.threadIdDictionary setObject:threadMessagesArray forKey:gmailThreadIDStr];
             }
         }
-        //                  NSLog(@"%@: %@ : %d", m.header.sender.mailbox, m.header.subject, threadMessagesArray.count);
     }
     NSMutableArray *combinedMessages = [NSMutableArray arrayWithArray:self.messages];
     // TODO: remove the if statement. Primary is currently the same as the All Mail view.
-    NSLog(@"Our funnl name: %@ ---> %d", fv.filterModel.filterTitle,self.messages.count);
     if (fv.filterModel && ![fv.filterModel.filterTitle isEqual:NULL] && ![fv.filterModel.filterTitle isEqualToString: @"All"] ) {
         NSMutableDictionary *dictionary = [fv.filterModel getEmailsForFunnl:fv.filterModel.filterTitle];
         NSSet *funnlEmailList = [dictionary objectForKey:@"senders"];
@@ -468,12 +458,6 @@ static NSString *currentFolder;
                     NSMutableSet *set = [NSMutableSet setWithSet:funnlSubjectList];
                     [set intersectSet:intersection];
                     subjectFoundArray =  [set allObjects];
-                    //NSLog(@"%@ : %d %@",subject,subjectFoundArray.count,emailAddress);
-//                    if(subjectFoundArray.count == 0)
-//                    {
-//                        [combinedMessages removeObjectAtIndex:i];
-//                        i--;
-//                    }
                 }
             }else{
                 [combinedMessages removeObjectAtIndex:i];
