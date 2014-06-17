@@ -12,6 +12,10 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import <ImageIO/ImageIO.h>
 #import "MCOMessageView.h"
+#import "PreviewEmailViewController.h"
+#import <MessageUI/MessageUI.h>
+
+
 
 @interface MsgViewController () <MCOMessageViewDelegate>
 
@@ -40,10 +44,29 @@
     return self;
 }
 
+
 - (void)viewDidLoad {
     _messageView = [[MCOMessageView alloc] initWithFrame:self.view.bounds];
     _messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.view addSubview:_messageView];
+    
+    UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 66, 28)];
+    centeredButtons.backgroundColor = [UIColor orangeColor];
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:centeredButtons];
+    self.navigationItem.rightBarButtonItem = rightItem;
+    
+    UIButton *replyButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIButton *forwardButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    [replyButton addTarget:self action:@selector(replyButtonSelected) forControlEvents:UIControlEventTouchUpInside];
+    replyButton.frame = CGRectMake(0, 0, 33, 28);
+    [replyButton setBackgroundImage:[UIImage imageNamed:@"Mail.png"] forState:UIControlStateNormal];
+    [centeredButtons addSubview:replyButton];
+
+    [forwardButton addTarget:self action:@selector(forwardButtonSelected) forControlEvents:UIControlEventTouchUpInside];
+    forwardButton.frame = CGRectMake(33, 0, 33, 28);
+    [forwardButton setBackgroundImage:[UIImage imageNamed:@"archive.png"] forState:UIControlStateNormal];
+    [centeredButtons addSubview:forwardButton];
     
     if (![[NSUserDefaults standardUserDefaults] boolForKey:@"FetchFullMessageEnabled"]) {
         [_messageView setDelegate:self];
@@ -274,6 +297,26 @@ typedef void (^DownloadCallback)(NSError * error);
     CFRelease(imageSource);
     
     return destData;
+}
+
+
+-(void) replyButtonSelected{
+    NSLog(@"reply Email selected");
+    PreviewEmailViewController *viewEmail = [[PreviewEmailViewController alloc]init];
+    viewEmail.address = self.address;
+    viewEmail.message = _message;
+    viewEmail.folder = _folder;
+    viewEmail._session = _session;
+    [self presentViewController:viewEmail animated:YES completion:NULL];
+}
+
+-(void) forwardButtonSelected{
+    NSLog(@"reply Email selected");
+    PreviewEmailViewController *viewEmail = [[PreviewEmailViewController alloc]init];
+    viewEmail.message = _message;
+    viewEmail.folder = _folder;
+    viewEmail._session = _session;
+    [self presentViewController:viewEmail animated:YES completion:NULL];
 }
 
 

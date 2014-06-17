@@ -82,7 +82,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     
     [composeEmailButton addTarget:self action:@selector(composeEmailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
     composeEmailButton.frame = CGRectMake(66, 0, 33, 28);
-    [composeEmailButton setBackgroundImage:[UIImage imageNamed:@"Mail.png"] forState:UIControlStateNormal];
+    [composeEmailButton setBackgroundImage:[UIImage imageNamed:@"compose.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:composeEmailButton];
     
     if(emailsTableViewController==nil){
@@ -137,31 +137,6 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [self presentViewController:mc animated:YES completion:NULL];
 }
 
-- (void)mailComposeController:(MFMailComposeViewController*)controller
-          didFinishWithResult:(MFMailComposeResult)result
-                        error:(NSError*)error;
-{
-    switch (result)
-    {
-        case MFMailComposeResultCancelled:
-            NSLog(@"Cancelled sending");
-            break;
-        case MFMailComposeResultSaved:
-            NSLog(@"Message Saved");
-            break;
-        case MFMailComposeResultSent:
-            NSLog(@"Message Sent");
-            break;
-        case MFMailComposeResultFailed:
-            NSLog(@"Sending Failed");
-            break;
-        default:
-            NSLog(@"Message not sent");
-            break;
-    }
-    [self dismissViewControllerAnimated:YES completion:nil];
-//    [self dismissModalViewControllerAnimated:YES];
-}
 
 
 - (void)didReceiveMemoryWarning

@@ -8,12 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #include <MailCore/MailCore.h>
+#import <MessageUI/MessageUI.h>
 
 @class MCOMessageView;
 @class MCOIMAPAsyncSession;
 @class MCOMAPMessage;
 
-@interface MsgViewController : UIViewController {
+@interface MsgViewController :  UIViewController <MFMailComposeViewControllerDelegate>{
     IBOutlet MCOMessageView * _messageView;
     NSMutableDictionary * _storage;
     NSMutableSet * _pending;
@@ -28,5 +29,5 @@
 
 @property (nonatomic, strong) MCOIMAPSession * session;
 @property (nonatomic, strong) MCOIMAPMessage * message;
-
+@property (nonatomic, strong) MCOAddress * address;
 @end
