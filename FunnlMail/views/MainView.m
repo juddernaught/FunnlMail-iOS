@@ -169,10 +169,6 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-  //FilterViewVC *vc = [[FilterViewVC alloc] init];
-  //vc.filterModel = (FilterModel *)filterArray[indexPath.row];
-  
-  //[self.navigationController pushViewController:vc animated:YES];
   if(indexPath.row == filterArray.count){
     [self createAddFunnlView];
   }else{

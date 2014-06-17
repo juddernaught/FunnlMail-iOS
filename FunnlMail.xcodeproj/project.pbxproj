@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		5A1FF53D1948263B0056750F /* FunnelModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1FF53C1948263B0056750F /* FunnelModel.m */; };
+		5AA690B619501EC200E4CB64 /* EmailThreadTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AA690B519501EC200E4CB64 /* EmailThreadTableViewController.m */; };
+		5AA690BE19505A5B00E4CB64 /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AA690BC19505A5B00E4CB64 /* arrow.png */; };
+		5AA690BF19505A5B00E4CB64 /* arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AA690BD19505A5B00E4CB64 /* arrow@2x.png */; };
+		639B69C1194D4990004217DB /* ComposeNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 639B69C0194D4990004217DB /* ComposeNew.png */; };
+		639B69C3194D49FF004217DB /* FunnlNew1.png in Resources */ = {isa = PBXBuildFile; fileRef = 639B69C2194D49FF004217DB /* FunnlNew1.png */; };
 		660BA98E1902CDEA00CDF86E /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 660BA98D1902CDEA00CDF86E /* LoginViewController.m */; };
 		6620BA8018E32FD700769C48 /* Files.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA7C18E32FD700769C48 /* Files.png */; };
 		6620BA8118E32FD700769C48 /* Meetings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA7D18E32FD700769C48 /* Meetings.png */; };
@@ -172,6 +177,12 @@
 /* Begin PBXFileReference section */
 		5A1FF53B1948263B0056750F /* FunnelModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FunnelModel.h; path = models/FunnelModel.h; sourceTree = "<group>"; };
 		5A1FF53C1948263B0056750F /* FunnelModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FunnelModel.m; path = models/FunnelModel.m; sourceTree = "<group>"; };
+		5AA690B419501EC200E4CB64 /* EmailThreadTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailThreadTableViewController.h; sourceTree = "<group>"; };
+		5AA690B519501EC200E4CB64 /* EmailThreadTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmailThreadTableViewController.m; sourceTree = "<group>"; };
+		5AA690BC19505A5B00E4CB64 /* arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow.png; sourceTree = "<group>"; };
+		5AA690BD19505A5B00E4CB64 /* arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow@2x.png"; sourceTree = "<group>"; };
+		639B69C0194D4990004217DB /* ComposeNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ComposeNew.png; sourceTree = "<group>"; };
+		639B69C2194D49FF004217DB /* FunnlNew1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FunnlNew1.png; sourceTree = "<group>"; };
 		660BA98C1902CDEA00CDF86E /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = viewcontrollers/LoginViewController.h; sourceTree = "<group>"; };
 		660BA98D1902CDEA00CDF86E /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = viewcontrollers/LoginViewController.m; sourceTree = "<group>"; };
 		6620BA7C18E32FD700769C48 /* Files.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Files.png; sourceTree = "<group>"; };
@@ -376,6 +387,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5AA690BB19505A5B00E4CB64 /* Image_Resources */ = {
+			isa = PBXGroup;
+			children = (
+				5AA690BC19505A5B00E4CB64 /* arrow.png */,
+				5AA690BD19505A5B00E4CB64 /* arrow@2x.png */,
+			);
+			path = Image_Resources;
+			sourceTree = "<group>";
+		};
 		6620BA8918E3439000769C48 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -398,7 +418,9 @@
 				FA5627D51935C92600238F40 /* notification@2x.png */,
 				FA5627D61935C92600238F40 /* notification.png */,
 				FA1AEB6B19346BE300E93907 /* add.png */,
+				639B69C0194D4990004217DB /* ComposeNew.png */,
 				6620BA9918E38BE500769C48 /* Compose.png */,
+				639B69C2194D49FF004217DB /* FunnlNew1.png */,
 				6620BA9A18E38BE500769C48 /* Funnl.png */,
 				6620BA9B18E38BE500769C48 /* Mail.png */,
 				6620BA9718E348EA00769C48 /* Menu.png */,
@@ -566,6 +588,7 @@
 		66F2C47018E3293E00CD593E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				5AA690BB19505A5B00E4CB64 /* Image_Resources */,
 				66F2C47118E3293E00CD593E /* FunnlMail-Info.plist */,
 				66F2C47218E3293E00CD593E /* InfoPlist.strings */,
 				66F2C47718E3293E00CD593E /* FunnlMail-Prefix.pch */,
@@ -658,6 +681,8 @@
 			children = (
 				66AEEB7F1933002D00B6DBE5 /* EmailsTableViewController.h */,
 				66AEEB801933002D00B6DBE5 /* EmailsTableViewController.m */,
+				5AA690B419501EC200E4CB64 /* EmailThreadTableViewController.h */,
+				5AA690B519501EC200E4CB64 /* EmailThreadTableViewController.m */,
 				CC8C7EAB18E6F1C100E76AE8 /* MainVC.h */,
 				B7C9B25F194E886700F766DA /* PreviewEmailViewController.h */,
 				B7C9B260194E886700F766DA /* PreviewEmailViewController.m */,
@@ -947,17 +972,21 @@
 				CC4263BC1934BB6700F3C5EB /* dbschema.sql in Resources */,
 				6620BA8218E32FD700769C48 /* Payments.png in Resources */,
 				FA5627D71935C92600238F40 /* settings@2x.png in Resources */,
+				639B69C1194D4990004217DB /* ComposeNew.png in Resources */,
 				6620BA9518E343FA00769C48 /* Social.png in Resources */,
 				FA5627E11935E57700238F40 /* close.png in Resources */,
 				FA2C9BB3193DF57700866BEE /* cross@2x.png in Resources */,
 				6620BA8018E32FD700769C48 /* Files.png in Resources */,
 				6620BAAF18E399C700769C48 /* Email 5.png in Resources */,
 				6620BAAB18E399C700769C48 /* Email 1.png in Resources */,
+				5AA690BE19505A5B00E4CB64 /* arrow.png in Resources */,
 				6620BA9818E348EA00769C48 /* Menu.png in Resources */,
 				FA1AEB6C19346BE300E93907 /* add.png in Resources */,
 				6620BAAD18E399C700769C48 /* Email 3.png in Resources */,
 				6620BA8318E32FD700769C48 /* Travel.png in Resources */,
+				5AA690BF19505A5B00E4CB64 /* arrow@2x.png in Resources */,
 				6620BA9E18E38BE500769C48 /* Mail.png in Resources */,
+				639B69C3194D49FF004217DB /* FunnlNew1.png in Resources */,
 				6620BA9318E343FA00769C48 /* Plus Sign.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -18,5 +18,5 @@
 -(BOOL) deleteXRefWithFunnelId:(NSString *)funnelId;
 -(NSArray *) xrefWithMessageID:(NSString *)messageID;
 -(NSArray *) xrefWithFunnelId:(NSString *)funnelId;
-
+-(NSArray *) messagesWithFunnelId:(NSString*)funnelId;
 @end

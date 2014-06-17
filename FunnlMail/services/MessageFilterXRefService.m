@@ -10,6 +10,8 @@
 #import "SQLiteDatabase.h"
 #import "FMDatabase.h"
 #import "FMResultSet.h"
+#import "MessageModel.h"
+#import <MailCore/MailCore.h>
 
 static MessageFilterXRefService *instance;
 
@@ -58,11 +60,12 @@ static MessageFilterXRefService *instance;
   
   __block BOOL success = NO;
   
-  paramDict[@"messageID"] = messageID;
+//  paramDict[@"messageID"] = messageID;
   paramDict[@"funnelId"] = funnelId;
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    success = [db executeUpdate:@"DELETE FROM messageFilterXRef WHERE messageID=:messageID AND funnelId=:funnelId" withParameterDictionary:paramDict];
+//    success = [db executeUpdate:@"DELETE FROM messageFilterXRef WHERE messageID=:messageID AND funnelId=:funnelId" withParameterDictionary:paramDict];
+      success = [db executeUpdate:@"DELETE FROM messageFilterXRef WHERE funnelId=:funnelId" withParameterDictionary:paramDict];
   }];
   
   return success;
@@ -142,6 +145,33 @@ static MessageFilterXRefService *instance;
   }];
   
   return array;
+}
+
+-(NSArray *) messagesWithFunnelId:(NSString*)funnelId{
+    __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+    
+    paramDict[@"funnelId"] = funnelId;
+    
+    __block NSMutableArray *array = [[NSMutableArray alloc] init];
+    
+    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *resultSet = [db executeQuery:@"SELECT messages.messageID,messages.read,messages.date,messageFilterXRef.funnelId FROM messageFilterXRef INNER JOIN messages ON (messages.messageID == messageFilterXRef.messageId) WHERE messageFilterXRef.funnelId == :funnelId" withParameterDictionary:paramDict];
+        
+        MessageModel *model;
+        
+        while ([resultSet next]) {
+            model = [[MessageModel alloc]init];
+            
+            model.messageID = [resultSet stringForColumn:@"messageID"];
+            model.messageJSON = [resultSet stringForColumn:@"messageJSON"];
+            model.read = [resultSet intForColumn:@"read"];
+            model.date = [resultSet dateForColumn:@"date"];
+            
+            [array addObject:[MCOIMAPMessage importSerializable:model.messageJSON]];
+        }
+    }];
+    
+    return array;
 }
 
 

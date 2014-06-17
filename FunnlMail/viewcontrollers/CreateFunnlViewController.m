@@ -394,9 +394,9 @@
                 // save to db
                 [[FunnelService instance] insertFunnel:model];
             }
-            
+            [[EmailService instance] applyingFunnel:model toMessages:[EmailService instance].filterMessages];
+            [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:model.funnelId top:2000];
             [self.mainVCdelegate filterSelected:model];
-
             model = nil;
             modelForFunnl = nil;
             [self.navigationController popViewControllerAnimated:YES];

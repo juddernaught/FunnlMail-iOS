@@ -38,6 +38,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [mainView reloadView];
 }
 
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -46,6 +47,9 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     mainView.hidden = YES;
     mainView.mainVCdelegate = self;
     [self.view addSubview:mainView];
+    
+    // Set the navigation bar to white
+    [self.navigationController.navigationBar setBarTintColor:[UIColor whiteColor]];
     
     [mainView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view.mas_top).with.offset(20);
@@ -62,22 +66,22 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     self.navigationItem.leftBarButtonItem = leftItem;
     
     UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 99, 28)];
-    centeredButtons.backgroundColor = [UIColor orangeColor];
+    //centeredButtons.backgroundColor = [UIColor orangeColor];
     UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:centeredButtons];
     self.navigationItem.rightBarButtonItem = rightItem;
   
-    UIButton *mailButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    //UIButton *mailButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIButton *filterButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIButton *composeEmailButton = [UIButton buttonWithType:UIButtonTypeCustom];
   
-    [mailButton addTarget:self action:@selector(mailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
+    /*[mailButton addTarget:self action:@selector(mailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
     mailButton.frame = CGRectMake(0, 0, 33, 28);
     [mailButton setBackgroundImage:[UIImage imageNamed:@"Mail.png"] forState:UIControlStateNormal];
-    [centeredButtons addSubview:mailButton];
+    [centeredButtons addSubview:mailButton];*/
   
     [filterButton addTarget:self action:@selector(filterButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    filterButton.frame = CGRectMake(33, 0, 33, 28);
-    [filterButton setBackgroundImage:[UIImage imageNamed:@"Funnl.png"] forState:UIControlStateNormal];
+    filterButton.frame = CGRectMake(15, 0, 33, 33);
+    [filterButton setBackgroundImage:[UIImage imageNamed:@"FunnlNew1.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:filterButton];
     
     [composeEmailButton addTarget:self action:@selector(composeEmailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
@@ -155,9 +159,19 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     }
     mainView.hidden = YES;
     emailsTableViewController.filterModel = currentFilterModel;
-    [[EmailService instance] loadLastNMessages:[EmailService instance].messages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:emailsTableViewController withFolder:emailsTableViewController.emailFolder];
-//    [emailsTableViewController.tableView reloadData];
-//    [mainView reloadView];
+    //fetching from net
+//    [[EmailService instance] loadLastNMessages:[EmailService instance].messages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:emailsTableViewController withFolder:emailsTableViewController.emailFolder];
+    //fetching from database
+    if ([filterModel.funnelId isEqualToString:@"0"]) {
+        [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
+    }
+    else
+    {
+        [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:filterModel.funnelId top:2000];
+    }
+    NSLog(@"%d",[EmailService instance].filterMessages.count);
+    [emailsTableViewController.tableView reloadData];
+    
 //    [emailsTableViewController.tableView setContentOffset:CGPointMake(0, -40)];
 //    [filterView startLogin];  // TODO: (MSR) I'm guessing we don't want to call this again, may need to refactor retrieving of messages
 }

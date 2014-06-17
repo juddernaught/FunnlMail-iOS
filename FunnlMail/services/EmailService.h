@@ -11,6 +11,8 @@
 #import <mailcore/mailcore.h>
 #import "MessageService.h"
 #import "MessageModel.h"
+#import "FunnelService.h"
+#import "MessageFilterXRefService.h"
 
 @interface EmailService : NSObject{
 //    NSMutableArray *filterArray;
@@ -34,6 +36,9 @@
 +(void)deleteFilter:(FunnelModel*)oldFilter;
 +(void)editFilterWith:(FunnelModel*)model withOldFilter:(int)oldFilter;
 +(FunnelModel*)getDefaultFilter;
+- (void)applyingFunnel:(FunnelModel*)funnel toMessages:(NSArray*)messages;
+- (void)applyingFilters:(NSArray*)messages;
 - (void) startLogin :(EmailsTableViewController *) fv;
 - (void)loadLastNMessages:(NSUInteger)nMessages  withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName;
+- (void)loadLatestMail:(NSUInteger)nMessages  withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName;
 @end

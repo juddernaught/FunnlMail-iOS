@@ -6,6 +6,7 @@ create table messages(
   messageJSON TEXT,
   read INTEGER,
   date REAL,
+  gmailthreadid TEXT,
   PRIMARY KEY (messageID)
 );
 
@@ -26,10 +27,11 @@ create table emailServers(
 
 create table messageFilterXRef(
   messageID TEXT,
-  funnelId TEXT
+  funnelId TEXT,
+  primary key (messageID, funnelId)
 );
 
 CREATE INDEX messageIDIndex ON messageFilterXRef (messageID);
 CREATE INDEX funnelIdIndex ON messageFilterXRef (funnelId);
 
-
+select messageID,

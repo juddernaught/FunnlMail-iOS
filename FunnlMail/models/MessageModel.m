@@ -11,7 +11,7 @@
 @implementation MessageModel
 
 -(NSString *) description{
-  return [NSString stringWithFormat:@"{messageID:%@, read:%i, date:%@}", self.messageID, self.read, self.date];
+  return [NSString stringWithFormat:@"{messageID:%@, read:%i, date:%@, threadID:%@, mails_in_thread:%d}", self.messageID, self.read, self.date,self.gmailThreadID,self.numberOfEmailInThread];
 }
 
 @end

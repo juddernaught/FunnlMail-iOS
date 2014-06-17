@@ -8,20 +8,32 @@
 
 #import "EmailCell.h"
 #import <QuartzCore/QuartzCore.h>
+#import "UIColor+HexString.h"
 
 @implementation EmailCell
-@synthesize dateLabel,senderLabel,subjectLabel,bodyLabel,readLabel,threadLabel;
+@synthesize dateLabel,senderLabel,subjectLabel,bodyLabel,readLabel,threadLabel,detailDiscloser;
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier];
     
     dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(320-85, 2, 80, 20)];
     senderLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 2, 320-105, 20)];
-    subjectLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 24, 320-25, 20)];
-    bodyLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 44, 320-25, 40)];
-    readLabel = [[UILabel alloc] initWithFrame:CGRectMake(4, 10, 12, 12)];
-    threadLabel = [[UILabel alloc] initWithFrame:CGRectMake(4, 30, 12, 12)];
-    readLabel.layer.cornerRadius = 6;
+//    subjectLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 24, 320-25, 20)];
+    subjectLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 24, 320-50-20, 20)];
+//    bodyLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 44, 320-25, 40)];
+    bodyLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 44, 320-50-20, 40)];
+    readLabel = [[UILabel alloc] initWithFrame:CGRectMake(4, 7, 12, 12)];
+//    threadLabel = [[UILabel alloc] initWithFrame:CGRectMake(4, 30, 12, 12)];
+    threadLabel = [[UILabel alloc] initWithFrame:CGRectMake(320-48, 20, 48-5, 20)];
+    detailDiscloser = [[UIImageView alloc] initWithFrame:CGRectMake(320-40+5, 48+5, 20, 20)];
+//    [detailDiscloser setBackgroundColor:[UIColor redColor]];
+    [threadLabel setBackgroundColor:[UIColor colorWithHexString:@"#e7e7e7"]];
+    [detailDiscloser setImage:[UIImage imageNamed:@"arrow.png"]];
+    [threadLabel setTextAlignment:NSTextAlignmentCenter];
+    readLabel.clipsToBounds = YES;
+    readLabel.layer.cornerRadius = 6.0f;
+    threadLabel.clipsToBounds = YES;
+    threadLabel.layer.cornerRadius = 4.0f;
     bodyLabel.numberOfLines = 2;
     
     dateLabel.font = [UIFont systemFontOfSize:13];
@@ -29,7 +41,7 @@
     subjectLabel.font = [UIFont systemFontOfSize:13];
     bodyLabel.font = [UIFont systemFontOfSize:13];
     readLabel.font = [UIFont systemFontOfSize:13];
-    threadLabel.font = [UIFont systemFontOfSize:12];
+    threadLabel.font = [UIFont systemFontOfSize:13];
     
     dateLabel.textColor = [UIColor lightGrayColor];
     senderLabel.textColor = [UIColor blackColor];
@@ -50,7 +62,7 @@
     [self.contentView addSubview:subjectLabel];
     [self.contentView addSubview:bodyLabel];
     [self.contentView addSubview:readLabel];
-    
+    [self.contentView addSubview:detailDiscloser];
     return self;
 }
 
