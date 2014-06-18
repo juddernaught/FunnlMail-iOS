@@ -10,6 +10,7 @@
 #import "MASConstraintMaker.h"
 #import "View+MASAdditions.h"
 #import "MainFilterCell.h"
+#import "PreviewEmailViewController.h"
 //#import "FilterModel.h"
 #import "FunnelModel.h"
 #import "EmailService.h"
@@ -135,37 +136,11 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 -(void) composeEmailButtonSelected{
     NSLog(@"Compose Email selected");
     mainView.hidden = YES;
-    MFMailComposeViewController *mc = [[MFMailComposeViewController alloc] init];
-    mc.mailComposeDelegate = self;
+    PreviewEmailViewController *mc = [[PreviewEmailViewController alloc] init];
     // Present mail view controller on screen
     [self presentViewController:mc animated:YES completion:NULL];
 }
 
-- (void)mailComposeController:(MFMailComposeViewController*)controller
-          didFinishWithResult:(MFMailComposeResult)result
-                        error:(NSError*)error;
-{
-    switch (result)
-    {
-        case MFMailComposeResultCancelled:
-            NSLog(@"Cancelled sending");
-            break;
-        case MFMailComposeResultSaved:
-            NSLog(@"Message Saved");
-            break;
-        case MFMailComposeResultSent:
-            NSLog(@"Message Sent");
-            break;
-        case MFMailComposeResultFailed:
-            NSLog(@"Sending Failed");
-            break;
-        default:
-            NSLog(@"Message not sent");
-            break;
-    }
-    [self dismissViewControllerAnimated:YES completion:nil];
-//    [self dismissModalViewControllerAnimated:YES];
-}
 
 
 - (void)didReceiveMemoryWarning

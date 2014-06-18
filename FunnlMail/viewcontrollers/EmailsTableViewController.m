@@ -440,6 +440,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 MsgViewController *vc = [[MsgViewController alloc] init];
                 vc.folder = self.emailFolder;
                 vc.message = msg;
+                vc.address = msg.header.from;
                 vc.session = [EmailService instance].imapSession;
                 msg.flags = msg.flags | MCOMessageFlagSeen;
                 MCOIMAPOperation *msgOperation=[[EmailService instance].imapSession storeFlagsOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:msg.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagSeen];
