@@ -86,14 +86,14 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     // This is the green or purple All bar
     
      
-     
+    /*
     filterLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 44+20, 320, 40)];
     filterLabel.textColor = [UIColor whiteColor];
     filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#2EB82E"]);
-    filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : @"All");
+    filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : @"Alllllllllllllllllll");
     filterLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:filterLabel];
-    
+    */
      
     
     
@@ -117,12 +117,12 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     
     
 //>>>>>>> newbranch
-    self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 104, self.view.frame.size.width, self.view.frame.size.height-104)];
+    self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-104)];
     tablecontroller.tableView = self.tableView;
     tablecontroller.refreshControl = refreshControl;
     self.tableView.rowHeight = 71.0;
     self.tableView.dataSource = self;
-    self.tableView.delegate = self;    
+    self.tableView.delegate = self;
     [self.tableView registerClass:[FilterViewCell class] forCellReuseIdentifier:FILTER_VIEW_CELL];
 //<<<<<<< HEAD
     [self.view addSubview:tablecontroller.view];
