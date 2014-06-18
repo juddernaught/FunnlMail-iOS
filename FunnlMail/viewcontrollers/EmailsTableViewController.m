@@ -95,11 +95,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     
     // This is the green or purple All bar
     
-//<<<<<<< HEAD
-     
-    /*
-=======
-    AppDelegate *tempAppDelegate = APPDELEGATE;
+/*    AppDelegate *tempAppDelegate = APPDELEGATE;
     
 >>>>>>> befb26a4459794a789ff1240527bd41eba700a00
     filterLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 44+20, 320, 40)];

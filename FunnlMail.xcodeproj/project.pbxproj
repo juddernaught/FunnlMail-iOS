@@ -8,11 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		5A1FF53D1948263B0056750F /* FunnelModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1FF53C1948263B0056750F /* FunnelModel.m */; };
-		5AA690B619501EC200E4CB64 /* EmailThreadTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AA690B519501EC200E4CB64 /* EmailThreadTableViewController.m */; };
 		5AA690BE19505A5B00E4CB64 /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AA690BC19505A5B00E4CB64 /* arrow.png */; };
 		5AA690BF19505A5B00E4CB64 /* arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AA690BD19505A5B00E4CB64 /* arrow@2x.png */; };
 		639B69C1194D4990004217DB /* ComposeNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 639B69C0194D4990004217DB /* ComposeNew.png */; };
 		639B69C3194D49FF004217DB /* FunnlNew1.png in Resources */ = {isa = PBXBuildFile; fileRef = 639B69C2194D49FF004217DB /* FunnlNew1.png */; };
+		639B69D4195254D1004217DB /* EmailThreadTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AA690B519501EC200E4CB64 /* EmailThreadTableViewController.m */; };
 		660BA98E1902CDEA00CDF86E /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 660BA98D1902CDEA00CDF86E /* LoginViewController.m */; };
 		6620BA8018E32FD700769C48 /* Files.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA7C18E32FD700769C48 /* Files.png */; };
 		6620BA8118E32FD700769C48 /* Meetings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA7D18E32FD700769C48 /* Meetings.png */; };
@@ -1050,6 +1050,7 @@
 				66AEEB811933002D00B6DBE5 /* EmailsTableViewController.m in Sources */,
 				CCC9E41C193DF5E80028DC84 /* FunnelService.m in Sources */,
 				CCC9E425193E414F0028DC84 /* ServiceUtils.m in Sources */,
+				639B69D4195254D1004217DB /* EmailThreadTableViewController.m in Sources */,
 				CC7F72F818E83925008962C3 /* EmailService.m in Sources */,
 				66F2C47A18E3293E00CD593E /* AppDelegate.m in Sources */,
 				CCC9E422193DF9B10028DC84 /* MessageService.m in Sources */,
