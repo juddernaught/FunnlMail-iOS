@@ -30,7 +30,11 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 @end
 
 @implementation EmailsTableViewController
-@synthesize tablecontroller;
+@synthesize tablecontroller,activityIndicator;
+
+#pragma mark -
+#pragma mark Lifecycle
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
   self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -39,7 +43,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
   }
   return self;
 }
-
 
 - (void)viewDidLoad
 {
@@ -55,6 +58,13 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    if ([EmailService instance].filterMessages.count > 0) {
+        [self.tableView reloadData];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -85,9 +95,18 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     
     // This is the green or purple All bar
     
+//<<<<<<< HEAD
      
     /*
+=======
+    AppDelegate *tempAppDelegate = APPDELEGATE;
+    
+>>>>>>> befb26a4459794a789ff1240527bd41eba700a00
     filterLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 44+20, 320, 40)];
+    activityIndicator = tempAppDelegate.appActivityIndicator;
+    [activityIndicator setBackgroundColor:[UIColor clearColor]];
+    [activityIndicator startAnimating];
+    [filterLabel addSubview:activityIndicator];
     filterLabel.textColor = [UIColor whiteColor];
     filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#2EB82E"]);
     filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : @"Alllllllllllllllllll");
@@ -158,6 +177,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
 - (void)fetchLatestEmail
 {
+    [activityIndicator startAnimating];
     [[EmailService instance] loadLatestMail:1 withTableController:self withFolder:INBOX];
 }
 
@@ -169,7 +189,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     
     if(filterLabel!=nil){
         filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#2EB82E"]);
-//        NSLog(@"[EmailsTableViewController setFilterModel]  %@",(self.filterModel!=nil ? self.filterModel.filterTitle : @"All"));
         filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : @"All");
       [[EmailService instance] loadLastNMessages:[EmailService instance].messages.count withTableController:self withFolder:self.emailFolder];
     }
@@ -201,7 +220,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 return 1;
             return 0;
         }
-        NSLog(@"[EmailsTableViewController numberOfRowsInSection] -- %d",[EmailService instance].filterMessages.count);
         return [EmailService instance].filterMessages.count;
     }
     else{
@@ -218,14 +236,24 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
             {
                 EmailCell *cell = [tableView dequeueReusableCellWithIdentifier:mailCellIdentifier forIndexPath:indexPath];
                 cell.delegate = self;
-                MCOIMAPMessage *message = [EmailService instance].filterMessages[indexPath.row];
-                
-                if(message.flags == MCOMessageFlagSeen){
-                    cell.readLabel.backgroundColor = [UIColor clearColor];
-                }else{
-                    cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
+                MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
+                if ([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread] > 1) {
+                    if ([self isThreadRead:[NSString stringWithFormat:@"%llul",message.gmailThreadID]]) {
+                        cell.readLabel.backgroundColor = [UIColor clearColor];
+                    }
+                    else
+                    {
+                        cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
+                    }
                 }
-
+                else
+                {
+                    if([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] read]){
+                        cell.readLabel.backgroundColor = [UIColor clearColor];
+                    }else{
+                        cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
+                    }
+                }
                 NSTimeInterval interval = [message.header.date timeIntervalSinceNow];
                 interval = -interval;
                 if([message.header.date isToday]){
@@ -238,18 +266,21 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                     cell.dateLabel.text = [message.header.date timeAgo];
                 }
                 if(message.header.sender.displayName.length)
-                    cell.senderLabel.text = message.header.sender.displayName;
+                    cell.senderLabel.text = [NSString stringWithFormat:@"%@",message.header.sender.displayName];
                 else
-                    cell.senderLabel.text = message.header.sender.mailbox;
+                    cell.senderLabel.text = cell.senderLabel.text = [NSString stringWithFormat:@"%@",message.header.sender.mailbox];
                 cell.subjectLabel.text = message.header.subject;
-                NSMutableSet *threadArray = [[EmailService instance].threadIdDictionary objectForKey:[NSString stringWithFormat:@"%qx",message.gmailThreadID]];
-                //NSLog(@"%@: %@ : %d %qx", message.header.sender.mailbox, message.header.subject, threadArray.count,message.gmailThreadID);
-                if(threadArray && threadArray.count > 1){
+            
+                if([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread] > 1){
                     //cell.threadLabel.text = [NSString stringWithFormat:@"%d",threadArray.count];
-                    cell.threadLabel.text = @"";
+                    cell.threadLabel.text = [NSString stringWithFormat:@"%d",[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread]];
+                    [cell.threadLabel setHidden:NO];
+                    [cell.detailDiscloser setHidden:NO];
                 }
                 else{
                     cell.threadLabel.text = @"";
+                    [cell.threadLabel setHidden:YES];
+                    [cell.detailDiscloser setHidden:YES];
                 }
 
                 NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
@@ -295,7 +326,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                     NSLog(@"Did swipe \"Delete\" cell");
                     [cell swipeToOriginWithCompletion:nil];
 
-                    MCOIMAPMessage *message = [EmailService instance].filterMessages[indexPath.row];
+                    MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
                     MCOAddress *emailAddress = message.header.from;
                     NSMutableArray *mailArray = [[NSMutableArray alloc] init];
                     [mailArray addObject:emailAddress];
@@ -399,12 +430,13 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if(isSearching == NO){
         switch (indexPath.section)
         {
             case 0:
             {
-                MCOIMAPMessage *msg = [EmailService instance].filterMessages[indexPath.row];
+                MCOIMAPMessage *msg = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
                 MsgViewController *vc = [[MsgViewController alloc] init];
                 vc.folder = self.emailFolder;
                 vc.message = msg;
@@ -416,7 +448,14 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                     NSLog(@"selected message flags %u UID is %u",msg.flags,msg.uid );
                 }];
                 //[self.navigationController pushViewController:vc animated:YES];
-                [self.mainVCdelegate pushViewController:vc];
+                if ([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread] > 1) {
+                    EmailThreadTableViewController *threadViewController = [[EmailThreadTableViewController alloc] initWithGmailThreadID:[NSString stringWithFormat:@"%llu",msg.gmailThreadID]];
+                    [self.navigationController pushViewController:threadViewController animated:YES];
+                }
+                else{
+                    [self setReadMessage:(MessageModel*)[EmailService instance].filterMessages[indexPath.row]];
+                    [self.mainVCdelegate pushViewController:vc];
+                }
                 break;
             }
                 
@@ -426,7 +465,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 if (!self.isLoading &&
                     [EmailService instance].messages.count < [EmailService instance].totalNumberOfInboxMessages)
                 {
-                    NSLog(@"%d",[EmailService instance].filterMessages.count + NUMBER_OF_MESSAGES_TO_LOAD);
                     [[EmailService instance] loadLastNMessages:[EmailService instance].filterMessages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:self withFolder:INBOX];
                     cell.accessoryView = self.loadMoreActivityView;
                     [self.loadMoreActivityView startAnimating];
@@ -449,6 +487,23 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
         [self.mainVCdelegate pushViewController:vc];
     }
     
+}
+
+#pragma mark -
+#pragma mark Helper
+- (BOOL)isThreadRead:(NSString*)gmailThreadID
+{
+    NSArray *tempArray = [[MessageService instance] retrieveAllMessagesWithSameGmailID:[gmailThreadID substringWithRange:NSMakeRange(0, gmailThreadID.length-1)]];
+    if (tempArray.count > 0) {
+        return NO;
+    }
+    return YES;
+}
+
+- (void)setReadMessage:(MessageModel*)messageRead
+{
+    [messageRead setRead:YES];
+    [[MessageService instance] updateMessage:messageRead];
 }
 
 #pragma mark - Table View

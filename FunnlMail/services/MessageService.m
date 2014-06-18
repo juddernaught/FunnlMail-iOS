@@ -52,9 +52,10 @@ static MessageService *instance;
   paramDict[@"messageJSON"] = messageModel.messageJSON;
   paramDict[@"read"] = [NSNumber numberWithBool:messageModel.read];
   paramDict[@"date"] = dateTimeInterval;
+  paramDict[@"gmailthreadid"] = messageModel.gmailThreadID;
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    success = [db executeUpdate:@"INSERT INTO messages (messageID,messageJSON,read,date) VALUES (:messageID,:messageJSON,:read,:date)" withParameterDictionary:paramDict];
+    success = [db executeUpdate:@"INSERT INTO messages (messageID,messageJSON,read,date,gmailthreadid) VALUES (:messageID,:messageJSON,:read,:date,:gmailthreadid)" withParameterDictionary:paramDict];
   }];
   
   return success;
@@ -88,9 +89,7 @@ static MessageService *instance;
   __block NSMutableArray *array = [[NSMutableArray alloc] init];
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-//    FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, date FROM messages order by messageID DESC limit :limit" withParameterDictionary:paramDict];
-    //retriving all messages
-    FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, date FROM messages order by messageID DESC" withParameterDictionary:paramDict];
+    FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, date FROM messages order by messageID DESC limit :limit" withParameterDictionary:paramDict];
       
     MessageModel *model;
     
@@ -121,24 +120,63 @@ static MessageService *instance;
     __block NSMutableArray *array = [[NSMutableArray alloc] init];
     
     [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-        //    FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, date FROM messages order by messageID DESC limit :limit" withParameterDictionary:paramDict];
         //retriving all messages
-        FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, date FROM messages order by messageID DESC" withParameterDictionary:paramDict];
+//        FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, date FROM messages order by messageID DESC" withParameterDictionary:nil];
+        //new query retrieving the recent mail of a particular thread.
+        
+        FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, date, t_count FROM messages INNER JOIN (SELECT MAX(messageID) as t_msgID, COUNT(*) as t_count FROM messages GROUP BY gmailthreadid) t ON ( messages. messageID = t.t_msgID ) order by messageID DESC;" withParameterDictionary:nil];
+        
+//        FMResultSet *resultSet = [db executeQuery:@"select messageID, messageJSON, read, date, count(gmailthreadid) as threadmailcount from messages group by gmailthreadid having messageID in (select max(messageID) from messages group by gmailthreadid) order by messageID DESC;" withParameterDictionary:nil];
         
         MessageModel *model;
-        
         while ([resultSet next]) {
             model = [[MessageModel alloc]init];
             
             model.messageID = [resultSet stringForColumn:@"messageID"];
             model.messageJSON = [resultSet stringForColumn:@"messageJSON"];
             model.read = [resultSet intForColumn:@"read"];
-            
+            model.numberOfEmailInThread = [resultSet intForColumn:@"t_count"];
+
             double dateTimeInterval = [resultSet doubleForColumn:@"date"];
-            
             model.date = [NSDate dateWithTimeIntervalSince1970:dateTimeInterval];
             
-            [array addObject:[MCOIMAPMessage importSerializable:model.messageJSON]];
+            //updated on 17th June 2014
+            [array addObject:model];
+//            [array addObject:[MCOIMAPMessage importSerializable:model.messageJSON]];
+        }
+    }];
+    
+    return array;
+}
+
+-(NSArray *) retrieveAllMessagesWithSameGmailID:(NSString*)gmailID{
+    __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+    
+    paramDict[@"gmailthreadid"] = gmailID;
+    
+    __block NSMutableArray *array = [[NSMutableArray alloc] init];
+    
+    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+        //retriving all messages
+        //        FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, date FROM messages order by messageID DESC" withParameterDictionary:nil];
+        //new query retrieving the recent mail of a particular thread.
+        FMResultSet *resultSet = [db executeQuery:@"select messageID, messageJSON, read, date from messages where gmailthreadid = :gmailthreadid and read = 0;" withParameterDictionary:paramDict];
+        
+        MessageModel *model;
+        while ([resultSet next]) {
+            model = [[MessageModel alloc]init];
+            
+            model.messageID = [resultSet stringForColumn:@"messageID"];
+            model.messageJSON = [resultSet stringForColumn:@"messageJSON"];
+            model.read = [resultSet intForColumn:@"read"];
+//            model.numberOfEmailInThread = [resultSet intForColumn:@"threadmailcount"];
+            
+            double dateTimeInterval = [resultSet doubleForColumn:@"date"];
+            model.date = [NSDate dateWithTimeIntervalSince1970:dateTimeInterval];
+            
+            //updated on 17th June 2014
+            [array addObject:model];
+            //            [array addObject:[MCOIMAPMessage importSerializable:model.messageJSON]];
         }
     }];
     
@@ -153,7 +191,7 @@ static MessageService *instance;
     __block NSMutableArray *array = [[NSMutableArray alloc] init];
     
     [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet *resultSet = [db executeQuery:@"SELECT max(messageID) as maxID FROM messages" withParameterDictionary:paramDict];
+        FMResultSet *resultSet = [db executeQuery:@"SELECT max(messageID) as maxID FROM messages" withParameterDictionary:nil];
         while ([resultSet next]) {
             NSString *tempString = [resultSet stringForColumn:@"maxID"];
             if (tempString) {
@@ -165,6 +203,8 @@ static MessageService *instance;
     
     return array;
 }
+
+
 
 -(NSArray *) messagesWithStart:(NSInteger)start count:(NSInteger)count{
   __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
@@ -192,6 +232,38 @@ static MessageService *instance;
   }];
   
   return array;
+}
+
+//newly added on 17th June 2014
+-(NSArray *) retrieveAllMessagesForThread:(NSString*)gmailthreadID{
+    __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+    
+    paramDict[@"gmailthreadid"] = gmailthreadID;
+    
+    __block NSMutableArray *array = [[NSMutableArray alloc] init];
+    
+    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *resultSet = [db executeQuery:@"select messageID, messageJSON, read, date from messages where gmailthreadid = :gmailthreadid order by messageID DESC;" withParameterDictionary:paramDict];
+        
+        MessageModel *model;
+        while ([resultSet next]) {
+            model = [[MessageModel alloc]init];
+            
+            model.messageID = [resultSet stringForColumn:@"messageID"];
+            model.messageJSON = [resultSet stringForColumn:@"messageJSON"];
+            model.read = [resultSet intForColumn:@"read"];
+//            model.numberOfEmailInThread = [resultSet intForColumn:@"threadmailcount"];
+            
+            double dateTimeInterval = [resultSet doubleForColumn:@"date"];
+            model.date = [NSDate dateWithTimeIntervalSince1970:dateTimeInterval];
+            
+            //updated on 17th June 2014
+            [array addObject:model];
+            //            [array addObject:[MCOIMAPMessage importSerializable:model.messageJSON]];
+        }
+    }];
+    
+    return array;
 }
 
 -(BOOL) deleteMessage:(NSString *)messageID{
@@ -229,7 +301,7 @@ static MessageService *instance;
         model.read = [resultSet intForColumn:@"read"];
         model.date = [resultSet dateForColumn:@"date"];
         
-        [array addObject:[MCOIMAPMessage importSerializable:model.messageJSON]];
+        [array addObject:model];
     }
   }];
   

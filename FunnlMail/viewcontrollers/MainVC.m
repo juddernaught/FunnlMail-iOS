@@ -188,7 +188,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 //    [[EmailService instance] loadLastNMessages:[EmailService instance].messages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:emailsTableViewController withFolder:emailsTableViewController.emailFolder];
     //fetching from database
     if ([filterModel.funnelId isEqualToString:@"0"]) {
-        [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithTop:2000];
+        [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
     }
     else
     {
