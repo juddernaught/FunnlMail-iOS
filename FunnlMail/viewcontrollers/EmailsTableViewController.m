@@ -132,7 +132,13 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     
     
 //>>>>>>> newbranch
-    self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-104)];
+//<<<<<<< HEAD
+//    self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-104)];
+//=======
+
+    self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height)];
+
+//>>>>>>> Change 2
     tablecontroller.tableView = self.tableView;
     tablecontroller.refreshControl = refreshControl;
     self.tableView.rowHeight = 71.0;
