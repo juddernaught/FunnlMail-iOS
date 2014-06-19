@@ -62,7 +62,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     UIButton *menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [menuButton addTarget:self action:@selector(menuButtonSelected) forControlEvents:UIControlEventTouchUpInside];
     menuButton.frame = CGRectMake(0, 0, 33, 28);
-    [menuButton setBackgroundImage:[UIImage imageNamed:@"Menu.png"] forState:UIControlStateNormal];
+    [menuButton setBackgroundImage:[UIImage imageNamed:@"Menu1.png"] forState:UIControlStateNormal];
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
     self.navigationItem.leftBarButtonItem = leftItem;
     

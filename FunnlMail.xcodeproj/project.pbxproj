@@ -13,6 +13,7 @@
 		639B69C1194D4990004217DB /* ComposeNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 639B69C0194D4990004217DB /* ComposeNew.png */; };
 		639B69C3194D49FF004217DB /* FunnlNew1.png in Resources */ = {isa = PBXBuildFile; fileRef = 639B69C2194D49FF004217DB /* FunnlNew1.png */; };
 		639B69D4195254D1004217DB /* EmailThreadTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AA690B519501EC200E4CB64 /* EmailThreadTableViewController.m */; };
+		63A8A59E1952AA2600DBD969 /* Menu1.png in Resources */ = {isa = PBXBuildFile; fileRef = 63A8A59D1952AA2600DBD969 /* Menu1.png */; };
 		660BA98E1902CDEA00CDF86E /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 660BA98D1902CDEA00CDF86E /* LoginViewController.m */; };
 		6620BA8018E32FD700769C48 /* Files.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA7C18E32FD700769C48 /* Files.png */; };
 		6620BA8118E32FD700769C48 /* Meetings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA7D18E32FD700769C48 /* Meetings.png */; };
@@ -183,6 +184,7 @@
 		5AA690BD19505A5B00E4CB64 /* arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow@2x.png"; sourceTree = "<group>"; };
 		639B69C0194D4990004217DB /* ComposeNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ComposeNew.png; sourceTree = "<group>"; };
 		639B69C2194D49FF004217DB /* FunnlNew1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FunnlNew1.png; sourceTree = "<group>"; };
+		63A8A59D1952AA2600DBD969 /* Menu1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Menu1.png; sourceTree = "<group>"; };
 		660BA98C1902CDEA00CDF86E /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = viewcontrollers/LoginViewController.h; sourceTree = "<group>"; };
 		660BA98D1902CDEA00CDF86E /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = viewcontrollers/LoginViewController.m; sourceTree = "<group>"; };
 		6620BA7C18E32FD700769C48 /* Files.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Files.png; sourceTree = "<group>"; };
@@ -424,6 +426,7 @@
 				6620BA9A18E38BE500769C48 /* Funnl.png */,
 				6620BA9B18E38BE500769C48 /* Mail.png */,
 				6620BA9718E348EA00769C48 /* Menu.png */,
+				63A8A59D1952AA2600DBD969 /* Menu1.png */,
 			);
 			name = Icons;
 			sourceTree = "<group>";
@@ -963,6 +966,7 @@
 				6620BA9C18E38BE500769C48 /* Compose.png in Resources */,
 				FA2C9BB7193DF5CE00866BEE /* archive@2x.png in Resources */,
 				6620BAAC18E399C700769C48 /* Email 2.png in Resources */,
+				63A8A59E1952AA2600DBD969 /* Menu1.png in Resources */,
 				FA5627DA1935C92600238F40 /* notification.png in Resources */,
 				FA8A4ADC193D902B004890E3 /* NSDateTimeAgo.bundle in Resources */,
 				6620BA9418E343FA00769C48 /* Shopping.png in Resources */,
