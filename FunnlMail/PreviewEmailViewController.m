@@ -115,7 +115,7 @@ UITextField *subject;
     smtpSession.hostname = @"smtp.gmail.com";
     smtpSession.port = 465;
     smtpSession.username = self._session.username;
-    smtpSession.password = self._session.password;
+    smtpSession.password = @"bye2bye2";
     smtpSession.authType = (MCOAuthTypeSASLPlain | MCOAuthTypeSASLLogin);
     smtpSession.connectionType = MCOConnectionTypeTLS;
     
