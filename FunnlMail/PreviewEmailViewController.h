@@ -15,5 +15,5 @@
 @property (nonatomic, strong) MCOAddress * address;
 @property (nonatomic, strong) MCOIMAPMessage * message;
 @property (nonatomic, strong) NSString * folder;
-@property (nonatomic, strong) MCOIMAPSession * _session;
+@property (nonatomic, strong) MCOIMAPSession * imapSession;
 @end
