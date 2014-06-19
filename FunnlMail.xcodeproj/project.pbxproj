@@ -8,11 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		5A1FF53D1948263B0056750F /* FunnelModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1FF53C1948263B0056750F /* FunnelModel.m */; };
-		5AA690B619501EC200E4CB64 /* EmailThreadTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AA690B519501EC200E4CB64 /* EmailThreadTableViewController.m */; };
 		5AA690BE19505A5B00E4CB64 /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AA690BC19505A5B00E4CB64 /* arrow.png */; };
 		5AA690BF19505A5B00E4CB64 /* arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AA690BD19505A5B00E4CB64 /* arrow@2x.png */; };
 		639B69C1194D4990004217DB /* ComposeNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 639B69C0194D4990004217DB /* ComposeNew.png */; };
 		639B69C3194D49FF004217DB /* FunnlNew1.png in Resources */ = {isa = PBXBuildFile; fileRef = 639B69C2194D49FF004217DB /* FunnlNew1.png */; };
+		639B69D4195254D1004217DB /* EmailThreadTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AA690B519501EC200E4CB64 /* EmailThreadTableViewController.m */; };
+		63A8A59E1952AA2600DBD969 /* Menu1.png in Resources */ = {isa = PBXBuildFile; fileRef = 63A8A59D1952AA2600DBD969 /* Menu1.png */; };
 		660BA98E1902CDEA00CDF86E /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 660BA98D1902CDEA00CDF86E /* LoginViewController.m */; };
 		6620BA8018E32FD700769C48 /* Files.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA7C18E32FD700769C48 /* Files.png */; };
 		6620BA8118E32FD700769C48 /* Meetings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6620BA7D18E32FD700769C48 /* Meetings.png */; };
@@ -120,6 +121,8 @@
 		FA8A4ADB193D902B004890E3 /* NSDate+TimeAgo.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8A4AD9193D902B004890E3 /* NSDate+TimeAgo.m */; };
 		FA8A4ADC193D902B004890E3 /* NSDateTimeAgo.bundle in Resources */ = {isa = PBXBuildFile; fileRef = FA8A4ADA193D902B004890E3 /* NSDateTimeAgo.bundle */; };
 		FA8DDA551933A6420049F83F /* TextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8DDA541933A6420049F83F /* TextFieldCell.m */; };
+		FAABF1801952FA750072FFE8 /* FunnlPopUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = FAABF17F1952FA750072FFE8 /* FunnlPopUpView.m */; };
+		FAABF1871952FB720072FFE8 /* FunnlPopupViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FAABF1861952FB720072FFE8 /* FunnlPopupViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -183,6 +186,7 @@
 		5AA690BD19505A5B00E4CB64 /* arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow@2x.png"; sourceTree = "<group>"; };
 		639B69C0194D4990004217DB /* ComposeNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ComposeNew.png; sourceTree = "<group>"; };
 		639B69C2194D49FF004217DB /* FunnlNew1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FunnlNew1.png; sourceTree = "<group>"; };
+		63A8A59D1952AA2600DBD969 /* Menu1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Menu1.png; sourceTree = "<group>"; };
 		660BA98C1902CDEA00CDF86E /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = viewcontrollers/LoginViewController.h; sourceTree = "<group>"; };
 		660BA98D1902CDEA00CDF86E /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = viewcontrollers/LoginViewController.m; sourceTree = "<group>"; };
 		6620BA7C18E32FD700769C48 /* Files.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Files.png; sourceTree = "<group>"; };
@@ -353,6 +357,10 @@
 		FA8A4ADA193D902B004890E3 /* NSDateTimeAgo.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = NSDateTimeAgo.bundle; sourceTree = "<group>"; };
 		FA8DDA531933A6420049F83F /* TextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFieldCell.h; sourceTree = "<group>"; };
 		FA8DDA541933A6420049F83F /* TextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextFieldCell.m; sourceTree = "<group>"; };
+		FAABF17E1952FA750072FFE8 /* FunnlPopUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FunnlPopUpView.h; path = views/FunnlPopUpView.h; sourceTree = "<group>"; };
+		FAABF17F1952FA750072FFE8 /* FunnlPopUpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FunnlPopUpView.m; path = views/FunnlPopUpView.m; sourceTree = "<group>"; };
+		FAABF1851952FB720072FFE8 /* FunnlPopupViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FunnlPopupViewCell.h; path = collectionviewcells/FunnlPopupViewCell.h; sourceTree = "<group>"; };
+		FAABF1861952FB720072FFE8 /* FunnlPopupViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FunnlPopupViewCell.m; path = collectionviewcells/FunnlPopupViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -424,6 +432,7 @@
 				6620BA9A18E38BE500769C48 /* Funnl.png */,
 				6620BA9B18E38BE500769C48 /* Mail.png */,
 				6620BA9718E348EA00769C48 /* Menu.png */,
+				63A8A59D1952AA2600DBD969 /* Menu1.png */,
 			);
 			name = Icons;
 			sourceTree = "<group>";
@@ -684,9 +693,9 @@
 				5AA690B419501EC200E4CB64 /* EmailThreadTableViewController.h */,
 				5AA690B519501EC200E4CB64 /* EmailThreadTableViewController.m */,
 				CC8C7EAB18E6F1C100E76AE8 /* MainVC.h */,
+				CC8C7EAC18E6F1C100E76AE8 /* MainVC.m */,
 				B7C9B25F194E886700F766DA /* PreviewEmailViewController.h */,
 				B7C9B260194E886700F766DA /* PreviewEmailViewController.m */,
-				CC8C7EAC18E6F1C100E76AE8 /* MainVC.m */,
 				660BA98C1902CDEA00CDF86E /* LoginViewController.h */,
 				660BA98D1902CDEA00CDF86E /* LoginViewController.m */,
 				CC1AD1DC18F54BE9000E356C /* MainVCDelegate.h */,
@@ -720,6 +729,8 @@
 			children = (
 				CC39517018E6F9700093C787 /* MainFilterCell.h */,
 				CC39517118E6F9700093C787 /* MainFilterCell.m */,
+				FAABF1851952FB720072FFE8 /* FunnlPopupViewCell.h */,
+				FAABF1861952FB720072FFE8 /* FunnlPopupViewCell.m */,
 			);
 			name = collectionviewcells;
 			sourceTree = "<group>";
@@ -784,6 +795,8 @@
 			children = (
 				CCD00B5918F54797007A675F /* MainView.h */,
 				CCD00B5A18F54797007A675F /* MainView.m */,
+				FAABF17E1952FA750072FFE8 /* FunnlPopUpView.h */,
+				FAABF17F1952FA750072FFE8 /* FunnlPopUpView.m */,
 			);
 			name = views;
 			sourceTree = "<group>";
@@ -963,6 +976,7 @@
 				6620BA9C18E38BE500769C48 /* Compose.png in Resources */,
 				FA2C9BB7193DF5CE00866BEE /* archive@2x.png in Resources */,
 				6620BAAC18E399C700769C48 /* Email 2.png in Resources */,
+				63A8A59E1952AA2600DBD969 /* Menu1.png in Resources */,
 				FA5627DA1935C92600238F40 /* notification.png in Resources */,
 				FA8A4ADC193D902B004890E3 /* NSDateTimeAgo.bundle in Resources */,
 				6620BA9418E343FA00769C48 /* Shopping.png in Resources */,
@@ -1015,6 +1029,7 @@
 				CCC9E42B193E8D180028DC84 /* MessageFilterXRefService.m in Sources */,
 				CC4263B01934B67A00F3C5EB /* FMDatabase.m in Sources */,
 				CC8C7ECA18E6F38100E76AE8 /* MASConstraintMaker.m in Sources */,
+				FAABF1801952FA750072FFE8 /* FunnlPopUpView.m in Sources */,
 				CC8C7ED018E6F38100E76AE8 /* View+MASAdditions.m in Sources */,
 				66AEEBAF1936B5D100B6DBE5 /* GTMHTTPFetcher.m in Sources */,
 				CC4263B41934B67A00F3C5EB /* FMResultSet.m in Sources */,
@@ -1024,6 +1039,7 @@
 				FA2C9BD4193EDFCB00866BEE /* UIViewController+MMDrawerController.m in Sources */,
 				6677881A18EF84FB00EF1962 /* MCOCIDURLProtocol.mm in Sources */,
 				B7C9B261194E886700F766DA /* PreviewEmailViewController.m in Sources */,
+				FAABF1871952FB720072FFE8 /* FunnlPopupViewCell.m in Sources */,
 				FA2C9BD3193EDFCB00866BEE /* MMDrawerVisualState.m in Sources */,
 				CCD00B5B18F54797007A675F /* MainView.m in Sources */,
 				CC8C7EC918E6F38100E76AE8 /* MASConstraint.m in Sources */,
@@ -1050,6 +1066,7 @@
 				66AEEB811933002D00B6DBE5 /* EmailsTableViewController.m in Sources */,
 				CCC9E41C193DF5E80028DC84 /* FunnelService.m in Sources */,
 				CCC9E425193E414F0028DC84 /* ServiceUtils.m in Sources */,
+				639B69D4195254D1004217DB /* EmailThreadTableViewController.m in Sources */,
 				CC7F72F818E83925008962C3 /* EmailService.m in Sources */,
 				66F2C47A18E3293E00CD593E /* AppDelegate.m in Sources */,
 				CCC9E422193DF9B10028DC84 /* MessageService.m in Sources */,

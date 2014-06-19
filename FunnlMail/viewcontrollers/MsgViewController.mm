@@ -306,7 +306,7 @@ typedef void (^DownloadCallback)(NSError * error);
     viewEmail.address = self.address;
     viewEmail.message = _message;
     viewEmail.folder = _folder;
-    viewEmail._session = _session;
+    viewEmail.imapSession = _session;
     [self presentViewController:viewEmail animated:YES completion:NULL];
 }
 
@@ -315,7 +315,7 @@ typedef void (^DownloadCallback)(NSError * error);
     PreviewEmailViewController *viewEmail = [[PreviewEmailViewController alloc]init];
     viewEmail.message = _message;
     viewEmail.folder = _folder;
-    viewEmail._session = _session;
+    viewEmail.imapSession = _session;
     [self presentViewController:viewEmail animated:YES completion:NULL];
 }
 

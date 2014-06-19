@@ -10,7 +10,7 @@
 #import "MainVCDelegate.h"
 
 @interface MainView : UIView<UICollectionViewDelegate,UICollectionViewDataSource,UIGestureRecognizerDelegate>{
-  NSArray *filterArray;
+    NSArray *filterArray;
 }
 
 @property (strong) UICollectionView *collectionView;

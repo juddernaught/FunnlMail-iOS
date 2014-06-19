@@ -171,6 +171,12 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
         [smtpSession setAuthType:MCOAuthTypeXOAuth2];
         [smtpSession setOAuth2Token:accessToken];
         [smtpSession setUsername:email];
+        smtpSession.hostname = @"smtp.gmail.com";
+        smtpSession.port = 465;
+        smtpSession.authType = MCOAuthTypeXOAuth2;
+        smtpSession.connectionType = MCOConnectionTypeTLS;
+        [EmailService instance].smtpSession = smtpSession;
+
         
         // Authentication succeeded
         [self loadHomeScreen];
@@ -261,6 +267,11 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
     [smtpSession setAuthType:MCOAuthTypeXOAuth2];
     [smtpSession setOAuth2Token:self.emailServerModel.accessToken];
     [smtpSession setUsername:self.emailServerModel.emailAddress];
+    smtpSession.hostname = @"smtp.gmail.com";
+    smtpSession.port = 465;
+    smtpSession.authType = MCOAuthTypeXOAuth2;
+    smtpSession.connectionType = MCOConnectionTypeTLS;
+    [EmailService instance].smtpSession = smtpSession;
     
     [self loadHomeScreen];
 

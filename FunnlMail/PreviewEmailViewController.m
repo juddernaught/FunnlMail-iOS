@@ -10,6 +10,7 @@
 #include <MailCore/MailCore.h>
 #import <MessageUI/MessageUI.h>
 #import <QuartzCore/QuartzCore.h>
+#import "EmailService.h"
 
 @interface PreviewEmailViewController ()
 
@@ -36,6 +37,8 @@ UITextField *subject;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.imapSession = [EmailService instance].imapSession;
+
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor whiteColor];
     
@@ -90,7 +93,7 @@ UITextField *subject;
     [email setBackgroundColor:[UIColor blackColor]];
     [self.view addSubview:email];
     
-    MCOIMAPFetchContentOperation *operation = [self._session fetchMessageByUIDOperationWithFolder:@"INBOX" uid:self.message.uid];
+    MCOIMAPFetchContentOperation *operation = [self.imapSession fetchMessageByUIDOperationWithFolder:@"INBOX" uid:self.message.uid];
     
     [operation start:^(NSError *error, NSData *data) {
         MCOMessageParser *messageParser = [[MCOMessageParser alloc] initWithData:data];
@@ -120,7 +123,7 @@ UITextField *subject;
     smtpSession.connectionType = MCOConnectionTypeTLS;
     
     MCOMessageBuilder * builder = [[MCOMessageBuilder alloc] init];
-    [[builder header] setFrom:[MCOAddress addressWithDisplayName:nil mailbox:self._session.username]];
+    [[builder header] setFrom:[MCOAddress addressWithDisplayName:nil mailbox:self.imapSession.username]];
     NSMutableArray *toArray = [[NSMutableArray alloc] init];
     MCOAddress *newAddress = [MCOAddress addressWithMailbox:to.text];
     [toArray addObject:newAddress];
@@ -140,9 +143,9 @@ UITextField *subject;
     MCOSMTPSendOperation *sendOperation = [smtpSession sendOperationWithData:rfc822Data];
     [sendOperation start:^(NSError *error) {
         if(error) {
-            NSLog(@"%@ Error sending email:%@", self._session.username, error);
+            NSLog(@"%@ Error sending email:%@", self.imapSession.username, error);
         } else {
-            NSLog(@"%@ Successfully sent email!", self._session.username);
+            NSLog(@"%@ Successfully sent email!", self.imapSession.username);
         }
     }];
     [self dismissViewControllerAnimated:YES completion:NULL];

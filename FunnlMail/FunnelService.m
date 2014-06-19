@@ -82,6 +82,37 @@ static FunnelService *instance;
   return success;
 }
 
+-(NSArray *) getFunnelsExceptAllFunnel{
+    __block NSMutableArray *array = [[NSMutableArray alloc] init];
+    __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+    paramDict[@"funnelName"] = @"All";
+    
+    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *resultSet = [db executeQuery:@"SELECT funnelId,funnelName,emailAddresses,phrases FROM funnels WHERE funnelName !=:funnelName" withParameterDictionary:paramDict];
+        
+        FunnelModel *model;
+        int counter = 1;
+        while ([resultSet next]) {
+            model = [[FunnelModel alloc]init];
+            model.funnelId = [resultSet stringForColumn:@"funnelId"];
+            model.funnelName = [resultSet stringForColumn:@"funnelName"];
+            model.filterTitle = [resultSet stringForColumn:@"funnelName"];
+            model.emailAddresses = [resultSet stringForColumn:@"emailAddresses"];
+            model.sendersArray = (NSMutableArray *)[[resultSet stringForColumn:@"emailAddresses"] componentsSeparatedByString:@","];
+            model.phrases = [resultSet stringForColumn:@"phrases"];
+            model.subjectsArray = (NSMutableArray *)[[resultSet stringForColumn:@"phrases"] componentsSeparatedByString:@","];
+            NSArray *tempArray = GRADIENT_ARRAY;
+            model.barColor = [UIColor colorWithHexString:[tempArray objectAtIndex:counter%5]];
+            model.dateOfLastMessage = [NSDate date];
+            [array addObject:model];
+            model = nil;
+            counter ++;
+        }
+    }];
+    
+    return array;
+}
+
 -(NSArray *) allFunnels{
   __block NSMutableArray *array = [[NSMutableArray alloc] init];
     
