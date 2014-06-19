@@ -20,6 +20,7 @@
     UISearchDisplayController *searchDisplayController;
     NSMutableArray *searchMessages;
     BOOL isSearching;
+    NSArray *funnlArray;
     
 }
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;

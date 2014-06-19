@@ -18,7 +18,7 @@
 #define ADD_FUNNL @"#@New@#"
 #define ALL_FUNNL @"#@All@#"
 
-#define kNUMBER_OF_MESSAGES_TO_DOWNLOAD_IN_BACKGROUND 100
+#define kNUMBER_OF_MESSAGES_TO_DOWNLOAD_IN_BACKGROUND 20
 #define NUMBER_OF_MESSAGES_TO_LOAD		20
 #define INBOX @"INBOX"
 #define SENT @"[Gmail]/Sent Mail"

@@ -16,6 +16,7 @@
 -(BOOL) insertFunnel:(FunnelModel *)funnelModel;
 -(BOOL) updateFunnel:(FunnelModel *)funnelModel;
 -(NSArray *) allFunnels;
+-(NSArray *) getFunnelsExceptAllFunnel;
 -(FunnelModel *) emailServersWithFunnelName:(NSString *)funnelName;
 -(BOOL) deleteFunnel:(NSString *)funnelId;
 

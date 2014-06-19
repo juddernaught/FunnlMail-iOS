@@ -37,7 +37,6 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
 {
     self = [super initWithFrame:frame];
     if (self) {
-
     }
     return self;
 }
@@ -88,12 +87,12 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
   [self.collectionView registerClass:[MainFilterCell class] forCellWithReuseIdentifier:MAIN_FILTER_CELL];
   [self.collectionView registerClass:[MainFilterCell class] forCellWithReuseIdentifier:ADD_MAIN_FILTER_CELL];
   
-  [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-    make.top.equalTo(self.mas_top).with.offset(44);
-    make.left.equalTo(self.mas_left).with.offset(80);
-    make.right.equalTo(self.mas_right).with.offset(0);
-    make.bottom.equalTo(self.mas_bottom).with.offset(-250);
-  }];
+    [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.mas_top).with.offset(44);
+        make.left.equalTo(self.mas_left).with.offset(80);
+        make.right.equalTo(self.mas_right).with.offset(0);
+        make.bottom.equalTo(self.mas_bottom).with.offset(-250);
+    }];
   
   
   UITapGestureRecognizer *singleFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
@@ -147,13 +146,10 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
     cell.filterTitle = fm.filterTitle;
     cell.newMessageCount = fm.newMessageCount;
     cell.dateOfLastMessage = fm.dateOfLastMessage;
-  
     cell.settingsButton.tag = indexPath.row;
     [cell.settingsButton addTarget:self action:@selector(settingsButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-
     cell.notificationButton.tag = indexPath.row;
     //[cell.notificationButton addTarget:self action:@selector(notificationButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-
   }
   cell.contentView.backgroundColor = [UIColor whiteColor];
   return cell;
