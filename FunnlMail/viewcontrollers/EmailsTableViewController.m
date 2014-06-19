@@ -58,6 +58,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+                                           
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -95,9 +96,8 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     
     // This is the green or purple All bar
     
-/*    AppDelegate *tempAppDelegate = APPDELEGATE;
+    AppDelegate *tempAppDelegate = APPDELEGATE;
     
->>>>>>> befb26a4459794a789ff1240527bd41eba700a00
     filterLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 44+20, 320, 40)];
     activityIndicator = tempAppDelegate.appActivityIndicator;
     [activityIndicator setBackgroundColor:[UIColor clearColor]];
@@ -107,8 +107,8 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#2EB82E"]);
     filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : @"Alllllllllllllllllll");
     filterLabel.textAlignment = NSTextAlignmentCenter;
-    [self.view addSubview:filterLabel];
-    */
+    //[self.view addSubview:filterLabel];
+    self.navigationItem.title = filterLabel.text;
      
     
     

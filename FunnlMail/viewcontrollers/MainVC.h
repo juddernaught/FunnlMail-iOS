@@ -18,6 +18,9 @@
 //  MainView *mainView;
   EmailsTableViewController *emailsTableViewController;
   FunnelModel *currentFilterModel;
+  UILabel *filterLabel;
 }
 @property (nonatomic, retain) MainView *mainView;
+@property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
+@property (strong,nonatomic) FunnelModel *filterModel;
 @end

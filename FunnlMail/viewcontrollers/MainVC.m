@@ -15,6 +15,9 @@
 #import "FunnelModel.h"
 #import "EmailService.h"
 #import "AppDelegate.h"
+
+#import "UIColor+HexString.h"
+
 #import <MessageUI/MessageUI.h>
 
 static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
@@ -58,6 +61,29 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
         make.right.equalTo(self.view.mas_right).with.offset(0);
         make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
     }];
+    
+    // Filter Title
+    self.navigationItem.title = currentFilterModel.funnelName;
+    
+    // This is the All bar
+    
+    AppDelegate *tempAppDelegate = APPDELEGATE;
+    
+    //>>>>>>> befb26a4459794a789ff1240527bd41eba700a00
+    filterLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 44+20, 320, 40)];
+    _activityIndicator = tempAppDelegate.appActivityIndicator;
+    [_activityIndicator setBackgroundColor:[UIColor clearColor]];
+    [_activityIndicator startAnimating];
+    [filterLabel addSubview:_activityIndicator];
+    filterLabel.textColor = [UIColor whiteColor];
+    filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#2EB82E"]);
+    filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle: @"All");
+    filterLabel.textAlignment = NSTextAlignmentCenter;
+    //[self.view addSubview:filterLabel];
+    self.navigationItem.title = filterLabel.text;
+    //*/
+
+
   
     UIButton *menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [menuButton addTarget:self action:@selector(menuButtonSelected) forControlEvents:UIControlEventTouchUpInside];
