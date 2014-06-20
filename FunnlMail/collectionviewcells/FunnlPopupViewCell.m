@@ -24,6 +24,10 @@
         coloredBarView.backgroundColor = self.barColor;
         [self addSubview:coloredBarView];
         
+        mailImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Mail.png"]];
+        mailImageView.frame = CGRectMake(0, 0, 29, 23);
+        [self addSubview:mailImageView];
+        
         [coloredBarView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.mas_top).with.offset(0);
             make.left.equalTo(self.mas_left).with.offset(0);
@@ -61,6 +65,7 @@
 -(void) setBarColor:(UIColor *)barColor{
     _barColor = barColor;
     coloredBarView.backgroundColor = barColor;
+    
 }
 
 -(void) setFilterTitle:(NSString *)filterTitle{
@@ -68,7 +73,15 @@
     filterTitleLabel.text = filterTitle;
     if([filterTitleLabel.text isEqualToString:ADD_FUNNL]){
         filterTitleLabel.text = @"";
+        mailImageView.contentMode = UIViewContentModeCenter;
+        mailImageView.image = [UIImage imageNamed:@"add.png"];
+        [mailImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(filterTitleLabel.mas_bottom).with.offset(0);
+            make.left.equalTo(self.mas_centerX).with.offset(-(60/2));
+        }];
+        mailImageView.hidden = NO;
     }else{
+        mailImageView.hidden = YES;
     }
 }
 

@@ -324,7 +324,8 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                     cell.secondTrigger = 0.5;
                     [cell setSwipeGestureWithView:halfFunnlView color:halfFunnlColor mode:MCSwipeTableViewCellModeSwitch state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
                         NSLog(@"Did swipe Half cell,  ");
-                        FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:NO withMessageId:uidKey];
+                        FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:NO withMessageId:uidKey withMessage:nil];
+                        funnlPopUpView.mainVCdelegate = self.mainVCdelegate;
                         [self.view addSubview:funnlPopUpView];
                     }];
                 }
@@ -332,25 +333,13 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 [cell setSwipeGestureWithView:fullFunnlView color:fullFunnlColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState4 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
                     NSLog(@"Did swipe full cell, ");
                     
-                    [cell swipeToOriginWithCompletion:nil];                    
+                    [cell swipeToOriginWithCompletion:nil];
                     MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
-                    MCOAddress *emailAddress = message.header.from;
-                    NSMutableArray *mailArray = [[NSMutableArray alloc] init];
-                    [mailArray addObject:emailAddress];
-                    [mailArray addObjectsFromArray:message.header.cc];
+                    FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:YES withMessageId:uidKey withMessage:message];
+                    funnlPopUpView.mainVCdelegate = self.mainVCdelegate;
+
+                    [self.view addSubview:funnlPopUpView];
                     
-                    NSMutableDictionary *sendersDictionary = [[NSMutableDictionary alloc] init];
-                    int count = 0;
-                    for (MCOAddress *address in mailArray) {
-                        NSString *email = [address.mailbox lowercaseString];
-                        [sendersDictionary setObject:email forKey:[NSIndexPath indexPathForRow:count inSection:1]];
-                        count ++;
-                    }
-                    
-                    CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:nil filterModel:nil];
-                    creatFunnlViewController.mainVCdelegate = self.mainVCdelegate;
-                    [self.mainVCdelegate pushViewController:creatFunnlViewController];
-                    creatFunnlViewController = nil;
                 }];
                 
                 return cell;

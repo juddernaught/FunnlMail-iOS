@@ -11,6 +11,8 @@
 @interface FunnlPopupViewCell : UICollectionViewCell{
     UIView *coloredBarView;
     UILabel *filterTitleLabel;
+    UIImageView *mailImageView;
+
 }
 
 @property (strong,nonatomic) UIColor *barColor;
