@@ -50,23 +50,51 @@
     _messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.view addSubview:_messageView];
     
-    UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 66, 28)];
-    centeredButtons.backgroundColor = [UIColor orangeColor];
-    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:centeredButtons];
-    self.navigationItem.rightBarButtonItem = rightItem;
+//    UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 66, 28)];
+//    centeredButtons.backgroundColor = [UIColor orangeColor];
+//    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:centeredButtons];
+//    self.navigationItem.rightBarButtonItem = rightItem;
     
-    UIButton *replyButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIButton *forwardButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIToolbar *toolbar = [UIToolbar new];
     
-    [replyButton addTarget:self action:@selector(replyButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    replyButton.frame = CGRectMake(0, 0, 33, 28);
-    [replyButton setBackgroundImage:[UIImage imageNamed:@"Mail.png"] forState:UIControlStateNormal];
-    [centeredButtons addSubview:replyButton];
-
-    [forwardButton addTarget:self action:@selector(forwardButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    forwardButton.frame = CGRectMake(33, 0, 33, 28);
-    [forwardButton setBackgroundImage:[UIImage imageNamed:@"archive.png"] forState:UIControlStateNormal];
-    [centeredButtons addSubview:forwardButton];
+    toolbar.barStyle = UIBarStyleBlackTranslucent;
+    
+    // create a bordered style button with custom title
+    
+    UIBarButtonItem *forward = [[UIBarButtonItem alloc] initWithTitle:@"Forward" style:UIBarButtonItemStyleBordered target:self action:@selector(forwardButtonSelected)];
+    
+    UIBarButtonItem *reply = [[UIBarButtonItem alloc] initWithTitle:@"Reply" style:UIBarButtonItemStyleBordered target:self action:@selector(replyButtonSelected)];
+    
+    NSArray *items = [NSArray arrayWithObjects:
+                      
+                      forward,
+                      
+                      reply,
+                      
+                      nil];
+    
+    toolbar.items = items;
+    
+    // size up the toolbar and set its frame
+    
+    // please not that it will work only for views without Navigation toolbars.
+    
+    [toolbar setFrame:CGRectMake(0, self.view.bounds.size.height-28, self.view.bounds.size.width, 28)];
+    
+    [self.view addSubview:toolbar];
+//    
+//    UIButton *replyButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    UIButton *forwardButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    
+//    [replyButton addTarget:self action:@selector(replyButtonSelected) forControlEvents:UIControlEventTouchUpInside];
+//    replyButton.frame = CGRectMake(0, 0, 33, 28);
+//    [replyButton setBackgroundImage:[UIImage imageNamed:@"Mail.png"] forState:UIControlStateNormal];
+//    [centeredButtons addSubview:replyButton];
+//
+//    [forwardButton addTarget:self action:@selector(forwardButtonSelected) forControlEvents:UIControlEventTouchUpInside];
+//    forwardButton.frame = CGRectMake(33, 0, 33, 28);
+//    [forwardButton setBackgroundImage:[UIImage imageNamed:@"archive.png"] forState:UIControlStateNormal];
+//    [centeredButtons addSubview:forwardButton];
     
     if (![[NSUserDefaults standardUserDefaults] boolForKey:@"FetchFullMessageEnabled"]) {
         [_messageView setDelegate:self];
