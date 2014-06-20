@@ -8,16 +8,18 @@
 
 #import <UIKit/UIKit.h>
 #import "MainVCDelegate.h"
+#import <MailCore/MailCore.h>
 
 @interface FunnlPopUpView : UIView<UICollectionViewDelegate,UICollectionViewDataSource,UIGestureRecognizerDelegate>{
     NSArray *filterArray;
     BOOL isNewCreatePopup;
     NSString *messageID;
+    MCOIMAPMessage *message;
 }
 
 @property (strong) UICollectionView *collectionView;
 @property (weak) id<MainVCDelegate> mainVCdelegate;
 -(void)reloadView;
 - (void)setupViews;
-- (id)initWithFrame:(CGRect)frame withNewPopup:(BOOL)isNew withMessageId:(NSString*)mID;
+- (id)initWithFrame:(CGRect)frame withNewPopup:(BOOL)isNew withMessageId:(NSString*)mID withMessage:(MCOIMAPMessage*)m;
 @end

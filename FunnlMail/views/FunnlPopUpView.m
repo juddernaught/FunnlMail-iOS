@@ -34,12 +34,14 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
     return self;
 }
 
-- (id)initWithFrame:(CGRect)frame withNewPopup:(BOOL)isNew withMessageId:(NSString*)mID
+- (id)initWithFrame:(CGRect)frame withNewPopup:(BOOL)isNew withMessageId:(NSString*)mID withMessage:(MCOIMAPMessage*)m
 {
     self = [super initWithFrame:frame];
     if (self) {
         isNewCreatePopup = isNew;
         messageID = mID;
+        if(m != nil)
+            message = m;
         [self setup];
         [self setupViews];
     }
@@ -73,7 +75,6 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
     self.collectionView.alwaysBounceVertical = YES;
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
-    
     [self addSubview:self.collectionView];
     
     [self.collectionView registerClass:[FunnlPopupViewCell class] forCellWithReuseIdentifier:MAIN_FILTER_CELL];
@@ -83,9 +84,8 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
         make.top.equalTo(self.mas_top).with.offset(120);
         make.left.equalTo(self.mas_left).with.offset(40);
         make.right.equalTo(self.mas_right).with.offset(-40);
-        make.bottom.equalTo(self.mas_bottom).with.offset(-160);
+        make.bottom.equalTo(self.mas_bottom).with.offset(-100);
     }];
-    
     
     UITapGestureRecognizer *singleFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
     singleFingerTap.delegate = self;
@@ -149,7 +149,21 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
 }
 
 -(void)createAddFunnlView{
-    CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:nil subjects:nil filterModel:nil];
+    
+    MCOAddress *emailAddress = message.header.from;
+    NSMutableArray *mailArray = [[NSMutableArray alloc] init];
+    [mailArray addObject:emailAddress];
+    [mailArray addObjectsFromArray:message.header.cc];
+    
+    NSMutableDictionary *sendersDictionary = [[NSMutableDictionary alloc] init];
+    int count = 0;
+    for (MCOAddress *address in mailArray) {
+        NSString *email = [address.mailbox lowercaseString];
+        [sendersDictionary setObject:email forKey:[NSIndexPath indexPathForRow:count inSection:1]];
+        count ++;
+    }
+    
+    CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:nil filterModel:nil];
     creatFunnlViewController.mainVCdelegate = self.mainVCdelegate;
     [self.mainVCdelegate pushViewController:creatFunnlViewController];
     creatFunnlViewController = nil;
