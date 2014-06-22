@@ -164,6 +164,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     mainView.hidden = YES;
     PreviewEmailViewController *mc = [[PreviewEmailViewController alloc] init];
     // Present mail view controller on screen
+    mc.newMessage = 1;
     [self presentViewController:mc animated:YES completion:NULL];
 }
 

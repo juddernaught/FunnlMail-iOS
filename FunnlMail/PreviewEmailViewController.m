@@ -12,6 +12,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "EmailService.h"
 
+
 @interface PreviewEmailViewController ()
 
 @end
@@ -62,36 +63,69 @@ UITextField *subject;
     [centeredButtons addSubview:sendButton];
     [self.view addSubview:centeredButtons];
     
-    to = [[UITextField alloc] initWithFrame:CGRectMake(0, 60, 320, 20)];
-    cc = [[UITextField alloc] initWithFrame:CGRectMake(0, 80, 320, 20)];
-    bcc = [[UITextField alloc]initWithFrame:CGRectMake(0, 100, 320, 20)];
-    subject = [[UITextField alloc]initWithFrame:CGRectMake(0, 120, 320, 20)];
+    to = [[UITextField alloc] initWithFrame:CGRectMake(22, 60, 300, 20)];
+    cc = [[UITextField alloc] initWithFrame:CGRectMake(22, 80, 300, 20)];
+    bcc = [[UITextField alloc]initWithFrame:CGRectMake(32, 100, 288, 20)];
+    subject = [[UITextField alloc]initWithFrame:CGRectMake(50, 120, 270, 20)];
+    UITextField *to2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 60, 22, 20)];
+    UITextField *cc2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 80, 22, 20)];
+    UITextField *bcc2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 100, 32, 20)];
+    UITextField *subject2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 120, 50, 20)];
     to.text = [self.address nonEncodedRFC822String];
+    
+    to2.text = @" to:";
+    cc2.text = @" cc:";
+    bcc2.text = @" bcc:";
+    subject2.text = @" subject:";
+    
+    [to2 setFont:[UIFont systemFontOfSize:12]];
+    [cc2 setFont:[UIFont systemFontOfSize:12]];
+    [bcc2 setFont:[UIFont systemFontOfSize:12]];
+    [subject2 setFont:[UIFont systemFontOfSize:12]];
 
     to.layer.masksToBounds=YES;
     to.layer.borderColor=[[UIColor blackColor]CGColor];
-    to.layer.borderWidth= 1.0f;
+    to.layer.borderWidth= 0.5f;
     
     cc.layer.masksToBounds=YES;
     cc.layer.borderColor=[[UIColor blackColor]CGColor];
-    cc.layer.borderWidth= 1.0f;
+    cc.layer.borderWidth= 0.5f;
     
     bcc.layer.masksToBounds=YES;
     bcc.layer.borderColor=[[UIColor blackColor]CGColor];
-    bcc.layer.borderWidth= 1.0f;
+    bcc.layer.borderWidth= 0.5f;
     
     subject.layer.masksToBounds=YES;
     subject.layer.borderColor=[[UIColor blackColor]CGColor];
-    subject.layer.borderWidth= 1.0f;
+    subject.layer.borderWidth= 0.5f;
     
+    subject2.layer.masksToBounds=YES;
+    subject2.layer.borderColor=[[UIColor blackColor]CGColor];
+    subject2.layer.borderWidth= 0.5f;
+    
+    to.layer.masksToBounds=YES;
+    to2.layer.borderColor=[[UIColor blackColor]CGColor];
+    to2.layer.borderWidth= 0.5f;
+    
+    cc2.layer.masksToBounds=YES;
+    cc2.layer.borderColor=[[UIColor blackColor]CGColor];
+    cc2.layer.borderWidth= 0.5f;
+    
+    bcc2.layer.masksToBounds=YES;
+    bcc2.layer.borderColor=[[UIColor blackColor]CGColor];
+    bcc2.layer.borderWidth= 0.5f;
+
+    [self.view addSubview:to2];
+    [self.view addSubview:cc2];
+    [self.view addSubview:bcc2];
+    [self.view addSubview:subject2];
     [self.view addSubview:to];
     [self.view addSubview:cc];
     [self.view addSubview:bcc];
     [self.view addSubview:subject];
+
     UIWebView *email = [[UIWebView alloc]initWithFrame:CGRectMake(0, 140, 320, self.view.bounds.size.height-140)];
-    [email loadHTMLString:[self.message htmlRenderingWithFolder:self.folder delegate:nil] baseURL:nil];
-    [email setBackgroundColor:[UIColor blackColor]];
-    [self.view addSubview:email];
+
     
     MCOIMAPFetchContentOperation *operation = [self.imapSession fetchMessageByUIDOperationWithFolder:@"INBOX" uid:self.message.uid];
     
@@ -99,8 +133,14 @@ UITextField *subject;
         MCOMessageParser *messageParser = [[MCOMessageParser alloc] initWithData:data];
         msgHTMLBody = [messageParser htmlBodyRendering];
         [email loadHTMLString:msgHTMLBody baseURL:nil];
-        [self.view addSubview:email];
+        
     }];
+    if (!self.newMessage) {
+        NSLog(@"message is empty");
+        [email loadHTMLString:[self.message htmlRenderingWithFolder:self.folder delegate:nil] baseURL:nil];
+        [email setBackgroundColor:[UIColor blackColor]];
+        [self.view addSubview:email];
+    }
     
 }
 
@@ -111,9 +151,15 @@ UITextField *subject;
 }
 
 -(void)sendButtonSelected{
-    NSLog(@"Username: %@",self.imapSession.username);
-    NSLog(@"Password: %@",self.imapSession.password);
-    MCOSMTPSession *smtpSession = [EmailService instance].smtpSession;
+    MCOSMTPSession *smtpSession = [[MCOSMTPSession alloc] init];
+    smtpSession.hostname = @"smtp.gmail.com";
+    smtpSession.port = 465;
+    smtpSession.username = @"herurpranav@gmail.com";
+    smtpSession.password = @"bye2bye2";
+    smtpSession.authType = (MCOAuthTypeSASLPlain | MCOAuthTypeSASLLogin);
+    smtpSession.connectionType = MCOConnectionTypeTLS;
+    //[EmailService instance].smtpSession.OAuth2Token
+    
     
     MCOMessageBuilder * builder = [[MCOMessageBuilder alloc] init];
     [[builder header] setFrom:[MCOAddress addressWithDisplayName:nil mailbox:self.imapSession.username]];
