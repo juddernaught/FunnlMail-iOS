@@ -335,7 +335,6 @@ static NSString *currentFolder;
 {
     NSArray *funnels = [[FunnelService instance] allFunnels];
     for (FunnelModel *tempFunnelModel in funnels) {
-//        [[MessageFilterXRefService instance] deleteXRefWithMessageID:@"" funnelId:tempFunnelModel.funnelId];
         for (int count = 0; count < messages.count; count++) {
             MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[messages objectAtIndex:count] messageJSON]];
             if ([self checkForFunnel:tempFunnelModel forMessage:message]) {

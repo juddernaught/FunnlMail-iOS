@@ -17,6 +17,9 @@
 #import "EmailService.h"
 #import "UIColor+HexString.h"
 #import "CreateFunnlViewController.h"
+#import "ConfirmFunnelPopUp.h"
+#import "EmailsTableViewController.h"
+#import "FunnelPopUpForExtraRules.h"
 
 static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
@@ -34,7 +37,7 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
     return self;
 }
 
-- (id)initWithFrame:(CGRect)frame withNewPopup:(BOOL)isNew withMessageId:(NSString*)mID withMessage:(MCOIMAPMessage*)m
+- (id)initWithFrame:(CGRect)frame withNewPopup:(BOOL)isNew withMessageId:(NSString*)mID withMessage:(MCOIMAPMessage*)m  subViewOnViewController:(id)viewCOntroller
 {
     self = [super initWithFrame:frame];
     if (self) {
@@ -42,6 +45,7 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
         messageID = mID;
         if(m != nil)
             message = m;
+        viewController = viewCOntroller;
         [self setup];
         [self setupViews];
     }
@@ -62,8 +66,28 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
 	// Do any additional setup after loading the view.
     //changes made by iauro001 on 11 June 2014
    
+//    int width = 280;
+    NSString *messageStr = nil;
+    if (isNewCreatePopup) {
+        messageStr = @"Create new Funnel Rule?\nSelect one";
+    }
+    else
+    {
+        messageStr = @"Move to Funnel\nSelect one";
+    }
+    UIView *mainView = [[UIView alloc] initWithFrame:CGRectMake(40, 100, 320 - 80, 80)];
+    [mainView setBackgroundColor:[UIColor whiteColor]];
+    UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 320 - 100, 50)];
+    messageLabel.numberOfLines = 2;
+    messageLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    [messageLabel setBackgroundColor:[UIColor whiteColor]];
+    messageLabel.text = messageStr;
+    [mainView addSubview:messageLabel];
+    [mainView setUserInteractionEnabled:YES];
+    [self addSubview:mainView];
+    
     filterArray = [[FunnelService instance] getFunnelsExceptAllFunnel];
-    self.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
+    self.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.5];
     
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     layout.scrollDirection = UICollectionViewScrollDirectionVertical;
@@ -76,15 +100,16 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     [self addSubview:self.collectionView];
+//    [mainView addSubview:self.collectionView];
     
     [self.collectionView registerClass:[FunnlPopupViewCell class] forCellWithReuseIdentifier:MAIN_FILTER_CELL];
     [self.collectionView registerClass:[FunnlPopupViewCell class] forCellWithReuseIdentifier:ADD_MAIN_FILTER_CELL];
     
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.mas_top).with.offset(120);
+        make.top.equalTo(self.mas_top).with.offset(160);
         make.left.equalTo(self.mas_left).with.offset(40);
         make.right.equalTo(self.mas_right).with.offset(-40);
-        make.bottom.equalTo(self.mas_bottom).with.offset(-100);
+        make.bottom.equalTo(self.mas_bottom).with.offset(-50);
     }];
     
     UITapGestureRecognizer *singleFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
@@ -142,9 +167,30 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
     if(indexPath.row == filterArray.count){
         [self createAddFunnlView];
     }else{
-        FunnelModel *funnel = [filterArray objectAtIndex:indexPath.row];
-        //[self.mainVCdelegate filterSelected:(FunnelModel *)filterArray[indexPath.row]];
-        [[MessageFilterXRefService instance] insertMessageXRefMessageID:messageID funnelId:funnel.funnelId];
+        if (isNewCreatePopup) {
+            NSLog(@"Cell swiped fully!!");
+            FunnelModel *funnel = [filterArray objectAtIndex:indexPath.row];
+            NSMutableArray *tempArray = [[NSMutableArray alloc] initWithArray:funnel.sendersArray];
+            BOOL flag = FALSE;
+            for (NSString *email in tempArray) {
+                if ([email isEqualToString:message.header.sender.mailbox]) {
+                    flag = TRUE;
+                }
+            }
+            if (!flag) {
+                [tempArray addObject:message.header.sender.mailbox];
+                funnel.sendersArray = nil;
+                funnel.sendersArray = tempArray;
+            }
+            tempArray = nil;
+            FunnelPopUpForExtraRules *funnelPopUp = [[FunnelPopUpForExtraRules alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT) withMessage:message withFunnel:funnel];
+            [[(EmailsTableViewController*)viewController view] addSubview:funnelPopUp];
+        }
+        else {
+            FunnelModel *funnel = [filterArray objectAtIndex:indexPath.row];
+            ConfirmFunnelPopUp *confirmMessagePopUp = [[ConfirmFunnelPopUp alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height) withNewPopup:YES withMessageId:messageID withMessage:message onViewController:viewController withFunnelModel:funnel];
+            [[(EmailsTableViewController*)viewController view] addSubview:confirmMessagePopUp];
+        }
     }
 }
 

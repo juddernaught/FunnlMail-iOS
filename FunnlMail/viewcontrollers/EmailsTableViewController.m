@@ -76,7 +76,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     // Dispose of any resources that can be recreated.
 }
 
-
 #pragma mark - Table view data source
 
 - (void)setupView
@@ -109,8 +108,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#2EB82E"]);
     filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : @"Alllllllllllllllllll");
     filterLabel.textAlignment = NSTextAlignmentCenter;
-    //[self.view addSubview:filterLabel];
-    self.navigationItem.title = filterLabel.text;
+    [self.view addSubview:filterLabel];
     
     
     
@@ -324,7 +322,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                     cell.secondTrigger = 0.5;
                     [cell setSwipeGestureWithView:halfFunnlView color:halfFunnlColor mode:MCSwipeTableViewCellModeSwitch state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
                         NSLog(@"Did swipe Half cell,  ");
-                        FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:NO withMessageId:uidKey withMessage:nil];
+                        FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:NO withMessageId:uidKey withMessage:nil subViewOnViewController:self];
                         funnlPopUpView.mainVCdelegate = self.mainVCdelegate;
                         [self.view addSubview:funnlPopUpView];
                     }];
@@ -335,7 +333,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                     
                     [cell swipeToOriginWithCompletion:nil];
                     MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
-                    FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:YES withMessageId:uidKey withMessage:message];
+                    FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:YES withMessageId:uidKey withMessage:message subViewOnViewController:self];
                     funnlPopUpView.mainVCdelegate = self.mainVCdelegate;
 
                     [self.view addSubview:funnlPopUpView];

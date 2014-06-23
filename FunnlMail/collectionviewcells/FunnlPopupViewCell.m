@@ -49,13 +49,18 @@
         self.barColor = [UIColor redColor];
         
         filterTitleLabel = [[UILabel alloc] init];
+        filterTitleLabel.numberOfLines = 0;
+        filterTitleLabel.lineBreakMode = NSLineBreakByWordWrapping;
         filterTitleLabel.textAlignment = NSTextAlignmentCenter;
         filterTitleLabel.text = @"Primary";
         //filterTitleLabel.backgroundColor = [UIColor orangeColor];
         [self addSubview:filterTitleLabel];
         
         [filterTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.center.equalTo(self);
+//            make.center.equalTo(self);
+            make.top.equalTo(self.mas_top).with.offset(20);
+            make.left.equalTo(self.mas_left).with.offset(0);
+            make.width.equalTo(self.mas_width).with.offset(0);
         }];
         
     }
@@ -76,8 +81,8 @@
         mailImageView.contentMode = UIViewContentModeCenter;
         mailImageView.image = [UIImage imageNamed:@"add.png"];
         [mailImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(filterTitleLabel.mas_bottom).with.offset(0);
-            make.left.equalTo(self.mas_centerX).with.offset(-(60/2));
+            make.top.equalTo(filterTitleLabel.mas_bottom).with.offset(10);
+            make.left.equalTo(self.mas_centerX).with.offset(-20);
         }];
         mailImageView.hidden = NO;
     }else{

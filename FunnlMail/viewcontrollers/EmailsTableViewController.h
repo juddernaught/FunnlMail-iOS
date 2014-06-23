@@ -35,5 +35,4 @@
 @property (nonatomic) BOOL isLoading;
 @property (nonatomic, strong) UIActivityIndicatorView *loadMoreActivityView;
 -(void) setFilterModel:(FunnelModel *)filterModel;
-
 @end

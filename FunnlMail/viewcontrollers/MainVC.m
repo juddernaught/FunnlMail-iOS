@@ -133,6 +133,8 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 }
 
+#pragma mark -
+#pragma mark Event-Handler
 
 -(void)menuButtonSelected{
     NSLog(@"Menu button selected");
@@ -168,14 +170,20 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [self presentViewController:mc animated:YES completion:NULL];
 }
 
-
-
+#pragma mark -
+#pragma mark Memory Management
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark -
+#pragma mark setFilterTitle
+- (void)setFilterTitle:(NSString*)title
+{
+    self.navigationItem.title = title;
+}
 
 // FIXME: move somewhere else?
 -(void) filterSelected:(FunnelModel *)filterModel{
@@ -186,8 +194,6 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     }
     mainView.hidden = YES;
     emailsTableViewController.filterModel = currentFilterModel;
-    //fetching from net
-//    [[EmailService instance] loadLastNMessages:[EmailService instance].messages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:emailsTableViewController withFolder:emailsTableViewController.emailFolder];
     //fetching from database
     if ([filterModel.funnelId isEqualToString:@"0"]) {
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
@@ -196,7 +202,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     {
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:filterModel.funnelId top:2000];
     }
-    NSLog(@"%d",[EmailService instance].filterMessages.count);
+    [self setFilterTitle:filterModel.funnelName];
     [emailsTableViewController.tableView reloadData];
     
 //    [emailsTableViewController.tableView setContentOffset:CGPointMake(0, -40)];

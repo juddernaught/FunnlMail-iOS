@@ -15,11 +15,12 @@
     BOOL isNewCreatePopup;
     NSString *messageID;
     MCOIMAPMessage *message;
+    id viewController;
 }
 
 @property (strong) UICollectionView *collectionView;
 @property (weak) id<MainVCDelegate> mainVCdelegate;
 -(void)reloadView;
 - (void)setupViews;
-- (id)initWithFrame:(CGRect)frame withNewPopup:(BOOL)isNew withMessageId:(NSString*)mID withMessage:(MCOIMAPMessage*)m;
+- (id)initWithFrame:(CGRect)frame withNewPopup:(BOOL)isNew withMessageId:(NSString*)mID withMessage:(MCOIMAPMessage*)m subViewOnViewController:(id)viewCOntroller;
 @end
