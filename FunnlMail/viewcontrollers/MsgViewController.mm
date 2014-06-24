@@ -51,54 +51,29 @@
     [self.view addSubview:_messageView];
     
     UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, self.view.bounds.size.height-28, self.view.bounds.size.width, 28)];
-    centeredButtons.backgroundColor = [UIColor grayColor];
+    centeredButtons.backgroundColor = [UIColor whiteColor];
     
-    
-//    UIToolbar *toolbar = [UIToolbar new];
-//    
-//    toolbar.barStyle = UIBarStyleBlackTranslucent;
-//    
-//    // create a bordered style button with custom title
-//    
-////    UIImage *temp = [UIImage imageNamed:@"forward.png"];
-////    [temp drawInRect:CGRectMake(0, 0, 28, 28)];
-////    UIBarButtonItem *forward = [[UIBarButtonItem alloc] initWithImage:temp style:UIBarButtonItemStylePlain target:self action:@selector(forwardButtonSelected)];
-////    temp =[UIImage imageNamed:@"reply.png"];
-////    [temp drawInRect:CGRectMake(0, 0, 28, 28)];
-////    UIBarButtonItem *reply = [[UIBarButtonItem alloc] initWithImage:temp style:UIBarButtonItemStylePlain target:self action:@selector(replyButtonSelected)];
-////    
-////    
-////    NSArray *items = [NSArray arrayWithObjects:
-////                      
-////                      forward,
-////                      
-////                      reply,
-////                      
-////                      nil];
-////    
-////    toolbar.items = items;
-//    
-//    // size up the toolbar and set its frame
-//    
-//    // please not that it will work only for views without Navigation toolbars.
-//    
-//    [toolbar setFrame:CGRectMake(0, self.view.bounds.size.height-28, self.view.bounds.size.width, 28)];
-//    
-//    [self.view addSubview:toolbar];
-
     UIButton *replyButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIButton *forwardButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [replyButton addTarget:self action:@selector(replyButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    replyButton.frame = CGRectMake(0, 0, 33, 28);
+    replyButton.frame = CGRectMake(128, 0, 33, 28);
     [replyButton setBackgroundImage:[UIImage imageNamed:@"reply.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:replyButton];
 
     [forwardButton addTarget:self action:@selector(forwardButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    forwardButton.frame = CGRectMake(33, 0, 33, 28);
+    forwardButton.frame = CGRectMake(164, 0, 33, 28);
     [forwardButton setBackgroundImage:[UIImage imageNamed:@"forward.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:forwardButton];
+    
+    UIView *sideBorder = [[UIView alloc]
+                          initWithFrame:CGRectMake(159,0,1,28)];
+    sideBorder.backgroundColor = [UIColor lightGrayColor];
+    [centeredButtons addSubview:sideBorder];
     [self.view addSubview:centeredButtons];
+    
+
+    
     
     if (![[NSUserDefaults standardUserDefaults] boolForKey:@"FetchFullMessageEnabled"]) {
         [_messageView setDelegate:self];
@@ -339,6 +314,7 @@ typedef void (^DownloadCallback)(NSError * error);
     viewEmail.message = _message;
     viewEmail.folder = _folder;
     viewEmail.imapSession = _session;
+    viewEmail.reply = @1;
     [self presentViewController:viewEmail animated:YES completion:NULL];
 }
 
@@ -348,6 +324,7 @@ typedef void (^DownloadCallback)(NSError * error);
     viewEmail.message = _message;
     viewEmail.folder = _folder;
     viewEmail.imapSession = _session;
+    viewEmail.forward = @1;
     [self presentViewController:viewEmail animated:YES completion:NULL];
 }
 

@@ -16,5 +16,7 @@
 @property (nonatomic, strong) MCOIMAPMessage * message;
 @property (nonatomic, strong) NSString * folder;
 @property (nonatomic, strong) MCOIMAPSession * imapSession;
-@property (nonatomic) int * newMessage;
+@property (nonatomic) NSNumber * compose;
+@property (nonatomic) NSNumber * reply;
+@property (nonatomic) NSNumber * forward;
 @end

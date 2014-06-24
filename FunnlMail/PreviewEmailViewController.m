@@ -83,37 +83,69 @@ UITextField *subject;
     [bcc2 setFont:[UIFont systemFontOfSize:12]];
     [subject2 setFont:[UIFont systemFontOfSize:12]];
 
-    to.layer.masksToBounds=YES;
-    to.layer.borderColor=[[UIColor blackColor]CGColor];
-    to.layer.borderWidth= 0.5f;
+    UIView *bottomBorder = [[UIView alloc]
+                            initWithFrame:CGRectMake(0,to.frame.size.height-1,to.frame.size.width,1)];
+    bottomBorder.backgroundColor = [UIColor blackColor];
     
-    cc.layer.masksToBounds=YES;
-    cc.layer.borderColor=[[UIColor blackColor]CGColor];
-    cc.layer.borderWidth= 0.5f;
+    UIView *sideBorder = [[UIView alloc]
+                            initWithFrame:CGRectMake(to2.frame.size.width-1,0,1,to2.frame.size.height)];
+    sideBorder.backgroundColor = [UIColor lightGrayColor];
     
-    bcc.layer.masksToBounds=YES;
-    bcc.layer.borderColor=[[UIColor blackColor]CGColor];
-    bcc.layer.borderWidth= 0.5f;
     
-    subject.layer.masksToBounds=YES;
-    subject.layer.borderColor=[[UIColor blackColor]CGColor];
-    subject.layer.borderWidth= 0.5f;
+    [to addSubview:bottomBorder];
     
-    subject2.layer.masksToBounds=YES;
-    subject2.layer.borderColor=[[UIColor blackColor]CGColor];
-    subject2.layer.borderWidth= 0.5f;
+    bottomBorder = [[UIView alloc]
+                            initWithFrame:CGRectMake(0,to.frame.size.height-1,to.frame.size.width,1)];
+    bottomBorder.backgroundColor = [UIColor blackColor];
+    [to2 addSubview:bottomBorder];
     
-    to.layer.masksToBounds=YES;
-    to2.layer.borderColor=[[UIColor blackColor]CGColor];
-    to2.layer.borderWidth= 0.5f;
+    bottomBorder = [[UIView alloc]
+                            initWithFrame:CGRectMake(0,to.frame.size.height-1,to.frame.size.width,1)];
+    bottomBorder.backgroundColor = [UIColor blackColor];
+    [cc addSubview:bottomBorder];
     
-    cc2.layer.masksToBounds=YES;
-    cc2.layer.borderColor=[[UIColor blackColor]CGColor];
-    cc2.layer.borderWidth= 0.5f;
+    bottomBorder = [[UIView alloc]
+                            initWithFrame:CGRectMake(0,to.frame.size.height-1,to.frame.size.width,1)];
+    bottomBorder.backgroundColor = [UIColor blackColor];
+    [cc2 addSubview:bottomBorder];
     
-    bcc2.layer.masksToBounds=YES;
-    bcc2.layer.borderColor=[[UIColor blackColor]CGColor];
-    bcc2.layer.borderWidth= 0.5f;
+    bottomBorder = [[UIView alloc]
+                            initWithFrame:CGRectMake(0,to.frame.size.height-1,to.frame.size.width,1)];
+    bottomBorder.backgroundColor = [UIColor blackColor];
+    [bcc addSubview:bottomBorder];
+    
+    bottomBorder = [[UIView alloc]
+                            initWithFrame:CGRectMake(0,to.frame.size.height-1,to.frame.size.width,1)];
+    bottomBorder.backgroundColor = [UIColor blackColor];
+    [bcc2 addSubview:bottomBorder];
+    
+    bottomBorder = [[UIView alloc]
+                            initWithFrame:CGRectMake(0,to.frame.size.height-1,to.frame.size.width,1)];
+    bottomBorder.backgroundColor = [UIColor blackColor];
+    [subject2 addSubview:bottomBorder];
+    
+    bottomBorder = [[UIView alloc]
+                            initWithFrame:CGRectMake(0,to.frame.size.height-1,to.frame.size.width,1)];
+    bottomBorder.backgroundColor = [UIColor blackColor];
+    [subject addSubview:bottomBorder];
+    
+    bottomBorder = [[UIView alloc]
+                            initWithFrame:CGRectMake(0,to.frame.size.height-1,to.frame.size.width,1)];
+    bottomBorder.backgroundColor = [UIColor blackColor];
+
+    
+    if (self.forward) {
+        NSLog(@"self.forward");
+        NSMutableString *temp = [[NSMutableString alloc] initWithString:@"FWD: "];
+        [temp appendString:self.message.header.subject];
+        subject.text = temp;
+    }
+    else if (self.reply){
+        NSLog(@"self.reply");
+        NSMutableString *temp = [[NSMutableString alloc] initWithString:@"Re: "];
+        [temp appendString:self.message.header.subject];
+        subject.text = temp;
+    }
 
     [self.view addSubview:to2];
     [self.view addSubview:cc2];
@@ -124,23 +156,25 @@ UITextField *subject;
     [self.view addSubview:bcc];
     [self.view addSubview:subject];
 
-    UIWebView *email = [[UIWebView alloc]initWithFrame:CGRectMake(0, 140, 320, self.view.bounds.size.height-140)];
+    //dont use webview for now
+//    UIWebView *email = [[UIWebView alloc]initWithFrame:CGRectMake(0, 140, 320, self.view.bounds.size.height-140)];
+//    email.userInteractionEnabled = true;
 
+    UITextView *body = [[UITextView alloc] initWithFrame:CGRectMake(0, 140, 320, self.view.bounds.size.height-140)];
     
-    MCOIMAPFetchContentOperation *operation = [self.imapSession fetchMessageByUIDOperationWithFolder:@"INBOX" uid:self.message.uid];
     
-    [operation start:^(NSError *error, NSData *data) {
-        MCOMessageParser *messageParser = [[MCOMessageParser alloc] initWithData:data];
-        msgHTMLBody = [messageParser htmlBodyRendering];
-        [email loadHTMLString:msgHTMLBody baseURL:nil];
+    if (!self.compose) {
+        MCOIMAPFetchContentOperation *operation = [self.imapSession fetchMessageByUIDOperationWithFolder:@"INBOX" uid:self.message.uid];
         
-    }];
-    if (!self.newMessage) {
+        [operation start:^(NSError *error, NSData *data) {
+            MCOMessageParser *messageParser = [[MCOMessageParser alloc] initWithData:data];
+            msgHTMLBody = [messageParser plainTextBodyRendering];
+            body.text = msgHTMLBody;
+            
+        }];
         NSLog(@"message is empty");
-        [email loadHTMLString:[self.message htmlRenderingWithFolder:self.folder delegate:nil] baseURL:nil];
-        [email setBackgroundColor:[UIColor blackColor]];
-        [self.view addSubview:email];
     }
+    [self.view addSubview:body];
     
 }
 
