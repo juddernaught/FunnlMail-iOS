@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		5A1FF53D1948263B0056750F /* FunnelModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1FF53C1948263B0056750F /* FunnelModel.m */; };
+		5A4EE0D01959679700644B8E /* backArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A4EE0CE1959679700644B8E /* backArrow.png */; };
+		5A4EE0D11959679700644B8E /* backArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A4EE0CF1959679700644B8E /* backArrow@2x.png */; };
 		5A59DC6E1957FF9D0094B00D /* ConfirmFunnelPopUp.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A59DC6D1957FF9D0094B00D /* ConfirmFunnelPopUp.m */; };
 		5A59DC7519582A260094B00D /* FunnelPopUpForExtraRules.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A59DC7419582A260094B00D /* FunnelPopUpForExtraRules.m */; };
 		5A59DC781958320B0094B00D /* ContactTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A59DC771958320B0094B00D /* ContactTableViewCell.m */; };
@@ -185,6 +187,8 @@
 /* Begin PBXFileReference section */
 		5A1FF53B1948263B0056750F /* FunnelModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FunnelModel.h; path = models/FunnelModel.h; sourceTree = "<group>"; };
 		5A1FF53C1948263B0056750F /* FunnelModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FunnelModel.m; path = models/FunnelModel.m; sourceTree = "<group>"; };
+		5A4EE0CE1959679700644B8E /* backArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = backArrow.png; sourceTree = "<group>"; };
+		5A4EE0CF1959679700644B8E /* backArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "backArrow@2x.png"; sourceTree = "<group>"; };
 		5A59DC6C1957FF9D0094B00D /* ConfirmFunnelPopUp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfirmFunnelPopUp.h; sourceTree = "<group>"; };
 		5A59DC6D1957FF9D0094B00D /* ConfirmFunnelPopUp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfirmFunnelPopUp.m; sourceTree = "<group>"; };
 		5A59DC7319582A260094B00D /* FunnelPopUpForExtraRules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FunnelPopUpForExtraRules.h; sourceTree = "<group>"; };
@@ -411,6 +415,8 @@
 		5AA690BB19505A5B00E4CB64 /* Image_Resources */ = {
 			isa = PBXGroup;
 			children = (
+				5A4EE0CE1959679700644B8E /* backArrow.png */,
+				5A4EE0CF1959679700644B8E /* backArrow@2x.png */,
 				5AA690BC19505A5B00E4CB64 /* arrow.png */,
 				5AA690BD19505A5B00E4CB64 /* arrow@2x.png */,
 			);
@@ -990,12 +996,14 @@
 				FA2C9BDE193EF92400866BEE /* Main.storyboard in Resources */,
 				66F2C47418E3293E00CD593E /* InfoPlist.strings in Resources */,
 				FA2C9BB2193DF57700866BEE /* cross.png in Resources */,
+				5A4EE0D11959679700644B8E /* backArrow@2x.png in Resources */,
 				FA5627D81935C92600238F40 /* settings.png in Resources */,
 				FA5627D91935C92600238F40 /* notification@2x.png in Resources */,
 				66AEEBBC19370EAB00B6DBE5 /* intro.png in Resources */,
 				6620BA9D18E38BE500769C48 /* Funnl.png in Resources */,
 				6620BA9C18E38BE500769C48 /* Compose.png in Resources */,
 				FA2C9BB7193DF5CE00866BEE /* archive@2x.png in Resources */,
+				5A4EE0D01959679700644B8E /* backArrow.png in Resources */,
 				6620BAAC18E399C700769C48 /* Email 2.png in Resources */,
 				63A8A59E1952AA2600DBD969 /* Menu1.png in Resources */,
 				FA5627DA1935C92600238F40 /* notification.png in Resources */,

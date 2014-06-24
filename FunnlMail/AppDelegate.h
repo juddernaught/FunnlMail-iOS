@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MenuViewController.h"
 #import "MMDrawerController.h"
+#import "FunnelModel.h"
 @class MenuViewController;
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
@@ -16,4 +17,6 @@
 @property (strong, nonatomic) MenuViewController *menuController;
 @property (strong, nonatomic) MMDrawerController * drawerController;
 @property (strong, nonatomic) UIActivityIndicatorView *appActivityIndicator;
+@property (strong, nonatomic) NSString *currentFunnelString;
+@property (strong, nonatomic) FunnelModel *currentFunnelDS;
 @end

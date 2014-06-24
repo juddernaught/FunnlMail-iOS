@@ -44,7 +44,19 @@ static NSString *mailCellIdentifier = @"MailCell";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    AppDelegate *tempAppDelegate = APPDELEGATE;
     // Do any additional setup after loading the view.
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
+    [titleLabel setFont:[UIFont systemFontOfSize:22]];
+    [titleLabel setTextColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR]];
+    if ([tempAppDelegate.currentFunnelString.lowercaseString isEqualToString:@"all"]) {
+        titleLabel.text = @"All mails";
+    }
+    else {
+        titleLabel.text = tempAppDelegate.currentFunnelString.capitalizedString;
+    }
+    [titleLabel setTextAlignment:NSTextAlignmentCenter];
+    self.navigationItem.titleView = titleLabel;
     dataSourceArray = [[MessageService instance] retrieveAllMessagesForThread:gmailThreadId];
     [self.view setBackgroundColor:[UIColor whiteColor]];
     emailThreadTable = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, [[UIScreen mainScreen] bounds].size.height)];
@@ -52,6 +64,8 @@ static NSString *mailCellIdentifier = @"MailCell";
     emailThreadTable.delegate = self;
     emailThreadTable.dataSource = self;
     [self.view addSubview:emailThreadTable];
+    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"backArrow.png"] style:UIBarButtonItemStylePlain target:self action:@selector(back)];
+    [self.navigationItem setLeftBarButtonItem:leftButton];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -141,12 +155,47 @@ static NSString *mailCellIdentifier = @"MailCell";
 //    [self.mainVCdelegate pushViewController:vc];
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 50;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, 50)];
+    UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, WIDTH - 10, 50)];
+    if (dataSourceArray.count > 0) {
+        MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[dataSourceArray[0] messageJSON]];
+        textLabel.text = message.header.subject;
+    }
+    UIView *funnelView = [[UIView alloc] initWithFrame:CGRectMake(320 - 10 - 20, 25-10, 20, 20)];
+    funnelView.clipsToBounds = YES;
+    funnelView.layer.cornerRadius = 10.0f;
+    [funnelView setBackgroundColor:[UIColor orangeColor]];
+    [headerView addSubview:funnelView];
+    funnelView = nil;
+    funnelView = [[UIView alloc] initWithFrame:CGRectMake(320 - 10 - 20 - 5 - 20, 25-10, 20, 20)];
+    funnelView.clipsToBounds = YES;
+    funnelView.layer.cornerRadius = 10.0f;
+    [funnelView setBackgroundColor:[UIColor greenColor]];
+    [headerView addSubview:funnelView];
+    funnelView = nil;
+    
+    [headerView addSubview:textLabel];
+    textLabel = nil;
+    [headerView setBackgroundColor:[UIColor colorWithHexString:@"#d8d8d8"]];
+    return headerView;
+}
+
 #pragma mark -
 #pragma mark Helper
 - (void)setReadMessage:(MessageModel*)messageRead
 {
     [messageRead setRead:YES];
     [[MessageService instance] updateMessage:messageRead];
+}
+
+- (void)back
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark -

@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #include <MailCore/MailCore.h>
 #import <MessageUI/MessageUI.h>
+#import "UIColor+HexString.h"
 
 @class MCOMessageView;
 @class MCOIMAPAsyncSession;

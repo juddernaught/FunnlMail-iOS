@@ -14,7 +14,7 @@
 #import "MCOMessageView.h"
 #import "PreviewEmailViewController.h"
 #import <MessageUI/MessageUI.h>
-
+#import "AppDelegate.h"
 
 
 @interface MsgViewController () <MCOMessageViewDelegate>
@@ -53,6 +53,19 @@
     UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, self.view.bounds.size.height-28, self.view.bounds.size.width, 28)];
     centeredButtons.backgroundColor = [UIColor grayColor];
     
+    AppDelegate *tempAppDelegate = APPDELEGATE;
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
+    [titleLabel setFont:[UIFont systemFontOfSize:22]];
+    [titleLabel setTextColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR]];
+//    titleLabel.text = tempAppDelegate.currentFunnelString.capitalizedString;
+    if ([tempAppDelegate.currentFunnelString.lowercaseString isEqualToString:@"all"]) {
+        titleLabel.text = @"All mails";
+    }
+    else {
+        titleLabel.text = tempAppDelegate.currentFunnelString.capitalizedString;
+    }
+    [titleLabel setTextAlignment:NSTextAlignmentCenter];
+    self.navigationItem.titleView = titleLabel;
     
 //    UIToolbar *toolbar = [UIToolbar new];
 //    
@@ -122,6 +135,15 @@
             [_messageView setMessage:msg];
         }];
     }
+    //customize back button.
+    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"backArrow.png"] style:UIBarButtonItemStylePlain target:self action:@selector(back)];
+    [self.navigationItem setLeftBarButtonItem:leftButton];
+}
+
+//newly added by iauro001 on 24th June 2014
+- (void)back
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void) setMessage:(MCOIMAPMessage *)message

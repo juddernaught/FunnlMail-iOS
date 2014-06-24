@@ -12,10 +12,13 @@
 #import "ServiceTests.h"
 
 @implementation AppDelegate
-@synthesize menuController,drawerController,appActivityIndicator;
+@synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    //initializing currentFunnelString to "All"
+    currentFunnelString = @"all";
+    currentFunnelDS = nil;
     appActivityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(320 - 20 - 10, 10, 20, 20)];
     //FunnlViewController *fvc = [[FunnlViewController alloc] init];
     //self.window.rootViewController = fvc;

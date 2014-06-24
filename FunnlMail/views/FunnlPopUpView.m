@@ -69,23 +69,31 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
 //    int width = 280;
     NSString *messageStr = nil;
     if (isNewCreatePopup) {
-        messageStr = @"Create new Funnel Rule?\nSelect one";
+        messageStr = @"Create new Funnel Rule?";
     }
     else
     {
-        messageStr = @"Move to Funnel\nSelect one";
+        messageStr = @"Move to Funnel";
     }
     UIView *mainView = [[UIView alloc] initWithFrame:CGRectMake(40, 100, 320 - 80, 80)];
     [mainView setBackgroundColor:[UIColor whiteColor]];
-    UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 320 - 100, 50)];
-    messageLabel.numberOfLines = 2;
+    UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 320 - 100, 25)];
+    messageLabel.numberOfLines = 1;
+    [messageLabel setFont:[UIFont systemFontOfSize:17]];
     messageLabel.lineBreakMode = NSLineBreakByWordWrapping;
     [messageLabel setBackgroundColor:[UIColor whiteColor]];
     messageLabel.text = messageStr;
     [mainView addSubview:messageLabel];
     [mainView setUserInteractionEnabled:YES];
-    [self addSubview:mainView];
     
+    UILabel *tempLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 30, 320-100, 25)];
+    [tempLabel setFont:[UIFont systemFontOfSize:15]];
+    [tempLabel setTextColor:[UIColor lightGrayColor]];
+    tempLabel.text = @"Select one";
+    [mainView addSubview:tempLabel];
+    tempLabel = nil;
+    
+    [self addSubview:mainView];
     filterArray = [[FunnelService instance] getFunnelsExceptAllFunnel];
     self.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.5];
     

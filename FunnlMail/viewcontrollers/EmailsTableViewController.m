@@ -48,6 +48,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    tempAppDelegate = APPDELEGATE;
     [[EmailService instance] startLogin: self];
     [self setupView];
     // MUSTFIX: code doesn't work without below line, but it doesn't seem like it really belongs
@@ -208,7 +209,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 #pragma mark - Table View
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    if ([filterLabel.text isEqualToString:@"All"]) {
+    if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
         return 2;
     }
 	return 1;
@@ -252,19 +253,66 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 
                 NSTimeInterval interval = [message.header.date timeIntervalSinceNow];
                 interval = -interval;
-                if([message.header.date isToday]){
+                if (interval <= 24*60*60) {
                     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
                     [dateFormatter setDateFormat:@"hh:mm a"];
                     NSString *dateString = [dateFormatter stringFromDate:message.header.date];
-                    cell.dateLabel.text = dateString;
+                    cell.dateLabel.text = dateString.uppercaseString;
                 }
                 else
                     cell.dateLabel.text = [message.header.date timeAgo];
-                
+//                if([message.header.date isToday]){
+//                    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+//                    [dateFormatter setDateFormat:@"hh:mm a"];
+//                    NSString *dateString = [dateFormatter stringFromDate:message.header.date];
+//                    cell.dateLabel.text = dateString.uppercaseString;
+//                }
+//                else
+//                    cell.dateLabel.text = [message.header.date timeAgo];
                 if(message.header.sender.displayName.length)
                     cell.senderLabel.text = [NSString stringWithFormat:@"%@",message.header.sender.displayName];
                 else
                     cell.senderLabel.text = cell.senderLabel.text = [NSString stringWithFormat:@"%@",message.header.sender.mailbox];
+                
+                CGFloat tempFloat = [self findTheSizeOf:cell.senderLabel.text];
+                
+                if (tempFloat < 320-105-6-60) {
+                    cell.inclusiveFunnels.frame = CGRectMake(cell.senderLabel.frame.origin.x + tempFloat + 5, cell.senderLabel.frame.origin.y, WIDTH - cell.senderLabel.frame.origin.x - tempFloat - 80, 40);
+                    [cell.inclusiveFunnels setBackgroundColor:[UIColor clearColor]];
+                }
+                else {
+                    cell.inclusiveFunnels.frame = CGRectMake(32 + (320-105-6-60) + 5, cell.senderLabel.frame.origin.y, WIDTH - cell.senderLabel.frame.origin.y - tempFloat - 80, 40);
+                    [cell.inclusiveFunnels setBackgroundColor:[UIColor clearColor]];
+                }
+                
+                if (indexPath.row % 2 == 0) {
+                    UIView *funnelView = [[UIView alloc] initWithFrame:CGRectMake(2, 4, 12, 12)];
+                    funnelView.clipsToBounds = YES;
+                    funnelView.layer.cornerRadius = 6.0f;
+                    [funnelView setBackgroundColor:[UIColor orangeColor]];
+                    [cell.inclusiveFunnels addSubview:funnelView];
+                    funnelView = nil;
+                    funnelView = [[UIView alloc] initWithFrame:CGRectMake(2 + 12 + 2, 4, 12, 12)];
+                    funnelView.clipsToBounds = YES;
+                    funnelView.layer.cornerRadius = 6.0f;
+                    [funnelView setBackgroundColor:[UIColor greenColor]];
+                    [cell.inclusiveFunnels addSubview:funnelView];
+                    funnelView = nil;
+                }
+                else {
+                    UIView *funnelView = [[UIView alloc] initWithFrame:CGRectMake(2, 4, 12, 12)];
+                    funnelView.clipsToBounds = YES;
+                    funnelView.layer.cornerRadius = 6.0f;
+                    [funnelView setBackgroundColor:[UIColor purpleColor]];
+                    [cell.inclusiveFunnels addSubview:funnelView];
+                    funnelView = nil;
+                    funnelView = [[UIView alloc] initWithFrame:CGRectMake(2 + 12 + 2, 4, 12, 12)];
+                    funnelView.clipsToBounds = YES;
+                    funnelView.layer.cornerRadius = 6.0f;
+                    [funnelView setBackgroundColor:[UIColor redColor]];
+                    [cell.inclusiveFunnels addSubview:funnelView];
+                    funnelView = nil;
+                }
                 cell.subjectLabel.text = message.header.subject;
                 
                 if([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread] > 1){
@@ -285,7 +333,13 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 else{
                     cell.messageRenderingOperation = [[EmailService instance].imapSession plainTextBodyRenderingOperationWithMessage:message folder:self.emailFolder];
                     [cell.messageRenderingOperation start:^(NSString * plainTextBodyString, NSError * error) {
-                        cell.bodyLabel.text = plainTextBodyString;
+                        if (plainTextBodyString) {
+                            if (plainTextBodyString.length > 0) {
+                                if ([[plainTextBodyString substringWithRange:NSMakeRange(0, 1)] isEqualToString:@" "]) {
+                                    cell.bodyLabel.text = [plainTextBodyString substringWithRange:NSMakeRange(1, plainTextBodyString.length - 1)];
+                                }
+                            }
+                        }
                         cell.messageRenderingOperation = nil;
                         if(plainTextBodyString)
                             [EmailService instance].filterMessagePreviews[uidKey] = plainTextBodyString;
@@ -295,11 +349,13 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 UIView *archiveView = [self viewWithImageName:@"archive"];
                 UIColor *yellowColor = [UIColor colorWithHexString:@"#F9CA47"];
                 
-                UIView *fullFunnlView = [self viewWithImageName:@"Funnl"];
-                UIColor *fullFunnlColor = [UIColor colorWithHexString:@"#4068AE"];
+                UIView *fullFunnlView = [self viewWithImageName:@"FunnlNew1"];
+//                UIColor *fullFunnlColor = [UIColor colorWithHexString:@"#4068AE"];
+                UIColor *fullFunnlColor = [UIColor colorWithHexString:@"#43F377"];
                 
                 UIView *halfFunnlView = [self viewWithImageName:@"Funnl"];
-                UIColor *halfFunnlColor = [UIColor colorWithHexString:@"#448DEC"];
+//                UIColor *halfFunnlColor = [UIColor colorWithHexString:@"#448DEC"];
+                UIColor *halfFunnlColor = [UIColor colorWithHexString:@"#4487E9"];
                 
                 [cell setSwipeGestureWithView:archiveView color:yellowColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
                     NSLog(@"Did swipe \"Archive\" cell");
@@ -471,6 +527,17 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
 #pragma mark -
 #pragma mark Helper
+- (CGFloat)findTheSizeOf:(NSString*)nameString
+{
+    UIFont *font = [UIFont systemFontOfSize:16];
+    NSDictionary *userAttributes = @{NSFontAttributeName: font, NSForegroundColorAttributeName: [UIColor blackColor]};
+    CGSize sizeNeeded = [nameString sizeWithAttributes:userAttributes];
+    if (sizeNeeded.width < 320-105-6-60) {
+        return sizeNeeded.width;
+    }
+    return 320-105-6-60;
+}
+
 - (BOOL)isThreadRead:(NSString*)gmailThreadID
 {
     NSArray *tempArray = [[MessageService instance] retrieveAllMessagesWithSameGmailID:[gmailThreadID substringWithRange:NSMakeRange(0, gmailThreadID.length-1)]];

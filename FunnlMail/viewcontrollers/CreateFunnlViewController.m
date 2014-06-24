@@ -354,7 +354,9 @@
             model.funnelId = oldModel.funnelId;
             FunnelModel *modelForFunnl = [[FunnelModel alloc] init];
             modelForFunnl.funnelName = model.filterTitle;
-            
+            AppDelegate *tempAppDelegate = APPDELEGATE;
+            tempAppDelegate.currentFunnelString = model.funnelName.lowercaseString;
+            tempAppDelegate.currentFunnelDS = model;
             NSArray *tempArrayForSender = [dictionaryOfConversations allValues];
             NSMutableString *senderEmailIds = [[NSMutableString alloc] init];
             for (NSString *tempString in tempArrayForSender) {

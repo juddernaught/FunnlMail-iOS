@@ -112,7 +112,14 @@ static NSString *currentFolder;
     self.sentMessagePreviews = [NSMutableDictionary dictionary];
     [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
     if ([EmailService instance].filterMessages.count == 0) {
-        [fv.tableView reloadData];
+        AppDelegate *tempAppDelegate = APPDELEGATE;
+        if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
+            [fv.tableView reloadData];
+        }
+        else {
+            self.filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:tempAppDelegate.currentFunnelDS.funnelId top:2000];
+            [fv.tableView reloadData];
+        }
     }
 	NSLog(@"checking account");
 	self.imapCheckOp = [self.imapSession checkAccountOperation];
@@ -227,9 +234,18 @@ static NSString *currentFolder;
               [self insertMessage:messages];
               //retrieving the message from database
               NSArray *tempArray = [[MessageService instance] retrieveAllMessages];
-              [self performSelectorInBackground:@selector(applyingFilters:) withObject:tempArray];
+              [self performSelector:@selector(applyingFilters:) withObject:tempArray];
+//              [self performSelectorInBackground:@selector(applyingFilters:) withObject:tempArray];
               _filterMessages = (NSMutableArray*)tempArray;
-              [emailTableViewController.tableView reloadData];
+              AppDelegate *tempAppDelegate = APPDELEGATE;
+              if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
+                  [emailTableViewController.tableView reloadData];
+              }
+              else {
+                  self.filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:tempAppDelegate.currentFunnelDS.funnelId top:2000];
+                  [fv.tableView reloadData];
+                  
+              }
               [fv.activityIndicator stopAnimating];
               if (tempArray.count > kNUMBER_OF_MESSAGES_TO_DOWNLOAD_IN_BACKGROUND) {
             
@@ -469,7 +485,14 @@ static NSString *currentFolder;
     else{
         self.filterMessages = [[NSMutableArray alloc] initWithArray:[combinedMessages sortedArrayUsingDescriptors:@[sort]]];
     }
-    [fv.tableView reloadData];
+    AppDelegate *tempAppDelegate = APPDELEGATE;
+    if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
+        [fv.tableView reloadData];
+    }
+    {
+        self.filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:tempAppDelegate.currentFunnelDS.funnelId top:2000];
+        [fv.tableView reloadData];
+    }
 }
 
 +(void)setNewFilterModel:(FunnelModel*)model{

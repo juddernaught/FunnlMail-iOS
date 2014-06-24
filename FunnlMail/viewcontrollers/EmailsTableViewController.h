@@ -13,6 +13,7 @@
 // FIXME: are these two imports neccessary?
 #import "FunnelModel.h"
 #import "MainVCDelegate.h"
+#import "AppDelegate.h"
 @interface EmailsTableViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate,MCSwipeTableViewCellDelegate> {
     UIView *filterNavigationView;
     UILabel *filterLabel;
@@ -21,7 +22,7 @@
     NSMutableArray *searchMessages;
     BOOL isSearching;
     NSArray *funnlArray;
-    
+    AppDelegate *tempAppDelegate;
 }
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property (nonatomic, strong) UITableViewController *tablecontroller;

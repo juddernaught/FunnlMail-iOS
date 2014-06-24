@@ -168,6 +168,9 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
   if(indexPath.row == filterArray.count){
     [self createAddFunnlView];
   }else{
+    AppDelegate *tempAppDelegate = APPDELEGATE;
+    tempAppDelegate.currentFunnelString = [[(FunnelModel *)filterArray[indexPath.row] funnelName] lowercaseString];
+      tempAppDelegate.currentFunnelDS = (FunnelModel *)filterArray[indexPath.row];
     [self.mainVCdelegate filterSelected:(FunnelModel *)filterArray[indexPath.row]];
   }
 }
