@@ -16,4 +16,5 @@
 @property (nonatomic, strong) UILabel *senderLabel,*dateLabel,*subjectLabel,*readLabel,*bodyLabel,*threadLabel;
 @property (nonatomic, strong) MCOIMAPMessageRenderingOperation * messageRenderingOperation;
 @property (nonatomic, strong) UIImageView *detailDiscloser;
+@property (nonatomic, strong) UIView *inclusiveFunnels;
 @end

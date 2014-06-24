@@ -11,40 +11,36 @@
 #import "UIColor+HexString.h"
 
 @implementation EmailCell
-@synthesize dateLabel,senderLabel,subjectLabel,bodyLabel,readLabel,threadLabel,detailDiscloser;
+@synthesize dateLabel,senderLabel,subjectLabel,bodyLabel,readLabel,threadLabel,detailDiscloser,inclusiveFunnels;
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier];
-    
-    dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(320-85, 2, 80, 20)];
-    senderLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 2, 320-105, 20)];
-//    subjectLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 24, 320-25, 20)];
-    subjectLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 24, 320-50-20, 20)];
-//    bodyLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 44, 320-25, 40)];
-    bodyLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 44, 320-50-20, 40)];
-    readLabel = [[UILabel alloc] initWithFrame:CGRectMake(4, 7, 12, 12)];
-//    threadLabel = [[UILabel alloc] initWithFrame:CGRectMake(4, 30, 12, 12)];
-    threadLabel = [[UILabel alloc] initWithFrame:CGRectMake(320-48, 20, 48-5, 20)];
-    detailDiscloser = [[UIImageView alloc] initWithFrame:CGRectMake(320-40+5, 48+5, 20, 20)];
-//    [detailDiscloser setBackgroundColor:[UIColor redColor]];
-    [threadLabel setBackgroundColor:[UIColor colorWithHexString:@"#e7e7e7"]];
+    inclusiveFunnels = [[UILabel alloc] init];
+    dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(320-80-10, 7, 80, 20)];
+    senderLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 7, 320-105-6-60, 20)];
+    subjectLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 27, 320-50-32, 20)];
+    bodyLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 47, 320-50-32, 90-47-7)];
+    readLabel = [[UILabel alloc] initWithFrame:CGRectMake(10-1, 39-1, 14, 14)];
+    threadLabel = [[UILabel alloc] initWithFrame:CGRectMake(320-20-10-43, 35, 48-5, 20)];
+    detailDiscloser = [[UIImageView alloc] initWithFrame:CGRectMake(320-20-10, 35, 20, 20)];
     [detailDiscloser setImage:[UIImage imageNamed:@"arrow.png"]];
-    [threadLabel setTextAlignment:NSTextAlignmentCenter];
+    [threadLabel setTextAlignment:NSTextAlignmentRight];
     readLabel.clipsToBounds = YES;
-    readLabel.layer.cornerRadius = 6.0f;
-    threadLabel.clipsToBounds = YES;
-    threadLabel.layer.cornerRadius = 4.0f;
+    readLabel.layer.cornerRadius = 7;
+    readLabel.layer.borderWidth = 0.5;
+    readLabel.layer.borderColor = [[UIColor blackColor] CGColor];
     bodyLabel.numberOfLines = 2;
     
     dateLabel.font = [UIFont systemFontOfSize:13];
-    senderLabel.font = [UIFont boldSystemFontOfSize:14];
-    subjectLabel.font = [UIFont systemFontOfSize:13];
-    bodyLabel.font = [UIFont systemFontOfSize:13];
+    senderLabel.font = [UIFont boldSystemFontOfSize:16];
+    subjectLabel.font = [UIFont systemFontOfSize:14];
+    bodyLabel.font = [UIFont systemFontOfSize:14];
     readLabel.font = [UIFont systemFontOfSize:13];
     threadLabel.font = [UIFont systemFontOfSize:13];
     
-    dateLabel.textColor = [UIColor lightGrayColor];
+    dateLabel.textColor = [UIColor blackColor];
     senderLabel.textColor = [UIColor blackColor];
+    [senderLabel setBackgroundColor:[UIColor clearColor]];
     subjectLabel.textColor = [UIColor blackColor];
     bodyLabel.textColor = [UIColor lightGrayColor];
     readLabel.backgroundColor = [UIColor clearColor];
@@ -63,6 +59,7 @@
     [self.contentView addSubview:bodyLabel];
     [self.contentView addSubview:readLabel];
     [self.contentView addSubview:detailDiscloser];
+//    [self.contentView addSubview:inclusiveFunnels];
     return self;
 }
 
@@ -75,12 +72,12 @@
 
 - (void)prepareForReuse
 {
-    [self.messageRenderingOperation cancel];
-    self.detailTextLabel.text = @" ";
-    self.bodyLabel.text = @" ";
-    self.dateLabel.text = @" ";
-    self.senderLabel.text = @" ";
-    self.subjectLabel.text = @" ";
+//    [self.messageRenderingOperation cancel];
+    self.detailTextLabel.text = @"";
+//    self.bodyLabel.text = @" ";
+//    self.dateLabel.text = @" ";
+//    self.senderLabel.text = @" ";
+//    self.subjectLabel.text = @" ";
 }
 
 @end

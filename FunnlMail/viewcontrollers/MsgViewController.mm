@@ -14,7 +14,7 @@
 #import "MCOMessageView.h"
 #import "PreviewEmailViewController.h"
 #import <MessageUI/MessageUI.h>
-
+#import "AppDelegate.h"
 
 
 @interface MsgViewController () <MCOMessageViewDelegate>
@@ -97,6 +97,15 @@
             [_messageView setMessage:msg];
         }];
     }
+    //customize back button.
+    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"backArrow.png"] style:UIBarButtonItemStylePlain target:self action:@selector(back)];
+    [self.navigationItem setLeftBarButtonItem:leftButton];
+}
+
+//newly added by iauro001 on 24th June 2014
+- (void)back
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void) setMessage:(MCOIMAPMessage *)message

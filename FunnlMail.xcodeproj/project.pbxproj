@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		5A1FF53D1948263B0056750F /* FunnelModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1FF53C1948263B0056750F /* FunnelModel.m */; };
+		5A4EE0D01959679700644B8E /* backArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A4EE0CE1959679700644B8E /* backArrow.png */; };
+		5A4EE0D11959679700644B8E /* backArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A4EE0CF1959679700644B8E /* backArrow@2x.png */; };
+		5A59DC6E1957FF9D0094B00D /* ConfirmFunnelPopUp.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A59DC6D1957FF9D0094B00D /* ConfirmFunnelPopUp.m */; };
+		5A59DC7519582A260094B00D /* FunnelPopUpForExtraRules.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A59DC7419582A260094B00D /* FunnelPopUpForExtraRules.m */; };
+		5A59DC781958320B0094B00D /* ContactTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A59DC771958320B0094B00D /* ContactTableViewCell.m */; };
 		5AA690BE19505A5B00E4CB64 /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AA690BC19505A5B00E4CB64 /* arrow.png */; };
 		5AA690BF19505A5B00E4CB64 /* arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AA690BD19505A5B00E4CB64 /* arrow@2x.png */; };
 		639B69C1194D4990004217DB /* ComposeNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 639B69C0194D4990004217DB /* ComposeNew.png */; };
@@ -182,6 +187,14 @@
 /* Begin PBXFileReference section */
 		5A1FF53B1948263B0056750F /* FunnelModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FunnelModel.h; path = models/FunnelModel.h; sourceTree = "<group>"; };
 		5A1FF53C1948263B0056750F /* FunnelModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FunnelModel.m; path = models/FunnelModel.m; sourceTree = "<group>"; };
+		5A4EE0CE1959679700644B8E /* backArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = backArrow.png; sourceTree = "<group>"; };
+		5A4EE0CF1959679700644B8E /* backArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "backArrow@2x.png"; sourceTree = "<group>"; };
+		5A59DC6C1957FF9D0094B00D /* ConfirmFunnelPopUp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfirmFunnelPopUp.h; sourceTree = "<group>"; };
+		5A59DC6D1957FF9D0094B00D /* ConfirmFunnelPopUp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfirmFunnelPopUp.m; sourceTree = "<group>"; };
+		5A59DC7319582A260094B00D /* FunnelPopUpForExtraRules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FunnelPopUpForExtraRules.h; sourceTree = "<group>"; };
+		5A59DC7419582A260094B00D /* FunnelPopUpForExtraRules.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FunnelPopUpForExtraRules.m; sourceTree = "<group>"; };
+		5A59DC761958320B0094B00D /* ContactTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactTableViewCell.h; sourceTree = "<group>"; };
+		5A59DC771958320B0094B00D /* ContactTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactTableViewCell.m; sourceTree = "<group>"; };
 		5AA690B419501EC200E4CB64 /* EmailThreadTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailThreadTableViewController.h; sourceTree = "<group>"; };
 		5AA690B519501EC200E4CB64 /* EmailThreadTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmailThreadTableViewController.m; sourceTree = "<group>"; };
 		5AA690BC19505A5B00E4CB64 /* arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow.png; sourceTree = "<group>"; };
@@ -402,6 +415,8 @@
 		5AA690BB19505A5B00E4CB64 /* Image_Resources */ = {
 			isa = PBXGroup;
 			children = (
+				5A4EE0CE1959679700644B8E /* backArrow.png */,
+				5A4EE0CF1959679700644B8E /* backArrow@2x.png */,
 				5AA690BC19505A5B00E4CB64 /* arrow.png */,
 				5AA690BD19505A5B00E4CB64 /* arrow@2x.png */,
 			);
@@ -726,6 +741,8 @@
 				6677880B18EF80BF00EF1962 /* EmailCell.m */,
 				FA8DDA531933A6420049F83F /* TextFieldCell.h */,
 				FA8DDA541933A6420049F83F /* TextFieldCell.m */,
+				5A59DC761958320B0094B00D /* ContactTableViewCell.h */,
+				5A59DC771958320B0094B00D /* ContactTableViewCell.m */,
 			);
 			name = tablecells;
 			sourceTree = "<group>";
@@ -803,6 +820,10 @@
 				CCD00B5A18F54797007A675F /* MainView.m */,
 				FAABF17E1952FA750072FFE8 /* FunnlPopUpView.h */,
 				FAABF17F1952FA750072FFE8 /* FunnlPopUpView.m */,
+				5A59DC6C1957FF9D0094B00D /* ConfirmFunnelPopUp.h */,
+				5A59DC6D1957FF9D0094B00D /* ConfirmFunnelPopUp.m */,
+				5A59DC7319582A260094B00D /* FunnelPopUpForExtraRules.h */,
+				5A59DC7419582A260094B00D /* FunnelPopUpForExtraRules.m */,
 			);
 			name = views;
 			sourceTree = "<group>";
@@ -976,12 +997,14 @@
 				FA2C9BDE193EF92400866BEE /* Main.storyboard in Resources */,
 				66F2C47418E3293E00CD593E /* InfoPlist.strings in Resources */,
 				FA2C9BB2193DF57700866BEE /* cross.png in Resources */,
+				5A4EE0D11959679700644B8E /* backArrow@2x.png in Resources */,
 				FA5627D81935C92600238F40 /* settings.png in Resources */,
 				FA5627D91935C92600238F40 /* notification@2x.png in Resources */,
 				66AEEBBC19370EAB00B6DBE5 /* intro.png in Resources */,
 				6620BA9D18E38BE500769C48 /* Funnl.png in Resources */,
 				6620BA9C18E38BE500769C48 /* Compose.png in Resources */,
 				FA2C9BB7193DF5CE00866BEE /* archive@2x.png in Resources */,
+				5A4EE0D01959679700644B8E /* backArrow.png in Resources */,
 				6620BAAC18E399C700769C48 /* Email 2.png in Resources */,
 				63A8A59E1952AA2600DBD969 /* Menu1.png in Resources */,
 				FA5627DA1935C92600238F40 /* notification.png in Resources */,
@@ -1052,6 +1075,8 @@
 				CCD00B5B18F54797007A675F /* MainView.m in Sources */,
 				CC8C7EC918E6F38100E76AE8 /* MASConstraint.m in Sources */,
 				6677880118EF768B00EF1962 /* MsgViewController.mm in Sources */,
+				5A59DC6E1957FF9D0094B00D /* ConfirmFunnelPopUp.m in Sources */,
+				5A59DC781958320B0094B00D /* ContactTableViewCell.m in Sources */,
 				CC8C7EAD18E6F1C100E76AE8 /* MainVC.m in Sources */,
 				FA2C9BD2193EDFCB00866BEE /* MMDrawerController.m in Sources */,
 				FA2C9BDB193EE66400866BEE /* MenuViewController.m in Sources */,
@@ -1074,6 +1099,7 @@
 				66AEEB811933002D00B6DBE5 /* EmailsTableViewController.m in Sources */,
 				CCC9E41C193DF5E80028DC84 /* FunnelService.m in Sources */,
 				CCC9E425193E414F0028DC84 /* ServiceUtils.m in Sources */,
+				5A59DC7519582A260094B00D /* FunnelPopUpForExtraRules.m in Sources */,
 				639B69D4195254D1004217DB /* EmailThreadTableViewController.m in Sources */,
 				CC7F72F818E83925008962C3 /* EmailService.m in Sources */,
 				66F2C47A18E3293E00CD593E /* AppDelegate.m in Sources */,

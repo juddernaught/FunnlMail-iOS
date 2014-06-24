@@ -63,12 +63,22 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     }];
     
     // Filter Title
-    self.navigationItem.title = currentFilterModel.funnelName;
+//    self.navigationItem.title = currentFilterModel.funnelName;
+    navigationBarTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
+    [navigationBarTitleLabel setFont:[UIFont systemFontOfSize:22.0]];
+    
+    [navigationBarTitleLabel setTextAlignment:NSTextAlignmentCenter];
+    [navigationBarTitleLabel setTextColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR]];
+    self.navigationItem.titleView = navigationBarTitleLabel;
     
     // This is the All bar
     
     AppDelegate *tempAppDelegate = APPDELEGATE;
-    
+    if ([tempAppDelegate.currentFunnelString.lowercaseString isEqualToString:@"all"]) {
+        navigationBarTitleLabel.text = @"All mails";
+    }
+    else
+        navigationBarTitleLabel.text = tempAppDelegate.currentFunnelString.capitalizedString;
     //>>>>>>> befb26a4459794a789ff1240527bd41eba700a00
     filterLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 44+20, 320, 40)];
     _activityIndicator = tempAppDelegate.appActivityIndicator;
@@ -80,7 +90,8 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle: @"All");
     filterLabel.textAlignment = NSTextAlignmentCenter;
     //[self.view addSubview:filterLabel];
-    self.navigationItem.title = filterLabel.text;
+//    self.navigationItem.title = filterLabel.text;
+//    navigationBarTitleLabel.text = filterLabel.text;
     //*/
 
 
@@ -133,6 +144,8 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 }
 
+#pragma mark -
+#pragma mark Event-Handler
 
 -(void)menuButtonSelected{
     NSLog(@"Menu button selected");
@@ -168,14 +181,27 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [self presentViewController:mc animated:YES completion:NULL];
 }
 
-
-
+#pragma mark -
+#pragma mark Memory Management
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark -
+#pragma mark setFilterTitle
+- (void)setFilterTitle:(NSString*)title
+{
+    if ([title.lowercaseString isEqualToString:@"all"]) {
+        navigationBarTitleLabel.text = @"All mails";
+    }
+    else {
+        navigationBarTitleLabel.text = title;
+    }
+    self.navigationItem.title = title;
+    
+}
 
 // FIXME: move somewhere else?
 -(void) filterSelected:(FunnelModel *)filterModel{
@@ -186,8 +212,6 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     }
     mainView.hidden = YES;
     emailsTableViewController.filterModel = currentFilterModel;
-    //fetching from net
-//    [[EmailService instance] loadLastNMessages:[EmailService instance].messages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:emailsTableViewController withFolder:emailsTableViewController.emailFolder];
     //fetching from database
     if ([filterModel.funnelId isEqualToString:@"0"]) {
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
@@ -196,7 +220,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     {
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:filterModel.funnelId top:2000];
     }
-    NSLog(@"%d",[EmailService instance].filterMessages.count);
+    [self setFilterTitle:filterModel.funnelName];
     [emailsTableViewController.tableView reloadData];
     
 //    [emailsTableViewController.tableView setContentOffset:CGPointMake(0, -40)];

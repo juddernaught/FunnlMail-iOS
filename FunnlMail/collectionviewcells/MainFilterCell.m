@@ -76,7 +76,7 @@
         [self addSubview:notificationButton];
         notificationButton.hidden = YES;
       
-        settingsButton = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width - 32, self.frame.size.height - 32, 30, 30)];
+        settingsButton = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width - 32 - 5, self.frame.size.height - 32 - 5, 35, 35)];
         [settingsButton setImage:[UIImage imageNamed:@"settings.png"] forState:UIControlStateNormal];
         [self addSubview:settingsButton];
         settingsButton.hidden = YES;
