@@ -10,12 +10,13 @@
 #include <MailCore/MailCore.h>
 #import <MessageUI/MessageUI.h>
 #import "UIColor+HexString.h"
-
+#define TO_TAG_STARTING 20000
+#define CC_TAG_STARTING 30000
 @class MCOMessageView;
 @class MCOIMAPAsyncSession;
 @class MCOMAPMessage;
 
-@interface MsgViewController :  UIViewController <MFMailComposeViewControllerDelegate>{
+@interface MsgViewController :  UIViewController <MFMailComposeViewControllerDelegate,UITableViewDataSource,UITableViewDelegate>{
     IBOutlet MCOMessageView * _messageView;
     NSMutableDictionary * _storage;
     NSMutableSet * _pending;
@@ -24,6 +25,11 @@
     MCOIMAPMessage * _message;
     NSMutableDictionary * _callbacks;
     NSString * _folder;
+    UIView *headerView;
+    UIView *subjectView;
+    int subjectHeight;
+    int headerHeight;
+    UITableView *messageTableView;
 }
 
 @property (nonatomic, copy) NSString * folder;
