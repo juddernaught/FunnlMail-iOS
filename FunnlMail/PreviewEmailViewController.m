@@ -28,12 +28,13 @@
     return self;
 }
 
-NSString *msgHTMLBody;
+NSString *msgBody;
 NSData * rfc822Data;
 UITextField *to;
 UITextField *cc;
 UITextField *bcc;
 UITextField *subject;
+
 
 - (void)viewDidLoad
 {
@@ -84,54 +85,44 @@ UITextField *subject;
     [subject2 setFont:[UIFont systemFontOfSize:12]];
 
     UIView *bottomBorder = [[UIView alloc]
-                            initWithFrame:CGRectMake(0,to.frame.size.height-1,to.frame.size.width,1)];
+                            initWithFrame:CGRectMake(0,to.frame.size.height-1,to.frame.size.width-10,1)];
     bottomBorder.backgroundColor = [UIColor blackColor];
-    
-    UIView *sideBorder = [[UIView alloc]
-                            initWithFrame:CGRectMake(to2.frame.size.width-1,0,1,to2.frame.size.height)];
-    sideBorder.backgroundColor = [UIColor lightGrayColor];
-    
-    
     [to addSubview:bottomBorder];
     
     bottomBorder = [[UIView alloc]
-                            initWithFrame:CGRectMake(0,to.frame.size.height-1,to.frame.size.width,1)];
+                    initWithFrame:CGRectMake(10,to.frame.size.height-1,to2.frame.size.width-10,1)];
     bottomBorder.backgroundColor = [UIColor blackColor];
     [to2 addSubview:bottomBorder];
     
     bottomBorder = [[UIView alloc]
-                            initWithFrame:CGRectMake(0,to.frame.size.height-1,to.frame.size.width,1)];
+                    initWithFrame:CGRectMake(0,to.frame.size.height-1,cc.frame.size.width-10,1)];
     bottomBorder.backgroundColor = [UIColor blackColor];
     [cc addSubview:bottomBorder];
     
     bottomBorder = [[UIView alloc]
-                            initWithFrame:CGRectMake(0,to.frame.size.height-1,to.frame.size.width,1)];
+                            initWithFrame:CGRectMake(10,to.frame.size.height-1,cc2.frame.size.width,1)];
     bottomBorder.backgroundColor = [UIColor blackColor];
     [cc2 addSubview:bottomBorder];
     
     bottomBorder = [[UIView alloc]
-                            initWithFrame:CGRectMake(0,to.frame.size.height-1,to.frame.size.width,1)];
+                            initWithFrame:CGRectMake(0,to.frame.size.height-1,bcc.frame.size.width-10,1)];
     bottomBorder.backgroundColor = [UIColor blackColor];
     [bcc addSubview:bottomBorder];
     
     bottomBorder = [[UIView alloc]
-                            initWithFrame:CGRectMake(0,to.frame.size.height-1,to.frame.size.width,1)];
+                            initWithFrame:CGRectMake(10,to.frame.size.height-1,bcc2.frame.size.width,1)];
     bottomBorder.backgroundColor = [UIColor blackColor];
     [bcc2 addSubview:bottomBorder];
     
     bottomBorder = [[UIView alloc]
-                            initWithFrame:CGRectMake(0,to.frame.size.height-1,to.frame.size.width,1)];
+                            initWithFrame:CGRectMake(10,to.frame.size.height-1,subject2.frame.size.width,1)];
     bottomBorder.backgroundColor = [UIColor blackColor];
     [subject2 addSubview:bottomBorder];
     
     bottomBorder = [[UIView alloc]
-                            initWithFrame:CGRectMake(0,to.frame.size.height-1,to.frame.size.width,1)];
+                            initWithFrame:CGRectMake(0,to.frame.size.height-1,subject.frame.size.width-10,1)];
     bottomBorder.backgroundColor = [UIColor blackColor];
     [subject addSubview:bottomBorder];
-    
-    bottomBorder = [[UIView alloc]
-                            initWithFrame:CGRectMake(0,to.frame.size.height-1,to.frame.size.width,1)];
-    bottomBorder.backgroundColor = [UIColor blackColor];
 
     
     if (self.forward) {
@@ -160,7 +151,7 @@ UITextField *subject;
 //    UIWebView *email = [[UIWebView alloc]initWithFrame:CGRectMake(0, 140, 320, self.view.bounds.size.height-140)];
 //    email.userInteractionEnabled = true;
 
-    UITextView *body = [[UITextView alloc] initWithFrame:CGRectMake(0, 140, 320, self.view.bounds.size.height-140)];
+    self.body = [[UITextView alloc] initWithFrame:CGRectMake(0, 140, 320, self.view.bounds.size.height-140)];
     
     
     if (!self.compose) {
@@ -168,13 +159,15 @@ UITextField *subject;
         
         [operation start:^(NSError *error, NSData *data) {
             MCOMessageParser *messageParser = [[MCOMessageParser alloc] initWithData:data];
-            msgHTMLBody = [messageParser plainTextBodyRendering];
-            body.text = msgHTMLBody;
-            
+            msgBody = [messageParser plainTextBodyRendering];
+            NSMutableString *temp = [[NSMutableString alloc] initWithString:@"____________________________________________________"];
+            [temp appendString:msgBody];
+            self.body.text = temp;
+            temp = nil;
         }];
         NSLog(@"message is empty");
     }
-    [self.view addSubview:body];
+    [self.view addSubview:self.body];
     
 }
 
@@ -210,7 +203,7 @@ UITextField *subject;
     [bccArray addObject:newAddress];
     [[builder header] setBcc:bccArray];
     [[builder header] setSubject:subject.text];
-    [builder setHTMLBody:msgHTMLBody];
+    [builder setHTMLBody:self.body.text];
     rfc822Data = [builder data];
     
     MCOSMTPSendOperation *sendOperation = [smtpSession sendOperationWithData:rfc822Data];

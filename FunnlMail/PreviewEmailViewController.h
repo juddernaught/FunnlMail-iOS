@@ -19,4 +19,5 @@
 @property (nonatomic) NSNumber * compose;
 @property (nonatomic) NSNumber * reply;
 @property (nonatomic) NSNumber * forward;
+@property (nonatomic) UITextView * body;
 @end

@@ -57,17 +57,32 @@
     UIButton *forwardButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [replyButton addTarget:self action:@selector(replyButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    replyButton.frame = CGRectMake(128, 0, 33, 28);
+    replyButton.frame = CGRectMake(128, 0, 31, 28);
     [replyButton setBackgroundImage:[UIImage imageNamed:@"reply.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:replyButton];
 
     [forwardButton addTarget:self action:@selector(forwardButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    forwardButton.frame = CGRectMake(164, 0, 33, 28);
+    forwardButton.frame = CGRectMake(164, 0, 31, 28);
     [forwardButton setBackgroundImage:[UIImage imageNamed:@"forward.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:forwardButton];
     
     UIView *sideBorder = [[UIView alloc]
                           initWithFrame:CGRectMake(159,0,1,28)];
+    sideBorder.backgroundColor = [UIColor lightGrayColor];
+    [centeredButtons addSubview:sideBorder];
+    
+    sideBorder = [[UIView alloc]
+                          initWithFrame:CGRectMake(163,0,1,28)];
+    sideBorder.backgroundColor = [UIColor lightGrayColor];
+    [centeredButtons addSubview:sideBorder];
+    
+    sideBorder = [[UIView alloc]
+                  initWithFrame:CGRectMake(127,0,1,28)];
+    sideBorder.backgroundColor = [UIColor lightGrayColor];
+    [centeredButtons addSubview:sideBorder];
+    
+    sideBorder = [[UIView alloc]
+                  initWithFrame:CGRectMake(195,0,1,28)];
     sideBorder.backgroundColor = [UIColor lightGrayColor];
     [centeredButtons addSubview:sideBorder];
     [self.view addSubview:centeredButtons];
