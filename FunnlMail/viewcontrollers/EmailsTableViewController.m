@@ -98,9 +98,13 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     
     // This is the green or purple All bar
     
-    AppDelegate *tempAppDelegate = APPDELEGATE;
+//    AppDelegate *tempAppDelegate = APPDELEGATE;
     
     filterLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 44+20, 320, 40)];
+    [self.view addSubview:tempAppDelegate.progressHUD];
+    [self.view bringSubviewToFront:tempAppDelegate.progressHUD];
+    [tempAppDelegate.progressHUD show:YES];
+    [tempAppDelegate.progressHUD setHidden:NO];
     activityIndicator = tempAppDelegate.appActivityIndicator;
     [activityIndicator setBackgroundColor:[UIColor clearColor]];
     [activityIndicator startAnimating];
@@ -138,7 +142,9 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     //=======
     
     self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64)];
-    
+    UIView *tempView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    self.tableView.tableFooterView = tempView;
+    tempView = nil;
     //>>>>>>> Change 2
     tablecontroller.tableView = self.tableView;
     tablecontroller.refreshControl = refreshControl;
@@ -176,10 +182,14 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     //    searchDisplayController.searchResultsDataSource = self;
     //    searchDisplayController.searchResultsDelegate = self;
     //[self.tableView insertSubview:self.searchDisplayController.searchBar aboveSubview:self.tableView];
+    [self.view bringSubviewToFront:tempAppDelegate.progressHUD];
 }
 
 - (void)fetchLatestEmail
 {
+    [self.view bringSubviewToFront:tempAppDelegate.progressHUD];
+    [tempAppDelegate.progressHUD show:YES];
+    [tempAppDelegate.progressHUD setHidden:NO];
     [activityIndicator startAnimating];
     [[EmailService instance] loadLatestMail:1 withTableController:self withFolder:INBOX];
 }
@@ -424,7 +434,10 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 if (self.isLoading)
                     [self.loadMoreActivityView startAnimating];
                 else
+                {
+                    [tempAppDelegate.progressHUD show:NO];
                     [self.loadMoreActivityView stopAnimating];
+                }
                 
                 return cell;
                 break;

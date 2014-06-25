@@ -229,6 +229,9 @@ static NSString *currentFolder;
          [self.imapMessagesFetchOp start:
           ^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
           {
+              AppDelegate *tempAppDelegate = APPDELEGATE;
+              [tempAppDelegate.progressHUD setHidden:YES];
+              [tempAppDelegate.progressHUD show:NO];
               [fv.tablecontroller.refreshControl endRefreshing];
               //newly added by iauro001 on 12th June 2014
               [self insertMessage:messages];
@@ -237,7 +240,6 @@ static NSString *currentFolder;
               [self performSelector:@selector(applyingFilters:) withObject:tempArray];
 //              [self performSelectorInBackground:@selector(applyingFilters:) withObject:tempArray];
               _filterMessages = (NSMutableArray*)tempArray;
-              AppDelegate *tempAppDelegate = APPDELEGATE;
               if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
                   [emailTableViewController.tableView reloadData];
               }
@@ -246,6 +248,7 @@ static NSString *currentFolder;
                   [fv.tableView reloadData];
                   
               }
+              [tempAppDelegate.progressHUD show:NO];
               [fv.activityIndicator stopAnimating];
               if (tempArray.count > kNUMBER_OF_MESSAGES_TO_DOWNLOAD_IN_BACKGROUND) {
             
@@ -326,8 +329,13 @@ static NSString *currentFolder;
                       }
                       else
                       {
+                          AppDelegate *tempAppDelegate = APPDELEGATE;
+                          [tempAppDelegate.progressHUD show:NO];
+                          [tempAppDelegate.progressHUD setHidden:YES];
                           [fv.tablecontroller.refreshControl endRefreshing];
                           if (self.filterMessages.count > kNUMBER_OF_MESSAGES_TO_DOWNLOAD_IN_BACKGROUND) {
+                              AppDelegate*tempAppDelegate = APPDELEGATE;
+                              [tempAppDelegate.progressHUD show:NO];
                               [fv.activityIndicator stopAnimating];
                           }
                           else{

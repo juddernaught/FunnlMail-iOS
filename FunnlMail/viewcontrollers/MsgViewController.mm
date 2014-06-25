@@ -44,11 +44,29 @@
     return self;
 }
 
-
 - (void)viewDidLoad {
-    _messageView = [[MCOMessageView alloc] initWithFrame:self.view.bounds];
+    [super viewDidLoad];
+    [self.view setBackgroundColor:[UIColor whiteColor]];
+    [self setUpView];
+//    [self.view addSubview:headerView];
+    UIView *seperator = [[UIView alloc] initWithFrame:CGRectMake(20, headerView.frame.origin.y + headerView.frame.size.height, WIDTH - 20, 0.5)];
+    [seperator setBackgroundColor:[UIColor lightGrayColor]];
+//    [self.view addSubview:seperator];
+    
+//    subjectView.frame = CGRectMake(0, headerView.frame.origin.y + headerView.frame.size.height, WIDTH, subjectHeight + 20);
+    subjectView.frame = CGRectMake(0, 0, WIDTH, subjectHeight + 20);
+//    [self.view addSubview:subjectView];
+    
+    _messageView = [[MCOMessageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT-100)];
     _messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [self.view addSubview:_messageView];
+//    [self.view addSubview:_messageView];
+    
+    messageTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT-48)];
+    [messageTableView setScrollEnabled:YES];
+    messageTableView.delegate = self;
+    messageTableView.dataSource = self;
+    messageTableView.tableFooterView = _messageView;
+    [self.view addSubview:messageTableView];
     
     UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, self.view.bounds.size.height-28, self.view.bounds.size.width, 28)];
     centeredButtons.backgroundColor = [UIColor whiteColor];
@@ -71,10 +89,6 @@
     sideBorder.backgroundColor = [UIColor lightGrayColor];
     [centeredButtons addSubview:sideBorder];
     [self.view addSubview:centeredButtons];
-    
-
-    
-    
     if (![[NSUserDefaults standardUserDefaults] boolForKey:@"FetchFullMessageEnabled"]) {
         [_messageView setDelegate:self];
         [_messageView setFolder:_folder];
@@ -102,6 +116,201 @@
     [self.navigationItem setLeftBarButtonItem:leftButton];
 }
 
+#pragma mark -
+#pragma mark Helper
+- (void)setUpView
+{
+    headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, 100)];
+    int padding = 0;
+    UILabel *fromLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, padding + 10, 50, 16)];
+    [fromLabel setTextAlignment:NSTextAlignmentLeft];
+    [fromLabel setTextColor:[UIColor blackColor]];
+    fromLabel.text = @"From:";
+    [fromLabel setFont:[UIFont systemFontOfSize:16]];
+    [headerView addSubview:fromLabel];
+    fromLabel = nil;
+    
+    UIButton *fromValue = [[UIButton alloc] initWithFrame:CGRectMake(20 + 50, padding + 10, WIDTH - 20 - 50, 16)];
+    [fromValue setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+    if (_message.header.sender.displayName) {
+        [fromValue setTitle:_message.header.sender.displayName forState:UIControlStateNormal];
+    }
+    else
+        [fromValue setTitle:_message.header.sender.mailbox forState:UIControlStateNormal];
+    [fromValue setTitleColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR] forState:UIControlStateNormal];
+    [fromValue.titleLabel setFont:[UIFont systemFontOfSize:16]];
+    [headerView addSubview:fromValue];
+    fromValue = nil;
+    
+    UILabel *toLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, padding + 10 + 16 + 8, 25, 16)];
+    [toLabel setTextAlignment:NSTextAlignmentLeft];
+    [toLabel setTextColor:[UIColor blackColor]];
+    toLabel.text = @"To:";
+    [toLabel setFont:[UIFont systemFontOfSize:16]];
+    [headerView addSubview:toLabel];
+    toLabel = nil;
+    
+    int finalY = [self insertToAddress:_message.header.to withX:45 andY:padding + 10 + 16 + 8];
+    UILabel *ccLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, finalY, 25, 16)];
+    [ccLabel setTextAlignment:NSTextAlignmentLeft];
+    [ccLabel setTextColor:[UIColor blackColor]];
+    ccLabel.text = @"Cc:";
+    [ccLabel setFont:[UIFont systemFontOfSize:16]];
+    [headerView addSubview:ccLabel];
+    toLabel = nil;
+    finalY = [self insertCCAddress:_message.header.cc withX:45 andY:finalY];
+    headerView.frame = CGRectMake(0, 0, WIDTH, finalY);
+    headerHeight = finalY;
+    int height = [self calculateSize:_message.header.subject];
+    subjectHeight = height;
+    UILabel *subjectLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, 280, height)];
+    [subjectLabel setFont:[UIFont boldSystemFontOfSize:16]];
+    subjectLabel.numberOfLines = 0;
+    subjectLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    subjectLabel.text = _message.header.subject;
+    
+    subjectView = [[UIView alloc] init];
+    [subjectView addSubview:subjectLabel];
+    subjectLabel = nil;
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"d MMMM yyyy h:mm a"];
+    UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 10 + height + 3, 280, 15)];
+    [dateLabel setFont:[UIFont systemFontOfSize:14]];
+    [dateLabel setTextColor:[UIColor blackColor]];
+    dateLabel.text = [dateFormatter stringFromDate:_message.header.date];
+    [subjectView addSubview:dateLabel];
+    dateLabel = nil;
+    
+    UIView *seperator = [[UILabel alloc] initWithFrame:CGRectMake(20, 10 + height + 3 + 15 + 11, 300, 0.5)];
+    [seperator setBackgroundColor:[UIColor lightGrayColor]];
+    [subjectView addSubview:seperator];
+    seperator = nil;
+}
+
+- (CGFloat)calculateSize:(NSString*)string
+{
+    CGSize maximumSize = CGSizeMake(280, 568);
+    UIFont *myFont = [UIFont boldSystemFontOfSize:16];
+    CGSize myStringSize = [string sizeWithFont:myFont constrainedToSize:maximumSize lineBreakMode:NSLineBreakByWordWrapping];
+    return myStringSize.height;
+}
+
+- (int)insertCCAddress:(NSArray*)to withX:(int)x andY:(int)y{
+    for (int counter = 0; counter < to.count; counter++) {
+        NSString *toString = nil;
+        if ([[_message.header.to objectAtIndex:counter] displayName]) {
+            toString = [[_message.header.cc objectAtIndex:counter] displayName];
+        }
+        else
+            toString = [[_message.header.cc objectAtIndex:counter] mailbox];
+        int expectedLength = [self getLengthOf:toString];
+        if (expectedLength > (WIDTH - 40 - x)) {
+            y = y + 16 + 8;
+            x = 20;
+        }
+        UIButton *toValue = [[UIButton alloc] initWithFrame:CGRectMake(x, y, expectedLength, 16)];
+        [toValue setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+        if (toString) {
+            [toValue setTitle:[NSString stringWithFormat:@"%@",toString] forState:UIControlStateNormal];
+        }
+        else
+        {
+            [toValue setTitle:[[_message.header.to objectAtIndex:0] mailbox] forState:UIControlStateNormal];
+        }
+        [toValue setTitleColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR] forState:UIControlStateNormal];
+        [toValue.titleLabel setFont:[UIFont systemFontOfSize:16]];
+        toValue.tag = CC_TAG_STARTING + counter;
+        [headerView addSubview:toValue];
+        toValue = nil;
+        UIImageView *arrorImageView = [[UIImageView alloc] initWithFrame:CGRectMake(x + expectedLength-5, y, 16, 16)];
+        [arrorImageView setImage:[UIImage imageNamed:@"arrow.png"]];
+        [headerView addSubview:arrorImageView];
+        arrorImageView = nil;
+        x = x + expectedLength + 15;
+    }
+    return y + 16 + 8;
+}
+
+- (int)insertToAddress:(NSArray*)to withX:(int)x andY:(int)y{
+    for (int counter = 0; counter < to.count; counter++) {
+        NSString *toString = nil;
+        if ([[_message.header.to objectAtIndex:counter] displayName]) {
+            toString = [[_message.header.to objectAtIndex:counter] displayName];
+        }
+        else
+            toString = [[_message.header.to objectAtIndex:counter] mailbox];
+        int expectedLength = [self getLengthOf:toString];
+        if (expectedLength > (WIDTH - 40 - x)) {
+            y = y + 16 + 8;
+            x = 20;
+        }
+        UIButton *toValue = [[UIButton alloc] initWithFrame:CGRectMake(x, y, expectedLength, 16)];
+        [toValue setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+        if (toString) {
+            [toValue setTitle:[NSString stringWithFormat:@"%@",toString] forState:UIControlStateNormal];
+        }
+        else
+        {
+            [toValue setTitle:[[_message.header.to objectAtIndex:0] mailbox] forState:UIControlStateNormal];
+        }
+        [toValue setTitleColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR] forState:UIControlStateNormal];
+        [toValue.titleLabel setFont:[UIFont systemFontOfSize:16]];
+        toValue.tag = TO_TAG_STARTING + counter;
+        [headerView addSubview:toValue];
+        toValue = nil;
+        UIImageView *arrorImageView = [[UIImageView alloc] initWithFrame:CGRectMake(x + expectedLength-5, y, 16, 16)];
+        [arrorImageView setImage:[UIImage imageNamed:@"arrow.png"]];
+        [headerView addSubview:arrorImageView];
+        arrorImageView = nil;
+        x = x + expectedLength + 15;
+    }
+    return y + 16 + 8;
+}
+
+- (CGFloat)getLengthOf:(NSString*)string {
+    UIFont *font = [UIFont systemFontOfSize:16];
+    NSDictionary *userAttributes = @{NSFontAttributeName: font, NSForegroundColorAttributeName: [UIColor blackColor]};
+    CGSize sizeNeeded = [string sizeWithAttributes:userAttributes];
+    return sizeNeeded.width + 5;
+}
+
+#pragma mark -
+#pragma mark UITableViewDelegate & DataSource
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 2;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [[UITableViewCell alloc] init];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    if (indexPath.row == 0) {
+        [cell.contentView addSubview:headerView];
+    }
+    else if (indexPath.row == 1)
+        [cell.contentView addSubview:subjectView];
+    else
+        [cell.contentView addSubview:_messageView];
+    return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row == 0) {
+        return headerHeight;
+    }
+    else if (indexPath.row == 1)
+        return subjectView.frame.size.height + 20;
+    else
+        return HEIGHT - 28;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+#pragma mark -
+#pragma mark EventHandler
 //newly added by iauro001 on 24th June 2014
 - (void)back
 {

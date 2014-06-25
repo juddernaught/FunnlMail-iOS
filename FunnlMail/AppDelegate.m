@@ -12,10 +12,11 @@
 #import "ServiceTests.h"
 
 @implementation AppDelegate
-@synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS;
+@synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    progressHUD = [[MBProgressHUD alloc] init];
     //initializing currentFunnelString to "All"
     currentFunnelString = @"all";
     currentFunnelDS = nil;
