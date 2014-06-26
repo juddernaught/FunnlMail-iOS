@@ -156,12 +156,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     [self.view addSubview:tablecontroller.view];
     //=======
     [self.view addSubview:self.tableView];
-    
-    
-    
-    
-    
-    
     //>>>>>>> newbranch
     // TODO: change self.view.mas_top to bottom of filter label
     /*[self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -182,14 +176,18 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     //    searchDisplayController.searchResultsDataSource = self;
     //    searchDisplayController.searchResultsDelegate = self;
     //[self.tableView insertSubview:self.searchDisplayController.searchBar aboveSubview:self.tableView];
-    [self.view bringSubviewToFront:tempAppDelegate.progressHUD];
+    if ([[MessageService instance] messagesAllTopMessages].count > 0) {
+        
+    }
+    else
+        [self.view bringSubviewToFront:tempAppDelegate.progressHUD];
 }
 
 - (void)fetchLatestEmail
 {
-    [self.view bringSubviewToFront:tempAppDelegate.progressHUD];
-    [tempAppDelegate.progressHUD show:YES];
-    [tempAppDelegate.progressHUD setHidden:NO];
+//    [self.view bringSubviewToFront:tempAppDelegate.progressHUD];
+//    [tempAppDelegate.progressHUD show:YES];
+//    [tempAppDelegate.progressHUD setHidden:NO];
     [activityIndicator startAnimating];
     [[EmailService instance] loadLatestMail:1 withTableController:self withFolder:INBOX];
 }
@@ -363,7 +361,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 //                UIColor *fullFunnlColor = [UIColor colorWithHexString:@"#4068AE"];
                 UIColor *fullFunnlColor = [UIColor colorWithHexString:@"#43F377"];
                 
-                UIView *halfFunnlView = [self viewWithImageName:@"Funnl"];
+                UIView *halfFunnlView = [self viewWithImageName:@"FunnlNew1"];
 //                UIColor *halfFunnlColor = [UIColor colorWithHexString:@"#448DEC"];
                 UIColor *halfFunnlColor = [UIColor colorWithHexString:@"#4487E9"];
                 
@@ -388,9 +386,12 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                     cell.secondTrigger = 0.5;
                     [cell setSwipeGestureWithView:halfFunnlView color:halfFunnlColor mode:MCSwipeTableViewCellModeSwitch state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
                         NSLog(@"Did swipe Half cell,  ");
-                        FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:NO withMessageId:uidKey withMessage:nil subViewOnViewController:self];
-                        funnlPopUpView.mainVCdelegate = self.mainVCdelegate;
-                        [self.view addSubview:funnlPopUpView];
+                        if ([[FunnelService instance] allFunnels].count > 1) {
+                            FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:NO withMessageId:uidKey withMessage:nil subViewOnViewController:self];
+                            funnlPopUpView.mainVCdelegate = self.mainVCdelegate;
+                            [self.view addSubview:funnlPopUpView];
+                        }
+                        
                     }];
                 }
                 
@@ -514,7 +515,9 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 if (!self.isLoading &&
                     [EmailService instance].messages.count < [EmailService instance].totalNumberOfInboxMessages)
                 {
-                    [[EmailService instance] loadLastNMessages:[EmailService instance].filterMessages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:self withFolder:INBOX];
+                    int totalNumberOfMessage = [[MessageService instance] messagesAllTopMessages].count + NUMBER_OF_MESSAGES_TO_LOAD;
+                    NSLog(@"[EmailsTableViewController didSelect] %d",totalNumberOfMessage);
+                    [[EmailService instance] loadLastNMessages:totalNumberOfMessage withTableController:self withFolder:INBOX];
                     cell.accessoryView = self.loadMoreActivityView;
                     [self.loadMoreActivityView startAnimating];
                 }
@@ -617,8 +620,10 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 #pragma mark Helpers
 - (UIView *)viewWithImageName:(NSString *)imageName {
     UIImage *image = [UIImage imageNamed:imageName];
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-    imageView.contentMode = UIViewContentModeCenter;
+    UIImageView *imageView = [[UIImageView alloc] init];
+    imageView.frame = CGRectMake(10, 0, 40, 40);
+    [imageView setImage:image];
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
     return imageView;
 }
 

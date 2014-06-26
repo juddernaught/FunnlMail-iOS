@@ -72,9 +72,9 @@
 
 - (void)prepareForReuse
 {
-//    [self.messageRenderingOperation cancel];
+    [self.messageRenderingOperation cancel];
     self.detailTextLabel.text = @"";
-//    self.bodyLabel.text = @" ";
+    self.bodyLabel.text = @"";
 //    self.dateLabel.text = @" ";
 //    self.senderLabel.text = @" ";
 //    self.subjectLabel.text = @" ";

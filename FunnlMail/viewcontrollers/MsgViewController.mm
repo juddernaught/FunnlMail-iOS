@@ -57,11 +57,11 @@
     subjectView.frame = CGRectMake(0, 0, WIDTH, subjectHeight + 20);
 //    [self.view addSubview:subjectView];
     
-    _messageView = [[MCOMessageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT-100)];
+    _messageView = [[MCOMessageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT-28)];
     _messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 //    [self.view addSubview:_messageView];
     
-    messageTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT-48)];
+    messageTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT-28)];
     [messageTableView setScrollEnabled:YES];
     messageTableView.delegate = self;
     messageTableView.dataSource = self;
@@ -114,6 +114,21 @@
     //customize back button.
     UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"backArrow.png"] style:UIBarButtonItemStylePlain target:self action:@selector(back)];
     [self.navigationItem setLeftBarButtonItem:leftButton];
+    
+    AppDelegate *tempAppDelegate = APPDELEGATE;
+    
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
+    [titleLabel setFont:[UIFont systemFontOfSize:22]];
+    [titleLabel setTextColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR]];
+    if ([tempAppDelegate.currentFunnelString.lowercaseString isEqualToString:@"all"]) {
+        titleLabel.text = @"All mails";
+    }
+    else {
+        titleLabel.text = tempAppDelegate.currentFunnelString.capitalizedString;
+    }
+    [titleLabel setTextAlignment:NSTextAlignmentCenter];
+    self.navigationItem.titleView = titleLabel;
+//    titleLabel = nil;
 }
 
 #pragma mark -
@@ -149,16 +164,18 @@
     [toLabel setFont:[UIFont systemFontOfSize:16]];
     [headerView addSubview:toLabel];
     toLabel = nil;
-    
+
     int finalY = [self insertToAddress:_message.header.to withX:45 andY:padding + 10 + 16 + 8];
-    UILabel *ccLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, finalY, 25, 16)];
-    [ccLabel setTextAlignment:NSTextAlignmentLeft];
-    [ccLabel setTextColor:[UIColor blackColor]];
-    ccLabel.text = @"Cc:";
-    [ccLabel setFont:[UIFont systemFontOfSize:16]];
-    [headerView addSubview:ccLabel];
-    toLabel = nil;
-    finalY = [self insertCCAddress:_message.header.cc withX:45 andY:finalY];
+    if (_message.header.cc.count > 0) {
+        UILabel *ccLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, finalY, 25, 16)];
+        [ccLabel setTextAlignment:NSTextAlignmentLeft];
+        [ccLabel setTextColor:[UIColor blackColor]];
+        ccLabel.text = @"Cc:";
+        [ccLabel setFont:[UIFont systemFontOfSize:16]];
+        [headerView addSubview:ccLabel];
+        ccLabel = nil;
+        finalY = [self insertCCAddress:_message.header.cc withX:45 andY:finalY];
+    }
     headerView.frame = CGRectMake(0, 0, WIDTH, finalY);
     headerHeight = finalY;
     int height = [self calculateSize:_message.header.subject];
