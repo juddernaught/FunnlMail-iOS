@@ -329,9 +329,16 @@
 }
 
 -(void)deleteButtonClicked:(id)sender{
-  [EmailService deleteFilter:oldModel];
-  FunnelModel *defaultFilter = [EmailService getDefaultFilter];
-  [self.mainVCdelegate filterSelected:defaultFilter];
+//  [EmailService deleteFilter:oldModel];
+//  FunnelModel *defaultFilter = [EmailService getDefaultFilter];
+//  [self.mainVCdelegate filterSelected:defaultFilter];
+    [[FunnelService instance] deleteFunnel:oldModel.funnelId];
+    NSArray *funnelArray = [[FunnelService instance] allFunnels];
+    AppDelegate *tempAppDelegate = APPDELEGATE;
+    tempAppDelegate.currentFunnelString = [[(FunnelModel *)funnelArray[0] funnelName] lowercaseString];
+    tempAppDelegate.currentFunnelDS = (FunnelModel *)funnelArray[0];
+    [self.mainVCdelegate filterSelected:(FunnelModel *)funnelArray[0]];
+    funnelArray = nil;
   [self.navigationController popViewControllerAnimated:YES];
 }
 

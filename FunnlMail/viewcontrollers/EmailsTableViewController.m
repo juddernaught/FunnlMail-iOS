@@ -350,7 +350,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                         }
                         cell.messageRenderingOperation = nil;
                         if(plainTextBodyString)
-                            [EmailService instance].filterMessagePreviews[uidKey] = plainTextBodyString;
+                            [EmailService instance].filterMessagePreviews[uidKey] = [self removeStartingSpaceFromString:plainTextBodyString];
                     }];
                 }
                 
@@ -477,6 +477,16 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     }
 }
 
+- (NSString *)removeStartingSpaceFromString:(NSString*)sourceString {
+    if (sourceString.length > 1) {
+        if ([[sourceString substringWithRange:NSMakeRange(0, 1)] isEqualToString:@" "]) {
+            return [sourceString substringWithRange:NSMakeRange(1, sourceString.length -1)];
+        }
+        return sourceString;
+    }
+    else
+        return sourceString;
+}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -621,7 +631,11 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 - (UIView *)viewWithImageName:(NSString *)imageName {
     UIImage *image = [UIImage imageNamed:imageName];
     UIImageView *imageView = [[UIImageView alloc] init];
-    imageView.frame = CGRectMake(10, 0, 40, 40);
+    if ([imageName isEqualToString:@"archive"]) {
+        imageView.frame = CGRectMake(-10, 0, 40, 40);
+    }
+    else
+        imageView.frame = CGRectMake(10, 0, 40, 40);
     [imageView setImage:image];
     imageView.contentMode = UIViewContentModeScaleAspectFit;
     return imageView;

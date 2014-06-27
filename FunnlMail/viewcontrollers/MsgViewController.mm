@@ -121,13 +121,14 @@
     [titleLabel setFont:[UIFont systemFontOfSize:22]];
     [titleLabel setTextColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR]];
     if ([tempAppDelegate.currentFunnelString.lowercaseString isEqualToString:@"all"]) {
-        titleLabel.text = @"All mails";
+        self.navigationItem.title =@"All mails";
     }
     else {
-        titleLabel.text = tempAppDelegate.currentFunnelString.capitalizedString;
+        self.navigationItem.title = tempAppDelegate.currentFunnelString.capitalizedString;
+//        titleLabel.text = tempAppDelegate.currentFunnelString.capitalizedString;
     }
-    [titleLabel setTextAlignment:NSTextAlignmentCenter];
-    self.navigationItem.titleView = titleLabel;
+//    [titleLabel setTextAlignment:NSTextAlignmentCenter];
+//    self.navigationItem.titleView = titleLabel;
 //    titleLabel = nil;
 }
 

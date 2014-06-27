@@ -54,7 +54,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     
     // Set the navigation bar to white
     [self.navigationController.navigationBar setBarTintColor:[UIColor whiteColor]];
-    
+    [[UINavigationBar appearance] setTintColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR]];
     [mainView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view.mas_top).with.offset(20);
         make.left.equalTo(self.view.mas_left).with.offset(0);
@@ -63,22 +63,25 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     }];
     
     // Filter Title
-//    self.navigationItem.title = currentFilterModel.funnelName;
-    navigationBarTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
-    [navigationBarTitleLabel setFont:[UIFont systemFontOfSize:22.0]];
-    
-    [navigationBarTitleLabel setTextAlignment:NSTextAlignmentCenter];
-    [navigationBarTitleLabel setTextColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR]];
-    self.navigationItem.titleView = navigationBarTitleLabel;
+    self.navigationItem.title = currentFilterModel.funnelName;
+//    navigationBarTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
+//    [navigationBarTitleLabel setFont:[UIFont systemFontOfSize:22.0]];
+//    
+//    [navigationBarTitleLabel setTextAlignment:NSTextAlignmentCenter];
+//    [navigationBarTitleLabel setTextColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR]];
+//    self.navigationItem.titleView = navigationBarTitleLabel;
     
     // This is the All bar
     
     AppDelegate *tempAppDelegate = APPDELEGATE;
     if ([tempAppDelegate.currentFunnelString.lowercaseString isEqualToString:@"all"]) {
         navigationBarTitleLabel.text = @"All mails";
+        self.navigationItem.title = @"All mails";
     }
-    else
+    else {
+        self.navigationItem.title = tempAppDelegate.currentFunnelString.capitalizedString;
         navigationBarTitleLabel.text = tempAppDelegate.currentFunnelString.capitalizedString;
+    }
     //>>>>>>> befb26a4459794a789ff1240527bd41eba700a00
     filterLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 44+20, 320, 40)];
     _activityIndicator = tempAppDelegate.appActivityIndicator;
@@ -194,13 +197,13 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 - (void)setFilterTitle:(NSString*)title
 {
     if ([title.lowercaseString isEqualToString:@"all"]) {
-        navigationBarTitleLabel.text = @"All mails";
+        self.navigationItem.title = @"All mails";
+//        navigationBarTitleLabel.text = @"All mails";
     }
     else {
-        navigationBarTitleLabel.text = title;
+        self.navigationItem.title = title;
+//        navigationBarTitleLabel.text = title;
     }
-    self.navigationItem.title = title;
-    
 }
 
 // FIXME: move somewhere else?
