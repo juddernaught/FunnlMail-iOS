@@ -15,6 +15,9 @@
 		5A59DC781958320B0094B00D /* ContactTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A59DC771958320B0094B00D /* ContactTableViewCell.m */; };
 		5AA690BE19505A5B00E4CB64 /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AA690BC19505A5B00E4CB64 /* arrow.png */; };
 		5AA690BF19505A5B00E4CB64 /* arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AA690BD19505A5B00E4CB64 /* arrow@2x.png */; };
+		5ACEBEA3195DA0CA00D4EAAA /* RDSwipeableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ACEBEA2195DA0CA00D4EAAA /* RDSwipeableTableViewCell.m */; };
+		5ACEBEAC195DB0AE00D4EAAA /* CreateFunnlIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5ACEBEAA195DB0AE00D4EAAA /* CreateFunnlIcon@2x.png */; };
+		5ACEBEAD195DB0AE00D4EAAA /* moveToFunnlIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5ACEBEAB195DB0AE00D4EAAA /* moveToFunnlIcon@2x.png */; };
 		639B69C1194D4990004217DB /* ComposeNew.png in Resources */ = {isa = PBXBuildFile; fileRef = 639B69C0194D4990004217DB /* ComposeNew.png */; };
 		639B69C3194D49FF004217DB /* FunnlNew1.png in Resources */ = {isa = PBXBuildFile; fileRef = 639B69C2194D49FF004217DB /* FunnlNew1.png */; };
 		639B69D4195254D1004217DB /* EmailThreadTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AA690B519501EC200E4CB64 /* EmailThreadTableViewController.m */; };
@@ -199,6 +202,10 @@
 		5AA690B519501EC200E4CB64 /* EmailThreadTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmailThreadTableViewController.m; sourceTree = "<group>"; };
 		5AA690BC19505A5B00E4CB64 /* arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow.png; sourceTree = "<group>"; };
 		5AA690BD19505A5B00E4CB64 /* arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow@2x.png"; sourceTree = "<group>"; };
+		5ACEBEA1195DA0CA00D4EAAA /* RDSwipeableTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RDSwipeableTableViewCell.h; sourceTree = "<group>"; };
+		5ACEBEA2195DA0CA00D4EAAA /* RDSwipeableTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RDSwipeableTableViewCell.m; sourceTree = "<group>"; };
+		5ACEBEAA195DB0AE00D4EAAA /* CreateFunnlIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CreateFunnlIcon@2x.png"; sourceTree = "<group>"; };
+		5ACEBEAB195DB0AE00D4EAAA /* moveToFunnlIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "moveToFunnlIcon@2x.png"; sourceTree = "<group>"; };
 		639B69C0194D4990004217DB /* ComposeNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ComposeNew.png; sourceTree = "<group>"; };
 		639B69C2194D49FF004217DB /* FunnlNew1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FunnlNew1.png; sourceTree = "<group>"; };
 		63A8A59D1952AA2600DBD969 /* Menu1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Menu1.png; sourceTree = "<group>"; };
@@ -423,6 +430,25 @@
 			path = Image_Resources;
 			sourceTree = "<group>";
 		};
+		5ACEBEA0195DA0CA00D4EAAA /* RDSwipeableTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				5ACEBEA1195DA0CA00D4EAAA /* RDSwipeableTableViewCell.h */,
+				5ACEBEA2195DA0CA00D4EAAA /* RDSwipeableTableViewCell.m */,
+			);
+			path = RDSwipeableTableViewCell;
+			sourceTree = "<group>";
+		};
+		5ACEBEA9195DB0AE00D4EAAA /* icons_for_swip */ = {
+			isa = PBXGroup;
+			children = (
+				5ACEBEAA195DB0AE00D4EAAA /* CreateFunnlIcon@2x.png */,
+				5ACEBEAB195DB0AE00D4EAAA /* moveToFunnlIcon@2x.png */,
+			);
+			name = icons_for_swip;
+			path = FunnlMail/icons_for_swip;
+			sourceTree = "<group>";
+		};
 		6620BA8918E3439000769C48 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -487,6 +513,7 @@
 		6620BAA518E3999A00769C48 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				5ACEBEA9195DB0AE00D4EAAA /* icons_for_swip */,
 				66AEEBB21937091F00B6DBE5 /* Login */,
 				6620BA8B18E343A100769C48 /* Funnls */,
 				6620BA8A18E3439800769C48 /* Icons */,
@@ -761,6 +788,7 @@
 		CC8C7EB018E6F34D00E76AE8 /* external */ = {
 			isa = PBXGroup;
 			children = (
+				5ACEBEA0195DA0CA00D4EAAA /* RDSwipeableTableViewCell */,
 				FA2C9BC7193EDFCB00866BEE /* MMDrawerController */,
 				FA2C9BA8193DEF5200866BEE /* MCSwipeTableViewCell */,
 				FA8A4AD7193D902B004890E3 /* NSDate+TimeAgo */,
@@ -996,6 +1024,7 @@
 				66F2C48218E3293E00CD593E /* Images.xcassets in Resources */,
 				FA2C9BDE193EF92400866BEE /* Main.storyboard in Resources */,
 				66F2C47418E3293E00CD593E /* InfoPlist.strings in Resources */,
+				5ACEBEAD195DB0AE00D4EAAA /* moveToFunnlIcon@2x.png in Resources */,
 				FA2C9BB2193DF57700866BEE /* cross.png in Resources */,
 				5A4EE0D11959679700644B8E /* backArrow@2x.png in Resources */,
 				FA5627D81935C92600238F40 /* settings.png in Resources */,
@@ -1013,6 +1042,7 @@
 				6620BA9418E343FA00769C48 /* Shopping.png in Resources */,
 				66AEEBBE193719AF00B6DBE5 /* login.png in Resources */,
 				6620BAAE18E399C700769C48 /* Email 4.png in Resources */,
+				5ACEBEAC195DB0AE00D4EAAA /* CreateFunnlIcon@2x.png in Resources */,
 				FA2C9BB6193DF5CE00866BEE /* archive.png in Resources */,
 				CC4263BC1934BB6700F3C5EB /* dbschema.sql in Resources */,
 				6620BA8218E32FD700769C48 /* Payments.png in Resources */,
@@ -1083,6 +1113,7 @@
 				CC8C7ECC18E6F38100E76AE8 /* MASViewAttribute.m in Sources */,
 				CC8C7ECF18E6F38100E76AE8 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
 				66AEEBAB1936B26B00B6DBE5 /* GTMOAuth2ViewControllerTouch.m in Sources */,
+				5ACEBEA3195DA0CA00D4EAAA /* RDSwipeableTableViewCell.m in Sources */,
 				CC8C7EC818E6F38100E76AE8 /* MASCompositeConstraint.m in Sources */,
 				66AEEBA71936B24900B6DBE5 /* GTMOAuth2SignIn.m in Sources */,
 				66E669751904431E003F9305 /* KeychainItemWrapper.m in Sources */,

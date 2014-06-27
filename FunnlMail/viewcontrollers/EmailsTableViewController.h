@@ -8,13 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "MCSwipeTableViewCell.h"
+#import "RDSwipeableTableViewCell.h"
 #import "MessageService.h"
 #import "EmailThreadTableViewController.h"
 // FIXME: are these two imports neccessary?
 #import "FunnelModel.h"
 #import "MainVCDelegate.h"
 #import "AppDelegate.h"
-@interface EmailsTableViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate,MCSwipeTableViewCellDelegate> {
+@interface EmailsTableViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate,MCSwipeTableViewCellDelegate,RDSwipeableTableViewCellDelegate> {
     UIView *filterNavigationView;
     UILabel *filterLabel;
     UISearchBar *mailSearchBar;

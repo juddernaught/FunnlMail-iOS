@@ -244,6 +244,8 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
         switch (indexPath.section){
             case 0:{
                 EmailCell *cell = [tableView dequeueReusableCellWithIdentifier:mailCellIdentifier forIndexPath:indexPath];
+                [cell resetToOriginalState];
+                cell.tag = indexPath.row;
                 cell.delegate = self;
                 MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
                 if ([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread] > 1) {
@@ -354,58 +356,9 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                     }];
                 }
                 
-                UIView *archiveView = [self viewWithImageName:@"archive"];
-                UIColor *yellowColor = [UIColor colorWithHexString:@"#F9CA47"];
-                
-                UIView *fullFunnlView = [self viewWithImageName:@"FunnlNew1"];
-//                UIColor *fullFunnlColor = [UIColor colorWithHexString:@"#4068AE"];
-                UIColor *fullFunnlColor = [UIColor colorWithHexString:@"#43F377"];
-                
-                UIView *halfFunnlView = [self viewWithImageName:@"FunnlNew1"];
-//                UIColor *halfFunnlColor = [UIColor colorWithHexString:@"#448DEC"];
-                UIColor *halfFunnlColor = [UIColor colorWithHexString:@"#4487E9"];
-                
-                [cell setSwipeGestureWithView:archiveView color:yellowColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
-                    NSLog(@"Did swipe \"Archive\" cell");
-                    MCOIMAPOperation *msgOperation = [[EmailService instance].imapSession storeFlagsOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:message.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagDeleted];
-                    [msgOperation start:^(NSError * error)
-                     {
-                         [tableView beginUpdates];
-                         [[EmailService instance].filterMessagePreviews removeObjectForKey:uidKey];
-                         [[EmailService instance].filterMessages removeObjectAtIndex:indexPath.row];
-                         [[EmailService instance].messages removeObjectIdenticalTo:message];
-                         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
-                         [tableView endUpdates];
-                         NSLog(@"selected message flags %u UID is %u",message.flags,message.uid );
-                     }];
-                    [cell swipeToOriginWithCompletion:nil];
-                }];
-                
-                if(funnlArray.count){
-                    cell.firstTrigger = 0.1;
-                    cell.secondTrigger = 0.5;
-                    [cell setSwipeGestureWithView:halfFunnlView color:halfFunnlColor mode:MCSwipeTableViewCellModeSwitch state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
-                        NSLog(@"Did swipe Half cell,  ");
-                        if ([[FunnelService instance] allFunnels].count > 1) {
-                            FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:NO withMessageId:uidKey withMessage:nil subViewOnViewController:self];
-                            funnlPopUpView.mainVCdelegate = self.mainVCdelegate;
-                            [self.view addSubview:funnlPopUpView];
-                        }
-                        
-                    }];
-                }
-                
-                [cell setSwipeGestureWithView:fullFunnlView color:fullFunnlColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState4 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
-                    NSLog(@"Did swipe full cell, ");
-                    
-                    [cell swipeToOriginWithCompletion:nil];
-                    MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
-                    FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:YES withMessageId:uidKey withMessage:message subViewOnViewController:self];
-                    funnlPopUpView.mainVCdelegate = self.mainVCdelegate;
-
-                    [self.view addSubview:funnlPopUpView];
-                    
-                }];
+                cell.delegate = self;
+                cell.tableView = tableView;
+                cell.revealDirection = RDSwipeableTableViewCellRevealDirectionRight | RDSwipeableTableViewCellRevealDirectionLeft;
                 
                 return cell;
                 break;
@@ -474,6 +427,150 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
             cell.messageRenderingOperation = nil;
         }];
         return cell;
+    }
+}
+
+#pragma mark -
+#pragma mark RDSwipeableTableViewCellDelgate
+- (void)tableView:(UITableView *)tableView willBeginCellSwipe:(RDSwipeableTableViewCell *)cell inDirection:(RDSwipeableTableViewCellRevealDirection)direction
+{
+    
+    if(direction == RDSwipeableTableViewCellRevealDirectionRight){
+        
+        if ([[FunnelService instance] allFunnels].count > 1) {
+            CGRect cellRect = cell.frame;
+            
+            UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
+            button.tag = cell.tag;
+
+            button.frame = CGRectMake(cellRect.size.width - 80, 0, 80, cellRect.size.height);
+            [button setImage:[UIImage imageNamed:@"moveToFunnlIcon.png"] forState:UIControlStateNormal];
+            button.backgroundColor = [UIColor colorWithHexString:@"#4487E9"];
+//            [button setTitle:@"Half Swip" forState:UIControlStateNormal];
+            [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [button addTarget:self action:@selector(halfSwipe:) forControlEvents:UIControlEventTouchUpInside];
+            [cell.revealView addSubview:button];
+            
+            button = [UIButton buttonWithType:UIButtonTypeCustom];
+            button.tag = cell.tag;
+            button.frame = CGRectMake(cellRect.size.width - 160, 0, 80, cellRect.size.height);
+            button.backgroundColor = [UIColor colorWithHexString:@"#43F377"];
+            [button setImage:[UIImage imageNamed:@"CreateFunnlIcon"] forState:UIControlStateNormal];
+//            [button setTitle:@"Full Swip" forState:UIControlStateNormal];
+            [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [button addTarget:self action:@selector(fullSwipe:) forControlEvents:UIControlEventTouchUpInside];
+            [cell.revealView addSubview:button];
+            
+            cell.revealDistance = 160;
+        }
+        else {
+            CGRect cellRect = cell.frame;
+            UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
+            button = [UIButton buttonWithType:UIButtonTypeSystem];
+            button.tag = cell.tag;
+            button.frame = CGRectMake(cellRect.size.width - 80, 0, 80, cellRect.size.height);
+            [button setImage:[UIImage imageNamed:@"CreateFunnlIcon"] forState:UIControlStateNormal];
+            button.backgroundColor = [UIColor colorWithHexString:@"#43F377"];
+            [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [button addTarget:self action:@selector(fullSwipe:) forControlEvents:UIControlEventTouchUpInside];
+            [cell.revealView addSubview:button];
+            
+            cell.revealDistance = 80;
+        }
+        
+    }
+    else{
+        CGRect cellRect = cell.frame;
+        UIButton * button;
+        
+        
+        button = [UIButton buttonWithType:UIButtonTypeCustom];
+        button.tag = cell.tag;
+        button.frame = CGRectMake(0, 0, 80, cellRect.size.height);
+        button.backgroundColor = [UIColor colorWithHexString:@"#F9CA47"];
+        [button setImage:[UIImage imageNamed:@"archive"] forState:UIControlStateNormal];
+//        [button setTitle:@"Archive" forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [button addTarget:self action:@selector(leftSwip:) forControlEvents:UIControlEventTouchUpInside];
+        [cell.revealView addSubview:button];
+        
+        cell.revealDistance = 80;
+    }
+}
+
+- (void)leftSwip:(UIButton*)sender {
+    NSLog(@"in [leftSwip]");
+    MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[sender.tag] messageJSON]];
+    [_tableView beginUpdates];
+    [[EmailService instance].filterMessagePreviews removeObjectForKey:[NSString stringWithFormat:@"%d",message.uid]];
+    [[EmailService instance].filterMessages removeObjectAtIndex:sender.tag];
+    [[EmailService instance].messages removeObjectIdenticalTo:message];
+    [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForItem:sender.tag inSection:0], nil] withRowAnimation:UITableViewRowAnimationLeft];
+    [_tableView endUpdates];
+    [_tableView reloadData];
+    NSLog(@"selected message flags %u UID is %u",message.flags,message.uid );
+}
+
+- (void)fullSwipe:(UIButton*)sender {
+    [_tableView reloadData];
+    NSLog(@"in [fullSwipe]");
+    MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[sender.tag] messageJSON]];
+    FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:YES withMessageId:[NSString stringWithFormat:@"%d",message.uid] withMessage:message subViewOnViewController:self];
+    funnlPopUpView.mainVCdelegate = self.mainVCdelegate;
+    [self.view addSubview:funnlPopUpView];
+}
+
+- (void)halfSwipe:(UIButton*)sender {
+    [_tableView reloadData];
+    NSLog(@"in [halfSwipe]");
+    MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[sender.tag] messageJSON]];
+    if ([[FunnelService instance] allFunnels].count > 1) {
+        FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:NO withMessageId:[NSString stringWithFormat:@"%d",message.uid] withMessage:nil subViewOnViewController:self];
+        funnlPopUpView.mainVCdelegate = self.mainVCdelegate;
+        [self.view addSubview:funnlPopUpView];
+    }
+}
+
+- (void)tableView:(UITableView *)tableView didCellReset:(RDSwipeableTableViewCell *)cell
+{
+    [cell.revealView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+}
+
+#pragma mark -
+#pragma mark didPressDelete
+- (void)didPressMore:(UIButton*)sender {
+    MCOIMAPMessage *message = nil;
+    int row = 0;
+    if (sender.tag < 100000) {
+        row = 0;
+        message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[0] messageJSON]];
+    }
+    else {
+        int index = sender.tag / 100000;
+        row = index;
+        message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[index] messageJSON]];
+    }
+    int buttonClicked = sender.tag % 100000;
+    if (buttonClicked == 1) {
+        if ([[FunnelService instance] allFunnels].count > 1) {
+            FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:NO withMessageId:[NSString stringWithFormat:@"%d",message.uid] withMessage:nil subViewOnViewController:self];
+            funnlPopUpView.mainVCdelegate = self.mainVCdelegate;
+            [self.view addSubview:funnlPopUpView];
+        }
+    }
+    else if (sender.tag == 2) {
+        FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:YES withMessageId:[NSString stringWithFormat:@"%d",message.uid] withMessage:message subViewOnViewController:self];
+        funnlPopUpView.mainVCdelegate = self.mainVCdelegate;
+        [self.view addSubview:funnlPopUpView];
+    }
+    else if (sender.tag == 3) {
+        [_tableView beginUpdates];
+        [[EmailService instance].filterMessagePreviews removeObjectForKey:[NSString stringWithFormat:@"%d",message.uid]];
+        [[EmailService instance].filterMessages removeObjectAtIndex:row];
+        [[EmailService instance].messages removeObjectIdenticalTo:message];
+        [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForItem:row inSection:0], nil] withRowAnimation:UITableViewRowAnimationLeft];
+        [_tableView endUpdates];
+        NSLog(@"selected message flags %u UID is %u",message.flags,message.uid );
     }
 }
 

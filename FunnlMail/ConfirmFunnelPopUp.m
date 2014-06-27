@@ -83,11 +83,13 @@
 
 - (void)dismissPopUp:(UIButton*)sender {
     [self removeFromSuperview];
+    [[(EmailsTableViewController*)emailViewController tableView] reloadData];
 }
 
 -(void)createAddFunnlView{
     [[MessageFilterXRefService instance] insertMessageXRefMessageID:messageID funnelId:tempDS.funnelId];
     [self removeFromSuperview];
+    [[(EmailsTableViewController*)emailViewController tableView] reloadData];
 }
 
 /*
