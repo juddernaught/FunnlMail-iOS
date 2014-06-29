@@ -9,7 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <MailCore/MailCore.h>
 #import "MCSwipeTableViewCell.h"
-@interface EmailCell : MCSwipeTableViewCell
+#import "RDSwipeableTableViewCell.h"
+@interface EmailCell : RDSwipeableTableViewCell
 {
     
 }

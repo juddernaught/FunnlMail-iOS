@@ -130,7 +130,9 @@ pre {\
 		[_webView loadHTMLString:@"" baseURL:nil];
 		return;
 	}
-	
+//    NSArray *tempArray = [content componentsSeparatedByString:@"</div></div><div><!DOCTYPE html>"];
+//    content = [NSString stringWithFormat:@"</div></div><div><!DOCTYPE html>\n%@",[tempArray objectAtIndex:1]];
+//    tempArray = nil;
 	NSMutableString * html = [NSMutableString string];
     [html appendFormat:@"<html><head><script>%@</script><style>%@</style></head>"
         @"<body>%@</body><iframe src='x-mailcore-msgviewloaded:' style='width: 0px; height: 0px; border: none;'>"

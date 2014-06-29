@@ -20,7 +20,7 @@
     senderLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 7, 320-105-6-60, 20)];
     subjectLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 27, 320-50-32, 20)];
     bodyLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 47, 320-50-32, 90-47-7)];
-    readLabel = [[UILabel alloc] initWithFrame:CGRectMake(10-1, 39-1, 14, 14)];
+    readLabel = [[UILabel alloc] initWithFrame:CGRectMake(10-1, 10, 14, 14)];
     threadLabel = [[UILabel alloc] initWithFrame:CGRectMake(320-20-10-43, 35, 48-5, 20)];
     detailDiscloser = [[UIImageView alloc] initWithFrame:CGRectMake(320-20-10, 35, 20, 20)];
     [detailDiscloser setImage:[UIImage imageNamed:@"arrow.png"]];
@@ -72,9 +72,9 @@
 
 - (void)prepareForReuse
 {
-//    [self.messageRenderingOperation cancel];
+    [self.messageRenderingOperation cancel];
     self.detailTextLabel.text = @"";
-//    self.bodyLabel.text = @" ";
+    self.bodyLabel.text = @"";
 //    self.dateLabel.text = @" ";
 //    self.senderLabel.text = @" ";
 //    self.subjectLabel.text = @" ";

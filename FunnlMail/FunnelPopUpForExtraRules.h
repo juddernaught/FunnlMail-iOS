@@ -21,6 +21,7 @@
     UITableView *contactsTableView;
     NSMutableArray *contactInCC;
     NSMutableArray *flagArray;
+    id viewController;
 }
-- (id)initWithFrame:(CGRect)frame withMessage:(MCOIMAPMessage*)messages withFunnel:(FunnelModel*)funnelDS;
+- (id)initWithFrame:(CGRect)frame withMessage:(MCOIMAPMessage*)messages withFunnel:(FunnelModel*)funnelDS onViewController:(id)someViewController;
 @end

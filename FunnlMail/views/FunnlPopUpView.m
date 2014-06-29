@@ -191,7 +191,7 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
                 funnel.sendersArray = tempArray;
             }
             tempArray = nil;
-            FunnelPopUpForExtraRules *funnelPopUp = [[FunnelPopUpForExtraRules alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT) withMessage:message withFunnel:funnel];
+            FunnelPopUpForExtraRules *funnelPopUp = [[FunnelPopUpForExtraRules alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT) withMessage:message withFunnel:funnel onViewController:viewController];
             [[(EmailsTableViewController*)viewController view] addSubview:funnelPopUp];
         }
         else {

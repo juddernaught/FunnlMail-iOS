@@ -20,7 +20,7 @@ static NSString *contactCellIdentifier = @"ContactCell";
     return self;
 }
 
-- (id)initWithFrame:(CGRect)frame withMessage:(MCOIMAPMessage*)messages withFunnel:(FunnelModel*)funnelDS
+- (id)initWithFrame:(CGRect)frame withMessage:(MCOIMAPMessage*)messages withFunnel:(FunnelModel*)funnelDS onViewController:(id)someViewController
 {
     self = [super initWithFrame:frame];
     if (self) {
@@ -28,6 +28,7 @@ static NSString *contactCellIdentifier = @"ContactCell";
         message = messages;
         tempFunnelModel = funnelDS;
         [self setUpViews];
+        viewController = someViewController;
     }
     return self;
 }
@@ -122,10 +123,13 @@ static NSString *contactCellIdentifier = @"ContactCell";
     [[FunnelService instance] updateFunnel:tempFunnelModel];
     [[EmailService instance] applyingFunnel:tempFunnelModel toMessages:[EmailService instance].filterMessages];
     [self removeFromSuperview];
+    [[(EmailsTableViewController*)viewController tableView] reloadData];
+    
 }
 
 - (void)outterButtonClicked:(UIButton *)sender {
     [self removeFromSuperview];
+    [[(EmailsTableViewController*)viewController tableView] reloadData];
 }
 
 #pragma mark -

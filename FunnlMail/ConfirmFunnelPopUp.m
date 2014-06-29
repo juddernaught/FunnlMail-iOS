@@ -60,7 +60,15 @@
     [mainView addSubview:seperator];
     seperator = nil;
     
-    UIButton *doneButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 200 + 30, width - 20, 30)];
+    UIButton *undoButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 200 + 30, width - 20, 30)];
+    undoButton.clipsToBounds = YES;
+    undoButton.layer.cornerRadius = 2.0;
+    [undoButton setTitle:@"Undo" forState:UIControlStateNormal];
+    [undoButton addTarget:self action:@selector(dismissPopUp:) forControlEvents:UIControlEventTouchUpInside];
+    [undoButton setBackgroundColor:[UIColor colorWithHexString:UNDO_BUTTON_RED_COLOR]];
+    [mainView addSubview:undoButton];
+    
+    UIButton *doneButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 200 + 30 + 40, width - 20, 30)];
     doneButton.clipsToBounds = YES;
     doneButton.layer.cornerRadius = 2.0;
     [doneButton setTitle:@"Done" forState:UIControlStateNormal];
@@ -73,9 +81,15 @@
     [[(EmailsTableViewController*)emailViewController view] addSubview:self];
 }
 
+- (void)dismissPopUp:(UIButton*)sender {
+    [self removeFromSuperview];
+    [[(EmailsTableViewController*)emailViewController tableView] reloadData];
+}
+
 -(void)createAddFunnlView{
     [[MessageFilterXRefService instance] insertMessageXRefMessageID:messageID funnelId:tempDS.funnelId];
     [self removeFromSuperview];
+    [[(EmailsTableViewController*)emailViewController tableView] reloadData];
 }
 
 /*

@@ -46,17 +46,13 @@ static NSString *mailCellIdentifier = @"MailCell";
     [super viewDidLoad];
     AppDelegate *tempAppDelegate = APPDELEGATE;
     // Do any additional setup after loading the view.
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
-    [titleLabel setFont:[UIFont systemFontOfSize:22]];
-    [titleLabel setTextColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR]];
     if ([tempAppDelegate.currentFunnelString.lowercaseString isEqualToString:@"all"]) {
-        titleLabel.text = @"All mails";
+        self.navigationItem.title = @"All mails";
     }
     else {
-        titleLabel.text = tempAppDelegate.currentFunnelString.capitalizedString;
+        self.navigationItem.title = tempAppDelegate.currentFunnelString.capitalizedString;
     }
-    [titleLabel setTextAlignment:NSTextAlignmentCenter];
-    self.navigationItem.titleView = titleLabel;
+    
     dataSourceArray = [[MessageService instance] retrieveAllMessagesForThread:gmailThreadId];
     [self.view setBackgroundColor:[UIColor whiteColor]];
     emailThreadTable = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, [[UIScreen mainScreen] bounds].size.height)];
