@@ -17,7 +17,8 @@
     self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier];
     inclusiveFunnels = [[UILabel alloc] init];
     dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(320-80-10, 7, 80, 20)];
-    senderLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 7, 320-105-6-60, 20)];
+//    senderLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 7, 320-105-6-60, 20)];
+    senderLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 7, 320-105, 20)];
     subjectLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 27, 320-50-32, 20)];
     bodyLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 47, 320-50-32, 90-47-7)];
     readLabel = [[UILabel alloc] initWithFrame:CGRectMake(10-1, 10, 14, 14)];

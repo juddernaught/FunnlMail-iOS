@@ -8,6 +8,7 @@
 
 #import "MCOMessageView.h"
 #import "MCOCIDURLProtocol.h"
+#import "MessageService.h"
 
 static NSString * mainJavascript = @"\
 var imageElements = function() {\
@@ -71,6 +72,7 @@ pre {\
 @synthesize delegate = _delegate;
 @synthesize prefetchIMAPImagesEnabled = _prefetchIMAPImagesEnabled;
 @synthesize prefetchIMAPAttachmentsEnabled = _prefetchIMAPAttachmentsEnabled;
+@synthesize tempMessageModel;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -106,38 +108,98 @@ pre {\
 
 - (void) _refresh
 {
-    NSString * content;
+    NSString *uidKey = [NSString stringWithFormat:@"%d",tempMessageModel.uid];
+    NSString * content = @"";
     
     if (_message == nil) {
         content = nil;
+        [_webView loadHTMLString:@"" baseURL:nil];
     }
     else {
+        NSArray *stringArray = (NSArray*)[[MessageService instance] retrieveHTMLContentWithID:uidKey];
+        NSString *string = @"";
+        if (stringArray.count > 0) {
+            string = [stringArray objectAtIndex:0];
+        }
+        else
+            string = @"";
+        if (![string isEqualToString:@"not"] && string && ![string isEqualToString:@""]) {
+            NSMutableString * html = [NSMutableString string];
+            [html appendFormat:@"<html><head><script>%@</script><style>%@</style></head>"
+             @"<body>%@</body><iframe src='x-mailcore-msgviewloaded:' style='width: 0px; height: 0px; border: none;'>"
+             @"</iframe></html>", mainJavascript, mainStyle, string];
+            [_webView loadHTMLString:html baseURL:nil];
+            return;
+        }
+        [_webView loadHTMLString:@"" baseURL:nil];
+        
+        NSMutableDictionary *paramDict = [[NSMutableDictionary alloc] init];
         if ([_message isKindOfClass:[MCOIMAPMessage class]]) {
             content = [(MCOIMAPMessage *) _message htmlRenderingWithFolder:_folder delegate:self];
+            if (content) {
+                NSArray *tempArray = [content componentsSeparatedByString:@"<html xmlns=\"http://www.w3.org/1999/xhtml\">"];
+                if (tempArray.count > 1) {
+                    content = [tempArray objectAtIndex:1];
+                }
+                paramDict[uidKey] = content;
+                [[MessageService instance] updateMessageWithHTMLContent:paramDict];
+                NSMutableString * html = [NSMutableString string];
+                [html appendFormat:@"<html><head><script>%@</script><style>%@</style></head>"
+                 @"<body>%@</body><iframe src='x-mailcore-msgviewloaded:' style='width: 0px; height: 0px; border: none;'>"
+                 @"</iframe></html>", mainJavascript, mainStyle, content];
+                
+                [_webView loadHTMLString:html baseURL:nil];
+            }
+            else
+                [_webView loadHTMLString:@"" baseURL:nil];
         }
         else if ([_message isKindOfClass:[MCOMessageBuilder class]]) {
             content = [(MCOMessageBuilder *) _message htmlRenderingWithDelegate:self];
+            if (content) {
+                NSArray *tempArray = [content componentsSeparatedByString:@"<html xmlns=\"http://www.w3.org/1999/xhtml\">"];
+                if (tempArray.count > 1) {
+                    content = [tempArray objectAtIndex:1];
+                }
+                paramDict[uidKey] = content;
+                [[MessageService instance] updateMessageWithHTMLContent:paramDict];
+                NSMutableString * html = [NSMutableString string];
+                [html appendFormat:@"<html><head><script>%@</script><style>%@</style></head>"
+                 @"<body>%@</body><iframe src='x-mailcore-msgviewloaded:' style='width: 0px; height: 0px; border: none;'>"
+                 @"</iframe></html>", mainJavascript, mainStyle, content];
+                
+                [_webView loadHTMLString:html baseURL:nil];
+            }
+            else
+                [_webView loadHTMLString:@"" baseURL:nil];
         }
         else if ([_message isKindOfClass:[MCOMessageParser class]]) {
             content = [(MCOMessageParser *) _message htmlRenderingWithDelegate:self];
+            if (content) {
+                NSArray *tempArray = [content componentsSeparatedByString:@"<html xmlns=\"http://www.w3.org/1999/xhtml\">"];
+                if (tempArray.count > 1) {
+                    content = [tempArray objectAtIndex:1];
+                }
+                paramDict[uidKey] = content;
+                [[MessageService instance] updateMessageWithHTMLContent:paramDict];
+                NSMutableString * html = [NSMutableString string];
+                [html appendFormat:@"<html><head><script>%@</script><style>%@</style></head>"
+                 @"<body>%@</body><iframe src='x-mailcore-msgviewloaded:' style='width: 0px; height: 0px; border: none;'>"
+                 @"</iframe></html>", mainJavascript, mainStyle, content];
+                
+                [_webView loadHTMLString:html baseURL:nil];
+            }
+            else
+                [_webView loadHTMLString:@"" baseURL:nil];
         }
         else {
             content = nil;
             MCAssert(0);
         }
     }
-	if (content == nil) {
-		[_webView loadHTMLString:@"" baseURL:nil];
-		return;
-	}
-//    NSArray *tempArray = [content componentsSeparatedByString:@"</div></div><div><!DOCTYPE html>"];
-//    content = [NSString stringWithFormat:@"</div></div><div><!DOCTYPE html>\n%@",[tempArray objectAtIndex:1]];
-//    tempArray = nil;
-	NSMutableString * html = [NSMutableString string];
-    [html appendFormat:@"<html><head><script>%@</script><style>%@</style></head>"
-        @"<body>%@</body><iframe src='x-mailcore-msgviewloaded:' style='width: 0px; height: 0px; border: none;'>"
-        @"</iframe></html>", mainJavascript, mainStyle, content];
-	[_webView loadHTMLString:html baseURL:nil];
+//	if (content == nil) {
+//		[_webView loadHTMLString:@"" baseURL:nil];
+//		return;
+//	}
 }
 
 - (void) _loadImages
