@@ -128,7 +128,7 @@ static MessageService *instance;
   paramDict[@"date"] = dateTimeInterval;
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    success = [db executeUpdate:@"UPDATE messages SET messageJSON=:messageJSON,read=:read,date=:date messageBodyToBeRendered:messageBodyToBeRendered WHERE messageID=:messageID" withParameterDictionary:paramDict];
+    success = [db executeUpdate:@"UPDATE messages SET messageJSON=:messageJSON,read=:read,date=:date WHERE messageID=:messageID" withParameterDictionary:paramDict];
     
   }];
   

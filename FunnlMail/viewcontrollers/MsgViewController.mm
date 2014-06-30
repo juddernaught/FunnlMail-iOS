@@ -219,7 +219,7 @@
 - (int)insertCCAddress:(NSArray*)to withX:(int)x andY:(int)y{
     for (int counter = 0; counter < to.count; counter++) {
         NSString *toString = nil;
-        if ([[_message.header.to objectAtIndex:counter] displayName]) {
+        if ([[_message.header.cc objectAtIndex:counter] displayName]) {
             toString = [[_message.header.cc objectAtIndex:counter] displayName];
         }
         else

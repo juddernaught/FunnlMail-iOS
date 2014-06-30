@@ -25,6 +25,7 @@
     BOOL isSearching;
     NSArray *funnlArray;
     AppDelegate *tempAppDelegate;
+    NSIndexPath *currentIndexPath;
 }
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property (nonatomic, strong) UITableViewController *tablecontroller;

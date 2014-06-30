@@ -48,6 +48,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    currentIndexPath = nil;
     tempAppDelegate = APPDELEGATE;
     [[EmailService instance] startLogin: self];
     [self setupView];
@@ -444,7 +445,12 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 #pragma mark RDSwipeableTableViewCellDelgate
 - (void)tableView:(UITableView *)tableView willBeginCellSwipe:(RDSwipeableTableViewCell *)cell inDirection:(RDSwipeableTableViewCellRevealDirection)direction
 {
-//    [tableView reloadData];
+//    if (currentIndexPath) {
+//        RDSwipeableTableViewCell *tempCell = (RDSwipeableTableViewCell*)[tableView cellForRowAtIndexPath:currentIndexPath];
+//        [tempCell resetToOriginalState];
+//        currentIndexPath = nil;
+//    }
+//    currentIndexPath = [NSIndexPath indexPathForRow:cell.tag inSection:0];
     if(direction == RDSwipeableTableViewCellRevealDirectionRight){
         
         if ([[FunnelService instance] allFunnels].count > 1) {
@@ -492,8 +498,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     else{
         CGRect cellRect = cell.frame;
         UIButton * button;
-        
-        
         button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.tag = cell.tag;
         button.frame = CGRectMake(0, 0, 80, cellRect.size.height);
@@ -695,6 +699,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 - (void)setReadMessage:(MessageModel*)messageRead
 {
     [messageRead setRead:YES];
+    messageRead.read = TRUE;
     [[MessageService instance] updateMessage:messageRead];
 }
 
