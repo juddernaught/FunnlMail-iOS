@@ -157,8 +157,8 @@ static MessageService *instance;
             double dateTimeInterval = [resultSet doubleForColumn:@"date"];
             
             model.date = [NSDate dateWithTimeIntervalSince1970:dateTimeInterval];
-            
-            [array addObject:[MCOIMAPMessage importSerializable:model.messageJSON]];
+            [array addObject:model];
+//            [array addObject:[MCOIMAPMessage importSerializable:model.messageJSON]];
         }
     }];
     

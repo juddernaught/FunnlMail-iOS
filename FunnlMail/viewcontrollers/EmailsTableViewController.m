@@ -31,7 +31,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 @end
 
 @implementation EmailsTableViewController
-@synthesize tablecontroller,activityIndicator;
+@synthesize tablecontroller,activityIndicator,isSearching;
 
 #pragma mark -
 #pragma mark Lifecycle
@@ -221,6 +221,9 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
         return 2;
     }
+    if (isSearching) {
+        return 2;
+    }
 	return 1;
 }
 
@@ -235,6 +238,9 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
         return [EmailService instance].filterMessages.count;
     }
     else{
+        if (section == 1) {
+            return 1;
+        }
         return searchMessages.count;
     }
 }
@@ -283,7 +289,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 if(message.header.sender.displayName.length)
                     cell.senderLabel.text = [self removeAngularBracket:message.header.sender.displayName];
                 else {
-                    NSLog(@"Email Address : %@",message.header.sender.mailbox);
                     cell.senderLabel.text = [self removeAngularBracket:message.header.sender.mailbox];
                 }
                 
@@ -414,30 +419,107 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
         }
     }
     else{
-        EmailCell *cell = [tableView dequeueReusableCellWithIdentifier:mailCellIdentifier forIndexPath:indexPath];
-        MCOIMAPMessage *message = searchMessages[indexPath.row];
-        if([message.header.date isToday]){
-            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-            [dateFormatter setDateFormat:@"HH:mm"];
-            NSString *dateString = [dateFormatter stringFromDate:message.header.date];
-            cell.dateLabel.text = dateString;
+        switch (indexPath.section){
+            case 0:{
+                EmailCell *cell = [tableView dequeueReusableCellWithIdentifier:mailCellIdentifier forIndexPath:indexPath];
+                MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)searchMessages[indexPath.row] messageJSON]];
+                NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
+                if([message.header.date isToday]){
+                    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                    [dateFormatter setDateFormat:@"HH:mm"];
+                    NSString *dateString = [dateFormatter stringFromDate:message.header.date];
+                    cell.dateLabel.text = dateString;
+                }
+                else
+                    cell.dateLabel.text = [message.header.date timeAgo];
+                
+                if ([(MessageModel*)searchMessages[indexPath.row] numberOfEmailInThread] > 1) {
+                    if ([self isThreadRead:[NSString stringWithFormat:@"%llul",message.gmailThreadID]])
+                        cell.readLabel.backgroundColor = [UIColor clearColor];
+                    else
+                        cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
+                }
+                else{
+                    if([(MessageModel*)searchMessages[indexPath.row] read])
+                        cell.readLabel.backgroundColor = [UIColor clearColor];
+                    else
+                        cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
+                }
+                
+                if([(MessageModel*)searchMessages[indexPath.row] numberOfEmailInThread] > 1){
+                    cell.threadLabel.text = [NSString stringWithFormat:@"%d",[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread]];
+                    [cell.threadLabel setHidden:NO];
+                    [cell.detailDiscloser setHidden:NO];
+                }
+                else{
+                    cell.threadLabel.text = @"";
+                    [cell.threadLabel setHidden:YES];
+                    [cell.detailDiscloser setHidden:YES];
+                }
+                
+                if(message.header.sender.displayName.length)
+                    cell.senderLabel.text = message.header.sender.displayName;
+                else
+                    cell.senderLabel.text = message.header.sender.mailbox;
+                
+                cell.subjectLabel.text = message.header.subject;
+                cell.threadLabel.text = @"";
+                cell.messageRenderingOperation = [[EmailService instance].imapSession plainTextBodyRenderingOperationWithMessage:message folder:self.emailFolder];
+                [cell.messageRenderingOperation start:^(NSString * plainTextBodyString, NSError * error) {
+                    if (plainTextBodyString) {
+                        if (plainTextBodyString.length > 0) {
+                            if ([[plainTextBodyString substringWithRange:NSMakeRange(0, 1)] isEqualToString:@" "]) {
+                                cell.bodyLabel.text = [plainTextBodyString substringWithRange:NSMakeRange(1, plainTextBodyString.length - 1)];
+                            }
+                        }
+                    }
+                    cell.messageRenderingOperation = nil;
+                    if(plainTextBodyString) {
+                        [EmailService instance].filterMessagePreviews[uidKey] = [self removeStartingSpaceFromString:plainTextBodyString];
+                        NSMutableDictionary *paramDict = [[NSMutableDictionary alloc] init];
+                        paramDict[uidKey] = [self removeStartingSpaceFromString:plainTextBodyString];
+                        [[MessageService instance] updateMessageWithDictionary:paramDict];
+                    }
+                }];
+                return cell;
+            }
+            case 1:
+            {
+                UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:inboxInfoIdentifier];
+                if (!cell)
+                {
+                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:inboxInfoIdentifier];
+                    cell.textLabel.font = [UIFont boldSystemFontOfSize:14];
+                    cell.textLabel.textAlignment = NSTextAlignmentCenter;
+                    cell.detailTextLabel.textAlignment = NSTextAlignmentCenter;
+                    cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+                }
+                
+                if ([EmailService instance].messages.count < [EmailService instance].totalNumberOfInboxMessages)
+                    cell.textLabel.text = [NSString stringWithFormat:@"Load %u more",MIN([EmailService instance].totalNumberOfInboxMessages - [EmailService instance].messages.count, NUMBER_OF_MESSAGES_TO_LOAD_ON_SEARCH)];
+                else
+                    cell.textLabel.text = nil;
+                
+                //                if ([EmailService instance].totalNumberOfInboxMessages > 0)
+                //                    cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld message(s)",(long)[EmailService instance].totalNumberOfInboxMessages];
+                cell.accessoryView = self.loadMoreActivityView;
+                
+                if (self.isLoading)
+                    [self.loadMoreActivityView startAnimating];
+                else
+                {
+                    [tempAppDelegate.progressHUD show:NO];
+                    [self.loadMoreActivityView stopAnimating];
+                }
+                
+                return cell;
+                break;
+            }
+                
+            default:
+                return nil;
+                break;
         }
-        else
-            cell.dateLabel.text = [message.header.date timeAgo];
-        
-        if(message.header.sender.displayName.length)
-            cell.senderLabel.text = message.header.sender.displayName;
-        else
-            cell.senderLabel.text = message.header.sender.mailbox;
-        
-        cell.subjectLabel.text = message.header.subject;
-        cell.threadLabel.text = @"";
-        cell.messageRenderingOperation = [[EmailService instance].imapSession plainTextBodyRenderingOperationWithMessage:message folder:self.emailFolder];
-        [cell.messageRenderingOperation start:^(NSString * plainTextBodyString, NSError * error) {
-            cell.bodyLabel.text = plainTextBodyString;
-            cell.messageRenderingOperation = nil;
-        }];
-        return cell;
     }
 }
 
@@ -651,13 +733,19 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
         }
     }
     else{
-        MCOIMAPMessage *msg = searchMessages[indexPath.row];
-        MsgViewController *vc = [[MsgViewController alloc] init];
-        vc.folder = self.emailFolder;
-        vc.message = msg;
-        vc.session = [EmailService instance].imapSession;
-        //[self.navigationController pushViewController:vc animated:YES];
-        [self.mainVCdelegate pushViewController:vc];
+        if (indexPath.section == 1) {
+            [self searchOnlineWithString:mailSearchBar.text];
+        }
+        else {
+            MCOIMAPMessage *msg = [MCOIMAPMessage importSerializable:[(MessageModel*)searchMessages[indexPath.row] messageJSON]];
+            MsgViewController *vc = [[MsgViewController alloc] init];
+            vc.folder = self.emailFolder;
+            vc.message = msg;
+            vc.session = [EmailService instance].imapSession;
+            //[self.navigationController pushViewController:vc animated:YES];
+            [self setReadMessage:(MessageModel*)searchMessages[indexPath.row]];
+            [self.mainVCdelegate pushViewController:vc];
+        }
     }
     
 }
@@ -674,6 +762,10 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
         }
     }
     return emailString;
+}
+
+- (void)resetSearchBar {
+    mailSearchBar.text = @"";
 }
 
 - (CGFloat)findTheSizeOf:(NSString*)nameString
@@ -804,32 +896,61 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     
 }
 
-- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar;{
+#pragma mark SearchFunction
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+    [searchBar resignFirstResponder];
+    NSString *searchText = searchBar.text;
+    isSearching = YES;
+    [self searchWithInDataBaseWithString:searchText];
+}
+
+//search online
+- (void)searchOnlineWithString:(NSString*)searchText {
     filterLabel.text = @"Search Results";
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [searchMessages removeAllObjects];
-    MCOIMAPSearchOperation *searchOperation = [[EmailService instance].imapSession searchOperationWithFolder:self.emailFolder kind:MCOIMAPSearchKindFrom searchString:searchBar.text];
+//    [searchMessages removeAllObjects];
+    MCOIMAPSearchOperation *searchOperation = [[EmailService instance].imapSession searchOperationWithFolder:self.emailFolder kind:MCOIMAPSearchKindFrom searchString:searchText];
     [searchOperation start:^(NSError *error, MCOIndexSet *searchResult) {
         if (error)
         {
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-            NSLog(@"%@",error.description);
+//            NSLog(@"%@",error.description);
         }
         else
         {
             NSLog(@"%d", [searchResult count]);
-            filterLabel.text = [NSString stringWithFormat:@"Search Results : %d",searchResult.count];
+//            filterLabel.text = [NSString stringWithFormat:@"Search Results : %d",searchResult.count];
             if (searchResult) {
                 MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)
                 (MCOIMAPMessagesRequestKindHeaders | MCOIMAPMessagesRequestKindStructure |
                  MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject |
                  MCOIMAPMessagesRequestKindFlags);
-                
+                for (MessageModel *tempMessageMOdel in searchMessages) {
+                    [searchResult removeIndex:tempMessageMOdel.messageID.integerValue];
+                }
+                NSLog(@"%d",searchResult.count);
                 MCOIMAPSession *session = [EmailService instance].imapSession;
                 MCOIMAPFetchMessagesOperation * op = [session fetchMessagesByUIDOperationWithFolder:self.emailFolder requestKind:requestKind uids:searchResult];
                 [op start:^(NSError * error, NSArray * messages, MCOIndexSet * vanishedMessages) {
+//                    [searchMessages removeAllObjects];
                     NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"header.date" ascending:NO];
-                    searchMessages = [[NSMutableArray alloc] initWithArray:[messages sortedArrayUsingDescriptors:@[sort]]];
+                    messages = [[NSMutableArray alloc] initWithArray:[messages sortedArrayUsingDescriptors:@[sort]]];
+                    int counter = 0;
+                    for (MCOIMAPMessage *m in messages) {
+                        if (counter >= NUMBER_OF_MESSAGES_TO_LOAD_ON_SEARCH) {
+                            break;
+                        }
+                        else
+                            counter++;
+                        MessageModel *tempMessageModel = [[MessageModel alloc] init];
+                        tempMessageModel.read = m.flags;
+                        tempMessageModel.date = m.header.date;
+                        tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
+                        tempMessageModel.messageJSON = [m serializable];
+                        tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
+                        [searchMessages addObject:tempMessageModel];
+                        tempMessageModel = nil;
+                    }
                     isSearching = YES;
                     [self.tableView reloadData];
                     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -840,7 +961,30 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
             }
         }
     }];
-    [searchBar resignFirstResponder];
+}
+
+//offline search
+- (void)searchWithInDataBaseWithString:(NSString*)searchText {
+    [searchMessages removeAllObjects];
+    NSArray *tempArray = [[MessageService instance] messagesAllTopMessages];
+    for (int counter = 0; counter < [tempArray count] ; counter++) {
+        MessageModel *tempModel = [tempArray objectAtIndex:counter];
+        if ([self searchForString:searchText inMessage:tempModel]) {
+            [searchMessages addObject:tempModel];
+        }
+    }
+    [_tableView reloadData];
+}
+
+- (BOOL)searchForString:(NSString*)searchText inMessage:(MessageModel*)tempMessageModel {
+    //    int numberOfOccurence = [tempMessageModel.messageBodyToBeRendered containsSubstring:searchText];
+    if ([tempMessageModel.messageJSON.lowercaseString rangeOfString:searchText.lowercaseString].location == NSNotFound) {
+        
+    }
+    else {
+        return TRUE;
+    }
+    return FALSE;
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar;{

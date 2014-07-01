@@ -208,6 +208,8 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 // FIXME: move somewhere else?
 -(void) filterSelected:(FunnelModel *)filterModel{
+    emailsTableViewController.isSearching = FALSE;
+    [emailsTableViewController resetSearchBar];
     if(filterModel != nil){
         currentFilterModel = filterModel;
     }else{

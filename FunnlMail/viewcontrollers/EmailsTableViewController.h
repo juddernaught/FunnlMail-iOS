@@ -22,11 +22,11 @@
     UISearchBar *mailSearchBar;
     UISearchDisplayController *searchDisplayController;
     NSMutableArray *searchMessages;
-    BOOL isSearching;
     NSArray *funnlArray;
     AppDelegate *tempAppDelegate;
     NSIndexPath *currentIndexPath;
 }
+@property BOOL isSearching;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property (nonatomic, strong) UITableViewController *tablecontroller;
 @property (nonatomic, strong) NSArray *messages;
@@ -39,4 +39,5 @@
 @property (nonatomic) BOOL isLoading;
 @property (nonatomic, strong) UIActivityIndicatorView *loadMoreActivityView;
 -(void) setFilterModel:(FunnelModel *)filterModel;
+- (void)resetSearchBar;
 @end
