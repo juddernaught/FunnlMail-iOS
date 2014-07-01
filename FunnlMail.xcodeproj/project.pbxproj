@@ -71,9 +71,9 @@
 		66F2C48B18E3293F00CD593E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C46D18E3293E00CD593E /* UIKit.framework */; };
 		66F2C49318E3293F00CD593E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66F2C49118E3293F00CD593E /* InfoPlist.strings */; };
 		66F2C49518E3293F00CD593E /* FunnlMailTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F2C49418E3293F00CD593E /* FunnlMailTests.m */; };
-		B71F39741956642100E6D1AB /* forward.png in Resources */ = {isa = PBXBuildFile; fileRef = B71F39731956642100E6D1AB /* forward.png */; };
 		B742EC351959E170006E17AB /* reply.png in Resources */ = {isa = PBXBuildFile; fileRef = B742EC341959E170006E17AB /* reply.png */; };
 		B751C88F1940FDFF0051DF0B /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B751C88E1940FDFF0051DF0B /* MessageUI.framework */; };
+		B7A270AB1961089800DE39DF /* forward.png in Resources */ = {isa = PBXBuildFile; fileRef = B7A270AA1961089800DE39DF /* forward.png */; };
 		B7C9B261194E886700F766DA /* PreviewEmailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B7C9B260194E886700F766DA /* PreviewEmailViewController.m */; };
 		CC39517218E6F9700093C787 /* MainFilterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CC39517118E6F9700093C787 /* MainFilterCell.m */; };
 		CC4263B01934B67A00F3C5EB /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = CC4263A61934B67A00F3C5EB /* FMDatabase.m */; };
@@ -273,9 +273,9 @@
 		66F2C49018E3293F00CD593E /* FunnlMailTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FunnlMailTests-Info.plist"; sourceTree = "<group>"; };
 		66F2C49218E3293F00CD593E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		66F2C49418E3293F00CD593E /* FunnlMailTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FunnlMailTests.m; sourceTree = "<group>"; };
-		B71F39731956642100E6D1AB /* forward.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = forward.png; sourceTree = "<group>"; };
 		B742EC341959E170006E17AB /* reply.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = reply.png; path = ../reply.png; sourceTree = "<group>"; };
 		B751C88E1940FDFF0051DF0B /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		B7A270AA1961089800DE39DF /* forward.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = forward.png; sourceTree = "<group>"; };
 		B7C9B25F194E886700F766DA /* PreviewEmailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreviewEmailViewController.h; sourceTree = "<group>"; };
 		B7C9B260194E886700F766DA /* PreviewEmailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreviewEmailViewController.m; sourceTree = "<group>"; };
 		CC1AD1DC18F54BE9000E356C /* MainVCDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainVCDelegate.h; path = viewcontrollers/MainVCDelegate.h; sourceTree = "<group>"; };
@@ -747,8 +747,8 @@
 				CC1AD1DC18F54BE9000E356C /* MainVCDelegate.h */,
 				667787FF18EF768B00EF1962 /* MsgViewController.h */,
 				6677880018EF768B00EF1962 /* MsgViewController.mm */,
-				B71F39731956642100E6D1AB /* forward.png */,
 				B742EC341959E170006E17AB /* reply.png */,
+				B7A270AA1961089800DE39DF /* forward.png */,
 				FA2F433D193318BE00C1F119 /* CreateFunnlViewController.h */,
 				FA2F433E193318BE00C1F119 /* CreateFunnlViewController.m */,
 				FA2C9BD9193EE66400866BEE /* MenuViewController.h */,
@@ -1018,6 +1018,7 @@
 				66AEEBAC1936B26B00B6DBE5 /* GTMOAuth2ViewTouch.xib in Resources */,
 				B742EC351959E170006E17AB /* reply.png in Resources */,
 				6620BA9218E343FA00769C48 /* News.png in Resources */,
+				B7A270AB1961089800DE39DF /* forward.png in Resources */,
 				FA5627E21935E57700238F40 /* close@2x.png in Resources */,
 				6620BA8118E32FD700769C48 /* Meetings.png in Resources */,
 				6620BA9118E343FA00769C48 /* Forums.png in Resources */,
@@ -1038,7 +1039,6 @@
 				63A8A59E1952AA2600DBD969 /* Menu1.png in Resources */,
 				FA5627DA1935C92600238F40 /* notification.png in Resources */,
 				FA8A4ADC193D902B004890E3 /* NSDateTimeAgo.bundle in Resources */,
-				B71F39741956642100E6D1AB /* forward.png in Resources */,
 				6620BA9418E343FA00769C48 /* Shopping.png in Resources */,
 				66AEEBBE193719AF00B6DBE5 /* login.png in Resources */,
 				6620BAAE18E399C700769C48 /* Email 4.png in Resources */,

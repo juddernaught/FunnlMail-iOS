@@ -34,7 +34,7 @@ UITextField *to;
 UITextField *cc;
 UITextField *bcc;
 UITextField *subject;
-
+NSNumber *sendNum;
 
 - (void)viewDidLoad
 {
@@ -44,7 +44,7 @@ UITextField *subject;
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor whiteColor];
     
-    UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, 28, 66, 28)];
+    UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, 28, self.view.bounds.size.width, 28)];
     centeredButtons.backgroundColor = [UIColor whiteColor];
     UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:centeredButtons];
     self.navigationItem.rightBarButtonItem = rightItem;
@@ -53,77 +53,92 @@ UITextField *subject;
     UIButton *sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [cancel addTarget:self action:@selector(cancelButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    cancel.frame = CGRectMake(33, 0, 33, 28);
+    cancel.frame = CGRectMake(0, 0, 33, 28);
     [cancel setTitle:@"X" forState:UIControlStateNormal];
     [cancel setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [centeredButtons addSubview:cancel];
     
     [sendButton addTarget:self action:@selector(sendButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    sendButton.frame = CGRectMake(0, 0, 33, 28);
-    [sendButton setBackgroundImage:[UIImage imageNamed:@"Mail.png"] forState:UIControlStateNormal];
+    sendButton.frame = CGRectMake(260, 0, 50, 28);
+    [sendButton setTitle:@"Send" forState:UIControlStateNormal];
+    [sendButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    //[sendButton setBackgroundImage:[UIImage imageNamed:@"Mail.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:sendButton];
     [self.view addSubview:centeredButtons];
     
-    to = [[UITextField alloc] initWithFrame:CGRectMake(22, 60, 300, 20)];
-    cc = [[UITextField alloc] initWithFrame:CGRectMake(22, 80, 300, 20)];
-    bcc = [[UITextField alloc]initWithFrame:CGRectMake(32, 100, 288, 20)];
-    subject = [[UITextField alloc]initWithFrame:CGRectMake(50, 120, 270, 20)];
-    UITextField *to2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 60, 22, 20)];
-    UITextField *cc2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 80, 22, 20)];
-    UITextField *bcc2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 100, 32, 20)];
-    UITextField *subject2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 120, 50, 20)];
+    int height = 30;
+    to = [[UITextField alloc] initWithFrame:CGRectMake(22, 60, 300, height)];
+    cc = [[UITextField alloc] initWithFrame:CGRectMake(30, 90, 290, height)];
+    bcc = [[UITextField alloc]initWithFrame:CGRectMake(32, 120, 288, height)];
+    subject = [[UITextField alloc]initWithFrame:CGRectMake(50, 150, 270, height)];
+    
+    UITextField *to2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 60, 22, height)];
+    UITextField *cc2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 90, 30, height)];
+    UITextField *bcc2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 120, 32, height)];
+    UITextField *subject2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 150, 50, height)];
     to.text = [self.address nonEncodedRFC822String];
     
-    to2.text = @" to:";
-    cc2.text = @" cc:";
-    bcc2.text = @" bcc:";
-    subject2.text = @" subject:";
+    to2.text = @" To:";
+    cc2.text = @" Cc:";
+    bcc2.text = @" Bcc:";
+    subject2.text = @" Subject: ";
+    
+    to2.userInteractionEnabled = false;
+    cc2.userInteractionEnabled = false;
+    bcc2.userInteractionEnabled = false;
+    subject2.userInteractionEnabled = false;
     
     [to2 setFont:[UIFont systemFontOfSize:12]];
     [cc2 setFont:[UIFont systemFontOfSize:12]];
     [bcc2 setFont:[UIFont systemFontOfSize:12]];
     [subject2 setFont:[UIFont systemFontOfSize:12]];
+    
+    [to2 setTextColor:[UIColor grayColor]];
+    [cc2 setTextColor:[UIColor grayColor]];
+    [bcc2 setTextColor:[UIColor grayColor]];
+    [subject2 setTextColor:[UIColor grayColor]];
 
+    //actual textview bordering
     UIView *bottomBorder = [[UIView alloc]
-                            initWithFrame:CGRectMake(0,to.frame.size.height-1,to.frame.size.width-10,1)];
-    bottomBorder.backgroundColor = [UIColor blackColor];
+                            initWithFrame:CGRectMake(0,to.frame.size.height-1,to.frame.size.width-30,1)];
+    bottomBorder.backgroundColor = [UIColor colorWithHexString:@"EBE6E9"];
     [to addSubview:bottomBorder];
     
     bottomBorder = [[UIView alloc]
-                    initWithFrame:CGRectMake(10,to.frame.size.height-1,to2.frame.size.width-10,1)];
-    bottomBorder.backgroundColor = [UIColor blackColor];
-    [to2 addSubview:bottomBorder];
-    
-    bottomBorder = [[UIView alloc]
-                    initWithFrame:CGRectMake(0,to.frame.size.height-1,cc.frame.size.width-10,1)];
-    bottomBorder.backgroundColor = [UIColor blackColor];
+                    initWithFrame:CGRectMake(0,to.frame.size.height-1,cc.frame.size.width-30,1)];
+    bottomBorder.backgroundColor = [UIColor colorWithHexString:@"EBE6E9"];
     [cc addSubview:bottomBorder];
     
     bottomBorder = [[UIView alloc]
-                            initWithFrame:CGRectMake(10,to.frame.size.height-1,cc2.frame.size.width,1)];
-    bottomBorder.backgroundColor = [UIColor blackColor];
-    [cc2 addSubview:bottomBorder];
-    
-    bottomBorder = [[UIView alloc]
-                            initWithFrame:CGRectMake(0,to.frame.size.height-1,bcc.frame.size.width-10,1)];
-    bottomBorder.backgroundColor = [UIColor blackColor];
+                            initWithFrame:CGRectMake(0,to.frame.size.height-1,bcc.frame.size.width-30,1)];
+    bottomBorder.backgroundColor = [UIColor colorWithHexString:@"EBE6E9"];
     [bcc addSubview:bottomBorder];
     
     bottomBorder = [[UIView alloc]
-                            initWithFrame:CGRectMake(10,to.frame.size.height-1,bcc2.frame.size.width,1)];
-    bottomBorder.backgroundColor = [UIColor blackColor];
+                            initWithFrame:CGRectMake(0,to.frame.size.height-1,subject.frame.size.width-30,1)];
+    bottomBorder.backgroundColor = [UIColor colorWithHexString:@"EBE6E9"];
+    [subject addSubview:bottomBorder];
+    
+    //begin prefix bordering
+    bottomBorder = [[UIView alloc]
+                    initWithFrame:CGRectMake(0,to.frame.size.height-1,to2.frame.size.width,1)];
+    bottomBorder.backgroundColor = [UIColor colorWithHexString:@"EBE6E9"];
+    [to2 addSubview:bottomBorder];
+    
+    bottomBorder = [[UIView alloc]
+                    initWithFrame:CGRectMake(0,to.frame.size.height-1,cc2.frame.size.width,1)];
+    bottomBorder.backgroundColor = [UIColor colorWithHexString:@"EBE6E9"];
+    [cc2 addSubview:bottomBorder];
+    
+    bottomBorder = [[UIView alloc]
+                    initWithFrame:CGRectMake(0,to.frame.size.height-1,bcc2.frame.size.width,1)];
+    bottomBorder.backgroundColor = [UIColor colorWithHexString:@"EBE6E9"];
     [bcc2 addSubview:bottomBorder];
     
     bottomBorder = [[UIView alloc]
-                            initWithFrame:CGRectMake(10,to.frame.size.height-1,subject2.frame.size.width,1)];
-    bottomBorder.backgroundColor = [UIColor blackColor];
+                    initWithFrame:CGRectMake(0,to.frame.size.height-1, subject2.frame.size.width,1)];
+    bottomBorder.backgroundColor = [UIColor colorWithHexString:@"EBE6E9"];
     [subject2 addSubview:bottomBorder];
-    
-    bottomBorder = [[UIView alloc]
-                            initWithFrame:CGRectMake(0,to.frame.size.height-1,subject.frame.size.width-10,1)];
-    bottomBorder.backgroundColor = [UIColor blackColor];
-    [subject addSubview:bottomBorder];
-
     
     if (self.forward) {
         NSLog(@"self.forward");
@@ -151,7 +166,7 @@ UITextField *subject;
 //    UIWebView *email = [[UIWebView alloc]initWithFrame:CGRectMake(0, 140, 320, self.view.bounds.size.height-140)];
 //    email.userInteractionEnabled = true;
 
-    self.body = [[UITextView alloc] initWithFrame:CGRectMake(0, 140, 320, self.view.bounds.size.height-140)];
+    self.body = [[UITextView alloc] initWithFrame:CGRectMake(0, 180, 320, self.view.bounds.size.height-140)];
     
     
     if (!self.compose) {
@@ -159,7 +174,7 @@ UITextField *subject;
         
         [operation start:^(NSError *error, NSData *data) {
             MCOMessageParser *messageParser = [[MCOMessageParser alloc] initWithData:data];
-            msgBody = [messageParser plainTextBodyRendering];
+            msgBody = [messageParser plainTextRendering];
             NSMutableString *temp = [[NSMutableString alloc] initWithString:@"____________________________________________________"];
             [temp appendString:msgBody];
             self.body.text = temp;
@@ -178,15 +193,6 @@ UITextField *subject;
 }
 
 -(void)sendButtonSelected{
-    MCOSMTPSession *smtpSession = [[MCOSMTPSession alloc] init];
-    smtpSession.hostname = @"smtp.gmail.com";
-    smtpSession.port = 465;
-    smtpSession.username = @"herurpranav@gmail.com";
-    smtpSession.password = @"bye2bye2";
-    smtpSession.authType = (MCOAuthTypeSASLPlain | MCOAuthTypeSASLLogin);
-    smtpSession.connectionType = MCOConnectionTypeTLS;
-    //[EmailService instance].smtpSession.OAuth2Token
-    
     
     MCOMessageBuilder * builder = [[MCOMessageBuilder alloc] init];
     [[builder header] setFrom:[MCOAddress addressWithDisplayName:nil mailbox:self.imapSession.username]];
@@ -206,16 +212,15 @@ UITextField *subject;
     [builder setHTMLBody:self.body.text];
     rfc822Data = [builder data];
     
-    MCOSMTPSendOperation *sendOperation = [smtpSession sendOperationWithData:rfc822Data];
+    MCOSMTPSendOperation *sendOperation = [[EmailService instance].smtpSession sendOperationWithData:rfc822Data];
     [sendOperation start:^(NSError *error) {
         if(error) {
-            NSLog(@"%@ Error sending email:%@", self.imapSession.username, error);
+            NSLog(@"%@ Error sending email:%@", [EmailService instance].smtpSession.username, error);
         } else {
-            NSLog(@"%@ Successfully sent email!", self.imapSession.username);
+            NSLog(@"%@ Successfully sent email!", [EmailService instance].smtpSession.username);
         }
     }];
     [self dismissViewControllerAnimated:YES completion:NULL];
-
 
 }
 

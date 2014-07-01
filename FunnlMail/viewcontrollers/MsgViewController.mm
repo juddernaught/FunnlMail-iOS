@@ -69,7 +69,8 @@
     [self.view addSubview:messageTableView];
     
     UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, self.view.bounds.size.height-28, self.view.bounds.size.width, 28)];
-    centeredButtons.backgroundColor = [UIColor whiteColor];
+    centeredButtons.backgroundColor = [UIColor colorWithHexString:@"F7F5F6"];
+    //EBE6E9 spare color i was testing
     
     UIButton *replyButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIButton *forwardButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -80,29 +81,18 @@
     [centeredButtons addSubview:replyButton];
 
     [forwardButton addTarget:self action:@selector(forwardButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    forwardButton.frame = CGRectMake(164, 0, 31, 28);
+    forwardButton.frame = CGRectMake(160, 0, 31, 28);
     [forwardButton setBackgroundImage:[UIImage imageNamed:@"forward.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:forwardButton];
     
     UIView *sideBorder = [[UIView alloc]
                           initWithFrame:CGRectMake(159,0,1,28)];
     sideBorder.backgroundColor = [UIColor lightGrayColor];
-    [centeredButtons addSubview:sideBorder];
+    UIView *topBorder = [[UIView alloc]
+                          initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,1)];
+    topBorder.backgroundColor = [UIColor lightGrayColor];
+    [centeredButtons addSubview:topBorder];
     
-    sideBorder = [[UIView alloc]
-                          initWithFrame:CGRectMake(163,0,1,28)];
-    sideBorder.backgroundColor = [UIColor lightGrayColor];
-    [centeredButtons addSubview:sideBorder];
-    
-    sideBorder = [[UIView alloc]
-                  initWithFrame:CGRectMake(127,0,1,28)];
-    sideBorder.backgroundColor = [UIColor lightGrayColor];
-    [centeredButtons addSubview:sideBorder];
-    
-    sideBorder = [[UIView alloc]
-                  initWithFrame:CGRectMake(195,0,1,28)];
-    sideBorder.backgroundColor = [UIColor lightGrayColor];
-    [centeredButtons addSubview:sideBorder];
     [self.view addSubview:centeredButtons];
     if (![[NSUserDefaults standardUserDefaults] boolForKey:@"FetchFullMessageEnabled"]) {
         [_messageView setDelegate:self];
