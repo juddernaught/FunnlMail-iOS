@@ -30,6 +30,7 @@
     int subjectHeight;
     int headerHeight;
     UITableView *messageTableView;
+    int webViewHeight;
 }
 
 @property (nonatomic, copy) NSString * folder;

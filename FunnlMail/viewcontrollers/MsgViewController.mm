@@ -61,13 +61,14 @@
     _messageView.tempMessageModel = _message;
     _messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 //    [self.view addSubview:_messageView];
+    [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(updateWebView) userInfo:nil repeats:NO];
     
-    messageTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT-28)];
+    messageTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT-34)];
 //    [messageTableView setSeparatorColor:[UIColor clearColor]];
     [messageTableView setScrollEnabled:YES];
     messageTableView.delegate = self;
     messageTableView.dataSource = self;
-    messageTableView.tableFooterView = _messageView;
+    messageTableView.tableFooterView = seperator;
     [self.view addSubview:messageTableView];
     
     UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, self.view.bounds.size.height-28, self.view.bounds.size.width, 28)];
@@ -137,6 +138,14 @@
 //    [titleLabel setTextAlignment:NSTextAlignmentCenter];
 //    self.navigationItem.titleView = titleLabel;
 //    titleLabel = nil;
+}
+
+-(void)updateWebView{
+    NSLog(@"----> %d",_messageView.height);
+    webViewHeight = MAX(HEIGHT-40, _messageView.height+60);
+    _messageView.webView.scrollView.alwaysBounceVertical = NO;
+    _messageView.webView.frame = CGRectMake(0, 0, _messageView.webView.frame.size.width, webViewHeight);
+    [messageTableView reloadData];
 }
 
 #pragma mark -
@@ -304,7 +313,7 @@
 #pragma mark UITableViewDelegate & DataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 2;
+    return 3;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -327,7 +336,7 @@
     else if (indexPath.row == 1)
         return subjectView.frame.size.height + 20;
     else
-        return HEIGHT - 28;
+        return webViewHeight;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

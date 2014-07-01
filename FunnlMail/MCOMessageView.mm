@@ -73,6 +73,8 @@ pre {\
 @synthesize prefetchIMAPImagesEnabled = _prefetchIMAPImagesEnabled;
 @synthesize prefetchIMAPAttachmentsEnabled = _prefetchIMAPAttachmentsEnabled;
 @synthesize tempMessageModel;
+@synthesize webView = _webView;
+@synthesize height;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -204,9 +206,11 @@ pre {\
 
 - (void) _loadImages
 {
+    NSString *heightOfWebViewStr = [_webView stringByEvaluatingJavaScriptFromString:@"document.height;"];
 	NSString * result = [_webView stringByEvaluatingJavaScriptFromString:@"findCIDImageURL()"];
     NSLog(@"----------");
-    NSLog(@"%@", result);
+    NSLog(@"%@ %@", result,heightOfWebViewStr);
+    height = [heightOfWebViewStr integerValue];
 	NSData * data = [result dataUsingEncoding:NSUTF8StringEncoding];
 	NSError *error = nil;
 	NSArray * imagesURLStrings = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];

@@ -18,7 +18,8 @@
 @property (nonatomic, strong) MCOAbstractMessage * message;
 
 @property (nonatomic, assign) id <MCOMessageViewDelegate> delegate;
-
+@property (nonatomic, strong) UIWebView *webView;
+@property (nonatomic, assign) int height;
 @property (nonatomic, assign) BOOL prefetchIMAPImagesEnabled;
 @property (nonatomic, assign) BOOL prefetchIMAPAttachmentsEnabled;
 @property (nonatomic, strong) MCOIMAPMessage *tempMessageModel;
