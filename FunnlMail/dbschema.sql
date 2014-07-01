@@ -7,6 +7,8 @@ create table messages(
   read INTEGER,
   date REAL,
   gmailthreadid TEXT,
+  messageBodyToBeRendered TEXT,
+  messageHTMLBody TEXT,
   PRIMARY KEY (messageID)
 );
 

@@ -7,8 +7,8 @@
 //
 
 #include <MailCore/MailCore.h>
-
 #import <UIKit/UIKit.h>
+#import "MessageModel.h"
 
 @protocol MCOMessageViewDelegate;
 
@@ -21,7 +21,7 @@
 
 @property (nonatomic, assign) BOOL prefetchIMAPImagesEnabled;
 @property (nonatomic, assign) BOOL prefetchIMAPAttachmentsEnabled;
-
+@property (nonatomic, strong) MCOIMAPMessage *tempMessageModel;
 @end
 
 @protocol MCOMessageViewDelegate <NSObject>
@@ -46,5 +46,5 @@
 - (NSString *) MCOMessageView:(MCOMessageView *)view filteredHTMLForPart:(NSString *)html;
 - (NSString *) MCOMessageView:(MCOMessageView *)view filteredHTMLForMessage:(NSString *)html;
 - (NSData *) MCOMessageView:(MCOMessageView *)view previewForData:(NSData *)data isHTMLInlineImage:(BOOL)isHTMLInlineImage;
-
+- (id)initWithFrame:(CGRect)frame withMessage:(MessageModel*)message;
 @end

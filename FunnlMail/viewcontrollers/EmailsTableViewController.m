@@ -48,6 +48,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    currentIndexPath = nil;
     tempAppDelegate = APPDELEGATE;
     [[EmailService instance] startLogin: self];
     [self setupView];
@@ -280,9 +281,11 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 //                else
 //                    cell.dateLabel.text = [message.header.date timeAgo];
                 if(message.header.sender.displayName.length)
-                    cell.senderLabel.text = [NSString stringWithFormat:@"%@",message.header.sender.displayName];
-                else
-                    cell.senderLabel.text = cell.senderLabel.text = [NSString stringWithFormat:@"%@",message.header.sender.mailbox];
+                    cell.senderLabel.text = [self removeAngularBracket:message.header.sender.displayName];
+                else {
+                    NSLog(@"Email Address : %@",message.header.sender.mailbox);
+                    cell.senderLabel.text = [self removeAngularBracket:message.header.sender.mailbox];
+                }
                 
                 CGFloat tempFloat = [self findTheSizeOf:cell.senderLabel.text];
                 
@@ -337,9 +340,13 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 }
                 
                 NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
-                NSString *cachedPreview = [EmailService instance].filterMessagePreviews[uidKey];
-                if (cachedPreview)
+//                NSString *cachedPreview = [EmailService instance].filterMessagePreviews[uidKey];
+                NSString *cachedPreview = [(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageBodyToBeRendered];
+                if (![cachedPreview isEqualToString:@"not"])
+                {
+//                    NSLog(@"[EmailTableViewController cellForRow] body stored previously");
                     cell.bodyLabel.text = cachedPreview;
+                }
                 else{
                     cell.messageRenderingOperation = [[EmailService instance].imapSession plainTextBodyRenderingOperationWithMessage:message folder:self.emailFolder];
                     [cell.messageRenderingOperation start:^(NSString * plainTextBodyString, NSError * error) {
@@ -351,8 +358,12 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                             }
                         }
                         cell.messageRenderingOperation = nil;
-                        if(plainTextBodyString)
+                        if(plainTextBodyString) {
                             [EmailService instance].filterMessagePreviews[uidKey] = [self removeStartingSpaceFromString:plainTextBodyString];
+                            NSMutableDictionary *paramDict = [[NSMutableDictionary alloc] init];
+                            paramDict[uidKey] = [self removeStartingSpaceFromString:plainTextBodyString];
+                            [[MessageService instance] updateMessageWithDictionary:paramDict];
+                        }
                     }];
                 }
                 
@@ -434,7 +445,12 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 #pragma mark RDSwipeableTableViewCellDelgate
 - (void)tableView:(UITableView *)tableView willBeginCellSwipe:(RDSwipeableTableViewCell *)cell inDirection:(RDSwipeableTableViewCellRevealDirection)direction
 {
-    
+//    if (currentIndexPath) {
+//        RDSwipeableTableViewCell *tempCell = (RDSwipeableTableViewCell*)[tableView cellForRowAtIndexPath:currentIndexPath];
+//        [tempCell resetToOriginalState];
+//        currentIndexPath = nil;
+//    }
+//    currentIndexPath = [NSIndexPath indexPathForRow:cell.tag inSection:0];
     if(direction == RDSwipeableTableViewCellRevealDirectionRight){
         
         if ([[FunnelService instance] allFunnels].count > 1) {
@@ -482,8 +498,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     else{
         CGRect cellRect = cell.frame;
         UIButton * button;
-        
-        
         button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.tag = cell.tag;
         button.frame = CGRectMake(0, 0, 80, cellRect.size.height);
@@ -650,6 +664,18 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
 #pragma mark -
 #pragma mark Helper
+- (NSString*)removeAngularBracket:(NSString*)emailString {
+    if (emailString.length > 0) {
+        if ([[emailString substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"<"]) {
+            emailString = [emailString substringWithRange:NSMakeRange(1, emailString.length - 1)];
+            if ([[emailString substringWithRange:NSMakeRange(emailString.length - 1, 1)] isEqualToString:@">"]) {
+                emailString = [emailString substringWithRange:NSMakeRange(0, emailString.length - 1)];
+            }
+        }
+    }
+    return emailString;
+}
+
 - (CGFloat)findTheSizeOf:(NSString*)nameString
 {
     UIFont *font = [UIFont systemFontOfSize:16];
@@ -673,6 +699,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 - (void)setReadMessage:(MessageModel*)messageRead
 {
     [messageRead setRead:YES];
+    messageRead.read = TRUE;
     [[MessageService instance] updateMessage:messageRead];
 }
 

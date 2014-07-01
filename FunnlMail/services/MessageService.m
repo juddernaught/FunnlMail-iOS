@@ -61,6 +61,60 @@ static MessageService *instance;
   return success;
 }
 
+-(BOOL) updateMessageWithHTMLContent:(NSDictionary *)messageDict{
+    __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+    
+    __block BOOL success = NO;
+    
+    //    NSNumber *dateTimeInterval = [NSNumber numberWithDouble:[messageModel.date timeIntervalSince1970]];
+    
+    paramDict[@"messageID"] = [messageDict.allKeys objectAtIndex:0];
+    paramDict[@"messageHTMLBody"] = [messageDict objectForKey:[messageDict.allKeys objectAtIndex:0]];
+    
+    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+        success = [db executeUpdate:@"UPDATE messages SET messageHTMLBody=:messageHTMLBody WHERE messageID=:messageID" withParameterDictionary:paramDict];
+        
+    }];
+    
+    return success;
+}
+
+-(BOOL) updateMessageWithDictionary:(NSDictionary *)messageDict{
+    __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+    
+    __block BOOL success = NO;
+    
+//    NSNumber *dateTimeInterval = [NSNumber numberWithDouble:[messageModel.date timeIntervalSince1970]];
+    
+    paramDict[@"messageID"] = [messageDict.allKeys objectAtIndex:0];
+    paramDict[@"messageBodyToBeRendered"] = [messageDict objectForKey:[messageDict.allKeys objectAtIndex:0]];
+    
+    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+        success = [db executeUpdate:@"UPDATE messages SET messageBodyToBeRendered=:messageBodyToBeRendered WHERE messageID=:messageID" withParameterDictionary:paramDict];
+        
+    }];
+    
+    return success;
+}
+
+- (NSArray*)retrieveHTMLContentWithID:(NSString*)uid {
+    __block NSMutableArray *array = [[NSMutableArray alloc] init];
+    __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+    paramDict[@"messageID"] = uid;
+    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *resultSet = [db executeQuery:@"select messageHTMLBody from messages where messageID=:messageID" withParameterDictionary:paramDict];
+        
+//        MessageModel *model;
+        
+        while ([resultSet next]) {
+            if ([resultSet stringForColumn:@"messageHTMLBody"]) {
+                [array addObject:[resultSet stringForColumn:@"messageHTMLBody"]];
+            }
+        }
+    }];
+    return array;
+}
+
 -(BOOL) updateMessage:(MessageModel *)messageModel{
   __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
   
@@ -154,7 +208,7 @@ static MessageService *instance;
 //        FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, date FROM messages order by messageID DESC" withParameterDictionary:nil];
         //new query retrieving the recent mail of a particular thread.
         
-        FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, date, t_count FROM messages INNER JOIN (SELECT MAX(messageID) as t_msgID, COUNT(*) as t_count FROM messages GROUP BY gmailthreadid) t ON ( messages. messageID = t.t_msgID ) order by messageID DESC;" withParameterDictionary:nil];
+        FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, messageBodyToBeRendered, date, t_count FROM messages INNER JOIN (SELECT MAX(messageID) as t_msgID, COUNT(*) as t_count FROM messages GROUP BY gmailthreadid) t ON ( messages. messageID = t.t_msgID ) order by messageID DESC;" withParameterDictionary:nil];
         
 //        FMResultSet *resultSet = [db executeQuery:@"select messageID, messageJSON, read, date, count(gmailthreadid) as threadmailcount from messages group by gmailthreadid having messageID in (select max(messageID) from messages group by gmailthreadid) order by messageID DESC;" withParameterDictionary:nil];
         
@@ -169,6 +223,16 @@ static MessageService *instance;
 
             double dateTimeInterval = [resultSet doubleForColumn:@"date"];
             model.date = [NSDate dateWithTimeIntervalSince1970:dateTimeInterval];
+            if ([resultSet stringForColumn:@"messageBodyToBeRendered"]) {
+                model.messageBodyToBeRendered = [resultSet stringForColumn:@"messageBodyToBeRendered"];
+            }
+            else
+                model.messageBodyToBeRendered = @"not";
+//            if ([resultSet stringForColumn:@"messageHTMLBody"]) {
+//                model.messageHTMLBody = [resultSet stringForColumn:@"messageHTMLBody"];
+//            }
+//            else
+//                model.messageHTMLBody = @"not";
             
             //updated on 17th June 2014
             [array addObject:model];
@@ -273,7 +337,7 @@ static MessageService *instance;
     __block NSMutableArray *array = [[NSMutableArray alloc] init];
     
     [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet *resultSet = [db executeQuery:@"select messageID, messageJSON, read, date from messages where gmailthreadid = :gmailthreadid order by messageID DESC;" withParameterDictionary:paramDict];
+        FMResultSet *resultSet = [db executeQuery:@"select messageID, messageJSON, read, messageBodyToBeRendered, messageHTMLBody, date from messages where gmailthreadid = :gmailthreadid order by messageID DESC;" withParameterDictionary:paramDict];
         
         MessageModel *model;
         while ([resultSet next]) {
@@ -286,6 +350,17 @@ static MessageService *instance;
             
             double dateTimeInterval = [resultSet doubleForColumn:@"date"];
             model.date = [NSDate dateWithTimeIntervalSince1970:dateTimeInterval];
+            if ([resultSet stringForColumn:@"messageBodyToBeRendered"]) {
+                model.messageBodyToBeRendered = [resultSet stringForColumn:@"messageBodyToBeRendered"];
+            }
+            else
+                model.messageBodyToBeRendered = @"not";
+            
+            if ([resultSet stringForColumn:@"messageHTMLBody"]) {
+                model.messageHTMLBody = [resultSet stringForColumn:@"messageHTMLBody"];
+            }
+            else
+                model.messageHTMLBody = @"not";
             
             //updated on 17th June 2014
             [array addObject:model];
@@ -325,12 +400,21 @@ static MessageService *instance;
     
     while ([resultSet next]) {
         model = [[MessageModel alloc]init];
-        
         model.messageID = [resultSet stringForColumn:@"messageID"];
         model.messageJSON = [resultSet stringForColumn:@"messageJSON"];
         model.read = [resultSet intForColumn:@"read"];
         model.date = [resultSet dateForColumn:@"date"];
+        if ([resultSet stringForColumn:@"messageBodyToBeRendered"]) {
+            model.messageBodyToBeRendered = [resultSet stringForColumn:@"messageBodyToBeRendered"];
+        }
+        else
+            model.messageBodyToBeRendered = @"not";
         
+        if ([resultSet stringForColumn:@"messageHTMLBody"]) {
+            model.messageHTMLBody = [resultSet stringForColumn:@"messageHTMLBody"];
+        }
+        else
+            model.messageHTMLBody = @"not";
         [array addObject:model];
     }
   }];

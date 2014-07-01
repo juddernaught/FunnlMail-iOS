@@ -28,4 +28,7 @@
 -(NSArray *) retrieveAllMessagesForThread:(NSString*)gmailthreadID;
 -(NSArray *) retrieveAllMessagesWithSameGmailID:(NSString*)gmailID;
 -(NSArray *) messagesAllTopMessages;
+-(BOOL) updateMessageWithDictionary:(NSDictionary *)messageDict;
+-(BOOL) updateMessageWithHTMLContent:(NSDictionary *)messageDict;
+- (NSString*)retrieveHTMLContentWithID:(NSString*)uid;
 @end

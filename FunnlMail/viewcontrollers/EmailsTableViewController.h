@@ -15,6 +15,7 @@
 #import "FunnelModel.h"
 #import "MainVCDelegate.h"
 #import "AppDelegate.h"
+
 @interface EmailsTableViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate,MCSwipeTableViewCellDelegate,RDSwipeableTableViewCellDelegate> {
     UIView *filterNavigationView;
     UILabel *filterLabel;
@@ -24,6 +25,7 @@
     BOOL isSearching;
     NSArray *funnlArray;
     AppDelegate *tempAppDelegate;
+    NSIndexPath *currentIndexPath;
 }
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property (nonatomic, strong) UITableViewController *tablecontroller;

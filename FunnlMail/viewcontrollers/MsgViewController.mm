@@ -49,7 +49,7 @@
     [self.view setBackgroundColor:[UIColor whiteColor]];
     [self setUpView];
 //    [self.view addSubview:headerView];
-    UIView *seperator = [[UIView alloc] initWithFrame:CGRectMake(20, headerView.frame.origin.y + headerView.frame.size.height, WIDTH - 20, 0.5)];
+    UIView *seperator = [[UIView alloc] initWithFrame:CGRectMake(25, headerView.frame.origin.y + headerView.frame.size.height, WIDTH - 20, 0.5)];
     [seperator setBackgroundColor:[UIColor lightGrayColor]];
 //    [self.view addSubview:seperator];
     
@@ -58,10 +58,12 @@
 //    [self.view addSubview:subjectView];
     
     _messageView = [[MCOMessageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT-28)];
+    _messageView.tempMessageModel = _message;
     _messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 //    [self.view addSubview:_messageView];
     
     messageTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT-28)];
+//    [messageTableView setSeparatorColor:[UIColor clearColor]];
     [messageTableView setScrollEnabled:YES];
     messageTableView.delegate = self;
     messageTableView.dataSource = self;
@@ -222,7 +224,7 @@
 - (int)insertCCAddress:(NSArray*)to withX:(int)x andY:(int)y{
     for (int counter = 0; counter < to.count; counter++) {
         NSString *toString = nil;
-        if ([[_message.header.to objectAtIndex:counter] displayName]) {
+        if ([[_message.header.cc objectAtIndex:counter] displayName]) {
             toString = [[_message.header.cc objectAtIndex:counter] displayName];
         }
         else

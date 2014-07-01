@@ -108,14 +108,15 @@ static NSString *mailCellIdentifier = @"MailCell";
         cell.dateLabel.text = [message.header.date timeAgo];
     }
     if(message.header.sender.displayName.length)
-        cell.senderLabel.text = [NSString stringWithFormat:@"%@",message.header.sender.displayName];
+        cell.senderLabel.text = [self removeAngularBracket:message.header.sender.displayName];
     else
-        cell.senderLabel.text = cell.senderLabel.text = [NSString stringWithFormat:@"%@",message.header.sender.mailbox];
+        cell.senderLabel.text = [self removeAngularBracket:message.header.sender.mailbox];
     cell.subjectLabel.text = message.header.subject;
 //    
     NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
-    NSString *cachedPreview = [EmailService instance].filterMessagePreviews[uidKey];
-    if (cachedPreview)
+//    NSString *cachedPreview = [EmailService instance].filterMessagePreviews[uidKey];
+    NSString *cachedPreview = [(MessageModel*)dataSourceArray[indexPath.row] messageBodyToBeRendered];
+    if (![cachedPreview isEqualToString:@"not"] && cachedPreview)
     {
         cell.bodyLabel.text = cachedPreview;
     }
@@ -125,7 +126,21 @@ static NSString *mailCellIdentifier = @"MailCell";
         [cell.messageRenderingOperation start:^(NSString * plainTextBodyString, NSError * error) {
             cell.bodyLabel.text = plainTextBodyString;
             cell.messageRenderingOperation = nil;
-            [EmailService instance].filterMessagePreviews[uidKey] = plainTextBodyString;
+//            [EmailService instance].filterMessagePreviews[uidKey] = plainTextBodyString;
+            if (plainTextBodyString) {
+                if (plainTextBodyString.length > 0) {
+                    if ([[plainTextBodyString substringWithRange:NSMakeRange(0, 1)] isEqualToString:@" "]) {
+                        cell.bodyLabel.text = [plainTextBodyString substringWithRange:NSMakeRange(1, plainTextBodyString.length - 1)];
+                    }
+                }
+            }
+            if(plainTextBodyString)
+            {
+                [EmailService instance].filterMessagePreviews[uidKey] = [self removeStartingSpaceFromString:plainTextBodyString];
+                NSMutableDictionary *paramDict = [[NSMutableDictionary alloc] init];
+                paramDict[uidKey] = [self removeStartingSpaceFromString:plainTextBodyString];
+                [[MessageService instance] updateMessageWithDictionary:paramDict];
+            }
         }];
     }
     return cell;
@@ -183,6 +198,29 @@ static NSString *mailCellIdentifier = @"MailCell";
 
 #pragma mark -
 #pragma mark Helper
+- (NSString*)removeAngularBracket:(NSString*)emailString {
+    if (emailString.length > 0) {
+        if ([[emailString substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"<"]) {
+            emailString = [emailString substringWithRange:NSMakeRange(1, emailString.length - 1)];
+            if ([[emailString substringWithRange:NSMakeRange(emailString.length - 1, 1)] isEqualToString:@">"]) {
+                emailString = [emailString substringWithRange:NSMakeRange(0, emailString.length - 1)];
+            }
+        }
+    }
+    return emailString;
+}
+
+- (NSString *)removeStartingSpaceFromString:(NSString*)sourceString {
+    if (sourceString.length > 1) {
+        if ([[sourceString substringWithRange:NSMakeRange(0, 1)] isEqualToString:@" "]) {
+            return [sourceString substringWithRange:NSMakeRange(1, sourceString.length -1)];
+        }
+        return sourceString;
+    }
+    else
+        return sourceString;
+}
+
 - (void)setReadMessage:(MessageModel*)messageRead
 {
     [messageRead setRead:YES];
