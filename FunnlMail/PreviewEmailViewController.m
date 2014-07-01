@@ -74,6 +74,7 @@ NSNumber *sendNum;
     
     UITextField *to2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 60, 22, height)];
     UITextField *cc2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 90, 30, height)];
+    cc2.delegate = self;
     UITextField *bcc2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 120, 32, height)];
     UITextField *subject2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 150, 50, height)];
     to.text = [self.address nonEncodedRFC822String];
@@ -88,10 +89,10 @@ NSNumber *sendNum;
     bcc2.userInteractionEnabled = false;
     subject2.userInteractionEnabled = false;
     
-    [to2 setFont:[UIFont systemFontOfSize:12]];
-    [cc2 setFont:[UIFont systemFontOfSize:12]];
-    [bcc2 setFont:[UIFont systemFontOfSize:12]];
-    [subject2 setFont:[UIFont systemFontOfSize:12]];
+    [to2 setFont:[UIFont boldSystemFontOfSize:12]];
+    [cc2 setFont:[UIFont boldSystemFontOfSize:12]];
+    [bcc2 setFont:[UIFont boldSystemFontOfSize:12]];
+    [subject2 setFont:[UIFont boldSystemFontOfSize:12]];
     
     [to2 setTextColor:[UIColor grayColor]];
     [cc2 setTextColor:[UIColor grayColor]];
@@ -101,43 +102,53 @@ NSNumber *sendNum;
     //actual textview bordering
     UIView *bottomBorder = [[UIView alloc]
                             initWithFrame:CGRectMake(0,to.frame.size.height-1,to.frame.size.width-30,1)];
-    bottomBorder.backgroundColor = [UIColor colorWithHexString:@"EBE6E9"];
+    bottomBorder.backgroundColor = [UIColor colorWithHexString:@"D9D9D9"];
     [to addSubview:bottomBorder];
     
     bottomBorder = [[UIView alloc]
+                    initWithFrame:CGRectMake(0,0,to.frame.size.width,1)];
+    bottomBorder.backgroundColor = [UIColor blackColor];
+    [to addSubview:bottomBorder];
+    
+    bottomBorder = [[UIView alloc]
+                    initWithFrame:CGRectMake(0,0,to2.frame.size.width,1)];
+    bottomBorder.backgroundColor = [UIColor blackColor];
+    [to2 addSubview:bottomBorder];
+    
+    bottomBorder = [[UIView alloc]
                     initWithFrame:CGRectMake(0,to.frame.size.height-1,cc.frame.size.width-30,1)];
-    bottomBorder.backgroundColor = [UIColor colorWithHexString:@"EBE6E9"];
+    bottomBorder.backgroundColor = [UIColor colorWithHexString:@"D9D9D9"];
     [cc addSubview:bottomBorder];
     
     bottomBorder = [[UIView alloc]
                             initWithFrame:CGRectMake(0,to.frame.size.height-1,bcc.frame.size.width-30,1)];
-    bottomBorder.backgroundColor = [UIColor colorWithHexString:@"EBE6E9"];
+    bottomBorder.backgroundColor = [UIColor colorWithHexString:@"D9D9D9"];
     [bcc addSubview:bottomBorder];
     
     bottomBorder = [[UIView alloc]
                             initWithFrame:CGRectMake(0,to.frame.size.height-1,subject.frame.size.width-30,1)];
-    bottomBorder.backgroundColor = [UIColor colorWithHexString:@"EBE6E9"];
+    bottomBorder.backgroundColor = [UIColor colorWithHexString:@"D9D9D9"];
     [subject addSubview:bottomBorder];
     
     //begin prefix bordering
     bottomBorder = [[UIView alloc]
                     initWithFrame:CGRectMake(0,to.frame.size.height-1,to2.frame.size.width,1)];
-    bottomBorder.backgroundColor = [UIColor colorWithHexString:@"EBE6E9"];
+    bottomBorder.backgroundColor = [UIColor colorWithHexString:@"D9D9D9"];
     [to2 addSubview:bottomBorder];
     
     bottomBorder = [[UIView alloc]
                     initWithFrame:CGRectMake(0,to.frame.size.height-1,cc2.frame.size.width,1)];
-    bottomBorder.backgroundColor = [UIColor colorWithHexString:@"EBE6E9"];
+    bottomBorder.backgroundColor = [UIColor colorWithHexString:@"D9D9D9"];
     [cc2 addSubview:bottomBorder];
     
     bottomBorder = [[UIView alloc]
                     initWithFrame:CGRectMake(0,to.frame.size.height-1,bcc2.frame.size.width,1)];
-    bottomBorder.backgroundColor = [UIColor colorWithHexString:@"EBE6E9"];
+    bottomBorder.backgroundColor = [UIColor colorWithHexString:@"D9D9D9"];
     [bcc2 addSubview:bottomBorder];
     
     bottomBorder = [[UIView alloc]
                     initWithFrame:CGRectMake(0,to.frame.size.height-1, subject2.frame.size.width,1)];
-    bottomBorder.backgroundColor = [UIColor colorWithHexString:@"EBE6E9"];
+    bottomBorder.backgroundColor = [UIColor colorWithHexString:@"D9D9D9"];
     [subject2 addSubview:bottomBorder];
     
     if (self.forward) {
@@ -191,6 +202,7 @@ NSNumber *sendNum;
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 
 -(void)sendButtonSelected{
     
