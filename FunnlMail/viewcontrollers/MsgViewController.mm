@@ -49,7 +49,7 @@
     [self.view setBackgroundColor:[UIColor whiteColor]];
     [self setUpView];
 //    [self.view addSubview:headerView];
-    UIView *seperator = [[UIView alloc] initWithFrame:CGRectMake(25, headerView.frame.origin.y + headerView.frame.size.height, WIDTH - 20, 0.5)];
+    UIView *seperator = [[UIView alloc] initWithFrame:CGRectMake(25, headerView.frame.origin.y + headerView.frame.size.height, WIDTH - 20, 0)];
     [seperator setBackgroundColor:[UIColor lightGrayColor]];
 //    [self.view addSubview:seperator];
     
@@ -216,10 +216,10 @@
     [subjectView addSubview:dateLabel];
     dateLabel = nil;
     
-    UIView *seperator = [[UILabel alloc] initWithFrame:CGRectMake(20, 10 + height + 3 + 15 + 11, 300, 0.5)];
-    [seperator setBackgroundColor:[UIColor lightGrayColor]];
-    [subjectView addSubview:seperator];
-    seperator = nil;
+//    UIView *seperator = [[UILabel alloc] initWithFrame:CGRectMake(20, 10 + height + 3 + 15 + 11, 300, 0.5)];
+//    [seperator setBackgroundColor:[UIColor lightGrayColor]];
+//    [subjectView addSubview:seperator];
+//    seperator = nil;
 }
 
 - (CGFloat)calculateSize:(NSString*)string

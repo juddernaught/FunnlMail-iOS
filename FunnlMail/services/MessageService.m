@@ -53,9 +53,10 @@ static MessageService *instance;
   paramDict[@"read"] = [NSNumber numberWithBool:messageModel.read];
   paramDict[@"date"] = dateTimeInterval;
   paramDict[@"gmailthreadid"] = messageModel.gmailThreadID;
+  paramDict[@"skipFlag"] = [NSNumber numberWithBool:messageModel.skipFlag];
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    success = [db executeUpdate:@"INSERT INTO messages (messageID,messageJSON,read,date,gmailthreadid) VALUES (:messageID,:messageJSON,:read,:date,:gmailthreadid)" withParameterDictionary:paramDict];
+    success = [db executeUpdate:@"INSERT INTO messages (messageID,messageJSON,read,date,gmailthreadid,skipFlag) VALUES (:messageID,:messageJSON,:read,:date,:gmailthreadid,:skipFlag)" withParameterDictionary:paramDict];
   }];
   
   return success;
@@ -126,9 +127,10 @@ static MessageService *instance;
   paramDict[@"messageJSON"] = messageModel.messageJSON;
   paramDict[@"read"] = [NSNumber numberWithBool:messageModel.read];
   paramDict[@"date"] = dateTimeInterval;
+  paramDict[@"skipFlag"] = [NSNumber numberWithBool:messageModel.skipFlag];
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    success = [db executeUpdate:@"UPDATE messages SET messageJSON=:messageJSON,read=:read,date=:date WHERE messageID=:messageID" withParameterDictionary:paramDict];
+    success = [db executeUpdate:@"UPDATE messages SET messageJSON=:messageJSON,read=:read,date=:date,skipFlag=:skipFlag WHERE messageID=:messageID" withParameterDictionary:paramDict];
     
   }];
   
@@ -143,7 +145,7 @@ static MessageService *instance;
     __block NSMutableArray *array = [[NSMutableArray alloc] init];
     
     [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, date FROM messages order by messageID DESC" withParameterDictionary:nil];
+        FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, date, skipFlag FROM messages order by messageID DESC" withParameterDictionary:nil];
         
         MessageModel *model;
         
@@ -153,7 +155,7 @@ static MessageService *instance;
             model.messageID = [resultSet stringForColumn:@"messageID"];
             model.messageJSON = [resultSet stringForColumn:@"messageJSON"];
             model.read = [resultSet intForColumn:@"read"];
-            
+            model.skipFlag = [resultSet intForColumn:@"skipFlag"];
             double dateTimeInterval = [resultSet doubleForColumn:@"date"];
             
             model.date = [NSDate dateWithTimeIntervalSince1970:dateTimeInterval];
@@ -208,7 +210,7 @@ static MessageService *instance;
 //        FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, date FROM messages order by messageID DESC" withParameterDictionary:nil];
         //new query retrieving the recent mail of a particular thread.
         
-        FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, messageBodyToBeRendered, date, t_count FROM messages INNER JOIN (SELECT MAX(messageID) as t_msgID, COUNT(*) as t_count FROM messages GROUP BY gmailthreadid) t ON ( messages. messageID = t.t_msgID ) order by messageID DESC;" withParameterDictionary:nil];
+        FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, messageBodyToBeRendered, date, t_count,skipFlag FROM messages INNER JOIN (SELECT MAX(messageID) as t_msgID, COUNT(*) as t_count FROM messages where skipFlag = 0 GROUP BY gmailthreadid) t ON ( messages. messageID = t.t_msgID ) order by messageID DESC;" withParameterDictionary:nil];
         
 //        FMResultSet *resultSet = [db executeQuery:@"select messageID, messageJSON, read, date, count(gmailthreadid) as threadmailcount from messages group by gmailthreadid having messageID in (select max(messageID) from messages group by gmailthreadid) order by messageID DESC;" withParameterDictionary:nil];
         
@@ -337,7 +339,7 @@ static MessageService *instance;
     __block NSMutableArray *array = [[NSMutableArray alloc] init];
     
     [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet *resultSet = [db executeQuery:@"select messageID, messageJSON, read, messageBodyToBeRendered, messageHTMLBody, date from messages where gmailthreadid = :gmailthreadid order by messageID DESC;" withParameterDictionary:paramDict];
+        FMResultSet *resultSet = [db executeQuery:@"select messageID, messageJSON, read, messageBodyToBeRendered, messageHTMLBody, date from messages where gmailthreadid = :gmailthreadid and skipFlag=0 order by messageID DESC;" withParameterDictionary:paramDict];
         
         MessageModel *model;
         while ([resultSet next]) {

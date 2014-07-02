@@ -11,6 +11,7 @@
 @interface FunnelModel : NSObject
 
 @property (strong) UIColor *barColor;
+@property (assign) BOOL skipFlag;
 //below parameter is replaced by "funnelName" in some case
 @property (copy) NSString *filterTitle;
 @property (assign) NSInteger newMessageCount;
@@ -25,5 +26,6 @@
 
 - (id)initWithBarColor:(UIColor *)barColor filterTitle:(NSString *)filterTitle newMessageCount:(NSInteger)newMessageCount dateOfLastMessage:(NSDate *)dateOfLastMessage;
 - (id)initWithBarColor:(UIColor *)barColor filterTitle:(NSString *)filterTitle newMessageCount:(NSInteger)newMessageCount dateOfLastMessage:(NSDate *)dateOfLastMessage sendersArray:(NSMutableArray*)sendersArray subjectsArray:(NSMutableArray*)subjectsArray;
+- (id)initWithBarColor:(UIColor *)barColor filterTitle:(NSString *)filterTitle newMessageCount:(NSInteger)newMessageCount dateOfLastMessage:(NSDate *)dateOfLastMessage sendersArray:(NSMutableArray*)sendersArray subjectsArray:(NSMutableArray*)subjectsArray skipAllFlag:(BOOL)flag;
 - (NSMutableDictionary*) getEmailsForFunnl: (NSString *) funnlName ;
 @end

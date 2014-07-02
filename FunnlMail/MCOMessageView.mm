@@ -139,9 +139,15 @@ pre {\
         if ([_message isKindOfClass:[MCOIMAPMessage class]]) {
             content = [(MCOIMAPMessage *) _message htmlRenderingWithFolder:_folder delegate:self];
             if (content) {
-                NSArray *tempArray = [content componentsSeparatedByString:@"<html xmlns=\"http://www.w3.org/1999/xhtml\">"];
+                NSArray *tempArray = [content componentsSeparatedByString:@"<head>"];
                 if (tempArray.count > 1) {
                     content = [tempArray objectAtIndex:1];
+                }
+                else {
+                    tempArray = [content componentsSeparatedByString:@"Subject:"];
+                    if (tempArray.count > 1) {
+                        content = [tempArray objectAtIndex:1];
+                    }
                 }
                 paramDict[uidKey] = content;
                 [[MessageService instance] updateMessageWithHTMLContent:paramDict];

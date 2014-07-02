@@ -2,35 +2,37 @@ create table dbVersion (version TEXT);
 insert into dbVersion (version) values ('1.0');
 
 create table messages(
-  messageID TEXT,
-  messageJSON TEXT,
-  read INTEGER,
-  date REAL,
-  gmailthreadid TEXT,
-  messageBodyToBeRendered TEXT,
-  messageHTMLBody TEXT,
-  PRIMARY KEY (messageID)
+messageID TEXT,
+messageJSON TEXT,
+read INTEGER,
+date REAL,
+gmailthreadid TEXT,
+messageBodyToBeRendered TEXT,
+messageHTMLBody TEXT,
+skipFlag INTEGER,
+PRIMARY KEY (messageID)
 );
 
 create table funnels(
-  funnelId TEXT,
-  funnelName TEXT,
-  emailAddresses TEXT,
-  phrases TEXT,
-  PRIMARY KEY (funnelId)
+funnelId TEXT,
+funnelName TEXT,
+emailAddresses TEXT,
+phrases TEXT,
+skipFlag INTEGER,
+PRIMARY KEY (funnelId)
 );
 
 create table emailServers(
-  emailAddress TEXT,
-  accessToken TEXT,
-  refreshToken TEXT,
-  PRIMARY KEY (emailAddress)
+emailAddress TEXT,
+accessToken TEXT,
+refreshToken TEXT,
+PRIMARY KEY (emailAddress)
 );
 
 create table messageFilterXRef(
-  messageID TEXT,
-  funnelId TEXT,
-  primary key (messageID, funnelId)
+messageID TEXT,
+funnelId TEXT,
+primary key (messageID, funnelId)
 );
 
 CREATE INDEX messageIDIndex ON messageFilterXRef (messageID);

@@ -238,7 +238,6 @@ static NSString *currentFolder;
               //retrieving the message from database
               NSArray *tempArray = [[MessageService instance] retrieveAllMessages];
               [self performSelector:@selector(applyingFilters:) withObject:tempArray];
-//              [self performSelectorInBackground:@selector(applyingFilters:) withObject:tempArray];
               _filterMessages = (NSMutableArray*)tempArray;
               if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
                   [emailTableViewController.tableView reloadData];
@@ -364,6 +363,8 @@ static NSString *currentFolder;
             if ([self checkForFunnel:tempFunnelModel forMessage:message]) {
                 NSString *funnelID = tempFunnelModel.funnelId;
                 NSString *messageID = [NSString stringWithFormat:@"%d",message.uid];
+                
+                [[MessageService instance] updateMessage:(MessageModel*)[messages objectAtIndex:count]];
                 [[MessageFilterXRefService instance] insertMessageXRefMessageID:messageID funnelId:funnelID];
             }
         }
@@ -375,9 +376,15 @@ static NSString *currentFolder;
 {
     for (int count = 0; count < messages.count; count++) {
         MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[messages objectAtIndex:count] messageJSON]];
+        NSLog(@"MessageID : %d",message.uid);
         if ([self checkForFunnel:funnel forMessage:message]) {
             NSString *funnelID = funnel.funnelId;
             NSString *messageID = [NSString stringWithFormat:@"%d",message.uid];
+            if (funnel.skipFlag) {
+                MessageModel *temp = (MessageModel*)[messages objectAtIndex:count];
+                temp.skipFlag = temp.skipFlag + 1;
+                [[MessageService instance] updateMessage:(MessageModel*)[messages objectAtIndex:count]];
+            }
             [[MessageFilterXRefService instance] insertMessageXRefMessageID:messageID funnelId:funnelID];
         }
     }
@@ -413,7 +420,7 @@ static NSString *currentFolder;
         tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
         tempMessageModel.messageJSON = [m serializable];
         tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
-        
+        tempMessageModel.skipFlag = 0;
         [[MessageService instance] insertMessage:tempMessageModel];
         tempMessageModel = nil;
     }
