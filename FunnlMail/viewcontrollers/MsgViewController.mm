@@ -574,7 +574,7 @@ typedef void (^DownloadCallback)(NSError * error);
 }
 
 -(void) replyAllButtonSelected{
-    NSLog(@"reply Email selected");
+    NSLog(@"replyAll Email selected");
     PreviewEmailViewController *viewEmail = [[PreviewEmailViewController alloc]init];
     viewEmail.addressArray = self.message.header.to;
     viewEmail.address = self.message.header.from;

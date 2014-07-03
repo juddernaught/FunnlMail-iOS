@@ -30,9 +30,9 @@
 
 NSString *msgBody;
 NSData * rfc822Data;
-UITextField *to;
-UITextField *cc;
-UITextField *bcc;
+UITextView *to;
+UITextView *cc;
+UITextView *bcc;
 UITextField *subject;
 NSNumber *sendNum;
 
@@ -67,9 +67,9 @@ NSNumber *sendNum;
     [self.view addSubview:centeredButtons];
     
     int height = 30;
-    to = [[UITextField alloc] initWithFrame:CGRectMake(22, 60, 300, height)];
-    cc = [[UITextField alloc] initWithFrame:CGRectMake(30, 90, 290, height)];
-    bcc = [[UITextField alloc]initWithFrame:CGRectMake(32, 120, 288, height)];
+    to = [[UITextView alloc] initWithFrame:CGRectMake(22, 60, 300, height)];
+    cc = [[UITextView alloc] initWithFrame:CGRectMake(30, 90, 290, height)];
+    bcc = [[UITextView alloc]initWithFrame:CGRectMake(32, 120, 288, height)];
     subject = [[UITextField alloc]initWithFrame:CGRectMake(50, 150, 270, height)];
     
     UITextField *to2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 60, 22, height)];
@@ -77,6 +77,9 @@ NSNumber *sendNum;
     UITextField *bcc2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 120, 32, height)];
     UITextField *subject2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 150, 50, height)];
 
+    to.dataDetectorTypes = UIDataDetectorTypeLink;
+    cc.dataDetectorTypes = UIDataDetectorTypeLink;
+    bcc.dataDetectorTypes = UIDataDetectorTypeLink;
     
     to2.text = @" To:";
     cc2.text = @" Cc:";
@@ -169,11 +172,12 @@ NSNumber *sendNum;
         [temp appendString:self.message.header.subject];
         subject.text = temp;
         temp = [[NSMutableString alloc] initWithString:@""];
-        for (MCOAddress* address in self.addressArray) {
-            [temp appendString:[address nonEncodedRFC822String]];
-        }
+//        for (MCOAddress* address in self.addressArray) {
+//            [temp appendString:[address nonEncodedRFC822String]];
+//        }
         [temp appendString:[self.address nonEncodedRFC822String]];
         to.text = temp;
+        NSLog(@"%@",self.addressArray);
     }
 
     [self.view addSubview:to2];
@@ -240,8 +244,11 @@ NSNumber *sendNum;
         if(error) {
             NSLog(@"%@ Error sending email:%@", [EmailService instance].smtpSession.username, error);
         } else {
-            NSLog(@"%@ Successfully sent email!", [EmailService instance].smtpSession.username);
-            
+            NSLog(@"%@ Successfully sent email!", to.text);
+            [[[EmailService instance].imapSession appendMessageOperationWithFolder:SENT messageData:rfc822Data flags:MCOMessageFlagMDNSent] start:^(NSError *error, uint32_t createdUID) {
+                if (error) NSLog(@"error adding message to sent folder");
+                else NSLog(@"successfully appended message to sent folder");
+            }];
         }
     }];
     [self dismissViewControllerAnimated:YES completion:NULL];
