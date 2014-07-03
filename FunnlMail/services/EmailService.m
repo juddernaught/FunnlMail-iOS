@@ -376,7 +376,7 @@ static NSString *currentFolder;
 {
     for (int count = 0; count < messages.count; count++) {
         MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[messages objectAtIndex:count] messageJSON]];
-        NSLog(@"MessageID : %d",message.uid);
+//        NSLog(@"MessageID : %d",message.uid);
         if ([self checkForFunnel:funnel forMessage:message]) {
             NSString *funnelID = funnel.funnelId;
             NSString *messageID = [NSString stringWithFormat:@"%d",message.uid];

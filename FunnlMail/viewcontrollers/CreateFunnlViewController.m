@@ -495,7 +495,6 @@
                 // save to db
                 
             }
-            
             [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:model.funnelId top:2000];
             [self.mainVCdelegate filterSelected:model];
             model = nil;

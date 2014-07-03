@@ -50,7 +50,12 @@ static NSString *contactCellIdentifier = @"ContactCell";
     [messageLabel setTextAlignment:NSTextAlignmentLeft];
     messageLabel.numberOfLines = 2;
     messageLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    messageLabel.text = [NSString stringWithFormat:@"Message from %@ will be funneled under %@.",message.header.sender.displayName,tempFunnelModel.funnelName];
+    if (message.header.sender.displayName) {
+        messageLabel.text = [NSString stringWithFormat:@"Message from %@ will be funneled under %@.",message.header.sender.displayName,tempFunnelModel.funnelName];
+    }
+    else {
+        messageLabel.text = [NSString stringWithFormat:@"Message from %@ will be funneled under %@.",message.header.sender.mailbox,tempFunnelModel.funnelName];
+    }
     
     [mainView addSubview:messageLabel];
     messageLabel = nil;
@@ -119,11 +124,18 @@ static NSString *contactCellIdentifier = @"ContactCell";
         senderString = (NSMutableString*)[senderString substringWithRange:NSMakeRange(0, senderString.length -1)];
         tempFunnelModel.emailAddresses = [NSString stringWithFormat:@"%@,%@",tempFunnelModel.emailAddresses,senderString];
     }
+    if ([tempFunnelModel.emailAddresses rangeOfString:message.header.sender.mailbox].location == NSNotFound) {
+        tempFunnelModel.emailAddresses = [NSString stringWithFormat:@"%@,%@",tempFunnelModel.emailAddresses,message.header.sender.mailbox];
+    } else {
+
+    }
     NSLog(@"CC %@",tempFunnelModel.emailAddresses);
     [[FunnelService instance] updateFunnel:tempFunnelModel];
     [[EmailService instance] applyingFunnel:tempFunnelModel toMessages:[EmailService instance].filterMessages];
     [self removeFromSuperview];
     [[(EmailsTableViewController*)viewController tableView] reloadData];
+    AppDelegate *tempAppDelegate = APPDELEGATE;
+    tempAppDelegate.funnelUpDated = TRUE;
     
 }
 

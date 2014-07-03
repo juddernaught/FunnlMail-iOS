@@ -166,6 +166,11 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 
 -(void) filterButtonSelected{
+    AppDelegate *tempAppDelegate = APPDELEGATE;
+    if (tempAppDelegate.funnelUpDated) {
+        tempAppDelegate.funnelUpDated = FALSE;
+        [mainView reloadView];
+    }
     NSLog(@"Filter button selected");
     if(mainView.hidden == YES){
         mainView.hidden = NO;

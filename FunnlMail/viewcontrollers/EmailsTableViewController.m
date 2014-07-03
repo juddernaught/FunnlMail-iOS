@@ -564,7 +564,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
         else {
             CGRect cellRect = cell.frame;
             UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
-            button = [UIButton buttonWithType:UIButtonTypeSystem];
             button.tag = cell.tag;
             button.frame = CGRectMake(cellRect.size.width - 80, 0, 80, cellRect.size.height);
             [button setImage:[UIImage imageNamed:@"CreateFunnlIcon"] forState:UIControlStateNormal];

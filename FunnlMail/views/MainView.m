@@ -195,7 +195,7 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
   NSMutableDictionary *subjectsDictionary = [[NSMutableDictionary alloc] init];
   count = 0;
   for (NSString *subject in fm.subjectsArray) {
-//      if (![subject isEqualToString:@""])
+      if (![subject isEqualToString:@""])
       {
           [subjectsDictionary setObject:[subject lowercaseString] forKey:[NSIndexPath indexPathForRow:count inSection:2]];
           count ++;
