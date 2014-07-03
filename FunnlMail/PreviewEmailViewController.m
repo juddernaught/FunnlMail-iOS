@@ -76,7 +76,7 @@ NSNumber *sendNum;
     UITextField *cc2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 90, 30, height)];
     UITextField *bcc2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 120, 32, height)];
     UITextField *subject2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 150, 50, height)];
-    to.text = [self.address nonEncodedRFC822String];
+
     
     to2.text = @" To:";
     cc2.text = @" Cc:";
@@ -161,6 +161,19 @@ NSNumber *sendNum;
         NSMutableString *temp = [[NSMutableString alloc] initWithString:@"Re: "];
         [temp appendString:self.message.header.subject];
         subject.text = temp;
+        to.text = [self.address nonEncodedRFC822String];
+    }
+    else if(self.replyAll){
+        NSLog(@"self.reply");
+        NSMutableString *temp = [[NSMutableString alloc] initWithString:@"Re: "];
+        [temp appendString:self.message.header.subject];
+        subject.text = temp;
+        temp = [[NSMutableString alloc] initWithString:@""];
+        for (MCOAddress* address in self.addressArray) {
+            [temp appendString:[address nonEncodedRFC822String]];
+        }
+        [temp appendString:[self.address nonEncodedRFC822String]];
+        to.text = temp;
     }
 
     [self.view addSubview:to2];
@@ -177,7 +190,6 @@ NSNumber *sendNum;
 //    email.userInteractionEnabled = true;
 
     self.body = [[UITextView alloc] initWithFrame:CGRectMake(0, 180, 320, self.view.bounds.size.height-140)];
-    
     
     if (!self.compose) {
         MCOIMAPFetchContentOperation *operation = [self.imapSession fetchMessageByUIDOperationWithFolder:@"INBOX" uid:self.message.uid];
@@ -229,6 +241,7 @@ NSNumber *sendNum;
             NSLog(@"%@ Error sending email:%@", [EmailService instance].smtpSession.username, error);
         } else {
             NSLog(@"%@ Successfully sent email!", [EmailService instance].smtpSession.username);
+            
         }
     }];
     [self dismissViewControllerAnimated:YES completion:NULL];

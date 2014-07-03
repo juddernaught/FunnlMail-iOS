@@ -84,7 +84,7 @@
     [replyButton setBackgroundImage:[UIImage imageNamed:@"reply.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:replyButton];
 
-    [replyAllButton addTarget:self action:@selector(forwardButtonSelected) forControlEvents:UIControlEventTouchUpInside];
+    [replyAllButton addTarget:self action:@selector(replyAllButtonSelected) forControlEvents:UIControlEventTouchUpInside];
     replyAllButton.frame = CGRectMake(140, 0, 42, 42);
     [replyAllButton setBackgroundImage:[UIImage imageNamed:@"replyAll.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:replyAllButton];
@@ -565,11 +565,23 @@ typedef void (^DownloadCallback)(NSError * error);
 -(void) replyButtonSelected{
     NSLog(@"reply Email selected");
     PreviewEmailViewController *viewEmail = [[PreviewEmailViewController alloc]init];
-    viewEmail.address = self.address;
+    viewEmail.address = self.message.header.from;
     viewEmail.message = _message;
     viewEmail.folder = _folder;
     viewEmail.imapSession = _session;
     viewEmail.reply = @1;
+    [self presentViewController:viewEmail animated:YES completion:NULL];
+}
+
+-(void) replyAllButtonSelected{
+    NSLog(@"reply Email selected");
+    PreviewEmailViewController *viewEmail = [[PreviewEmailViewController alloc]init];
+    viewEmail.addressArray = self.message.header.to;
+    viewEmail.address = self.message.header.from;
+    viewEmail.message = _message;
+    viewEmail.folder = _folder;
+    viewEmail.imapSession = _session;
+    viewEmail.replyAll = @1;
     [self presentViewController:viewEmail animated:YES completion:NULL];
 }
 
