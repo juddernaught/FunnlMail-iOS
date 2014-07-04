@@ -351,6 +351,30 @@ static NSString *currentFolder;
      }];
 }
 
+- (BOOL)checkForKey:(NSString *)key indict:(NSMutableDictionary*)dict {
+    NSArray *keys = dict.allKeys;
+    for (NSString *key1 in keys) {
+        if ([key1 isEqualToString:key])
+            return FALSE;
+    }
+    return TRUE;
+}
+
+#pragma mark insertIntoDictionary
+- (NSMutableDictionary*)insertIntoDictionary:(NSMutableDictionary*)dict funnel:(FunnelModel*)funnel {
+    if (!dict) {
+        dict = [[NSMutableDictionary alloc] init];
+    }
+    NSMutableDictionary *temp = [[NSMutableDictionary alloc] initWithDictionary:dict];
+    NSString *key = funnel.funnelName;
+    if ([self checkForKey:key indict:dict]) {
+        temp[key] = funnel.funnelColor;
+    }
+    dict = temp;
+    temp = nil;
+    return dict;
+}
+
 //storing messages according to funnels preasent.
 #pragma mark -
 #pragma mark applyingFilters
@@ -363,13 +387,33 @@ static NSString *currentFolder;
             if ([self checkForFunnel:tempFunnelModel forMessage:message]) {
                 NSString *funnelID = tempFunnelModel.funnelId;
                 NSString *messageID = [NSString stringWithFormat:@"%d",message.uid];
-                
+                NSString *funnelJsonString = [(MessageModel*)[messages objectAtIndex:count] funnelJson];
+                NSError *error = nil;
+                NSMutableDictionary *tempDict = (NSMutableDictionary*)[NSJSONSerialization JSONObjectWithData:[funnelJsonString dataUsingEncoding:NSUTF8StringEncoding]
+                                                                                options: NSJSONReadingAllowFragments
+                                                                                  error: &error];
+                if (!error) {
+                    tempDict = [self insertIntoDictionary:tempDict funnel:tempFunnelModel];
+                }
+                else {
+                    tempDict = [[NSMutableDictionary alloc] init];
+                    tempDict[tempFunnelModel.funnelName] = tempFunnelModel.funnelColor;
+                }
+                [(MessageModel*)[messages objectAtIndex:count] setFunnelJson:[self getJsonStringByDictionary:(NSDictionary*)tempDict]];
                 [[MessageService instance] updateMessage:(MessageModel*)[messages objectAtIndex:count]];
                 [[MessageFilterXRefService instance] insertMessageXRefMessageID:messageID funnelId:funnelID];
             }
         }
     }
     funnels = nil;
+}
+
+-(NSString*)getJsonStringByDictionary:(NSDictionary*)dictionary{
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary
+                                                       options:NSJSONWritingPrettyPrinted
+                                                         error:&error];
+    return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 }
 
 - (void)applyingFunnel:(FunnelModel*)funnel toMessages:(NSArray*)messages
@@ -383,8 +427,21 @@ static NSString *currentFolder;
             if (funnel.skipFlag) {
                 MessageModel *temp = (MessageModel*)[messages objectAtIndex:count];
                 temp.skipFlag = temp.skipFlag + 1;
-                [[MessageService instance] updateMessage:(MessageModel*)[messages objectAtIndex:count]];
             }
+            NSString *funnelJsonString = [(MessageModel*)[messages objectAtIndex:count] funnelJson];
+            NSError *error = nil;
+            NSMutableDictionary *tempDict = [NSJSONSerialization JSONObjectWithData:[funnelJsonString dataUsingEncoding:NSUTF8StringEncoding]
+                                                                            options: NSJSONReadingAllowFragments
+                                                                              error: &error];
+            if (!error) {
+                tempDict = [self insertIntoDictionary:tempDict funnel:funnel];
+            } else {
+                tempDict = [[NSMutableDictionary alloc] init];
+                tempDict[funnel.funnelName] = funnel.funnelColor;
+            }
+//            NSLog(@"----%@",[self getJsonStringByDictionary:(NSDictionary*)tempDict]);
+            [(MessageModel*)[messages objectAtIndex:count] setFunnelJson:[self getJsonStringByDictionary:(NSDictionary*)tempDict]];
+            [[MessageService instance] updateMessage:(MessageModel*)[messages objectAtIndex:count]];
             [[MessageFilterXRefService instance] insertMessageXRefMessageID:messageID funnelId:funnelID];
         }
     }

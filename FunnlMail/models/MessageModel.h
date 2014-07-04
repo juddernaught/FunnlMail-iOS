@@ -20,4 +20,5 @@
 @property int numberOfEmailInThread;
 @property (strong, nonatomic) NSString *messageBodyToBeRendered;
 @property (strong, nonatomic) NSString *messageHTMLBody;
+@property (strong, nonatomic) NSString *funnelJson;
 @end

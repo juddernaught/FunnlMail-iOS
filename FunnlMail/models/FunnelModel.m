@@ -106,6 +106,49 @@
     return self;
 }
 
+- (id)initWithBarColor:(UIColor *)barColor filterTitle:(NSString *)filterTitle newMessageCount:(NSInteger)newMessageCount dateOfLastMessage:(NSDate *)dateOfLastMessage sendersArray:(NSMutableArray*)sendersArray subjectsArray:(NSMutableArray*)subjectsArray skipAllFlag:(BOOL)flag funnelColor:(NSString*)colorString
+{
+    self = [super init];
+    if (self) {
+        // Custom initialization
+        self.funnelColor = colorString;
+        self.skipFlag = flag;
+        self.barColor = barColor;
+        self.filterTitle = filterTitle;
+        self.funnelName = filterTitle;
+        self.newMessageCount = newMessageCount;
+        self.dateOfLastMessage = dateOfLastMessage;
+        self.sendersArray = sendersArray;
+        NSMutableString *senderString = [[NSMutableString alloc] init];
+        for (int counter = 0; counter < sendersArray.count; counter++) {
+            [senderString appendString:[sendersArray objectAtIndex:counter]];
+            [senderString appendString:@","];
+        }
+        if (senderString.length > 1) {
+            senderString = (NSMutableString *)[senderString substringWithRange:NSMakeRange(0, senderString.length-1)];
+        }
+        else
+            [senderString appendString:@""];
+        self.emailAddresses = senderString;
+        senderString = nil;
+        
+        self.subjectsArray = subjectsArray;
+        senderString = [[NSMutableString alloc] init];
+        for (int counter = 0; counter < subjectsArray.count; counter++) {
+            [senderString appendString:[subjectsArray objectAtIndex:counter]];
+            [senderString appendString:@","];
+        }
+        if (senderString.length > 1) {
+            senderString = (NSMutableString *)[senderString substringWithRange:NSMakeRange(0, senderString.length-1)];
+        }
+        else
+            [senderString appendString:@""];
+        self.phrases = senderString;
+        senderString = nil;
+    }
+    return self;
+}
+
 - (NSMutableDictionary*) getEmailsForFunnl: (NSString *) funnlName {
     NSMutableDictionary *funnlDictionary = [[NSMutableDictionary alloc] init];
     if (self.sendersArray == nil)

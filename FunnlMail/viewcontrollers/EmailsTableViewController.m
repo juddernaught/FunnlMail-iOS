@@ -18,6 +18,7 @@
 #import "MsgViewController.h"
 #import "KeychainItemWrapper.h"
 #import "EmailService.h"
+#import "MessageFilterXRefService.h"
 #import "CreateFunnlviewController.h"
 #import "UIColor+HexString.h"
 #import "NSDate+TimeAgo.h"
@@ -252,6 +253,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
             case 0:{
                 EmailCell *cell = [tableView dequeueReusableCellWithIdentifier:mailCellIdentifier forIndexPath:indexPath];
                 [cell resetToOriginalState];
+                [cell.labelNameText setAttributedText:[self returnFunnelString:(MessageModel*)[EmailService instance].filterMessages[indexPath.row]]];
                 cell.tag = indexPath.row;
                 cell.delegate = self;
                 MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
@@ -751,6 +753,28 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
 #pragma mark -
 #pragma mark Helper
+- (NSMutableAttributedString*)returnFunnelString:(MessageModel*)message {
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] init];
+    NSString *funnelJsonString = [message funnelJson];
+    NSError *error = nil;
+    if (funnelJsonString) {
+        NSData *data = [funnelJsonString dataUsingEncoding:NSUTF8StringEncoding];
+        NSMutableDictionary *tempDict = [NSJSONSerialization JSONObjectWithData:data
+                                                                        options:kNilOptions
+                                                                          error:&error];
+        NSArray *keysArray = tempDict.allKeys;
+        NSArray *valueArray = tempDict.allValues;
+        for (int cnt = 0; cnt < keysArray.count; cnt++) {
+            UIColor * color = [UIColor colorWithHexString:[valueArray objectAtIndex:cnt]];
+            NSDictionary * attributes = [NSDictionary dictionaryWithObject:color forKey:NSForegroundColorAttributeName];
+            NSAttributedString * subString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"  %@",[keysArray objectAtIndex:cnt]] attributes:attributes];
+            [attributedString appendAttributedString:subString];
+            subString = nil;
+        }
+    }
+    return attributedString;
+}
+
 - (NSString*)removeAngularBracket:(NSString*)emailString {
     if (emailString.length > 0) {
         if ([[emailString substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"<"]) {
@@ -801,7 +825,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 90;
+    return 116;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath

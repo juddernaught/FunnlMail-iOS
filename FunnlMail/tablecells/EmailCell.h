@@ -10,6 +10,7 @@
 #import <MailCore/MailCore.h>
 #import "MCSwipeTableViewCell.h"
 #import "RDSwipeableTableViewCell.h"
+#import "UIColor+HexString.h"
 @interface EmailCell : RDSwipeableTableViewCell
 {
     
@@ -18,4 +19,5 @@
 @property (nonatomic, strong) MCOIMAPMessageRenderingOperation * messageRenderingOperation;
 @property (nonatomic, strong) UIImageView *detailDiscloser;
 @property (nonatomic, strong) UIView *inclusiveFunnels;
+@property (nonatomic, strong) UILabel *labelNameText;
 @end

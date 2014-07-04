@@ -13,6 +13,8 @@
 #import "ServiceUtils.h"
 #import "FunnelModel.h"
 #import <MailCore/MailCore.h>
+#import "FunnelService.h"
+#import "MessageFilterXRefService.h"
 
 static MessageService *instance;
 
@@ -128,9 +130,15 @@ static MessageService *instance;
   paramDict[@"read"] = [NSNumber numberWithBool:messageModel.read];
   paramDict[@"date"] = dateTimeInterval;
   paramDict[@"skipFlag"] = [NSNumber numberWithBool:messageModel.skipFlag];
+    if (messageModel.funnelJson) {
+        paramDict[@"funnelJson"] = messageModel.funnelJson;
+    }
+    else
+        paramDict[@"funnelJson"] = @"";
+  
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    success = [db executeUpdate:@"UPDATE messages SET messageJSON=:messageJSON,read=:read,date=:date,skipFlag=:skipFlag WHERE messageID=:messageID" withParameterDictionary:paramDict];
+    success = [db executeUpdate:@"UPDATE messages SET messageJSON=:messageJSON,read=:read,date=:date,skipFlag=:skipFlag,funnelJson=:funnelJson WHERE messageID=:messageID" withParameterDictionary:paramDict];
     
   }];
   
@@ -145,7 +153,7 @@ static MessageService *instance;
     __block NSMutableArray *array = [[NSMutableArray alloc] init];
     
     [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, date, skipFlag FROM messages order by messageID DESC" withParameterDictionary:nil];
+        FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, date, skipFlag, funnelJson FROM messages order by messageID DESC" withParameterDictionary:nil];
         
         MessageModel *model;
         
@@ -157,7 +165,11 @@ static MessageService *instance;
             model.read = [resultSet intForColumn:@"read"];
             model.skipFlag = [resultSet intForColumn:@"skipFlag"];
             double dateTimeInterval = [resultSet doubleForColumn:@"date"];
-            
+            if ([resultSet stringForColumn:@"funnelJson"]) {
+                model.funnelJson = [resultSet stringForColumn:@"funnelJson"];
+            }
+            else
+                model.funnelJson = @"";
             model.date = [NSDate dateWithTimeIntervalSince1970:dateTimeInterval];
             [array addObject:model];
 //            [array addObject:[MCOIMAPMessage importSerializable:model.messageJSON]];
@@ -167,6 +179,8 @@ static MessageService *instance;
     return array;
 }
 
+
+//currently not in use
 -(NSArray *) messagesWithTop:(NSInteger)top{
   __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
   
@@ -199,20 +213,10 @@ static MessageService *instance;
 
 //newly added function by iauro001 on 13th June 2014
 -(NSArray *) retrieveAllMessages{
-    __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
-    
-    paramDict[@"limit"] = @"20";
-    
     __block NSMutableArray *array = [[NSMutableArray alloc] init];
     
     [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-        //retriving all messages
-//        FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, date FROM messages order by messageID DESC" withParameterDictionary:nil];
-        //new query retrieving the recent mail of a particular thread.
-        
-        FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, messageBodyToBeRendered, date, t_count,skipFlag FROM messages INNER JOIN (SELECT MAX(messageID) as t_msgID, COUNT(*) as t_count FROM messages where skipFlag = 0 GROUP BY gmailthreadid) t ON ( messages. messageID = t.t_msgID ) order by messageID DESC;" withParameterDictionary:nil];
-        
-//        FMResultSet *resultSet = [db executeQuery:@"select messageID, messageJSON, read, date, count(gmailthreadid) as threadmailcount from messages group by gmailthreadid having messageID in (select max(messageID) from messages group by gmailthreadid) order by messageID DESC;" withParameterDictionary:nil];
+        FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, messageBodyToBeRendered, date, t_count,skipFlag,funnelJson FROM messages INNER JOIN (SELECT MAX(messageID) as t_msgID, COUNT(*) as t_count FROM messages where skipFlag = 0 GROUP BY gmailthreadid) t ON ( messages. messageID = t.t_msgID ) order by messageID DESC;" withParameterDictionary:nil];
         
         MessageModel *model;
         while ([resultSet next]) {
@@ -230,6 +234,11 @@ static MessageService *instance;
             }
             else
                 model.messageBodyToBeRendered = @"not";
+            if ([resultSet stringForColumn:@"funnelJson"]) {
+                model.funnelJson = [resultSet stringForColumn:@"funnelJson"];
+            }
+            else
+                model.funnelJson = @"";
 //            if ([resultSet stringForColumn:@"messageHTMLBody"]) {
 //                model.messageHTMLBody = [resultSet stringForColumn:@"messageHTMLBody"];
 //            }
@@ -481,6 +490,80 @@ static MessageService *instance;
   }];
   
   return array;
+}
+
+#pragma mark -
+#pragma funnelLabelOperations
+
+- (void)removeFunnelJson {
+    NSArray *messageArray = [self messagesAllTopMessages];
+    for (MessageModel *temp in messageArray) {
+        temp.funnelJson = @"";
+        [[MessageService instance] updateMessage:temp];
+    }
+}
+
+- (void)insertFunnelJsonForMessages {
+    [self removeFunnelJson];
+//    NSArray *messageArray = [self messagesAllTopMessages];
+    NSArray *funnelArray = [[FunnelService instance] allFunnels];
+    for (FunnelModel *tempModel in funnelArray) {
+        NSArray *referenceArray = [[MessageFilterXRefService instance] messagesWithFunnelId:tempModel.funnelId];
+        for (MessageModel *tempMessage in referenceArray) {
+            NSString *funnelID = tempModel.funnelId;
+            NSString *messageID = tempMessage.messageID;
+            NSString *funnelJsonString = [tempMessage funnelJson];
+            NSError *error = nil;
+            NSMutableDictionary *tempDict = (NSMutableDictionary*)[NSJSONSerialization JSONObjectWithData:[funnelJsonString dataUsingEncoding:NSUTF8StringEncoding]
+                                                                                                  options: NSJSONReadingAllowFragments
+                                                                                                    error: &error];
+            if (!error) {
+                tempDict = [self insertIntoDictionary:tempDict funnel:tempModel];
+            }
+            if (tempDict) {
+                [tempMessage setFunnelJson:[self getJsonStringByDictionary:(NSDictionary*)tempDict]];
+            }
+            else {
+                tempDict = [[NSMutableDictionary alloc] init];
+                tempDict[tempModel.funnelName] = tempModel.funnelColor;
+                [tempMessage setFunnelJson:[self getJsonStringByDictionary:(NSDictionary*)tempDict]];
+            }
+            [[MessageService instance] updateMessage:tempMessage];
+            [[MessageFilterXRefService instance] insertMessageXRefMessageID:messageID funnelId:funnelID];
+        }
+    }
+}
+
+-(NSString*)getJsonStringByDictionary:(NSDictionary*)dictionary{
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary
+                                                       options:NSJSONWritingPrettyPrinted
+                                                         error:&error];
+    return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+}
+
+- (BOOL)checkForKey:(NSString *)key indict:(NSMutableDictionary*)dict {
+    NSArray *keys = dict.allKeys;
+    for (NSString *key1 in keys) {
+        if ([key1 isEqualToString:key])
+            return FALSE;
+    }
+    return TRUE;
+}
+
+#pragma mark insertIntoDictionary
+- (NSMutableDictionary*)insertIntoDictionary:(NSMutableDictionary*)dict funnel:(FunnelModel*)funnel {
+    if (!dict) {
+        dict = [[NSMutableDictionary alloc] init];
+    }
+    NSMutableDictionary *temp = [[NSMutableDictionary alloc] initWithDictionary:dict];
+    NSString *key = funnel.funnelName;
+    if ([self checkForKey:key indict:dict]) {
+        temp[key] = funnel.funnelColor;
+    }
+    dict = temp;
+    temp = nil;
+    return dict;
 }
 
 @end

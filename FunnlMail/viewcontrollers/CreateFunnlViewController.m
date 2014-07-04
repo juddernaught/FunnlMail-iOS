@@ -392,15 +392,50 @@
 }
 
 -(void)deleteButtonClicked:(id)sender{
-//  [EmailService deleteFilter:oldModel];
-//  FunnelModel *defaultFilter = [EmailService getDefaultFilter];
-//  [self.mainVCdelegate filterSelected:defaultFilter];
+//    [self.view addSubview:tempAppDelegate.progressHUD];
+//    [tempAppDelegate.progressHUD show:YES];
+//    [self.view bringSubviewToFront:tempAppDelegate.progressHUD];
+//    [NSThread sleepForTimeInterval:0.2];
+//    [self performSelector:@selector(deleteOperation) withObject:nil afterDelay:0.1];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        //load your data here.
+//        [self.view addSubview:tempAppDelegate.progressHUD];
+//        [tempAppDelegate.progressHUD show:YES];
+        [tempAppDelegate.progressHUD setHidden:NO];
+        [self performSelectorInBackground:@selector(tempFunction) withObject:nil];
+//        [self.view bringSubviewToFront:tempAppDelegate.progressHUD];
+//        [NSThread sleepForTimeInterval:0.1];
+        if (oldModel.skipFlag) {
+            [[MessageFilterXRefService instance] deleteXRefWithFunnelId:oldModel.funnelId];
+            [self decrementCounterAgainstTheMessage];
+        }
+        [[FunnelService instance] deleteFunnel:oldModel.funnelId];
+        [[MessageService instance] insertFunnelJsonForMessages];
+        [tempAppDelegate.progressHUD show:YES];
+        [tempAppDelegate.progressHUD removeFromSuperview];
+        NSArray *funnelArray = [[FunnelService instance] allFunnels];
+        tempAppDelegate.currentFunnelString = [[(FunnelModel *)funnelArray[0] funnelName] lowercaseString];
+        tempAppDelegate.currentFunnelDS = (FunnelModel *)funnelArray[0];
+        [self.mainVCdelegate filterSelected:(FunnelModel *)funnelArray[0]];
+        funnelArray = nil;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //update UI in main thread.
+            [tempAppDelegate.progressHUD setHidden:YES];
+            [self.navigationController popViewControllerAnimated:YES];
+        });
+    });
+}
+
+- (void)deleteOperation {
     if (oldModel.skipFlag) {
+        [[MessageFilterXRefService instance] deleteXRefWithFunnelId:oldModel.funnelId];
         [self decrementCounterAgainstTheMessage];
     }
     [[FunnelService instance] deleteFunnel:oldModel.funnelId];
+    [[MessageService instance] insertFunnelJsonForMessages];
+    [tempAppDelegate.progressHUD show:YES];
+    [tempAppDelegate.progressHUD removeFromSuperview];
     NSArray *funnelArray = [[FunnelService instance] allFunnels];
-//    tempAppDelegate = APPDELEGATE;
     tempAppDelegate.currentFunnelString = [[(FunnelModel *)funnelArray[0] funnelName] lowercaseString];
     tempAppDelegate.currentFunnelDS = (FunnelModel *)funnelArray[0];
     [self.mainVCdelegate filterSelected:(FunnelModel *)funnelArray[0]];
@@ -408,9 +443,26 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+- (void)resetFunnelJsonInMessage {
+    
+}
+
 - (void)tempFunction {
     [tempAppDelegate.progressHUD show:YES];
     [self.view bringSubviewToFront:tempAppDelegate.progressHUD];
+}
+
+- (int)validateFunnelName:(NSString*)funnelName {
+    NSArray *funnelArray = [[FunnelService instance] allFunnels];
+    for (FunnelModel *tempFunnelName in funnelArray) {
+        if ([tempFunnelName.funnelName.lowercaseString isEqualToString:funnelName.lowercaseString]) {
+            return 2;
+        }
+    }
+    if ([[funnelName stringByReplacingOccurrencesOfString:@" " withString:@""] length] == 0) {
+        return 3;
+    }
+    return 1;
 }
 
 -(void)saveButtonPressed
@@ -422,15 +474,32 @@
         [activeField resignFirstResponder];
     }
     if(funnlName.length){
+        int validCode = [self validateFunnelName:funnlName];
+        if (validCode != 1 && !isEdit) {
+            if (validCode == 2) {
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:FUNNEL_NAME_REPEATED message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                [alertView show];
+                alertView = nil;
+                [tempAppDelegate.progressHUD setHidden:YES];
+            }
+            else if (validCode == 3) {
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:FUNNEL_NAME_BLANK message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                [alertView show];
+                alertView = nil;
+                [tempAppDelegate.progressHUD setHidden:YES];
+            }
+            return;
+        }
+
         if(dictionaryOfConversations.allKeys.count){
             
             NSInteger gradientInt = arc4random_uniform(randomColors.count);
-            UIColor *color = [UIColor colorWithHexString: [randomColors objectAtIndex:gradientInt]];
+            UIColor *color = [UIColor colorWithHexString:[randomColors objectAtIndex:gradientInt]];
             if(color == nil){
                 color = [UIColor colorWithHexString:@"#2EB82E"];
             }
             FunnelModel *model;
-            model = [[FunnelModel alloc]initWithBarColor:color filterTitle:funnlName newMessageCount:0 dateOfLastMessage:[NSDate new] sendersArray:(NSMutableArray*)[dictionaryOfConversations allValues] subjectsArray:(NSMutableArray*)[dictionaryOfSubjects allValues] skipAllFlag:isSkipALl];
+            model = [[FunnelModel alloc]initWithBarColor:color filterTitle:funnlName newMessageCount:0 dateOfLastMessage:[NSDate new] sendersArray:(NSMutableArray*)[dictionaryOfConversations allValues] subjectsArray:(NSMutableArray*)[dictionaryOfSubjects allValues] skipAllFlag:isSkipALl funnelColor:[randomColors objectAtIndex:gradientInt]];
             model.funnelId = oldModel.funnelId;
             FunnelModel *modelForFunnl = [[FunnelModel alloc] init];
             modelForFunnl.funnelName = model.filterTitle;
@@ -482,6 +551,7 @@
                     }
                     NSLog(@"Changes had occured!!");
                 }
+                [[MessageService instance] insertFunnelJsonForMessages];
             }else{
                 [[FunnelService instance] insertFunnel:model];
                 [[EmailService instance] applyingFunnel:model toMessages:[[MessageService instance] messagesAllTopMessages]];
@@ -495,6 +565,7 @@
                 // save to db
                 
             }
+//            [[MessageService instance] insertFunnelJsonForMessages];
             [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:model.funnelId top:2000];
             [self.mainVCdelegate filterSelected:model];
             model = nil;

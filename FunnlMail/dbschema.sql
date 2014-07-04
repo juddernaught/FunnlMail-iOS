@@ -10,6 +10,7 @@ gmailthreadid TEXT,
 messageBodyToBeRendered TEXT,
 messageHTMLBody TEXT,
 skipFlag INTEGER,
+funnelJson TEXT,
 PRIMARY KEY (messageID)
 );
 
@@ -19,6 +20,7 @@ funnelName TEXT,
 emailAddresses TEXT,
 phrases TEXT,
 skipFlag INTEGER,
+funnelColor TEXT,
 PRIMARY KEY (funnelId)
 );
 

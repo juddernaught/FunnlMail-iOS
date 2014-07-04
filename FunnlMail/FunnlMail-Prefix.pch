@@ -14,7 +14,8 @@
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
 #endif
-
+#define FUNNEL_NAME_REPEATED @"Funnel name is being repeated."
+#define FUNNEL_NAME_BLANK @"Funnel name is BLANK."
 #define ADD_FUNNL @"#@New@#"
 #define ALL_FUNNL @"#@All@#"
 #define HEIGHT [[UIScreen mainScreen] bounds].size.height
