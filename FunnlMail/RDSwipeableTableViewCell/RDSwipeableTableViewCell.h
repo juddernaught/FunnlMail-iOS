@@ -34,5 +34,5 @@ typedef enum {
 @property (assign, nonatomic) RDSwipeableTableViewCellRevealDirection revealDirection;
 
 - (void)resetToOriginalState;
-
+- (void)resetToOriginalState1;
 @end

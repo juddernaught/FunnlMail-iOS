@@ -29,6 +29,7 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
   if (self) {
     [self setup];
     [self setupViews];
+      editOn = FALSE;
   }
   return self;
 }
@@ -70,7 +71,33 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
 //    }
     filterArray = [[FunnelService instance] allFunnels];
   self.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
-  
+    
+    UIButton *outterButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+    [outterButton addTarget:self action:@selector(outterButtonClicked) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:outterButton];
+    
+    UIView *headerView =[[UIView alloc] init];
+    [self addSubview:headerView];
+    [headerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.mas_top).with.offset(120-40);
+        make.left.equalTo(self.mas_left).with.offset(80);
+        make.right.equalTo(self.mas_right).with.offset(0);
+        make.bottom.equalTo(self.mas_bottom).with.offset(-330);
+    }];
+    UILabel *funnelLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 100, 30)];
+    funnelLabel.text = @"Funnls";
+    [funnelLabel setTextAlignment:NSTextAlignmentLeft];
+    [funnelLabel setFont:[UIFont systemFontOfSize:20]];
+    [headerView addSubview:funnelLabel];
+    [headerView setBackgroundColor:[UIColor colorWithHexString:@"#E2E2E2"]];
+    
+    editButton = [[UIButton alloc] initWithFrame:CGRectMake(320 - 80 - 85 - 10, 10, 85, 30)];
+    [editButton setImage:[UIImage imageNamed:@"manage_Button"] forState:UIControlStateNormal];
+    [editButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+//    [editButton setTitle:@"edit" forState:UIControlStateNormal];
+    [editButton addTarget:self action:@selector(editButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [headerView addSubview:editButton];
+    
   UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
   layout.scrollDirection = UICollectionViewScrollDirectionVertical;
   
@@ -88,35 +115,38 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
   [self.collectionView registerClass:[MainFilterCell class] forCellWithReuseIdentifier:ADD_MAIN_FILTER_CELL];
   
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.mas_top).with.offset(44);
+        make.top.equalTo(self.mas_top).with.offset(120);
         make.left.equalTo(self.mas_left).with.offset(80);
         make.right.equalTo(self.mas_right).with.offset(0);
-        make.bottom.equalTo(self.mas_bottom).with.offset(-250);
+        make.bottom.equalTo(self.mas_bottom).with.offset(-100);
     }];
   
   
-  UITapGestureRecognizer *singleFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
-  singleFingerTap.delegate = self;
-  singleFingerTap.cancelsTouchesInView = NO;
-
-  [self addGestureRecognizer:singleFingerTap];
+//  UITapGestureRecognizer *singleFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
+//  singleFingerTap.delegate = self;
+//  singleFingerTap.cancelsTouchesInView = NO;
+//
+//  [self addGestureRecognizer:singleFingerTap];
 }
 
-//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
-//{
-//  CGPoint point = [touch locationInView:touch.view];
-//  UIView *viewTouched = [touch.view hitTest:point withEvent:nil];
-//  if ([viewTouched isKindOfClass:[UICollectionView class]]) {
-//    // Do nothing;
-//    return NO;
-//  } else {
-//    // respond to touch action
-//    return YES;
-//  }
-//}
+- (void)outterButtonClicked {
+  [self setHidden:YES];
+}
 
 - (void)handleSingleTap:(UITapGestureRecognizer *)recognizer {
   [self setHidden:YES];
+}
+
+- (void)editButtonPressed:(UIButton*)sender {
+    if (editOn) {
+        editOn = FALSE;
+        [editButton setImage:[UIImage imageNamed:@"manage_Button"] forState:UIControlStateNormal];
+    }
+    else {
+        editOn = TRUE;
+        [editButton setImage:[UIImage imageNamed:@"Done_Button"] forState:UIControlStateNormal];
+    }
+    [self.collectionView reloadData];
 }
 
 #pragma mark - Collection view datasource
@@ -150,6 +180,20 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
     [cell.settingsButton addTarget:self action:@selector(settingsButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     cell.notificationButton.tag = indexPath.row;
     //[cell.notificationButton addTarget:self action:@selector(notificationButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+      if (editOn && ![fm.funnelName.lowercaseString isEqualToString:@"all"]) {
+          [cell.notificationButton setHidden:NO];
+          [cell.settingsButton setHidden:NO];
+          [cell.shareButton setHidden:NO];
+          [cell.mailImageView setHidden:YES];
+          [cell.messageCountLabel setHidden:YES];
+      }
+      else {
+          [cell.notificationButton setHidden:YES];
+          [cell.settingsButton setHidden:YES];
+          [cell.shareButton setHidden:YES];
+          [cell.mailImageView setHidden:NO];
+          [cell.messageCountLabel setHidden:NO];
+      }
   }
   cell.contentView.backgroundColor = [UIColor whiteColor];
   return cell;

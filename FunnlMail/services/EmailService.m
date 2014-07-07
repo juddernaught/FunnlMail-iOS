@@ -316,7 +316,6 @@ static NSString *currentFolder;
              NSLog(@"Progress: %u of %lu", progress, (unsigned long)numberOfMessagesToLoad);
          }];
          
-         //         __weak EmailService *weakSelf = self;
          [self.imapMessagesFetchOp start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
           {
               if (messages.count > 0) {
@@ -381,6 +380,9 @@ static NSString *currentFolder;
 - (void)applyingFilters:(NSArray*)messages
 {
     NSArray *funnels = [[FunnelService instance] allFunnels];
+    if (funnels.count == 1) {
+        return;
+    }
     for (FunnelModel *tempFunnelModel in funnels) {
         for (int count = 0; count < messages.count; count++) {
             MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[messages objectAtIndex:count] messageJSON]];
@@ -457,9 +459,16 @@ static NSString *currentFolder;
             return TRUE;
         }
     }
-    for (NSString *phrase in funnel.subjectsArray) {
-        if ([phrase.lowercaseString isEqualToString:[[header subject] lowercaseString]]) {
-            return TRUE;
+    if ([funnel.funnelName.lowercaseString isEqualToString:@"all"]) {
+        
+    }
+    else {
+        for (NSString *phrase in funnel.subjectsArray) {
+            if ([[[header subject] lowercaseString] rangeOfString:phrase.lowercaseString].location == NSNotFound) {
+                
+            } else {
+                return TRUE;
+            }
         }
     }
     return FALSE;

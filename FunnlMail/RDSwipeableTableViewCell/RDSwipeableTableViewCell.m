@@ -229,6 +229,20 @@ typedef enum {
                      }];
 }
 
+- (void)resetToOriginalState1
+{
+    [UIView animateWithDuration:.3
+                     animations:^{
+                         self.contentScrollView.frame = CGRectOffset(self.contentScrollView.bounds, 0, 0);
+                         self.realContentView.bounds = CGRectOffset(self.realContentView.bounds, 0, 0);
+                     } completion:^(BOOL finished) {
+                         [self resetView];
+//                         if ([self.delegate respondsToSelector:@selector(tableView:didCellReset:)])
+//                             [self.delegate tableView:self.tableView didCellReset:self];
+//                         _revealViewVisible = NO;
+                     }];
+}
+
 
 - (void)handleSwipe:(UIPanGestureRecognizer *)gesture
           withPoint:(CGPoint)point

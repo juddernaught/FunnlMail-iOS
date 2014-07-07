@@ -493,7 +493,7 @@
 
         if(dictionaryOfConversations.allKeys.count){
             
-            NSInteger gradientInt = arc4random_uniform(randomColors.count);
+            NSInteger gradientInt = arc4random_uniform((uint32_t)randomColors.count);
             UIColor *color = [UIColor colorWithHexString:[randomColors objectAtIndex:gradientInt]];
             if(color == nil){
                 color = [UIColor colorWithHexString:@"#2EB82E"];

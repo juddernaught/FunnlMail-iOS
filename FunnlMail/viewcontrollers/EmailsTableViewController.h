@@ -17,6 +17,7 @@
 #import "AppDelegate.h"
 
 @interface EmailsTableViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate,MCSwipeTableViewCellDelegate,RDSwipeableTableViewCellDelegate> {
+    RDSwipeableTableViewCell *tempCellForDisplay;
     UIView *filterNavigationView;
     UILabel *filterLabel;
     UISearchBar *mailSearchBar;
