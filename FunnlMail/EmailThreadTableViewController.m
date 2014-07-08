@@ -116,7 +116,7 @@ static NSString *mailCellIdentifier = @"MailCell";
     NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
 //    NSString *cachedPreview = [EmailService instance].filterMessagePreviews[uidKey];
     NSString *cachedPreview = [(MessageModel*)dataSourceArray[indexPath.row] messageBodyToBeRendered];
-    if (![cachedPreview isEqualToString:@"not"] && cachedPreview)
+    if (![cachedPreview isEqualToString:EMPTY_DELIMITER] && cachedPreview)
     {
         cell.bodyLabel.text = cachedPreview;
     }

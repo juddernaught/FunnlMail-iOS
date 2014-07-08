@@ -386,7 +386,12 @@ static NSString *currentFolder;
     for (FunnelModel *tempFunnelModel in funnels) {
         for (int count = 0; count < messages.count; count++) {
             MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[messages objectAtIndex:count] messageJSON]];
+            if([message.header.subject isEqual:NULL] || [message.header.subject isEqualToString:@""] || [message.header.subject isEqualToString:@"(no subject)"]){
+                NSLog(@"aaa");
+            }
             if ([self checkForFunnel:tempFunnelModel forMessage:message]) {
+                
+                
                 NSString *funnelID = tempFunnelModel.funnelId;
                 NSString *messageID = [NSString stringWithFormat:@"%d",message.uid];
                 NSString *funnelJsonString = [(MessageModel*)[messages objectAtIndex:count] funnelJson];
@@ -464,10 +469,12 @@ static NSString *currentFolder;
     }
     else {
         for (NSString *phrase in funnel.subjectsArray) {
-            if ([[[header subject] lowercaseString] rangeOfString:phrase.lowercaseString].location == NSNotFound) {
-                
-            } else {
-                return TRUE;
+            if(header.subject.length){
+                if ([[[header subject] lowercaseString] rangeOfString:phrase.lowercaseString].location == NSNotFound) {
+                    
+                } else {
+                    return TRUE;
+                }
             }
         }
     }

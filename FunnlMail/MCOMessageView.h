@@ -28,6 +28,8 @@
 @protocol MCOMessageViewDelegate <NSObject>
 
 @optional
+- (void) MCOMessageViewLoadingCompleted:(MCOMessageView *)view;
+
 - (NSData *) MCOMessageView:(MCOMessageView *)view dataForPartWithUniqueID:(NSString *)partUniqueID;
 - (void) MCOMessageView:(MCOMessageView *)view fetchDataForPartWithUniqueID:(NSString *)partUniqueID
      downloadedFinished:(void (^)(NSError * error))downloadFinished;

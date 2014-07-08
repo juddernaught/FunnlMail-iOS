@@ -233,7 +233,7 @@ static MessageService *instance;
                 model.messageBodyToBeRendered = [resultSet stringForColumn:@"messageBodyToBeRendered"];
             }
             else
-                model.messageBodyToBeRendered = @"not";
+                model.messageBodyToBeRendered = EMPTY_DELIMITER;
             if ([resultSet stringForColumn:@"funnelJson"]) {
                 model.funnelJson = [resultSet stringForColumn:@"funnelJson"];
             }
@@ -243,7 +243,7 @@ static MessageService *instance;
 //                model.messageHTMLBody = [resultSet stringForColumn:@"messageHTMLBody"];
 //            }
 //            else
-//                model.messageHTMLBody = @"not";
+//                model.messageHTMLBody = EMPTY_DELIMITER;
             
             //updated on 17th June 2014
             [array addObject:model];
@@ -365,13 +365,13 @@ static MessageService *instance;
                 model.messageBodyToBeRendered = [resultSet stringForColumn:@"messageBodyToBeRendered"];
             }
             else
-                model.messageBodyToBeRendered = @"not";
+                model.messageBodyToBeRendered = EMPTY_DELIMITER;
             
             if ([resultSet stringForColumn:@"messageHTMLBody"]) {
                 model.messageHTMLBody = [resultSet stringForColumn:@"messageHTMLBody"];
             }
             else
-                model.messageHTMLBody = @"not";
+                model.messageHTMLBody = EMPTY_DELIMITER;
             
             //updated on 17th June 2014
             [array addObject:model];
@@ -423,13 +423,13 @@ static MessageService *instance;
             model.messageBodyToBeRendered = [resultSet stringForColumn:@"messageBodyToBeRendered"];
         }
         else
-            model.messageBodyToBeRendered = @"not";
+            model.messageBodyToBeRendered = EMPTY_DELIMITER;
         
         if ([resultSet stringForColumn:@"messageHTMLBody"]) {
             model.messageHTMLBody = [resultSet stringForColumn:@"messageHTMLBody"];
         }
         else
-            model.messageHTMLBody = @"not";
+            model.messageHTMLBody = EMPTY_DELIMITER;
         [array addObject:model];
     }
   }];

@@ -353,7 +353,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
 //                NSString *cachedPreview = [EmailService instance].filterMessagePreviews[uidKey];
                 NSString *cachedPreview = [(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageBodyToBeRendered];
-                if (![cachedPreview isEqualToString:@"not"])
+                if (![cachedPreview isEqualToString:EMPTY_DELIMITER])
                 {
                     cell.bodyLabel.text = cachedPreview;
                 }

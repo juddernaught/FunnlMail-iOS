@@ -18,6 +18,7 @@
 #define FUNNEL_NAME_BLANK @"Funnel name is BLANK."
 #define ADD_FUNNL @"#@New@#"
 #define ALL_FUNNL @"#@All@#"
+#define EMPTY_DELIMITER @"#NOT#"
 #define HEIGHT [[UIScreen mainScreen] bounds].size.height
 #define WIDTH [[UIScreen mainScreen] bounds].size.width
 #define kNUMBER_OF_MESSAGES_TO_DOWNLOAD_IN_BACKGROUND 20

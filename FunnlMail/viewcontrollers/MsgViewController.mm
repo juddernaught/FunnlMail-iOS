@@ -61,7 +61,6 @@
     _messageView.tempMessageModel = _message;
     _messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 //    [self.view addSubview:_messageView];
-    [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(updateWebView) userInfo:nil repeats:NO];
     
     messageTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT-34)];
 //    [messageTableView setSeparatorColor:[UIColor clearColor]];
@@ -481,11 +480,13 @@ typedef void (^DownloadCallback)(NSError * error);
 		NSData * data = [_storage objectForKey:partUniqueID];
 		return data;
 	}
+    [self updateWebView];
 }
 
 - (void) MCOMessageView:(MCOMessageView *)view fetchDataForPartWithUniqueID:(NSString *)partUniqueID
      downloadedFinished:(void (^)(NSError * error))downloadFinished
 {
+
     MCOIMAPFetchContentOperation * op = [self _fetchIMAPPartWithUniqueID:partUniqueID folder:_folder];
     [op setProgress:^(unsigned int current, unsigned int maximum) {
         MCLog("progress content: %u/%u", current, maximum);
@@ -502,6 +503,12 @@ typedef void (^DownloadCallback)(NSError * error);
         }
         [blocks addObject:[downloadFinished copy]];
     }
+    [self updateWebView];
+}
+
+- (void) MCOMessageViewLoadingCompleted:(MCOMessageView *)view;
+{
+    [self updateWebView];
 }
 
 - (NSData *) MCOMessageView:(MCOMessageView *)view previewForData:(NSData *)data isHTMLInlineImage:(BOOL)isHTMLInlineImage

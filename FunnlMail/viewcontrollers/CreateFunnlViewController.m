@@ -369,6 +369,7 @@
         count++;
     }
     dictionaryOfConversations = [NSMutableDictionary dictionaryWithDictionary:tmpDictionary];
+    [tableview reloadData];
     tmpDictionary = nil;
 }
 
