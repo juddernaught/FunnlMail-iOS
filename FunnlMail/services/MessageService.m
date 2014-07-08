@@ -405,7 +405,9 @@ static MessageService *instance;
   __block NSMutableArray *array = [[NSMutableArray alloc] init];
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    FMResultSet *resultSet = [db executeQuery:@"SELECT DISTINCT * FROM messageFilterXRef,messages WHERE messages.messageID==messageFilterXRef.messageID and messageFilterXRef.funnelId=:funnelId order by messageID DESC limit :limit" withParameterDictionary:paramDict];
+//    FMResultSet *resultSet = [db executeQuery:@"SELECT DISTINCT * FROM messageFilterXRef,messages WHERE messages.messageID=messageFilterXRef.messageID and messageFilterXRef.funnelId=:funnelId order by messageID DESC limit :limit" withParameterDictionary:paramDict];
+      FMResultSet *resultSet = [db executeQuery:@"SELECT messages.messageID, messages.messageJSON, messages.read, messages.messageBodyToBeRendered, messages.messageHTMLBody, messages.date, t.t_count, messages.funnelJson FROM messages INNER JOIN (SELECT MAX(messages.messageID) as t_msgID, COUNT(*) as t_count FROM messages INNER JOIN messageFilterXRef ON ( messages.messageID = messageFilterXRef.messageID ) WHERE messageFilterXRef.funnelId =:funnelId  GROUP BY gmailthreadid) t ON ( messages. messageID = t.t_msgID ) order by messages.messageID DESC limit :limit;" withParameterDictionary:paramDict];
+      
     
     MessageModel *model;
     
@@ -415,6 +417,8 @@ static MessageService *instance;
         model.messageJSON = [resultSet stringForColumn:@"messageJSON"];
         model.read = [resultSet intForColumn:@"read"];
         model.date = [resultSet dateForColumn:@"date"];
+        model.numberOfEmailInThread = [resultSet intForColumn:@"t_count"];
+
         if ([resultSet stringForColumn:@"messageBodyToBeRendered"]) {
             model.messageBodyToBeRendered = [resultSet stringForColumn:@"messageBodyToBeRendered"];
         }

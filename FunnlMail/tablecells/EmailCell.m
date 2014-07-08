@@ -18,7 +18,7 @@
     labelNameText = [[UILabel alloc] initWithFrame:CGRectMake(32, 96, 320 - 42, 20)];
 //    [labelNameText setBackgroundColor:[UIColor redColor]];
     [labelNameText setTextAlignment:NSTextAlignmentRight];
-    NSArray *labelArray = [[NSArray alloc] initWithObjects:@"Label1", @"Label2", @"Label3", nil];
+    NSArray *labelArray = [[NSArray alloc] init];
     NSMutableAttributedString *tempAttributedString = [[NSMutableAttributedString alloc] init];
     NSArray *colorArray = GRADIENT_ARRAY;
     for (int count = 0; count < labelArray.count ; count++) {

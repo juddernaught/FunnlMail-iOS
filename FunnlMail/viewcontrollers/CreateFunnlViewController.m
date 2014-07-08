@@ -538,7 +538,11 @@
             if(isEdit){
                 //                [EmailService editFilter:model withOldFilter:oldModel];
                 // save to db
+
+                [[MessageFilterXRefService instance] deleteXRefWithFunnelId:model.funnelId];
                 [[FunnelService instance] updateFunnel:model];
+                [[EmailService instance] applyingFunnel:model toMessages:[[MessageService instance] messagesAllTopMessages]];
+
                 if (oldModel.skipFlag == isSkipALl) {
                     NSLog(@"No changes had occured!!");
                 }

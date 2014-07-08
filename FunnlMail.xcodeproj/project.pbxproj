@@ -795,25 +795,25 @@
 		CC8C7EAA18E6EF8600E76AE8 /* viewcontrollers */ = {
 			isa = PBXGroup;
 			children = (
+				CC1AD1DC18F54BE9000E356C /* MainVCDelegate.h */,
+				CC8C7EAB18E6F1C100E76AE8 /* MainVC.h */,
+				CC8C7EAC18E6F1C100E76AE8 /* MainVC.m */,
 				66AEEB7F1933002D00B6DBE5 /* EmailsTableViewController.h */,
 				66AEEB801933002D00B6DBE5 /* EmailsTableViewController.m */,
 				5AA690B419501EC200E4CB64 /* EmailThreadTableViewController.h */,
 				5AA690B519501EC200E4CB64 /* EmailThreadTableViewController.m */,
-				CC8C7EAB18E6F1C100E76AE8 /* MainVC.h */,
-				CC8C7EAC18E6F1C100E76AE8 /* MainVC.m */,
 				B7C9B25F194E886700F766DA /* PreviewEmailViewController.h */,
 				B7C9B260194E886700F766DA /* PreviewEmailViewController.m */,
 				660BA98C1902CDEA00CDF86E /* LoginViewController.h */,
 				660BA98D1902CDEA00CDF86E /* LoginViewController.m */,
-				CC1AD1DC18F54BE9000E356C /* MainVCDelegate.h */,
 				667787FF18EF768B00EF1962 /* MsgViewController.h */,
 				6677880018EF768B00EF1962 /* MsgViewController.mm */,
-				B742EC341959E170006E17AB /* reply.png */,
-				B7A270AA1961089800DE39DF /* forward.png */,
 				FA2F433D193318BE00C1F119 /* CreateFunnlViewController.h */,
 				FA2F433E193318BE00C1F119 /* CreateFunnlViewController.m */,
 				FA2C9BD9193EE66400866BEE /* MenuViewController.h */,
 				FA2C9BDA193EE66400866BEE /* MenuViewController.m */,
+				B742EC341959E170006E17AB /* reply.png */,
+				B7A270AA1961089800DE39DF /* forward.png */,
 			);
 			name = viewcontrollers;
 			sourceTree = "<group>";

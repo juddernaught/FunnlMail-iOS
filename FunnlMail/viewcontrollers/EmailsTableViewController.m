@@ -11,7 +11,6 @@
 #import "MBProgressHUD.h"
 #import "FilterViewCell.h"
 #import "View+MASAdditions.h"
-//#import "FilterModel.h"
 #import "FunnelModel.h"
 #import <MailCore/MailCore.h>
 #import "EmailCell.h"
