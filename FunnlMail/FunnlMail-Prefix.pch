@@ -14,13 +14,15 @@
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
 #endif
-
+#define FUNNEL_NAME_REPEATED @"Funnel name is being repeated."
+#define FUNNEL_NAME_BLANK @"Funnel name is BLANK."
 #define ADD_FUNNL @"#@New@#"
 #define ALL_FUNNL @"#@All@#"
+#define EMPTY_DELIMITER @"#NOT#"
 #define HEIGHT [[UIScreen mainScreen] bounds].size.height
 #define WIDTH [[UIScreen mainScreen] bounds].size.width
 #define kNUMBER_OF_MESSAGES_TO_DOWNLOAD_IN_BACKGROUND 20
-#define NUMBER_OF_MESSAGES_TO_LOAD		100
+#define NUMBER_OF_MESSAGES_TO_LOAD 1000
 #define NUMBER_OF_MESSAGES_TO_LOAD_ON_SEARCH 20
 #define INBOX @"INBOX"
 #define SENT @"[Gmail]/Sent Mail"

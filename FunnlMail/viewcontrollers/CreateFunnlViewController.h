@@ -14,6 +14,7 @@
 @class FilterModel;
 @interface CreateFunnlViewController : UIViewController<UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate>
 {
+    AppDelegate *tempAppDelegate;
     UITableView *tableview;
     UITextField *nameTextField,*conversattionTextField,*subjectTextField;
     NSMutableDictionary *dictionaryOfConversations,*dictionaryOfSubjects;
@@ -22,6 +23,8 @@
     NSArray *randomColors;
     BOOL isEdit;
     FunnelModel *oldModel;
+    UISwitch *skipAllSwitch;
+    BOOL isSkipALl;
 }
 @property (weak) id<MainVCDelegate> mainVCdelegate;
 -(id)initTableViewWithSenders:(NSMutableDictionary*)sendersDictionary subjects:(NSMutableDictionary*)subjectsDictionary filterModel:(FunnelModel*)model;

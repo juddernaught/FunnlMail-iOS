@@ -11,16 +11,17 @@
 @interface MainFilterCell : UICollectionViewCell{
   UIView *coloredBarView;
   UILabel *filterTitleLabel;
-  UILabel *newMessageCountLabel;
-  UIImageView *mailImageView;
+//  UILabel *newMessageCountLabel;
+//  UIImageView *mailImageView;
   UILabel *dateOfLastMessageLabel;
   UILabel *typeLabel;
 }
-
+@property (strong, nonatomic) UILabel *messageCountLabel;
+@property (strong, nonatomic) UIImageView *mailImageView;
 @property (strong,nonatomic) UIColor *barColor;
 @property (copy,nonatomic) NSString *filterTitle;
 @property (assign,nonatomic) NSInteger newMessageCount;
 @property (copy,nonatomic) NSDate *dateOfLastMessage;
-@property (copy,nonatomic) UIButton *notificationButton,*settingsButton;
+@property (copy,nonatomic) UIButton *notificationButton,*settingsButton,*shareButton;
 
 @end

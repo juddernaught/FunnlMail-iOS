@@ -239,7 +239,6 @@ static NSString *currentFolder;
               //retrieving the message from database
               NSArray *tempArray = [[MessageService instance] retrieveAllMessages];
               [self performSelector:@selector(applyingFilters:) withObject:tempArray];
-//              [self performSelectorInBackground:@selector(applyingFilters:) withObject:tempArray];
               _filterMessages = (NSMutableArray*)tempArray;
               if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
                   [emailTableViewController.tableView reloadData];
@@ -408,7 +407,6 @@ static NSString *currentFolder;
              NSLog(@"Progress: %u of %lu", progress, (unsigned long)numberOfMessagesToLoad);
          }];
          
-         //         __weak EmailService *weakSelf = self;
          [self.imapMessagesFetchOp start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
           {
               if (messages.count > 0) {
@@ -643,12 +641,34 @@ static NSString *currentFolder;
 - (void)applyingFilters:(NSArray*)messages
 {
     NSArray *funnels = [[FunnelService instance] allFunnels];
+    if (funnels.count == 1) {
+        return;
+    }
     for (FunnelModel *tempFunnelModel in funnels) {
         for (int count = 0; count < messages.count; count++) {
             MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[messages objectAtIndex:count] messageJSON]];
+            if([message.header.subject isEqual:NULL] || [message.header.subject isEqualToString:@""] || [message.header.subject isEqualToString:@"(no subject)"]){
+                NSLog(@"aaa");
+            }
             if ([self checkForFunnel:tempFunnelModel forMessage:message]) {
+                
+                
                 NSString *funnelID = tempFunnelModel.funnelId;
                 NSString *messageID = [NSString stringWithFormat:@"%d",message.uid];
+                NSString *funnelJsonString = [(MessageModel*)[messages objectAtIndex:count] funnelJson];
+                NSError *error = nil;
+                NSMutableDictionary *tempDict = (NSMutableDictionary*)[NSJSONSerialization JSONObjectWithData:[funnelJsonString dataUsingEncoding:NSUTF8StringEncoding]
+                                                                                options: NSJSONReadingAllowFragments
+                                                                                  error: &error];
+                if (!error) {
+                    tempDict = [self insertIntoDictionary:tempDict funnel:tempFunnelModel];
+                }
+                else {
+                    tempDict = [[NSMutableDictionary alloc] init];
+                    tempDict[tempFunnelModel.funnelName] = tempFunnelModel.funnelColor;
+                }
+                [(MessageModel*)[messages objectAtIndex:count] setFunnelJson:[self getJsonStringByDictionary:(NSDictionary*)tempDict]];
+                [[MessageService instance] updateMessage:(MessageModel*)[messages objectAtIndex:count]];
                 [[MessageFilterXRefService instance] insertMessageXRefMessageID:messageID funnelId:funnelID];
             }
         }
@@ -656,13 +676,40 @@ static NSString *currentFolder;
     funnels = nil;
 }
 
+-(NSString*)getJsonStringByDictionary:(NSDictionary*)dictionary{
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary
+                                                       options:NSJSONWritingPrettyPrinted
+                                                         error:&error];
+    return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+}
+
 - (void)applyingFunnel:(FunnelModel*)funnel toMessages:(NSArray*)messages
 {
     for (int count = 0; count < messages.count; count++) {
         MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[messages objectAtIndex:count] messageJSON]];
+//        NSLog(@"MessageID : %d",message.uid);
         if ([self checkForFunnel:funnel forMessage:message]) {
             NSString *funnelID = funnel.funnelId;
             NSString *messageID = [NSString stringWithFormat:@"%d",message.uid];
+            if (funnel.skipFlag) {
+                MessageModel *temp = (MessageModel*)[messages objectAtIndex:count];
+                temp.skipFlag = temp.skipFlag + 1;
+            }
+            NSString *funnelJsonString = [(MessageModel*)[messages objectAtIndex:count] funnelJson];
+            NSError *error = nil;
+            NSMutableDictionary *tempDict = [NSJSONSerialization JSONObjectWithData:[funnelJsonString dataUsingEncoding:NSUTF8StringEncoding]
+                                                                            options: NSJSONReadingAllowFragments
+                                                                              error: &error];
+            if (!error) {
+                tempDict = [self insertIntoDictionary:tempDict funnel:funnel];
+            } else {
+                tempDict = [[NSMutableDictionary alloc] init];
+                tempDict[funnel.funnelName] = funnel.funnelColor;
+            }
+//            NSLog(@"----%@",[self getJsonStringByDictionary:(NSDictionary*)tempDict]);
+            [(MessageModel*)[messages objectAtIndex:count] setFunnelJson:[self getJsonStringByDictionary:(NSDictionary*)tempDict]];
+            [[MessageService instance] updateMessage:(MessageModel*)[messages objectAtIndex:count]];
             [[MessageFilterXRefService instance] insertMessageXRefMessageID:messageID funnelId:funnelID];
         }
     }
@@ -678,9 +725,18 @@ static NSString *currentFolder;
             return TRUE;
         }
     }
-    for (NSString *phrase in funnel.subjectsArray) {
-        if ([phrase.lowercaseString isEqualToString:[[header subject] lowercaseString]]) {
-            return TRUE;
+    if ([funnel.funnelName.lowercaseString isEqualToString:@"all"]) {
+        
+    }
+    else {
+        for (NSString *phrase in funnel.subjectsArray) {
+            if(header.subject.length){
+                if ([[[header subject] lowercaseString] rangeOfString:phrase.lowercaseString].location == NSNotFound) {
+                    
+                } else {
+                    return TRUE;
+                }
+            }
         }
     }
     return FALSE;
@@ -698,7 +754,7 @@ static NSString *currentFolder;
         tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
         tempMessageModel.messageJSON = [m serializable];
         tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
-        
+        tempMessageModel.skipFlag = 0;
         [[MessageService instance] insertMessage:tempMessageModel];
         tempMessageModel = nil;
     }

@@ -11,6 +11,8 @@
 
 @interface MainView : UIView<UICollectionViewDelegate,UICollectionViewDataSource,UIGestureRecognizerDelegate>{
     NSArray *filterArray;
+    UIButton *editButton;
+    BOOL editOn;
 }
 
 @property (strong) UICollectionView *collectionView;

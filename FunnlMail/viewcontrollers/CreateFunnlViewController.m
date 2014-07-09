@@ -38,53 +38,58 @@
 
 -(id)initTableViewWithSenders:(NSMutableDictionary*)sendersDictionary subjects:(NSMutableDictionary*)subjectsDictionary filterModel:(FunnelModel*)model;
 {
-  self = [super init];
-  if (self) {
-    // Custom initialization
-    funnlName = @"";
-    if(model){
-      //edit
-        funnlName = model.filterTitle;
-        oldModel = model;
-        isEdit = YES;
+    self = [super init];
+    if (self) {
+        // Custom initialization
+        funnlName = @"";
+        if(model){
+            //edit
+            funnlName = model.filterTitle;
+            oldModel = model;
+            isEdit = YES;
+        }
+        
+        if(sendersDictionary)
+            dictionaryOfConversations = [[NSMutableDictionary alloc] initWithDictionary:sendersDictionary];
+        else
+            dictionaryOfConversations = [[NSMutableDictionary alloc] init];
+        
+        if(subjectsDictionary)
+            dictionaryOfSubjects = [[NSMutableDictionary alloc] initWithDictionary:subjectsDictionary];
+        else
+            dictionaryOfSubjects = [[NSMutableDictionary alloc] init];
+        
+        tableview = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStyleGrouped];
+        tableview.frame = CGRectMake(0, 66, WIDTH, HEIGHT - 66);
+        [tableview setDataSource:self];
+        [tableview setDelegate:self];
+        [self.view addSubview:tableview];
+        
+        if(isEdit){
+            UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(10, 0, 300, 60)];
+            UIButton *deleteButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 300, 40)];
+            [deleteButton setTitleColor:[UIColor colorWithHexString:@"#448DEC"] forState:UIControlStateNormal];
+            [deleteButton setTitleColor:[UIColor colorWithHexString:@"#6F7683"] forState:UIControlStateHighlighted];
+            [deleteButton setTitle:@"Delete Funnl" forState:UIControlStateNormal];
+            [deleteButton.layer setBorderColor:[UIColor colorWithHexString:@"#448DEC"].CGColor];
+            [deleteButton.layer setBorderWidth:1];
+            [footerView addSubview:deleteButton];
+            tableview.tableFooterView = footerView;
+            [deleteButton addTarget:self action:@selector(deleteButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        }
+        
     }
-
-    if(sendersDictionary)
-      dictionaryOfConversations = [[NSMutableDictionary alloc] initWithDictionary:sendersDictionary];
-    else
-      dictionaryOfConversations = [[NSMutableDictionary alloc] init];
+    return self;
     
-    if(subjectsDictionary)
-      dictionaryOfSubjects = [[NSMutableDictionary alloc] initWithDictionary:subjectsDictionary];
-    else
-      dictionaryOfSubjects = [[NSMutableDictionary alloc] init];
-    
-    tableview = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStyleGrouped];
-    [tableview setDataSource:self];
-    [tableview setDelegate:self];
-    [self.view addSubview:tableview];
-    
-    if(isEdit){
-      UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(10, 0, 300, 40)];
-      UIButton *deleteButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 300, 40)];
-      [deleteButton setTitleColor:[UIColor colorWithHexString:@"#448DEC"] forState:UIControlStateNormal];
-      [deleteButton setTitleColor:[UIColor colorWithHexString:@"#6F7683"] forState:UIControlStateHighlighted];
-      [deleteButton setTitle:@"Delete Funnl" forState:UIControlStateNormal];
-      [deleteButton.layer setBorderColor:[UIColor colorWithHexString:@"#448DEC"].CGColor];
-      [deleteButton.layer setBorderWidth:1];
-      [footerView addSubview:deleteButton];
-      tableview.tableFooterView = footerView;
-      [deleteButton addTarget:self action:@selector(deleteButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    
-  }
-  return self;
-  
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    tempAppDelegate = APPDELEGATE;
+    [self.view addSubview:tempAppDelegate.progressHUD];
+    [self.view bringSubviewToFront:tempAppDelegate.progressHUD];
+    isSkipALl = oldModel.skipFlag;
     randomColors = GRADIENT_ARRAY;
     self.title = @"Create Funnl";
     [self.view setBackgroundColor:[UIColor whiteColor]];
@@ -104,14 +109,17 @@
     else if(section == 1){
         return dictionaryOfConversations.allKeys.count+1;
     }
-    else{
+    else if(section == 2){
         return dictionaryOfSubjects.allKeys.count+1;
+    }
+    else {
+        return 1;
     }
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 3;
+    return 4;
 }
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;  {
     if(section==0){
@@ -120,14 +128,31 @@
     else if(section == 1){
         return @"Conversation With:";
     }
-    else{
+    else if(section == 2){
         return @"Subject (Optional):";
     }
-
+    else {
+        return @"Skip all mail:";
+    }
+    
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (indexPath.section == 3) {
+        UITableViewCell *cell = [[UITableViewCell alloc] init];
+        cell.textLabel.text = @"Skip All Mail:";
+        skipAllSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(300-50, 8, 50, 0)];
+        if (oldModel.skipFlag) {
+            [skipAllSwitch setOn:YES];
+        }
+        else {
+            [skipAllSwitch setOn:NO];
+        }
+        [skipAllSwitch addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
+        [cell addSubview:skipAllSwitch];
+        return cell;
+    }
     TextFieldCell *cell = [[TextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
     
     if(indexPath.section == 0)
@@ -158,15 +183,15 @@
             [cell.addButton addTarget:self action:@selector(addButtonPressedForConversation:) forControlEvents:UIControlEventTouchUpInside];
             cell.textField.placeholder = @"Enter Email ID";
         }else{
-          [cell.addButton setHidden:YES];
-          [cell.cancelButton setHidden:NO];
-          [cell.cancelButton setFrame:CGRectMake(270, 2, 40, 40)];
-          cell.cancelButton.tag = indexPath.row;
-          [cell.cancelButton addTarget:self action:@selector(cancelButtonPressedForConversation:) forControlEvents:UIControlEventTouchUpInside];
+            [cell.addButton setHidden:YES];
+            [cell.cancelButton setHidden:NO];
+            [cell.cancelButton setFrame:CGRectMake(270, 2, 40, 40)];
+            cell.cancelButton.tag = indexPath.row;
+            [cell.cancelButton addTarget:self action:@selector(cancelButtonPressedForConversation:) forControlEvents:UIControlEventTouchUpInside];
         }
         cell.tag = cell.contentView.tag = indexPath.row;
     }
-    else
+    else if (indexPath.section == 2)
     {
         cell.textField.frame = CGRectMake(10, 2,250, 40);
         cell.textField.tag = indexPath.section;
@@ -185,14 +210,25 @@
             cell.textField.placeholder = @"Enter Subject";
         }
         else{
-          [cell.addButton setHidden:YES];
-          [cell.cancelButton setHidden:NO];
-          [cell.cancelButton setFrame:CGRectMake(270, 2, 40, 40)];
-          cell.cancelButton.tag = indexPath.row;
-          [cell.cancelButton addTarget:self action:@selector(cancelButtonPressedForSubject:) forControlEvents:UIControlEventTouchUpInside];
-          
+            [cell.addButton setHidden:YES];
+            [cell.cancelButton setHidden:NO];
+            [cell.cancelButton setFrame:CGRectMake(270, 2, 40, 40)];
+            cell.cancelButton.tag = indexPath.row;
+            [cell.cancelButton addTarget:self action:@selector(cancelButtonPressedForSubject:) forControlEvents:UIControlEventTouchUpInside];
+            
         }
         cell.tag = cell.contentView.tag = indexPath.row;
+    }
+    else if (indexPath.section == 3) {
+        skipAllSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(130, 235, 0, 0)];
+        if (oldModel.skipFlag) {
+            [skipAllSwitch setOn:YES];
+        }
+        else {
+            [skipAllSwitch setOn:NO];
+        }
+        [skipAllSwitch addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
+        [cell addSubview:skipAllSwitch];
     }
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     return cell;
@@ -209,62 +245,89 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  return @"Delete";
+    return @"Delete";
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-  if (editingStyle == UITableViewCellEditingStyleDelete) {
-    if(indexPath.section == 1){
-      [dictionaryOfConversations removeObjectForKey:indexPath];
-      [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
-      NSSortDescriptor *rowDescriptor = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
-      NSArray *sortedRows = [dictionaryOfConversations.allKeys sortedArrayUsingDescriptors:@[rowDescriptor]];
-      //NSLog(@"%@",sortedRows.description);
-      NSMutableDictionary *tmpDictionary = [[NSMutableDictionary alloc] init];
-      NSInteger count = 0;
-      for (NSIndexPath *path in sortedRows) {
-        [tmpDictionary setObject:[dictionaryOfConversations objectForKey:path] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
-        count++;
-      }
-      dictionaryOfConversations = [NSMutableDictionary dictionaryWithDictionary:tmpDictionary];
-      tmpDictionary = nil;
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        if(indexPath.section == 1){
+            [dictionaryOfConversations removeObjectForKey:indexPath];
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
+            NSSortDescriptor *rowDescriptor = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
+            NSArray *sortedRows = [dictionaryOfConversations.allKeys sortedArrayUsingDescriptors:@[rowDescriptor]];
+            //NSLog(@"%@",sortedRows.description);
+            NSMutableDictionary *tmpDictionary = [[NSMutableDictionary alloc] init];
+            NSInteger count = 0;
+            for (NSIndexPath *path in sortedRows) {
+                [tmpDictionary setObject:[dictionaryOfConversations objectForKey:path] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
+                count++;
+            }
+            dictionaryOfConversations = [NSMutableDictionary dictionaryWithDictionary:tmpDictionary];
+            tmpDictionary = nil;
+        }
+        else if(indexPath.section == 2){
+            [dictionaryOfSubjects removeObjectForKey:indexPath];
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
+            NSSortDescriptor *rowDescriptor = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
+            NSArray *sortedRows = [dictionaryOfSubjects.allKeys sortedArrayUsingDescriptors:@[rowDescriptor]];
+            //NSLog(@"%@",sortedRows.description);
+            NSMutableDictionary *tmpDictionary = [[NSMutableDictionary alloc] init];
+            NSInteger count = 0;
+            for (NSIndexPath *path in sortedRows) {
+                [tmpDictionary setObject:[dictionaryOfSubjects objectForKey:path] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
+                count++;
+            }
+            dictionaryOfSubjects = [NSMutableDictionary dictionaryWithDictionary:tmpDictionary];
+            tmpDictionary = nil;
+        }
     }
-    else if(indexPath.section == 2){
-      [dictionaryOfSubjects removeObjectForKey:indexPath];
-      [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
-      NSSortDescriptor *rowDescriptor = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
-      NSArray *sortedRows = [dictionaryOfSubjects.allKeys sortedArrayUsingDescriptors:@[rowDescriptor]];
-      //NSLog(@"%@",sortedRows.description);
-      NSMutableDictionary *tmpDictionary = [[NSMutableDictionary alloc] init];
-      NSInteger count = 0;
-      for (NSIndexPath *path in sortedRows) {
-        [tmpDictionary setObject:[dictionaryOfSubjects objectForKey:path] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
-        count++;
-      }
-      dictionaryOfSubjects = [NSMutableDictionary dictionaryWithDictionary:tmpDictionary];
-      tmpDictionary = nil;
-    }
-  }
-  [activeField resignFirstResponder];
-
+    [activeField resignFirstResponder];
+    
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-  if(indexPath.section == 1){
-    if(dictionaryOfConversations.count > 0 && indexPath.row < dictionaryOfConversations.count ){
-      return YES;
+    if(indexPath.section == 1){
+        if(dictionaryOfConversations.count > 0 && indexPath.row < dictionaryOfConversations.count ){
+            return YES;
+        }
+        return NO;
+    }
+    else  if(indexPath.section == 2){
+        if(dictionaryOfSubjects.count > 0 && indexPath.row < dictionaryOfSubjects.count ){
+            return YES;
+        }
+        return NO;
     }
     return NO;
-  }
-  else  if(indexPath.section == 2){
-    if(dictionaryOfSubjects.count > 0 && indexPath.row < dictionaryOfSubjects.count ){
-      return YES;
-    }
-    return NO;
-  }
-  return NO;
 }
 
+#pragma mark -
+#pragma mark Helper
+- (void)changeSwitch:(UISwitch*)sender {
+    if([sender isOn]){
+        NSLog(@"Switch is ON");
+        isSkipALl = TRUE;
+    } else{
+        NSLog(@"Switch is OFF");
+        isSkipALl = FALSE;
+    }
+}
+
+- (void)decrementCounterAgainstTheMessage {
+    NSArray *messageArray = [[MessageFilterXRefService instance] messagesWithFunnelId:oldModel.funnelId];
+    for (MessageModel *tempModel in messageArray) {
+        tempModel.skipFlag --;
+        [[MessageService instance] updateMessage:tempModel];
+    }
+}
+
+- (void)incrementCounterAgainstTheMessage {
+    NSArray *messageArray = [[MessageFilterXRefService instance] messagesWithFunnelId:oldModel.funnelId];
+    for (MessageModel *tempModel in messageArray) {
+        tempModel.skipFlag ++;
+        [[MessageService instance] updateMessage:tempModel];
+    }
+}
 
 #pragma mark -  Add Subject/Conversation Button Methods
 
@@ -291,77 +354,156 @@
 }
 
 -(void)cancelButtonPressedForConversation:(id)sender{
-  UIButton *b = (UIButton*)sender;
-  NSIndexPath *indexPath = [NSIndexPath indexPathForRow:b.tag inSection:1];
-
-  [dictionaryOfConversations removeObjectForKey:indexPath];
-  [tableview deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
-  NSSortDescriptor *rowDescriptor = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
-  NSArray *sortedRows = [dictionaryOfConversations.allKeys sortedArrayUsingDescriptors:@[rowDescriptor]];
-  //NSLog(@"%@",sortedRows.description);
-  NSMutableDictionary *tmpDictionary = [[NSMutableDictionary alloc] init];
-  NSInteger count = 0;
-  for (NSIndexPath *path in sortedRows) {
-    [tmpDictionary setObject:[dictionaryOfConversations objectForKey:path] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
-    count++;
-  }
-  dictionaryOfConversations = [NSMutableDictionary dictionaryWithDictionary:tmpDictionary];
-  tmpDictionary = nil;
+    UIButton *b = (UIButton*)sender;
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:b.tag inSection:1];
+    
+    [dictionaryOfConversations removeObjectForKey:indexPath];
+    [tableview deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
+    NSSortDescriptor *rowDescriptor = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
+    NSArray *sortedRows = [dictionaryOfConversations.allKeys sortedArrayUsingDescriptors:@[rowDescriptor]];
+    //NSLog(@"%@",sortedRows.description);
+    NSMutableDictionary *tmpDictionary = [[NSMutableDictionary alloc] init];
+    NSInteger count = 0;
+    for (NSIndexPath *path in sortedRows) {
+        [tmpDictionary setObject:[dictionaryOfConversations objectForKey:path] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
+        count++;
+    }
+    dictionaryOfConversations = [NSMutableDictionary dictionaryWithDictionary:tmpDictionary];
+    [tableview reloadData];
+    tmpDictionary = nil;
 }
 
 -(void)cancelButtonPressedForSubject:(id)sender{
-  UIButton *b = (UIButton*)sender;
-  NSIndexPath *indexPath = [NSIndexPath indexPathForRow:b.tag inSection:2];
-  
-  [dictionaryOfSubjects removeObjectForKey:indexPath];
-  [tableview deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
-  NSSortDescriptor *rowDescriptor = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
-  NSArray *sortedRows = [dictionaryOfSubjects.allKeys sortedArrayUsingDescriptors:@[rowDescriptor]];
-  //NSLog(@"%@",sortedRows.description);
-  NSMutableDictionary *tmpDictionary = [[NSMutableDictionary alloc] init];
-  NSInteger count = 0;
-  for (NSIndexPath *path in sortedRows) {
-    [tmpDictionary setObject:[dictionaryOfSubjects objectForKey:path] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
-    count++;
-  }
-  dictionaryOfSubjects = [NSMutableDictionary dictionaryWithDictionary:tmpDictionary];
-  tmpDictionary = nil;
+    UIButton *b = (UIButton*)sender;
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:b.tag inSection:2];
+    
+    [dictionaryOfSubjects removeObjectForKey:indexPath];
+    [tableview deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
+    NSSortDescriptor *rowDescriptor = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
+    NSArray *sortedRows = [dictionaryOfSubjects.allKeys sortedArrayUsingDescriptors:@[rowDescriptor]];
+    //NSLog(@"%@",sortedRows.description);
+    NSMutableDictionary *tmpDictionary = [[NSMutableDictionary alloc] init];
+    NSInteger count = 0;
+    for (NSIndexPath *path in sortedRows) {
+        [tmpDictionary setObject:[dictionaryOfSubjects objectForKey:path] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
+        count++;
+    }
+    dictionaryOfSubjects = [NSMutableDictionary dictionaryWithDictionary:tmpDictionary];
+    tmpDictionary = nil;
 }
 
 -(void)deleteButtonClicked:(id)sender{
-//  [EmailService deleteFilter:oldModel];
-//  FunnelModel *defaultFilter = [EmailService getDefaultFilter];
-//  [self.mainVCdelegate filterSelected:defaultFilter];
+//    [self.view addSubview:tempAppDelegate.progressHUD];
+//    [tempAppDelegate.progressHUD show:YES];
+//    [self.view bringSubviewToFront:tempAppDelegate.progressHUD];
+//    [NSThread sleepForTimeInterval:0.2];
+//    [self performSelector:@selector(deleteOperation) withObject:nil afterDelay:0.1];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        //load your data here.
+//        [self.view addSubview:tempAppDelegate.progressHUD];
+//        [tempAppDelegate.progressHUD show:YES];
+        [tempAppDelegate.progressHUD setHidden:NO];
+        [self performSelectorInBackground:@selector(tempFunction) withObject:nil];
+//        [self.view bringSubviewToFront:tempAppDelegate.progressHUD];
+//        [NSThread sleepForTimeInterval:0.1];
+        if (oldModel.skipFlag) {
+            [[MessageFilterXRefService instance] deleteXRefWithFunnelId:oldModel.funnelId];
+            [self decrementCounterAgainstTheMessage];
+        }
+        [[FunnelService instance] deleteFunnel:oldModel.funnelId];
+        [[MessageService instance] insertFunnelJsonForMessages];
+        [tempAppDelegate.progressHUD show:YES];
+        [tempAppDelegate.progressHUD removeFromSuperview];
+        NSArray *funnelArray = [[FunnelService instance] allFunnels];
+        tempAppDelegate.currentFunnelString = [[(FunnelModel *)funnelArray[0] funnelName] lowercaseString];
+        tempAppDelegate.currentFunnelDS = (FunnelModel *)funnelArray[0];
+        [self.mainVCdelegate filterSelected:(FunnelModel *)funnelArray[0]];
+        funnelArray = nil;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //update UI in main thread.
+            [tempAppDelegate.progressHUD setHidden:YES];
+            [self.navigationController popViewControllerAnimated:YES];
+        });
+    });
+}
+
+- (void)deleteOperation {
+    if (oldModel.skipFlag) {
+        [[MessageFilterXRefService instance] deleteXRefWithFunnelId:oldModel.funnelId];
+        [self decrementCounterAgainstTheMessage];
+    }
     [[FunnelService instance] deleteFunnel:oldModel.funnelId];
+    [[MessageService instance] insertFunnelJsonForMessages];
+    [tempAppDelegate.progressHUD show:YES];
+    [tempAppDelegate.progressHUD removeFromSuperview];
     NSArray *funnelArray = [[FunnelService instance] allFunnels];
-    AppDelegate *tempAppDelegate = APPDELEGATE;
     tempAppDelegate.currentFunnelString = [[(FunnelModel *)funnelArray[0] funnelName] lowercaseString];
     tempAppDelegate.currentFunnelDS = (FunnelModel *)funnelArray[0];
     [self.mainVCdelegate filterSelected:(FunnelModel *)funnelArray[0]];
     funnelArray = nil;
-  [self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)resetFunnelJsonInMessage {
+    
+}
+
+- (void)tempFunction {
+    [tempAppDelegate.progressHUD show:YES];
+    [self.view bringSubviewToFront:tempAppDelegate.progressHUD];
+}
+
+- (int)validateFunnelName:(NSString*)funnelName {
+    NSArray *funnelArray = [[FunnelService instance] allFunnels];
+    for (FunnelModel *tempFunnelName in funnelArray) {
+        if ([tempFunnelName.funnelName.lowercaseString isEqualToString:funnelName.lowercaseString]) {
+            return 2;
+        }
+    }
+    if ([[funnelName stringByReplacingOccurrencesOfString:@" " withString:@""] length] == 0) {
+        return 3;
+    }
+    return 1;
 }
 
 -(void)saveButtonPressed
 {
+    [tempAppDelegate.progressHUD setHidden:NO];
+    [self performSelectorInBackground:@selector(tempFunction) withObject:nil];
     NSLog(@"Save Butoon pressed");
-  if(activeField){
+    if(activeField){
         [activeField resignFirstResponder];
     }
     if(funnlName.length){
+        int validCode = [self validateFunnelName:funnlName];
+        if (validCode != 1 && !isEdit) {
+            if (validCode == 2) {
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:FUNNEL_NAME_REPEATED message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                [alertView show];
+                alertView = nil;
+                [tempAppDelegate.progressHUD setHidden:YES];
+            }
+            else if (validCode == 3) {
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:FUNNEL_NAME_BLANK message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                [alertView show];
+                alertView = nil;
+                [tempAppDelegate.progressHUD setHidden:YES];
+            }
+            return;
+        }
+
         if(dictionaryOfConversations.allKeys.count){
-      
-            NSInteger gradientInt = arc4random_uniform(randomColors.count);
-            UIColor *color = [UIColor colorWithHexString: [randomColors objectAtIndex:gradientInt]];
+            
+            NSInteger gradientInt = arc4random_uniform((uint32_t)randomColors.count);
+            UIColor *color = [UIColor colorWithHexString:[randomColors objectAtIndex:gradientInt]];
             if(color == nil){
                 color = [UIColor colorWithHexString:@"#2EB82E"];
             }
             FunnelModel *model;
-            model = [[FunnelModel alloc]initWithBarColor:color filterTitle:funnlName newMessageCount:0 dateOfLastMessage:[NSDate new] sendersArray:(NSMutableArray*)[dictionaryOfConversations allValues] subjectsArray:(NSMutableArray*)[dictionaryOfSubjects allValues]];
+            model = [[FunnelModel alloc]initWithBarColor:color filterTitle:funnlName newMessageCount:0 dateOfLastMessage:[NSDate new] sendersArray:(NSMutableArray*)[dictionaryOfConversations allValues] subjectsArray:(NSMutableArray*)[dictionaryOfSubjects allValues] skipAllFlag:isSkipALl funnelColor:[randomColors objectAtIndex:gradientInt]];
             model.funnelId = oldModel.funnelId;
             FunnelModel *modelForFunnl = [[FunnelModel alloc] init];
             modelForFunnl.funnelName = model.filterTitle;
-            AppDelegate *tempAppDelegate = APPDELEGATE;
             tempAppDelegate.currentFunnelString = model.funnelName.lowercaseString;
             tempAppDelegate.currentFunnelDS = model;
             NSArray *tempArrayForSender = [dictionaryOfConversations allValues];
@@ -393,17 +535,42 @@
                 modelForFunnl.phrases = @"";
             senderEmailIds = nil;
             tempArrayForSender = nil;
-            
+            model.skipFlag = isSkipALl;
             if(isEdit){
-//                [EmailService editFilter:model withOldFilter:oldModel];
+                //                [EmailService editFilter:model withOldFilter:oldModel];
                 // save to db
+
+                [[MessageFilterXRefService instance] deleteXRefWithFunnelId:model.funnelId];
                 [[FunnelService instance] updateFunnel:model];
+                [[EmailService instance] applyingFunnel:model toMessages:[[MessageService instance] messagesAllTopMessages]];
+
+                if (oldModel.skipFlag == isSkipALl) {
+                    NSLog(@"No changes had occured!!");
+                }
+                else {
+                    if (isSkipALl) {
+                        [self incrementCounterAgainstTheMessage];
+                    }
+                    else {
+                        [self decrementCounterAgainstTheMessage];
+                    }
+                    NSLog(@"Changes had occured!!");
+                }
+                [[MessageService instance] insertFunnelJsonForMessages];
             }else{
+                [[FunnelService instance] insertFunnel:model];
+                [[EmailService instance] applyingFunnel:model toMessages:[[MessageService instance] messagesAllTopMessages]];
+                if (isSkipALl) {
+//                    [self incrementCounterAgainstTheMessage];
+                }
+                else {
+                    
+                }
                 [EmailService setNewFilterModel:model];
                 // save to db
-                [[FunnelService instance] insertFunnel:model];
+                
             }
-            [[EmailService instance] applyingFunnel:model toMessages:[EmailService instance].filterMessages];
+//            [[MessageService instance] insertFunnelJsonForMessages];
             [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:model.funnelId top:2000];
             [self.mainVCdelegate filterSelected:model];
             model = nil;
@@ -418,6 +585,8 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Please add name for Funnl" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert show];
     }
+    [tempAppDelegate.progressHUD setHidden:YES];
+    [tempAppDelegate.progressHUD removeFromSuperview];
 }
 
 #pragma mark - TextField delegate
@@ -456,7 +625,7 @@
     return YES;
 }
 
-#pragma mark - 
+#pragma mark -
 - (void)keyboardWillShow:(NSNotification *)sender
 {
     CGSize kbSize = [[[sender userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;

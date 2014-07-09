@@ -53,9 +53,16 @@ static FunnelService *instance;
   paramDict[@"funnelName"] = funnelModel.funnelName;
   paramDict[@"emailAddresses"] = funnelModel.emailAddresses;
   paramDict[@"phrases"] = funnelModel.phrases;
+  paramDict[@"skipFlag"] = [NSNumber numberWithBool:funnelModel.skipFlag];
+    if (funnelModel.funnelColor) {
+        paramDict[@"funnelColor"] = funnelModel.funnelColor;
+    }
+    else
+        paramDict[@"funnelColor"] = @"#000000";
+  
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    success = [db executeUpdate:@"INSERT INTO funnels (funnelId,funnelName,emailAddresses,phrases) VALUES (:funnelId,:funnelName,:emailAddresses,:phrases)" withParameterDictionary:paramDict];
+    success = [db executeUpdate:@"INSERT INTO funnels (funnelId,funnelName,emailAddresses,phrases,skipFlag,funnelColor) VALUES (:funnelId,:funnelName,:emailAddresses,:phrases,:skipFlag,:funnelColor)" withParameterDictionary:paramDict];
   }];
   
   if(success){
@@ -74,9 +81,10 @@ static FunnelService *instance;
   paramDict[@"funnelName"] = funnelModel.funnelName;
   paramDict[@"emailAddresses"] = funnelModel.emailAddresses;
   paramDict[@"phrases"] = funnelModel.phrases;
+  paramDict[@"skipFlag"] = [NSNumber numberWithBool:funnelModel.skipFlag];
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    success = [db executeUpdate:@"UPDATE funnels SET funnelName=:funnelName,emailAddresses=:emailAddresses,phrases=:phrases WHERE funnelId=:funnelId" withParameterDictionary:paramDict];
+    success = [db executeUpdate:@"UPDATE funnels SET funnelName=:funnelName,emailAddresses=:emailAddresses,phrases=:phrases,skipFlag=:skipFlag WHERE funnelId=:funnelId" withParameterDictionary:paramDict];
   }];
   
   return success;
@@ -88,13 +96,14 @@ static FunnelService *instance;
     paramDict[@"funnelName"] = @"All";
     
     [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet *resultSet = [db executeQuery:@"SELECT funnelId,funnelName,emailAddresses,phrases FROM funnels WHERE funnelName !=:funnelName" withParameterDictionary:paramDict];
+        FMResultSet *resultSet = [db executeQuery:@"SELECT funnelId,funnelName,emailAddresses,phrases,skipFlag,funnelColor FROM funnels WHERE funnelName !=:funnelName" withParameterDictionary:paramDict];
         
         FunnelModel *model;
         int counter = 1;
         while ([resultSet next]) {
             model = [[FunnelModel alloc]init];
             model.funnelId = [resultSet stringForColumn:@"funnelId"];
+            model.skipFlag = [resultSet intForColumn:@"skipFlag"];
             model.funnelName = [resultSet stringForColumn:@"funnelName"];
             model.filterTitle = [resultSet stringForColumn:@"funnelName"];
             model.emailAddresses = [resultSet stringForColumn:@"emailAddresses"];
@@ -104,6 +113,11 @@ static FunnelService *instance;
             NSArray *tempArray = GRADIENT_ARRAY;
             model.barColor = [UIColor colorWithHexString:[tempArray objectAtIndex:counter%5]];
             model.dateOfLastMessage = [NSDate date];
+            if ([resultSet stringForColumn:@"funnelColor"]) {
+                model.funnelColor = [resultSet stringForColumn:@"funnelColor"];
+            }
+            else
+                model.funnelColor = @"";
             [array addObject:model];
             model = nil;
             counter ++;
@@ -117,7 +131,7 @@ static FunnelService *instance;
   __block NSMutableArray *array = [[NSMutableArray alloc] init];
     
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    FMResultSet *resultSet = [db executeQuery:@"SELECT funnelId,funnelName,emailAddresses,phrases FROM funnels"];
+    FMResultSet *resultSet = [db executeQuery:@"SELECT funnelId,funnelName,emailAddresses,phrases,skipFlag,funnelColor FROM funnels"];
     
     FunnelModel *model;
 //      FilterModel *modelForFilter;
@@ -130,6 +144,7 @@ static FunnelService *instance;
       model.funnelId = [resultSet stringForColumn:@"funnelId"];
       model.funnelName = [resultSet stringForColumn:@"funnelName"];
       model.filterTitle = [resultSet stringForColumn:@"funnelName"];
+      model.skipFlag = [resultSet intForColumn:@"skipFlag"];
 //        modelForFilter.filterTitle = [resultSet stringForColumn:@"funnelName"];
       model.emailAddresses = [resultSet stringForColumn:@"emailAddresses"];
       model.sendersArray = (NSMutableArray *)[[resultSet stringForColumn:@"emailAddresses"] componentsSeparatedByString:@","];
@@ -138,6 +153,11 @@ static FunnelService *instance;
       NSArray *tempArray = GRADIENT_ARRAY;
 //      NSInteger gradientInt = arc4random_uniform(tempArray.count);
       model.barColor = [UIColor colorWithHexString:[tempArray objectAtIndex:counter%5]];
+        if ([resultSet stringForColumn:@"funnelColor"]) {
+            model.funnelColor = [resultSet stringForColumn:@"funnelColor"];
+        }
+        else
+            model.funnelColor = @"";
       model.dateOfLastMessage = [NSDate date];
       [array addObject:model];
       model = nil;

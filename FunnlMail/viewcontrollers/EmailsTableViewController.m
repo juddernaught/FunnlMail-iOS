@@ -11,13 +11,13 @@
 #import "MBProgressHUD.h"
 #import "FilterViewCell.h"
 #import "View+MASAdditions.h"
-//#import "FilterModel.h"
 #import "FunnelModel.h"
 #import <MailCore/MailCore.h>
 #import "EmailCell.h"
 #import "MsgViewController.h"
 #import "KeychainItemWrapper.h"
 #import "EmailService.h"
+#import "MessageFilterXRefService.h"
 #import "CreateFunnlviewController.h"
 #import "UIColor+HexString.h"
 #import "NSDate+TimeAgo.h"
@@ -48,6 +48,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    tempCellForDisplay = nil;
     currentIndexPath = nil;
     tempAppDelegate = APPDELEGATE;
     [[EmailService instance] startLogin: self];
@@ -251,7 +252,12 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
         switch (indexPath.section){
             case 0:{
                 EmailCell *cell = [tableView dequeueReusableCellWithIdentifier:mailCellIdentifier forIndexPath:indexPath];
-                [cell resetToOriginalState];
+                if (tempCellForDisplay.tag == indexPath.row) {
+                    tempCellForDisplay = nil;
+                }
+                else
+                    [cell resetToOriginalState];
+                [cell.labelNameText setAttributedText:[self returnFunnelString:(MessageModel*)[EmailService instance].filterMessages[indexPath.row]]];
                 cell.tag = indexPath.row;
                 cell.delegate = self;
                 MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
@@ -347,9 +353,8 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
 //                NSString *cachedPreview = [EmailService instance].filterMessagePreviews[uidKey];
                 NSString *cachedPreview = [(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageBodyToBeRendered];
-                if (![cachedPreview isEqualToString:@"not"])
+                if (![cachedPreview isEqualToString:EMPTY_DELIMITER])
                 {
-//                    NSLog(@"[EmailTableViewController cellForRow] body stored previously");
                     cell.bodyLabel.text = cachedPreview;
                 }
                 else{
@@ -393,7 +398,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 }
                 
                 if ([EmailService instance].messages.count < [EmailService instance].totalNumberOfInboxMessages)
-                    cell.textLabel.text = [NSString stringWithFormat:@"Load %u more",MIN([EmailService instance].totalNumberOfInboxMessages - [EmailService instance].messages.count, NUMBER_OF_MESSAGES_TO_LOAD)];
+                    cell.textLabel.text = [NSString stringWithFormat:@"Load %lu more",MIN([EmailService instance].totalNumberOfInboxMessages - [EmailService instance].messages.count, NUMBER_OF_MESSAGES_TO_LOAD)];
                 else
                     cell.textLabel.text = nil;
                 
@@ -496,7 +501,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 }
                 
                 if ([EmailService instance].messages.count < [EmailService instance].totalNumberOfInboxMessages)
-                    cell.textLabel.text = [NSString stringWithFormat:@"Load %u more",MIN([EmailService instance].totalNumberOfInboxMessages - [EmailService instance].messages.count, NUMBER_OF_MESSAGES_TO_LOAD_ON_SEARCH)];
+                    cell.textLabel.text = [NSString stringWithFormat:@"Load %lu more",MIN([EmailService instance].totalNumberOfInboxMessages - [EmailService instance].messages.count, NUMBER_OF_MESSAGES_TO_LOAD_ON_SEARCH)];
                 else
                     cell.textLabel.text = nil;
                 
@@ -527,12 +532,10 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 #pragma mark RDSwipeableTableViewCellDelgate
 - (void)tableView:(UITableView *)tableView willBeginCellSwipe:(RDSwipeableTableViewCell *)cell inDirection:(RDSwipeableTableViewCellRevealDirection)direction
 {
-//    if (currentIndexPath) {
-//        RDSwipeableTableViewCell *tempCell = (RDSwipeableTableViewCell*)[tableView cellForRowAtIndexPath:currentIndexPath];
-//        [tempCell resetToOriginalState];
-//        currentIndexPath = nil;
-//    }
-//    currentIndexPath = [NSIndexPath indexPathForRow:cell.tag inSection:0];
+    if (tempCellForDisplay && cell != tempCellForDisplay) {
+        [tempCellForDisplay resetToOriginalState];
+    }
+    tempCellForDisplay = cell;
     if(direction == RDSwipeableTableViewCellRevealDirectionRight){
         
         if ([[FunnelService instance] allFunnels].count > 1) {
@@ -544,27 +547,26 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
             button.frame = CGRectMake(cellRect.size.width - 80, 0, 80, cellRect.size.height);
             [button setImage:[UIImage imageNamed:@"moveToFunnlIcon.png"] forState:UIControlStateNormal];
             button.backgroundColor = [UIColor colorWithHexString:@"#4487E9"];
-//            [button setTitle:@"Half Swip" forState:UIControlStateNormal];
             [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             [button addTarget:self action:@selector(halfSwipe:) forControlEvents:UIControlEventTouchUpInside];
             [cell.revealView addSubview:button];
+            button = nil;
             
-            button = [UIButton buttonWithType:UIButtonTypeCustom];
-            button.tag = cell.tag;
-            button.frame = CGRectMake(cellRect.size.width - 160, 0, 80, cellRect.size.height);
-            button.backgroundColor = [UIColor colorWithHexString:@"#43F377"];
-            [button setImage:[UIImage imageNamed:@"CreateFunnlIcon"] forState:UIControlStateNormal];
-//            [button setTitle:@"Full Swip" forState:UIControlStateNormal];
-            [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [button addTarget:self action:@selector(fullSwipe:) forControlEvents:UIControlEventTouchUpInside];
-            [cell.revealView addSubview:button];
+            UIButton *button1 = [UIButton buttonWithType:UIButtonTypeCustom];
+            button1.tag = cell.tag;
+            button1.frame = CGRectMake(cellRect.size.width - 160, 0, 80, cellRect.size.height);
+            button1.backgroundColor = [UIColor colorWithHexString:@"#43F377"];
+            [button1 setImage:[UIImage imageNamed:@"CreateFunnlIcon"] forState:UIControlStateNormal];
+            [button1 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [button1 addTarget:self action:@selector(fullSwipe:) forControlEvents:UIControlEventTouchUpInside];
+            [cell.revealView addSubview:button1];
+            button1 = nil;
             
             cell.revealDistance = 160;
         }
         else {
             CGRect cellRect = cell.frame;
             UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
-            button = [UIButton buttonWithType:UIButtonTypeSystem];
             button.tag = cell.tag;
             button.frame = CGRectMake(cellRect.size.width - 80, 0, 80, cellRect.size.height);
             [button setImage:[UIImage imageNamed:@"CreateFunnlIcon"] forState:UIControlStateNormal];
@@ -572,10 +574,9 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
             [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             [button addTarget:self action:@selector(fullSwipe:) forControlEvents:UIControlEventTouchUpInside];
             [cell.revealView addSubview:button];
-            
+            button = nil;
             cell.revealDistance = 80;
         }
-        
     }
     else{
         CGRect cellRect = cell.frame;
@@ -585,12 +586,12 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
         button.frame = CGRectMake(0, 0, 80, cellRect.size.height);
         button.backgroundColor = [UIColor colorWithHexString:@"#F9CA47"];
         [button setImage:[UIImage imageNamed:@"archive"] forState:UIControlStateNormal];
-//        [button setTitle:@"Archive" forState:UIControlStateNormal];
         [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [button addTarget:self action:@selector(leftSwip:) forControlEvents:UIControlEventTouchUpInside];
         [cell.revealView addSubview:button];
         
         cell.revealDistance = 80;
+        NSLog(@"%f,%f",cell.frame.origin.x,cell.frame.origin.y);
     }
 }
 
@@ -642,7 +643,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
         message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[0] messageJSON]];
     }
     else {
-        int index = sender.tag / 100000;
+        int index = (int)sender.tag / 100000;
         row = index;
         message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[index] messageJSON]];
     }
@@ -718,8 +719,8 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 if (!self.isLoading &&
                     [EmailService instance].messages.count < [EmailService instance].totalNumberOfInboxMessages)
                 {
-                    int totalNumberOfMessage = [[MessageService instance] messagesAllTopMessages].count + NUMBER_OF_MESSAGES_TO_LOAD;
-                    NSLog(@"[EmailsTableViewController didSelect] %d",totalNumberOfMessage);
+                    int totalNumberOfMessage = (int)[[MessageService instance] messagesAllTopMessages].count + NUMBER_OF_MESSAGES_TO_LOAD;
+//                    NSLog(@"[EmailsTableViewController didSelect] %d",totalNumberOfMessage);
                     [[EmailService instance] loadLastNMessages:totalNumberOfMessage withTableController:self withFolder:INBOX];
                     cell.accessoryView = self.loadMoreActivityView;
                     [self.loadMoreActivityView startAnimating];
@@ -752,6 +753,28 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
 #pragma mark -
 #pragma mark Helper
+- (NSMutableAttributedString*)returnFunnelString:(MessageModel*)message {
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] init];
+    NSString *funnelJsonString = [message funnelJson];
+    NSError *error = nil;
+    if (funnelJsonString) {
+        NSData *data = [funnelJsonString dataUsingEncoding:NSUTF8StringEncoding];
+        NSMutableDictionary *tempDict = [NSJSONSerialization JSONObjectWithData:data
+                                                                        options:kNilOptions
+                                                                          error:&error];
+        NSArray *keysArray = tempDict.allKeys;
+        NSArray *valueArray = tempDict.allValues;
+        for (int cnt = 0; cnt < keysArray.count; cnt++) {
+            UIColor * color = [UIColor colorWithHexString:[valueArray objectAtIndex:cnt]];
+            NSDictionary * attributes = [NSDictionary dictionaryWithObject:color forKey:NSForegroundColorAttributeName];
+            NSAttributedString * subString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"  %@",[keysArray objectAtIndex:cnt]] attributes:attributes];
+            [attributedString appendAttributedString:subString];
+            subString = nil;
+        }
+    }
+    return attributedString;
+}
+
 - (NSString*)removeAngularBracket:(NSString*)emailString {
     if (emailString.length > 0) {
         if ([[emailString substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"<"]) {
@@ -802,7 +825,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 90;
+    return 116;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -854,6 +877,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
         imageView.frame = CGRectMake(10, 0, 40, 40);
     [imageView setImage:image];
     imageView.contentMode = UIViewContentModeScaleAspectFit;
+    [imageView setBackgroundColor:[UIColor redColor]];
     return imageView;
 }
 
@@ -918,7 +942,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
         }
         else
         {
-            NSLog(@"%d", [searchResult count]);
 //            filterLabel.text = [NSString stringWithFormat:@"Search Results : %d",searchResult.count];
             if (searchResult) {
                 MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)
@@ -928,7 +951,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 for (MessageModel *tempMessageMOdel in searchMessages) {
                     [searchResult removeIndex:tempMessageMOdel.messageID.integerValue];
                 }
-                NSLog(@"%d",searchResult.count);
                 MCOIMAPSession *session = [EmailService instance].imapSession;
                 MCOIMAPFetchMessagesOperation * op = [session fetchMessagesByUIDOperationWithFolder:self.emailFolder requestKind:requestKind uids:searchResult];
                 [op start:^(NSError * error, NSArray * messages, MCOIndexSet * vanishedMessages) {

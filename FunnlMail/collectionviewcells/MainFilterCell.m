@@ -12,7 +12,7 @@
 #import "MASConstraintMaker.h"
 
 @implementation MainFilterCell
-@synthesize notificationButton,settingsButton;
+@synthesize notificationButton,settingsButton,mailImageView,messageCountLabel,shareButton;
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -45,13 +45,14 @@
         self.barColor = [UIColor redColor];
       
         filterTitleLabel = [[UILabel alloc] init];
+        [filterTitleLabel setFont:[UIFont systemFontOfSize:18]];
         filterTitleLabel.textAlignment = NSTextAlignmentCenter;
         filterTitleLabel.text = @"Primary";
         //filterTitleLabel.backgroundColor = [UIColor orangeColor];
         [self addSubview:filterTitleLabel];
       
         [filterTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-          make.top.equalTo(coloredBarView.mas_bottom).with.offset(0);
+          make.top.equalTo(coloredBarView.mas_bottom).with.offset(5);
           make.left.equalTo(coloredBarView.mas_left).with.offset(0);
           make.width.equalTo(coloredBarView.mas_width).with.offset(0);
         }];
@@ -67,18 +68,24 @@
       
         [self addConstraint:constraint];
       
-        mailImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Mail.png"]];
+        mailImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Mail"]];
         mailImageView.frame = CGRectMake(0, 0, 29, 23);
         [self addSubview:mailImageView];
       
-        notificationButton = [[UIButton alloc] initWithFrame:CGRectMake(2, self.frame.size.height - 32, 30, 30)];
-        [notificationButton setImage:[UIImage imageNamed:@"notification.png"] forState:UIControlStateNormal];
+        shareButton = [[UIButton alloc] initWithFrame:CGRectMake(5 + 2, self.frame.size.height - 32 - 5 + 2, 25, 25)];
+        [shareButton setImage:[UIImage imageNamed:@"Share"] forState:UIControlStateNormal];
+        [self addSubview:shareButton];
+        shareButton.hidden = YES;
+        
+        notificationButton = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width - 32 - 5 - 32, self.frame.size.height - 32 - 5, 30, 30)];
+        [notificationButton setImage:[UIImage imageNamed:@"Alert"] forState:UIControlStateNormal];
         [self addSubview:notificationButton];
         notificationButton.hidden = YES;
       
-        settingsButton = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width - 32 - 5, self.frame.size.height - 32 - 5, 35, 35)];
-        [settingsButton setImage:[UIImage imageNamed:@"settings.png"] forState:UIControlStateNormal];
+        settingsButton = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width - 32, self.frame.size.height - 32 - 5, 30, 30)];
+        [settingsButton setImage:[UIImage imageNamed:@"Settings"] forState:UIControlStateNormal];
         [self addSubview:settingsButton];
+//        [settingsButton setBackgroundColor:[UIColor redColor]];
         settingsButton.hidden = YES;
       
 //        [mailImageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -98,22 +105,24 @@
 //      
 //        [self addConstraint:constraint];
       
-        newMessageCountLabel = [[UILabel alloc] init];
-        newMessageCountLabel.textAlignment = NSTextAlignmentCenter;
-        newMessageCountLabel.text = @"0";
-        newMessageCountLabel.font = [UIFont fontWithName:@"Helvetica" size:11];
-        [self addSubview:newMessageCountLabel];
+        messageCountLabel = [[UILabel alloc] init];
+//        [newMessageCountLabel setFont:[UIFont systemFontOfSize:16]];
+        messageCountLabel.textAlignment = NSTextAlignmentCenter;
+        messageCountLabel.text = @"0";
+//        newMessageCountLabel.font = [UIFont fontWithName:@"Helvetica" size:11];
+        [messageCountLabel setFont:[UIFont systemFontOfSize:14]];
+        [self addSubview:messageCountLabel];
       
-        [newMessageCountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        [messageCountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
           make.top.equalTo(mailImageView.mas_bottom).with.offset(0);
           make.centerX.equalTo(self.mas_centerX).with.offset(0);
         }];
       
         constraint = [NSLayoutConstraint
-                      constraintWithItem:newMessageCountLabel
+                      constraintWithItem:messageCountLabel
                       attribute: NSLayoutAttributeHeight
                       relatedBy:NSLayoutRelationEqual
-                      toItem:newMessageCountLabel
+                      toItem:messageCountLabel
                       attribute:NSLayoutAttributeHeight
                       multiplier:0
                       constant:25];
@@ -185,13 +194,13 @@
   filterTitleLabel.text = filterTitle;
   if([filterTitleLabel.text isEqualToString:ADD_FUNNL]){
     filterTitleLabel.text = @"";
-    newMessageCountLabel.hidden = YES;
+    messageCountLabel.hidden = YES;
     typeLabel.hidden = YES;
     dateOfLastMessageLabel.hidden = YES;
     mailImageView.contentMode = UIViewContentModeCenter;
     mailImageView.image = [UIImage imageNamed:@"add.png"];
     [mailImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-      make.top.equalTo(filterTitleLabel.mas_bottom).with.offset(0);
+      make.top.equalTo(filterTitleLabel.mas_bottom).with.offset(-10);
       make.left.equalTo(self.mas_centerX).with.offset(-(40/2));
     }];
     settingsButton.hidden = YES;
@@ -213,7 +222,7 @@
 
 -(void) setNewMessageCount:(NSInteger)newMessageCount{
   _newMessageCount = newMessageCount;
-  newMessageCountLabel.text = [NSString stringWithFormat:@"%zd new", newMessageCount];
+  messageCountLabel.text = [NSString stringWithFormat:@"%zd new", newMessageCount];
 }
 
 /*

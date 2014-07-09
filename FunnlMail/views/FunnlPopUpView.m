@@ -177,7 +177,7 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
     }else{
         if (isNewCreatePopup) {
             NSLog(@"Cell swiped fully!!");
-            FunnelModel *funnel = [filterArray objectAtIndex:indexPath.row];
+            FunnelModel *funnel = (FunnelModel*)[filterArray objectAtIndex:indexPath.row];
             NSMutableArray *tempArray = [[NSMutableArray alloc] initWithArray:funnel.sendersArray];
             BOOL flag = FALSE;
             for (NSString *email in tempArray) {
@@ -206,7 +206,15 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
     
     MCOAddress *emailAddress = message.header.from;
     NSMutableArray *mailArray = [[NSMutableArray alloc] init];
-    [mailArray addObject:emailAddress];
+    BOOL flag = TRUE;
+    for (MCOAddress *emailID in message.header.cc) {
+        if ([emailAddress.mailbox.lowercaseString isEqual:emailID.mailbox.lowercaseString]) {
+            flag = FALSE;
+        }
+    }
+    if (flag) {
+        [mailArray addObject:emailAddress];
+    }
     [mailArray addObjectsFromArray:message.header.cc];
     
     NSMutableDictionary *sendersDictionary = [[NSMutableDictionary alloc] init];

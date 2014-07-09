@@ -155,7 +155,7 @@ static MessageFilterXRefService *instance;
     __block NSMutableArray *array = [[NSMutableArray alloc] init];
     
     [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet *resultSet = [db executeQuery:@"SELECT messages.messageID,messages.read,messages.date,messageFilterXRef.funnelId FROM messageFilterXRef INNER JOIN messages ON (messages.messageID == messageFilterXRef.messageId) WHERE messageFilterXRef.funnelId == :funnelId" withParameterDictionary:paramDict];
+        FMResultSet *resultSet = [db executeQuery:@"SELECT messages.funnelJson,messages.messageID,messages.read,messages.date,messages.skipFlag,messages.messageJSON,messageFilterXRef.funnelId FROM messageFilterXRef INNER JOIN messages ON (messages.messageID == messageFilterXRef.messageId) WHERE messageFilterXRef.funnelId == :funnelId" withParameterDictionary:paramDict];
         
         MessageModel *model;
         
@@ -166,8 +166,15 @@ static MessageFilterXRefService *instance;
             model.messageJSON = [resultSet stringForColumn:@"messageJSON"];
             model.read = [resultSet intForColumn:@"read"];
             model.date = [resultSet dateForColumn:@"date"];
+            model.skipFlag = [resultSet intForColumn:@"skipFlag"];
+            if ([resultSet stringForColumn:@"funnelJson"]) {
+                model.funnelJson = [resultSet stringForColumn:@"funnelJson"];
+            }
+            else
+                model.funnelJson = @"";
+//            [array addObject:[MCOIMAPMessage importSerializable:model.messageJSON]];
+            [array addObject:model];
             
-            [array addObject:[MCOIMAPMessage importSerializable:model.messageJSON]];
         }
     }];
     
