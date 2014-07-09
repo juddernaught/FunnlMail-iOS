@@ -260,95 +260,6 @@ static NSString *currentFolder;
           }];
      }];
     
-    
-    NSString *sentFolder = SENT;
-	MCOIMAPFolderInfoOperation *sentFolderInfo = [self.imapSession folderInfoOperation:sentFolder];
-	
-	[sentFolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
-     {
-         BOOL totalNumberOfMessagesDidChange =
-         self.totalNumberOfSentMessages != [info messageCount];
-         
-         self.totalNumberOfSentMessages = [info messageCount];
-         
-         NSUInteger numberOfMessagesToLoad =
-         MIN(self.totalNumberOfSentMessages, nMessages);
-         
-         if (numberOfMessagesToLoad == 0)
-         {
-             self.isLoading = NO;
-             return;
-         }
-         
-         MCORange fetchRange;
-         
-         // If total number of messages did not change since last fetch,
-         // assume nothing was deleted since our last fetch and just
-         // fetch what we don't have
-         if (!totalNumberOfMessagesDidChange && self.sentMessages.count)
-         {
-             numberOfMessagesToLoad -= self.sentMessages.count;
-             
-             fetchRange =
-             MCORangeMake(self.totalNumberOfSentMessages -
-                          self.sentMessages.count -
-                          (numberOfMessagesToLoad - 1),
-                          (numberOfMessagesToLoad - 1));
-         }
-         
-         // Else just fetch the last N messages
-         else
-         {
-             fetchRange =
-             MCORangeMake(self.totalNumberOfSentMessages -
-                          (numberOfMessagesToLoad - 1),
-                          (numberOfMessagesToLoad - 1));
-         }
-         
-         self.imapMessagesFetchOp =
-         [self.imapSession fetchMessagesByNumberOperationWithFolder:sentFolder
-                                                        requestKind:requestKind
-                                                            numbers:
-          [MCOIndexSet indexSetWithRange:fetchRange]];
-         
-         [self.imapMessagesFetchOp setProgress:^(unsigned int progress) {
-             NSLog(@"Progress: %u of %lu", progress, (unsigned long)numberOfMessagesToLoad);
-         }];
-         
-         //         __weak EmailService *weakSelf = self;
-         [self.imapMessagesFetchOp start:
-          ^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
-          {
-              AppDelegate *tempAppDelegate = APPDELEGATE;
-              [tempAppDelegate.progressHUD setHidden:YES];
-              [tempAppDelegate.progressHUD show:NO];
-              [fv.tablecontroller.refreshControl endRefreshing];
-              //newly added by iauro001 on 12th June 2014
-              [self insertMessage:messages];
-              //retrieving the message from database
-              NSArray *tempArray = [[MessageService instance] retrieveAllMessages];
-              [self performSelector:@selector(applyingFilters:) withObject:tempArray];
-              //              [self performSelectorInBackground:@selector(applyingFilters:) withObject:tempArray];
-              _filterMessages = (NSMutableArray*)tempArray;
-              if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
-                  [emailTableViewController.tableView reloadData];
-              }
-              else {
-                  self.filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:tempAppDelegate.currentFunnelDS.funnelId top:2000];
-                  [fv.tableView reloadData];
-                  
-              }
-              [tempAppDelegate.progressHUD show:NO];
-              [fv.activityIndicator stopAnimating];
-              if (tempArray.count > kNUMBER_OF_MESSAGES_TO_DOWNLOAD_IN_BACKGROUND) {
-                  
-              }
-              else
-              {
-                  [self loadLastNMessages:self.filterMessages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:fv withFolder:SENT];
-              }
-          }];
-     }];
 
 }
 
@@ -661,7 +572,7 @@ static NSString *currentFolder;
                                                                                 options: NSJSONReadingAllowFragments
                                                                                   error: &error];
                 if (!error) {
-                    tempDict = [self insertIntoDictionary:tempDict funnel:tempFunnelModel];
+                    //tempDict = [self insertIntoDictionary:tempDict funnel:tempFunnelModel];
                 }
                 else {
                     tempDict = [[NSMutableDictionary alloc] init];
@@ -702,7 +613,7 @@ static NSString *currentFolder;
                                                                             options: NSJSONReadingAllowFragments
                                                                               error: &error];
             if (!error) {
-                tempDict = [self insertIntoDictionary:tempDict funnel:funnel];
+                //tempDict = [self insertIntoDictionary:tempDict funnel:funnel];
             } else {
                 tempDict = [[NSMutableDictionary alloc] init];
                 tempDict[funnel.funnelName] = funnel.funnelColor;
