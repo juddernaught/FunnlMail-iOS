@@ -75,6 +75,8 @@
 		B70695C719650B8500D9571E /* forward.png in Resources */ = {isa = PBXBuildFile; fileRef = B70695C619650B8500D9571E /* forward.png */; };
 		B70695C919650B9000D9571E /* replyAll.png in Resources */ = {isa = PBXBuildFile; fileRef = B70695C819650B9000D9571E /* replyAll.png */; };
 		B751C88F1940FDFF0051DF0B /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B751C88E1940FDFF0051DF0B /* MessageUI.framework */; };
+		B7907D9219690E31000A2852 /* SentEmailsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B7907D9119690E31000A2852 /* SentEmailsTableViewController.m */; };
+		B7907D9919690F3A000A2852 /* SentEmailThreadTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B7907D9819690F3A000A2852 /* SentEmailThreadTableViewController.m */; };
 		B7C9B261194E886700F766DA /* PreviewEmailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B7C9B260194E886700F766DA /* PreviewEmailViewController.m */; };
 		CC39517218E6F9700093C787 /* MainFilterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CC39517118E6F9700093C787 /* MainFilterCell.m */; };
 		CC4263B01934B67A00F3C5EB /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = CC4263A61934B67A00F3C5EB /* FMDatabase.m */; };
@@ -274,10 +276,14 @@
 		66F2C49018E3293F00CD593E /* FunnlMailTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FunnlMailTests-Info.plist"; sourceTree = "<group>"; };
 		66F2C49218E3293F00CD593E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		66F2C49418E3293F00CD593E /* FunnlMailTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FunnlMailTests.m; sourceTree = "<group>"; };
-		B70695C419650ABD00D9571E /* reply.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reply.png; sourceTree = "<group>"; };
-		B70695C619650B8500D9571E /* forward.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = forward.png; sourceTree = "<group>"; };
-		B70695C819650B9000D9571E /* replyAll.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = replyAll.png; sourceTree = "<group>"; };
+		B70695C419650ABD00D9571E /* reply.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = reply.png; path = FunnlMail/reply.png; sourceTree = "<group>"; };
+		B70695C619650B8500D9571E /* forward.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = forward.png; path = FunnlMail/forward.png; sourceTree = "<group>"; };
+		B70695C819650B9000D9571E /* replyAll.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = replyAll.png; path = FunnlMail/replyAll.png; sourceTree = "<group>"; };
 		B751C88E1940FDFF0051DF0B /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		B7907D9019690E31000A2852 /* SentEmailsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SentEmailsTableViewController.h; sourceTree = "<group>"; };
+		B7907D9119690E31000A2852 /* SentEmailsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SentEmailsTableViewController.m; sourceTree = "<group>"; };
+		B7907D9719690F3A000A2852 /* SentEmailThreadTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SentEmailThreadTableViewController.h; sourceTree = "<group>"; };
+		B7907D9819690F3A000A2852 /* SentEmailThreadTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SentEmailThreadTableViewController.m; sourceTree = "<group>"; };
 		B7C9B25F194E886700F766DA /* PreviewEmailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreviewEmailViewController.h; sourceTree = "<group>"; };
 		B7C9B260194E886700F766DA /* PreviewEmailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreviewEmailViewController.m; sourceTree = "<group>"; };
 		CC1AD1DC18F54BE9000E356C /* MainVCDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainVCDelegate.h; path = viewcontrollers/MainVCDelegate.h; sourceTree = "<group>"; };
@@ -465,6 +471,9 @@
 				FA2C9BB4193DF5CE00866BEE /* archive.png */,
 				FA2C9BB5193DF5CE00866BEE /* archive@2x.png */,
 				FA2C9BB0193DF57700866BEE /* cross.png */,
+				B70695C419650ABD00D9571E /* reply.png */,
+				B70695C819650B9000D9571E /* replyAll.png */,
+				B70695C619650B8500D9571E /* forward.png */,
 				FA2C9BB1193DF57700866BEE /* cross@2x.png */,
 				FA5627DF1935E57700238F40 /* close.png */,
 				FA5627E01935E57700238F40 /* close@2x.png */,
@@ -744,9 +753,10 @@
 				CC8C7EAC18E6F1C100E76AE8 /* MainVC.m */,
 				B7C9B25F194E886700F766DA /* PreviewEmailViewController.h */,
 				B7C9B260194E886700F766DA /* PreviewEmailViewController.m */,
-				B70695C419650ABD00D9571E /* reply.png */,
-				B70695C819650B9000D9571E /* replyAll.png */,
-				B70695C619650B8500D9571E /* forward.png */,
+				B7907D9719690F3A000A2852 /* SentEmailThreadTableViewController.h */,
+				B7907D9819690F3A000A2852 /* SentEmailThreadTableViewController.m */,
+				B7907D9019690E31000A2852 /* SentEmailsTableViewController.h */,
+				B7907D9119690E31000A2852 /* SentEmailsTableViewController.m */,
 				660BA98C1902CDEA00CDF86E /* LoginViewController.h */,
 				660BA98D1902CDEA00CDF86E /* LoginViewController.m */,
 				CC1AD1DC18F54BE9000E356C /* MainVCDelegate.h */,
@@ -1085,6 +1095,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B7907D9919690F3A000A2852 /* SentEmailThreadTableViewController.m in Sources */,
 				CC8C7ECE18E6F38100E76AE8 /* NSArray+MASAdditions.m in Sources */,
 				CCC9E428193E47980028DC84 /* ServiceTests.m in Sources */,
 				CCC9E41F193DF91D0028DC84 /* MessageModel.m in Sources */,
@@ -1119,6 +1130,7 @@
 				66AEEBAB1936B26B00B6DBE5 /* GTMOAuth2ViewControllerTouch.m in Sources */,
 				5ACEBEA3195DA0CA00D4EAAA /* RDSwipeableTableViewCell.m in Sources */,
 				CC8C7EC818E6F38100E76AE8 /* MASCompositeConstraint.m in Sources */,
+				B7907D9219690E31000A2852 /* SentEmailsTableViewController.m in Sources */,
 				66AEEBA71936B24900B6DBE5 /* GTMOAuth2SignIn.m in Sources */,
 				66E669751904431E003F9305 /* KeychainItemWrapper.m in Sources */,
 				6677880C18EF80BF00EF1962 /* EmailCell.m in Sources */,

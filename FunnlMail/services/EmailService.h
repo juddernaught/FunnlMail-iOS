@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "EmailsTableViewController.h"
+#import "SentEmailsTableViewController.h"
 #import <mailcore/mailcore.h>
 #import "MessageService.h"
 #import "MessageModel.h"
@@ -23,12 +24,13 @@
 @property (nonatomic, strong) MCOSMTPSession *smtpSession;
 @property (nonatomic, strong) MCOIMAPFetchMessagesOperation *imapMessagesFetchOp;
 @property (nonatomic) NSInteger totalNumberOfInboxMessages;
+@property (nonatomic) NSInteger totalNumberOfSentMessages;
 @property (nonatomic, strong) NSMutableDictionary *threadIdDictionary;
 @property (nonatomic, strong) NSMutableArray *messages;
+@property (nonatomic, strong) NSMutableArray *sentMessages;
 @property (nonatomic, strong) NSMutableDictionary *messagePreviews;
 @property (nonatomic, strong) NSMutableArray *filterMessages;
 @property (nonatomic, strong) NSMutableDictionary *filterMessagePreviews;
-@property (nonatomic, strong) NSMutableArray *sentMessages;
 @property (nonatomic, strong) NSMutableDictionary *sentMessagePreviews;
 +(EmailService *)instance;
 +(NSArray *) getCurrentFilters;
@@ -42,4 +44,6 @@
 - (void) startLogin :(EmailsTableViewController *) fv;
 - (void)loadLastNMessages:(NSUInteger)nMessages  withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName;
 - (void)loadLatestMail:(NSUInteger)nMessages  withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName;
+- (void)loadLastNSentMessages:(NSUInteger)nMessages  withTableController:(SentEmailsTableViewController *)fv withFolder:(NSString*)folderName;
+- (void)loadLatestSentMail:(NSUInteger)nMessages  withTableController:(SentEmailsTableViewController *)fv withFolder:(NSString*)folderName;
 @end

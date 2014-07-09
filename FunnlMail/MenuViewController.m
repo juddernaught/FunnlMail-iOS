@@ -8,6 +8,7 @@
 
 #import "MenuViewController.h"
 #import "UIColor+HexString.h"
+#import "SentEmailsTableViewController.h"
 
 @interface MenuViewController ()
 
@@ -80,6 +81,13 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     //    [appDelegate.drawerController closeDrawerAnimated:YES completion:nil];
+    if (indexPath.row == 4) {
+        NSLog(@"sent mail requested");
+        SentEmailsTableViewController *vc = [[SentEmailsTableViewController alloc] init];
+//        [appDelegate.drawerController closeDrawerAnimated:YES completion:nil];
+        NSLog(@"navigationController = %@",self.navigationController);
+        [self.navigationController presentViewController:vc animated:NO completion:^{NSLog(@"navigationController was presented");}];
+    }
     AppDelegate *appDelegate = APPDELEGATE;
     [appDelegate.drawerController closeDrawerAnimated:YES completion:nil];
 }

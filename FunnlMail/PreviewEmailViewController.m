@@ -171,13 +171,12 @@ NSNumber *sendNum;
         NSMutableString *temp = [[NSMutableString alloc] initWithString:@"Re: "];
         [temp appendString:self.message.header.subject];
         subject.text = temp;
-        temp = [[NSMutableString alloc] initWithString:@""];
-//        for (MCOAddress* address in self.addressArray) {
-//            [temp appendString:[address nonEncodedRFC822String]];
-//        }
-        [temp appendString:[self.address nonEncodedRFC822String]];
+        temp = [[NSMutableString alloc] initWithString:[self.message.header.from nonEncodedRFC822String]];
+        for (MCOAddress* address in self.message.header.to) {
+            [temp appendString:@", "];
+            [temp appendString:[address nonEncodedRFC822String]];
+        }
         to.text = temp;
-        NSLog(@"%@",self.addressArray);
     }
 
     [self.view addSubview:to2];
@@ -206,7 +205,6 @@ NSNumber *sendNum;
             self.body.text = temp;
             temp = nil;
         }];
-        NSLog(@"message is empty");
     }
     [self.view addSubview:self.body];
     
