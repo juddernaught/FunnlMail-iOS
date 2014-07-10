@@ -21,9 +21,11 @@
 #define EMPTY_DELIMITER @"#NOT#"
 #define HEIGHT [[UIScreen mainScreen] bounds].size.height
 #define WIDTH [[UIScreen mainScreen] bounds].size.width
-#define kNUMBER_OF_MESSAGES_TO_DOWNLOAD_IN_BACKGROUND 20
-#define NUMBER_OF_MESSAGES_TO_LOAD 1000
+#define kNUMBER_OF_MESSAGES_TO_DOWNLOAD_IN_BACKGROUND 800
+#define NUMBER_OF_MESSAGES_TO_LOAD 100
 #define NUMBER_OF_MESSAGES_TO_LOAD_ON_SEARCH 20
+#define NUMBER_OF_NEW_MESSAGES_TO_CHECK 200
+
 #define INBOX @"INBOX"
 #define SENT @"[Gmail]/Sent Mail"
 

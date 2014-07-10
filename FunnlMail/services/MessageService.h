@@ -14,6 +14,7 @@
 +(MessageService *)instance;
 
 -(BOOL) insertMessage:(MessageModel *)messageModel;
+-(BOOL) insertBulkMessages:(NSArray *)messageModelArray;
 -(BOOL) updateMessage:(MessageModel *)messageModel;
 -(NSArray *) messagesWithTop:(NSInteger)top;
 -(NSArray *) messagesWithStart:(NSInteger)start count:(NSInteger)count;

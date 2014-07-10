@@ -29,6 +29,9 @@
 
 NSString *kMyClientID = @"655269106649-rkom4nvj3m9ofdpg6sk53pi65mpivv7d.apps.googleusercontent.com";     // pre-assigned by service
 NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
+//NSString *kMyClientID = @"994627364215-ctjmrhiul95ts0qrkc38sap3mo3go3ko.apps.googleusercontent.com";     // pre-assigned by service
+//NSString *kMyClientSecret = @"FNZ-x95gkwWqQT7HdJgeqJVW";
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -177,9 +180,14 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
         smtpSession.connectionType = MCOConnectionTypeTLS;
         [EmailService instance].smtpSession = smtpSession;
 
-        
+        AppDelegate *tempAppDelegate = APPDELEGATE;
+        [tempAppDelegate.progressHUD show:YES];
+        [tempAppDelegate.window addSubview:tempAppDelegate.progressHUD];
+        [tempAppDelegate.window bringSubviewToFront:tempAppDelegate.progressHUD];
+        [tempAppDelegate.progressHUD setHidden:NO];
+
         // Authentication succeeded
-        [self loadHomeScreen];
+        [self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
     }
 }
 
@@ -191,11 +199,16 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
     appDelegate.menuController = [[MenuViewController alloc] init];
     appDelegate.drawerController = [[MMDrawerController alloc] initWithCenterViewController:nav leftDrawerViewController:appDelegate.menuController];
     [appDelegate.drawerController setRestorationIdentifier:@"MMDrawer"];
-    [appDelegate.drawerController setMaximumLeftDrawerWidth:200.0];
+    [appDelegate.drawerController setMaximumLeftDrawerWidth:250.0];
     [appDelegate.drawerController setOpenDrawerGestureModeMask:MMOpenDrawerGestureModeAll];
     [appDelegate.drawerController setCloseDrawerGestureModeMask:MMCloseDrawerGestureModeAll];
     
     [self.navigationController presentViewController:appDelegate.drawerController animated:NO completion:nil];
+    AppDelegate *tempAppDelegate = APPDELEGATE;
+    [tempAppDelegate.progressHUD show:NO];
+    [tempAppDelegate.progressHUD setHidden:YES];
+
+
 }
 
 
@@ -274,6 +287,7 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
     [EmailService instance].smtpSession = smtpSession;
     
     [self loadHomeScreen];
+    //[self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
 
 }
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {

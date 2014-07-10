@@ -22,6 +22,7 @@
 #import "UIColor+HexString.h"
 #import "NSDate+TimeAgo.h"
 #import "FunnlPopUpView.h"
+#import <Mixpanel/Mixpanel.h>
 
 static NSString *FILTER_VIEW_CELL = @"FilterViewCell";
 static NSString *mailCellIdentifier = @"MailCell";
@@ -59,9 +60,10 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     isSearching = NO;
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
-    
+
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+//    loadNextMsgTimer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(loadNextMessages) userInfo:nil repeats:YES];
     
 }
 
@@ -86,21 +88,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     
 	// Do any additional setup after loading the view.
     self.view.backgroundColor= [UIColor grayColor];
-    
-    //    filterNavigationView = [[UIView alloc]initWithFrame:CGRectMake(0, 44, 320, 40)];
-    //    filterNavigationView.backgroundColor = [UIColor orangeColor];
-    //    [self.view addSubview:filterNavigationView];
-    
-    /*[filterNavigationView mas_makeConstraints:^(MASConstraintMaker *make) {
-     make.top.equalTo(self.view.mas_top).with.offset(44); // we should calculate this (self.topLayoutGuide.length?)
-     make.left.equalTo(self.view.mas_left).with.offset(0);
-     make.right.equalTo(self.view.mas_right).with.offset(0);
-     }];*/
-    
-    
     // This is the green or purple All bar
-    
-//    AppDelegate *tempAppDelegate = APPDELEGATE;
     
     filterLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 44+20, 320, 40)];
     [self.view addSubview:tempAppDelegate.progressHUD];
@@ -117,31 +105,11 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     filterLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:filterLabel];
     
-    
-    
-    /*
-     [filterLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-     make.top.equalTo(filterNavigationView.mas_top).with.offset(0);
-     make.left.equalTo(filterNavigationView.mas_left).with.offset(0);
-     make.right.equalTo(filterNavigationView.mas_right).with.offset(0);
-     make.bottom.equalTo(filterNavigationView.mas_bottom).with.offset(0);
-     }];
-     
-     */
-    
-    //<<<<<<< HEAD
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     
     refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull to Refresh"];
     [refreshControl addTarget:self action:@selector(fetchLatestEmail) forControlEvents:UIControlEventValueChanged];
     tablecontroller = [[UITableViewController alloc] init];
-    //=======
-    
-    
-    //>>>>>>> newbranch
-    //<<<<<<< HEAD
-    //    self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-104)];
-    //=======
     
     self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64)];
     UIView *tempView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
@@ -158,15 +126,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     [self.view addSubview:tablecontroller.view];
     //=======
     [self.view addSubview:self.tableView];
-    //>>>>>>> newbranch
-    // TODO: change self.view.mas_top to bottom of filter label
-    /*[self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-     //make.top.equalTo(filterNavigationView.mas_top).with.offset(0);
-     make.left.equalTo(self.view.mas_left).with.offset(0);
-     make.right.equalTo(self	.view.mas_right).with.offset(0);
-     make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
-     }];*/
-    
+        
 	[self.tableView registerClass:[EmailCell class] forCellReuseIdentifier:mailCellIdentifier];
     
 	self.loadMoreActivityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -631,6 +591,17 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 - (void)tableView:(UITableView *)tableView didCellReset:(RDSwipeableTableViewCell *)cell
 {
     [cell.revealView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+}
+
+-(void)loadNextMessages{
+    int totalNumberOfMessage = (int)[[MessageService instance] messagesAllTopMessages].count + NUMBER_OF_MESSAGES_TO_LOAD;
+    if(totalNumberOfMessage < 2000){
+        [[EmailService instance] loadLastNMessages:totalNumberOfMessage withTableController:self withFolder:INBOX];
+        //                    NSLog(@"[EmailsTableViewController didSelect] %d",totalNumberOfMessage);
+    }
+    else{
+        
+    }
 }
 
 #pragma mark -

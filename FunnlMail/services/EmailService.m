@@ -159,7 +159,7 @@ static NSString *currentFolder;
 - (void)sampleFunctionWithObject:(EmailsTableViewController*)fv
 {
 //    [[EmailService instance] loadLastNMessages:_filterMessages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:fv withFolder:@"INBOX"];
-    [[EmailService instance] loadLatestMail:1 withTableController:fv withFolder:INBOX];
+    [[EmailService instance] loadLatestMail:NUMBER_OF_NEW_MESSAGES_TO_CHECK withTableController:fv withFolder:INBOX];
 }
 
 - (void)loadLastNMessages:(NSUInteger)nMessages  withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName
@@ -205,21 +205,13 @@ static NSString *currentFolder;
          if (!totalNumberOfMessagesDidChange && self.messages.count)
          {
              numberOfMessagesToLoad -= self.messages.count;
-             
-             fetchRange =
-             MCORangeMake(self.totalNumberOfInboxMessages -
-                          self.messages.count -
-                          (numberOfMessagesToLoad - 1),
-                          (numberOfMessagesToLoad - 1));
+             fetchRange = MCORangeMake(self.totalNumberOfInboxMessages - self.messages.count - (numberOfMessagesToLoad - 1),(numberOfMessagesToLoad - 1));
          }
          
          // Else just fetch the last N messages
          else
          {
-             fetchRange =
-             MCORangeMake(self.totalNumberOfInboxMessages -
-                          (numberOfMessagesToLoad - 1),
-                          (numberOfMessagesToLoad - 1));
+             fetchRange = MCORangeMake(self.totalNumberOfInboxMessages - (numberOfMessagesToLoad - 1),(numberOfMessagesToLoad - 1));
          }
          
          self.imapMessagesFetchOp =
@@ -228,8 +220,9 @@ static NSString *currentFolder;
                                                             numbers:
           [MCOIndexSet indexSetWithRange:fetchRange]];
          
+         self.imapMessagesFetchOp = [self.imapSession fetchMessagesByNumberOperationWithFolder:inboxFolder requestKind:requestKind numbers:[MCOIndexSet indexSetWithRange:fetchRange]];
          [self.imapMessagesFetchOp setProgress:^(unsigned int progress) {
-             NSLog(@"Progress: %u of %lu", progress, (unsigned long)numberOfMessagesToLoad);
+//             NSLog(@"Progress: %u of %lu", progress, (unsigned long)numberOfMessagesToLoad);
          }];
          
 //         __weak EmailService *weakSelf = self;
@@ -498,17 +491,26 @@ static NSString *currentFolder;
 #pragma mark insertMessage
 - (void)insertMessage:(NSArray*)messages
 {
-    for (MCOIMAPMessage *m in messages) {
-        MessageModel *tempMessageModel = [[MessageModel alloc] init];
-        tempMessageModel.read = m.flags;
-        tempMessageModel.date = m.header.date;
-        tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
-        tempMessageModel.messageJSON = [m serializable];
-        tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
-        tempMessageModel.skipFlag = 0;
-        [[MessageService instance] insertMessage:tempMessageModel];
-        tempMessageModel = nil;
-    }
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+
+        NSMutableArray *messageModelArray = [[NSMutableArray alloc] init];
+        for (MCOIMAPMessage *m in messages) {
+            MessageModel *tempMessageModel = [[MessageModel alloc] init];
+            tempMessageModel.read = m.flags;
+            tempMessageModel.date = m.header.date;
+            tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
+            tempMessageModel.messageJSON = [m serializable];
+            tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
+            tempMessageModel.skipFlag = 0;
+            [messageModelArray addObject:tempMessageModel];
+    //        [[MessageService instance] insertMessage:tempMessageModel];
+            tempMessageModel = nil;
+        }
+    //    [[MessageService instance] performSelectorInBackground:@selector(insertBulkMessages:) withObject:messageModelArray];
+    //    [[MessageService instance] performSelector:@selector(insertBulkMessages:) withObject:nil afterDelay:0.1];
+        [[MessageService instance] insertBulkMessages:messageModelArray];
+    });
+
 }
 
 #pragma mark -
