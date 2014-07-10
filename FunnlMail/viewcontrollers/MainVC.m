@@ -61,7 +61,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
         make.right.equalTo(self.view.mas_right).with.offset(0);
         make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
     }];
-    
+
     // Filter Title
     self.navigationItem.title = currentFilterModel.funnelName;
 //    navigationBarTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
@@ -75,12 +75,13 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     
     AppDelegate *tempAppDelegate = APPDELEGATE;
     if ([tempAppDelegate.currentFunnelString.lowercaseString isEqualToString:@"all"]) {
+        //tempAppDelegate.currentFunnelString = @"Sent";
         navigationBarTitleLabel.text = @"All mails";
         self.navigationItem.title = @"All mails";
     }
     else {
-        self.navigationItem.title = tempAppDelegate.currentFunnelString.capitalizedString;
-        navigationBarTitleLabel.text = tempAppDelegate.currentFunnelString.capitalizedString;
+        self.navigationItem.title = @"Sent mail";
+        navigationBarTitleLabel.text = @"Sent";
     }
     //>>>>>>> befb26a4459794a789ff1240527bd41eba700a00
     filterLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 44+20, 320, 40)];
@@ -131,6 +132,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [centeredButtons addSubview:composeEmailButton];
     
     if(emailsTableViewController==nil){
+        
         emailsTableViewController = [[EmailsTableViewController alloc]init];
         emailsTableViewController.mainVCdelegate = self;
         

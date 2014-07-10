@@ -12,7 +12,6 @@
 #import <mailcore/mailcore.h>
 #import "KeychainItemWrapper.h"
 #import "EMailsTableViewController.h"
-#import "SentEmailsTableViewController.h"
 #import "SQLiteDatabase.h"
 #import "FMDatabase.h"
 #import "EmailServersService.h"
@@ -102,7 +101,7 @@ static NSString *currentFolder;
     };
 	
 	// Reset the inbox
-	self.sentMessages = [[NSMutableArray alloc] init];
+	self.Messages = [[NSMutableArray alloc] init];
     self.filterMessages = [[NSMutableArray alloc] init];
     self.sentMessages = [[NSMutableArray alloc] init];
     self.threadIdDictionary = [[NSMutableDictionary alloc] init];
@@ -172,21 +171,28 @@ static NSString *currentFolder;
 	(MCOIMAPMessagesRequestKindHeaders | MCOIMAPMessagesRequestKindStructure |
 	 MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject | MCOIMAPMessagesRequestKindGmailThreadID | MCOIMAPMessagesRequestKindGmailMessageID |	 MCOIMAPMessagesRequestKindFlags);
 	
-    NSString *inboxFolder = @"INBOX";
-	MCOIMAPFolderInfoOperation *inboxFolderInfo = [self.imapSession folderInfoOperation:inboxFolder];
-	
-	[inboxFolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
+    MCOIMAPFolderInfoOperation *FolderInfo;
+
+    if(![folderName isEqualToString:SENT]){
+        FolderInfo = [self.imapSession folderInfoOperation:INBOX];
+	}
+    else{
+        NSLog(@"making sure this is happenging");
+        FolderInfo = [self.imapSession folderInfoOperation:SENT];
+    }
+    
+	[FolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
      {
-         BOOL totalNumberOfMessagesDidChange =
-         self.totalNumberOfInboxMessages != [info messageCount];
+         BOOL totalNumberOfMessagesDidChange;
+         NSUInteger numberOfMessagesToLoad;
+        totalNumberOfMessagesDidChange = self.totalNumberOfInboxMessages != [info messageCount];
          
-         self.totalNumberOfInboxMessages = [info messageCount];
+        self.totalNumberOfInboxMessages = [info messageCount];
          
-         NSUInteger numberOfMessagesToLoad =
-         MIN(self.totalNumberOfInboxMessages, nMessages);
+        numberOfMessagesToLoad = MIN(self.totalNumberOfInboxMessages, nMessages);
          
-         if (numberOfMessagesToLoad == 0)
-         {
+        if (numberOfMessagesToLoad == 0)
+        {
              self.isLoading = NO;
              return;
          }
@@ -217,7 +223,7 @@ static NSString *currentFolder;
          }
          
          self.imapMessagesFetchOp =
-         [self.imapSession fetchMessagesByNumberOperationWithFolder:inboxFolder
+         [self.imapSession fetchMessagesByNumberOperationWithFolder:folderName
                                                         requestKind:requestKind
                                                             numbers:
           [MCOIndexSet indexSetWithRange:fetchRange]];
@@ -240,7 +246,33 @@ static NSString *currentFolder;
               NSArray *tempArray = [[MessageService instance] retrieveAllMessages];
               [self performSelector:@selector(applyingFilters:) withObject:tempArray];
               _filterMessages = (NSMutableArray*)tempArray;
-              if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
+              if ([folderName isEqualToString:SENT])
+              {
+                  //this is neccessary in order to pull sent messages
+                  //table view doesnt require messageModel but enough other methods require
+                  //for this to be the way to display messages properly
+                  emailTableViewController->searchMessages = [[NSMutableArray alloc]init];
+                  for (MCOIMAPMessage *m in messages) {
+                    
+                      MessageModel *tempMessageModel = [[MessageModel alloc] init];
+                      tempMessageModel.read = m.flags;
+                      tempMessageModel.date = m.header.date;
+                      tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
+                      tempMessageModel.messageJSON = [m serializable];
+                      tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
+                      [emailTableViewController->searchMessages addObject:tempMessageModel];
+                      tempMessageModel = nil;
+                  }
+                  //not sure if this my (Pranav) email alone but sent messages were intially backwards
+                  //my inbox still shows up out of order with no pattern noticeable
+                  //might be just me
+                  emailTableViewController->searchMessages = [NSMutableArray arrayWithArray:[[emailTableViewController->searchMessages reverseObjectEnumerator] allObjects]];
+                  emailTableViewController.isSearching = YES;
+                  NSLog(@"does it crash here?");
+                  emailTableViewController.navigationItem.title = @"Sent";
+                  [emailTableViewController.tableView reloadData];
+              }
+              else if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
                   [emailTableViewController.tableView reloadData];
               }
               else {
@@ -255,7 +287,7 @@ static NSString *currentFolder;
               }
               else
               {
-                  [self loadLastNMessages:self.filterMessages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:fv withFolder:INBOX];
+                  [self loadLastNMessages:self.filterMessages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:fv withFolder:folderName];
               }
           }];
      }];
@@ -289,7 +321,7 @@ static NSString *currentFolder;
              //             self.isLoading = NO;
              return;
          }
-         
+         NSLog(@"self.messages.count = %lu\n",(unsigned long)self.messages.count);
          MCORange fetchRange;
          if (!totalNumberOfMessagesDidChange && self.messages.count)
          {
@@ -352,198 +384,6 @@ static NSString *currentFolder;
      }];
 }
 
-
-
-//loading latest sent mail
-#pragma mark -
-#pragma mark loadLatestMail
-- (void)loadLatestSentMail:(NSUInteger)nMessages  withTableController:(SentEmailsTableViewController *)fv withFolder:(NSString*)folderName
-{
-//	self.isLoading = YES;
-	
-	MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)
-	(MCOIMAPMessagesRequestKindHeaders | MCOIMAPMessagesRequestKindStructure |
-	 MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject | MCOIMAPMessagesRequestKindGmailThreadID | MCOIMAPMessagesRequestKindGmailMessageID |	 MCOIMAPMessagesRequestKindFlags);
-	
-    NSString *sentFolder = SENT;
-	MCOIMAPFolderInfoOperation *sentFolderInfo = [self.imapSession folderInfoOperation:sentFolder];
-	
-	[sentFolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
-     {
-         BOOL totalNumberOfMessagesDidChange =
-         self.totalNumberOfSentMessages != [info messageCount];
-         self.totalNumberOfSentMessages = [info messageCount];
-         NSUInteger numberOfMessagesToLoad =
-         MIN(self.totalNumberOfSentMessages, nMessages);
-         
-         if (numberOfMessagesToLoad == 0)
-         {
-//             self.isLoading = NO;
-             return;
-         }
-         
-         MCORange fetchRange;
-         if (!totalNumberOfMessagesDidChange && self.messages.count)
-         {
-             numberOfMessagesToLoad -= self.messages.count;
-             
-             fetchRange =
-             MCORangeMake(self.totalNumberOfSentMessages - self.messages.count - (numberOfMessagesToLoad - 1),
-                          (numberOfMessagesToLoad - 1));
-         }
-         // Else just fetch the last N messages
-         else
-         {
-             fetchRange =
-             MCORangeMake(self.totalNumberOfSentMessages -
-                          (numberOfMessagesToLoad - 1),
-                          (numberOfMessagesToLoad - 1));
-         }
-         
-         self.imapMessagesFetchOp =
-         [self.imapSession fetchMessagesByNumberOperationWithFolder:sentFolder
-                                                        requestKind:requestKind
-                                                            numbers:
-          [MCOIndexSet indexSetWithRange:fetchRange]];
-         
-         [self.imapMessagesFetchOp setProgress:^(unsigned int progress) {
-             NSLog(@"Progress: %u of %lu", progress, (unsigned long)numberOfMessagesToLoad);
-         }];
-         
-         //         __weak EmailService *weakSelf = self;
-         [self.imapMessagesFetchOp start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
-          {
-              if (messages.count > 0) {
-                  MCOIMAPMessage *tempVariable = [messages objectAtIndex:0];
-                  NSArray *tempArray = [[MessageService instance] retrieveLatestMessages];
-                  if (tempArray.count > 0) {
-                      if ([[tempArray objectAtIndex:0] integerValue] < tempVariable.uid) {
-                          [self loadLastNSentMessages:tempVariable.uid - [[tempArray objectAtIndex:0] integerValue]withTableController:fv withFolder:SENT];
-                      }
-                      else
-                      {
-                          AppDelegate *tempAppDelegate = APPDELEGATE;
-                          [tempAppDelegate.progressHUD show:NO];
-                          [tempAppDelegate.progressHUD setHidden:YES];
-                          [fv.tablecontroller.refreshControl endRefreshing];
-                          if (self.filterMessages.count > kNUMBER_OF_MESSAGES_TO_DOWNLOAD_IN_BACKGROUND) {
-                              AppDelegate*tempAppDelegate = APPDELEGATE;
-                              [tempAppDelegate.progressHUD show:NO];
-                              [fv.activityIndicator stopAnimating];
-                          }
-                          else{
-                              [self loadLastNSentMessages:self.filterMessages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:fv withFolder:SENT];
-                          }
-                      }
-                  }
-                  else
-                  {
-                      [self loadLastNSentMessages:NUMBER_OF_MESSAGES_TO_LOAD withTableController:fv withFolder:SENT];
-                  }
-              }
-          }];
-     }];
-}
-
-- (void)loadLastNSentMessages:(NSUInteger)nMessages  withTableController:(SentEmailsTableViewController *)fv withFolder:(NSString*)folderName
-{
-    __block SentEmailsTableViewController *emailTableViewController = fv;
-	self.isLoading = YES;
-	
-	MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)
-	(MCOIMAPMessagesRequestKindHeaders | MCOIMAPMessagesRequestKindStructure |
-	 MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject | MCOIMAPMessagesRequestKindGmailThreadID | MCOIMAPMessagesRequestKindGmailMessageID |	 MCOIMAPMessagesRequestKindFlags);
-	
-    NSString *sentFolder = SENT;
-	MCOIMAPFolderInfoOperation *sentFolderInfo = [self.imapSession folderInfoOperation:sentFolder];
-	
-	[sentFolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
-     {
-         BOOL totalNumberOfMessagesDidChange =
-         self.totalNumberOfSentMessages != [info messageCount];
-         
-         self.totalNumberOfSentMessages = [info messageCount];
-         
-         NSUInteger numberOfMessagesToLoad =
-         MIN(self.totalNumberOfSentMessages, nMessages);
-         
-         if (numberOfMessagesToLoad == 0)
-         {
-             self.isLoading = NO;
-             return;
-         }
-         
-         MCORange fetchRange;
-         
-         // If total number of messages did not change since last fetch,
-         // assume nothing was deleted since our last fetch and just
-         // fetch what we don't have
-         if (!totalNumberOfMessagesDidChange && self.sentMessages.count)
-         {
-             numberOfMessagesToLoad -= self.sentMessages.count;
-             
-             fetchRange =
-             MCORangeMake(self.totalNumberOfSentMessages -
-                          self.sentMessages.count -
-                          (numberOfMessagesToLoad - 1),
-                          (numberOfMessagesToLoad - 1));
-         }
-         
-         // Else just fetch the last N messages
-         else
-         {
-             fetchRange =
-             MCORangeMake(self.totalNumberOfSentMessages -
-                          (numberOfMessagesToLoad - 1),
-                          (numberOfMessagesToLoad - 1));
-         }
-         
-         self.imapMessagesFetchOp =
-         [self.imapSession fetchMessagesByNumberOperationWithFolder:sentFolder
-                                                        requestKind:requestKind
-                                                            numbers:
-          [MCOIndexSet indexSetWithRange:fetchRange]];
-         
-         [self.imapMessagesFetchOp setProgress:^(unsigned int progress) {
-             NSLog(@"Progress: %u of %lu", progress, (unsigned long)numberOfMessagesToLoad);
-         }];
-         
-         //         __weak EmailService *weakSelf = self;
-         [self.imapMessagesFetchOp start:
-          ^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
-          {
-              AppDelegate *tempAppDelegate = APPDELEGATE;
-              [tempAppDelegate.progressHUD setHidden:YES];
-              [tempAppDelegate.progressHUD show:NO];
-              [fv.tablecontroller.refreshControl endRefreshing];
-              //newly added by iauro001 on 12th June 2014
-              [self insertMessage:messages];
-              //retrieving the message from database
-              NSArray *tempArray = [[MessageService instance] retrieveAllMessages];
-              [self performSelector:@selector(applyingFilters:) withObject:tempArray];
-              //              [self performSelectorInBackground:@selector(applyingFilters:) withObject:tempArray];
-              _filterMessages = (NSMutableArray*)tempArray;
-              if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
-                  [emailTableViewController.tableView reloadData];
-              }
-              else {
-                  self.filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:tempAppDelegate.currentFunnelDS.funnelId top:2000];
-                  [fv.tableView reloadData];
-                  
-              }
-              [tempAppDelegate.progressHUD show:NO];
-              [fv.activityIndicator stopAnimating];
-              if (tempArray.count > kNUMBER_OF_MESSAGES_TO_DOWNLOAD_IN_BACKGROUND) {
-                  
-              }
-              else
-              {
-                  [self loadLastNSentMessages:self.filterMessages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:fv withFolder:SENT];
-              }
-          }];
-     }];
-    
-}
 
 
 //storing messages according to funnels preasent.

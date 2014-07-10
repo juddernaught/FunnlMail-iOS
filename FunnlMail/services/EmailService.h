@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "EmailsTableViewController.h"
-#import "SentEmailsTableViewController.h"
 #import <mailcore/mailcore.h>
 #import "MessageService.h"
 #import "MessageModel.h"
@@ -44,6 +43,4 @@
 - (void) startLogin :(EmailsTableViewController *) fv;
 - (void)loadLastNMessages:(NSUInteger)nMessages  withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName;
 - (void)loadLatestMail:(NSUInteger)nMessages  withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName;
-- (void)loadLastNSentMessages:(NSUInteger)nMessages  withTableController:(SentEmailsTableViewController *)fv withFolder:(NSString*)folderName;
-- (void)loadLatestSentMail:(NSUInteger)nMessages  withTableController:(SentEmailsTableViewController *)fv withFolder:(NSString*)folderName;
 @end
