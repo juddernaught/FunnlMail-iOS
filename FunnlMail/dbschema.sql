@@ -39,5 +39,3 @@ primary key (messageID, funnelId)
 
 CREATE INDEX messageIDIndex ON messageFilterXRef (messageID);
 CREATE INDEX funnelIdIndex ON messageFilterXRef (funnelId);
-
-select messageID,

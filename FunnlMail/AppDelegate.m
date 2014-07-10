@@ -36,6 +36,8 @@
     //[ServiceTests runTests];
   
     LoginViewController *vc = [[LoginViewController alloc]init];
+    vc.view.backgroundColor = [UIColor clearColor];
+    self.window.backgroundColor = [UIColor whiteColor];
     UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:vc];
     self.window.rootViewController = nav;
 

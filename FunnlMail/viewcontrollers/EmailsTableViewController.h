@@ -26,6 +26,7 @@
     NSArray *funnlArray;
     AppDelegate *tempAppDelegate;
     NSIndexPath *currentIndexPath;
+    NSTimer *loadNextMsgTimer;
 }
 @property BOOL isSearching;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;

@@ -43,6 +43,29 @@ static MessageService *instance;
   return instance;
 }
 
+-(BOOL) insertBulkMessages:(NSArray *)messageModelArray{
+    
+    __block BOOL success = NO;
+    for (MessageModel *messageModel in messageModelArray) {
+        __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+        
+        NSNumber *dateTimeInterval = [NSNumber numberWithDouble:[messageModel.date timeIntervalSince1970]];
+        
+        paramDict[@"messageID"] = messageModel.messageID;
+        paramDict[@"messageJSON"] = messageModel.messageJSON;
+        paramDict[@"read"] = [NSNumber numberWithBool:messageModel.read];
+        paramDict[@"date"] = dateTimeInterval;
+        paramDict[@"gmailthreadid"] = messageModel.gmailThreadID;
+        paramDict[@"skipFlag"] = [NSNumber numberWithBool:messageModel.skipFlag];
+        
+        [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+            success = [db executeUpdate:@"INSERT OR REPLACE INTO messages (messageID,messageJSON,read,date,gmailthreadid,skipFlag) VALUES (:messageID,:messageJSON,:read,:date,:gmailthreadid,:skipFlag)" withParameterDictionary:paramDict];
+        }];
+        
+    }
+    return success;
+}
+
 -(BOOL) insertMessage:(MessageModel *)messageModel{
   __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
   
@@ -58,7 +81,7 @@ static MessageService *instance;
   paramDict[@"skipFlag"] = [NSNumber numberWithBool:messageModel.skipFlag];
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    success = [db executeUpdate:@"INSERT INTO messages (messageID,messageJSON,read,date,gmailthreadid,skipFlag) VALUES (:messageID,:messageJSON,:read,:date,:gmailthreadid,:skipFlag)" withParameterDictionary:paramDict];
+    success = [db executeUpdate:@"INSERT OR REPLACE INTO messages (messageID,messageJSON,read,date,gmailthreadid,skipFlag) VALUES (:messageID,:messageJSON,:read,:date,:gmailthreadid,:skipFlag)" withParameterDictionary:paramDict];
   }];
   
   return success;

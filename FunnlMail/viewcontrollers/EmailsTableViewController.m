@@ -62,6 +62,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+//    loadNextMsgTimer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(loadNextMessages) userInfo:nil repeats:YES];
     
 }
 
@@ -631,6 +632,17 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 - (void)tableView:(UITableView *)tableView didCellReset:(RDSwipeableTableViewCell *)cell
 {
     [cell.revealView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+}
+
+-(void)loadNextMessages{
+    int totalNumberOfMessage = (int)[[MessageService instance] messagesAllTopMessages].count + NUMBER_OF_MESSAGES_TO_LOAD;
+    if(totalNumberOfMessage < 2000){
+        [[EmailService instance] loadLastNMessages:totalNumberOfMessage withTableController:self withFolder:INBOX];
+        //                    NSLog(@"[EmailsTableViewController didSelect] %d",totalNumberOfMessage);
+    }
+    else{
+        
+    }
 }
 
 #pragma mark -

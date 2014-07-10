@@ -159,7 +159,7 @@ static NSString *currentFolder;
 - (void)sampleFunctionWithObject:(EmailsTableViewController*)fv
 {
 //    [[EmailService instance] loadLastNMessages:_filterMessages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:fv withFolder:@"INBOX"];
-    [[EmailService instance] loadLatestMail:1 withTableController:fv withFolder:INBOX];
+    [[EmailService instance] loadLatestMail:NUMBER_OF_NEW_MESSAGES_TO_CHECK withTableController:fv withFolder:INBOX];
 }
 
 - (void)loadLastNMessages:(NSUInteger)nMessages  withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName
@@ -176,13 +176,10 @@ static NSString *currentFolder;
 	
 	[inboxFolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
      {
-         BOOL totalNumberOfMessagesDidChange =
-         self.totalNumberOfInboxMessages != [info messageCount];
-         
+         BOOL totalNumberOfMessagesDidChange = self.totalNumberOfInboxMessages != [info messageCount];
          self.totalNumberOfInboxMessages = [info messageCount];
          
-         NSUInteger numberOfMessagesToLoad =
-         MIN(self.totalNumberOfInboxMessages, nMessages);
+         NSUInteger numberOfMessagesToLoad = MIN(self.totalNumberOfInboxMessages, nMessages);
          
          if (numberOfMessagesToLoad == 0)
          {
@@ -198,67 +195,82 @@ static NSString *currentFolder;
          if (!totalNumberOfMessagesDidChange && self.messages.count)
          {
              numberOfMessagesToLoad -= self.messages.count;
-             
-             fetchRange =
-             MCORangeMake(self.totalNumberOfInboxMessages -
-                          self.messages.count -
-                          (numberOfMessagesToLoad - 1),
-                          (numberOfMessagesToLoad - 1));
+             fetchRange = MCORangeMake(self.totalNumberOfInboxMessages - self.messages.count - (numberOfMessagesToLoad - 1),(numberOfMessagesToLoad - 1));
          }
          
          // Else just fetch the last N messages
          else
          {
-             fetchRange =
-             MCORangeMake(self.totalNumberOfInboxMessages -
-                          (numberOfMessagesToLoad - 1),
-                          (numberOfMessagesToLoad - 1));
+             fetchRange = MCORangeMake(self.totalNumberOfInboxMessages - (numberOfMessagesToLoad - 1),(numberOfMessagesToLoad - 1));
          }
          
-         self.imapMessagesFetchOp =
-         [self.imapSession fetchMessagesByNumberOperationWithFolder:inboxFolder
-                                                        requestKind:requestKind
-                                                            numbers:
-          [MCOIndexSet indexSetWithRange:fetchRange]];
          
+         self.imapMessagesFetchOp = [self.imapSession fetchMessagesByNumberOperationWithFolder:inboxFolder requestKind:requestKind numbers:[MCOIndexSet indexSetWithRange:fetchRange]];
          [self.imapMessagesFetchOp setProgress:^(unsigned int progress) {
-             NSLog(@"Progress: %u of %lu", progress, (unsigned long)numberOfMessagesToLoad);
+//             NSLog(@"Progress: %u of %lu", progress, (unsigned long)numberOfMessagesToLoad);
          }];
          
 //         __weak EmailService *weakSelf = self;
-         [self.imapMessagesFetchOp start:
-          ^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
-          {
-              AppDelegate *tempAppDelegate = APPDELEGATE;
-              [tempAppDelegate.progressHUD setHidden:YES];
-              [tempAppDelegate.progressHUD show:NO];
-              [fv.tablecontroller.refreshControl endRefreshing];
-              //newly added by iauro001 on 12th June 2014
-              [self insertMessage:messages];
-              //retrieving the message from database
-              NSArray *tempArray = [[MessageService instance] retrieveAllMessages];
-              [self performSelector:@selector(applyingFilters:) withObject:tempArray];
-              _filterMessages = (NSMutableArray*)tempArray;
-              if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
-                  [emailTableViewController.tableView reloadData];
-              }
-              else {
-                  self.filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:tempAppDelegate.currentFunnelDS.funnelId top:2000];
-                  [fv.tableView reloadData];
-                  
-              }
-              [tempAppDelegate.progressHUD show:NO];
-              [fv.activityIndicator stopAnimating];
-              if (tempArray.count > kNUMBER_OF_MESSAGES_TO_DOWNLOAD_IN_BACKGROUND) {
-            
-              }
-              else
+         
+         NSLog(@"--- start asyc fetch operation for mail download");
+         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+             [self.imapMessagesFetchOp start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
               {
-                  [self loadLastNMessages:self.filterMessages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:fv withFolder:INBOX];
-              }
-          }];
+                  NSLog(@"-- received %d message in fetch opreation",messages.count);
+                  AppDelegate *tempAppDelegate = APPDELEGATE;
+                  [fv.tablecontroller.refreshControl endRefreshing];
+            
+                  dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                  
+                      NSMutableArray *messageModelArray = [[NSMutableArray alloc] init];
+                      for (MCOIMAPMessage *m in messages) {
+                          MessageModel *tempMessageModel = [[MessageModel alloc] init];
+                          tempMessageModel.read = m.flags;
+                          tempMessageModel.date = m.header.date;
+                          tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
+                          tempMessageModel.messageJSON = [m serializable];
+                          tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
+                          tempMessageModel.skipFlag = 0;
+                          [messageModelArray addObject:tempMessageModel];
+//                          [[MessageService instance] insertMessage:tempMessageModel];
+                          tempMessageModel = nil;
+                      }
+                      [[MessageService instance] insertBulkMessages:messageModelArray];
+//                  [self insertMessage:messages];
+                      NSLog(@"***** insert %d message to db",messages.count);
+   
+                      //retrieving the message from database
+                      NSArray *tempArray = [[MessageService instance] retrieveAllMessages];
+                      [self performSelector:@selector(applyingFilters:) withObject:tempArray];
+                      self.filterMessages = (NSMutableArray*)tempArray;
+                      if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
+                      }
+                      else {
+                          self.filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:tempAppDelegate.currentFunnelDS.funnelId top:2000];
+                      }
+                      [tempAppDelegate.progressHUD setHidden:YES];
+                      [tempAppDelegate.progressHUD show:NO];
+                      [fv.tablecontroller.refreshControl endRefreshing];
+     
+                      dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+                          if (tempArray.count < kNUMBER_OF_MESSAGES_TO_DOWNLOAD_IN_BACKGROUND) {
+                              [self loadLastNMessages:self.filterMessages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:fv withFolder:INBOX];
+                          }
+                      });
+                      
+                      dispatch_async(dispatch_get_main_queue(), ^(void){
+                          [fv.tableView reloadData];
+                          [tempAppDelegate.progressHUD setHidden:YES];
+                          [tempAppDelegate.progressHUD show:NO];
+                          [fv.activityIndicator stopAnimating];
+                      });
+                  });
+              }];
+         });
      }];
 }
+
+
 
 //loading latest mail
 #pragma mark -
@@ -486,17 +498,26 @@ static NSString *currentFolder;
 #pragma mark insertMessage
 - (void)insertMessage:(NSArray*)messages
 {
-    for (MCOIMAPMessage *m in messages) {
-        MessageModel *tempMessageModel = [[MessageModel alloc] init];
-        tempMessageModel.read = m.flags;
-        tempMessageModel.date = m.header.date;
-        tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
-        tempMessageModel.messageJSON = [m serializable];
-        tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
-        tempMessageModel.skipFlag = 0;
-        [[MessageService instance] insertMessage:tempMessageModel];
-        tempMessageModel = nil;
-    }
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+
+        NSMutableArray *messageModelArray = [[NSMutableArray alloc] init];
+        for (MCOIMAPMessage *m in messages) {
+            MessageModel *tempMessageModel = [[MessageModel alloc] init];
+            tempMessageModel.read = m.flags;
+            tempMessageModel.date = m.header.date;
+            tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
+            tempMessageModel.messageJSON = [m serializable];
+            tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
+            tempMessageModel.skipFlag = 0;
+            [messageModelArray addObject:tempMessageModel];
+    //        [[MessageService instance] insertMessage:tempMessageModel];
+            tempMessageModel = nil;
+        }
+    //    [[MessageService instance] performSelectorInBackground:@selector(insertBulkMessages:) withObject:messageModelArray];
+    //    [[MessageService instance] performSelector:@selector(insertBulkMessages:) withObject:nil afterDelay:0.1];
+        [[MessageService instance] insertBulkMessages:messageModelArray];
+    });
+
 }
 
 #pragma mark -
