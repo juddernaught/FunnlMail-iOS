@@ -10,12 +10,18 @@
 #import "LoginViewController.h"
 #import "SQLiteDatabase.h"
 #import "ServiceTests.h"
+#import <Mixpanel/Mixpanel.h>
+
+#define MIXPANEL_TOKEN @"08b1e55d72f1b22a8e5696c2b56a6777"
 
 @implementation AppDelegate
 @synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // MixPanel setup
+    [Mixpanel sharedInstanceWithToken:@"08b1e55d72f1b22a8e5696c2b56a6777"];
+    [[Mixpanel sharedInstance] track:@"App opened"];
     funnelUpDated = FALSE;
     progressHUD = [[MBProgressHUD alloc] init];
     //initializing currentFunnelString to "All"
@@ -40,6 +46,8 @@
     self.window.backgroundColor = [UIColor whiteColor];
     UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:vc];
     self.window.rootViewController = nav;
+    
+
 
     // Override point for customization after application launch.
     return YES;
