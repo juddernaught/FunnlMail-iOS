@@ -258,6 +258,8 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 else {
                     cell.senderLabel.text = [self removeAngularBracket:message.header.sender.mailbox];
                 }
+                message.header.subject;
+                message.header.date;
                 
                 CGFloat tempFloat = [self findTheSizeOf:cell.senderLabel.text];
                 
@@ -559,6 +561,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 - (void)leftSwip:(UIButton*)sender {
     NSLog(@"in [leftSwip]");
     MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[sender.tag] messageJSON]];
+    
     [_tableView beginUpdates];
     [[EmailService instance].filterMessagePreviews removeObjectForKey:[NSString stringWithFormat:@"%d",message.uid]];
     [[EmailService instance].filterMessages removeObjectAtIndex:sender.tag];
