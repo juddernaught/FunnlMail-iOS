@@ -75,28 +75,29 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
     else {
         self.view.backgroundColor = [UIColor colorWithHexString:@"F6F6F6"];
         
-        UIImageView *funnlMailIntroView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"intro.png"]];
-        
+        UIImageView *funnlMailIntroView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"splashScreen"]];
+        funnlMailIntroView.frame = CGRectMake(0, 30, WIDTH, HEIGHT-120);
+        funnlMailIntroView.userInteractionEnabled = YES;
         [self.view addSubview:funnlMailIntroView];
         
-        [funnlMailIntroView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.view.mas_top).with.offset(20);
-            make.left.equalTo(self.view.mas_left).with.offset(0);
-            make.right.equalTo(self.view.mas_right).with.offset(0);
-            make.bottom.equalTo(self.view.mas_bottom).with.offset(-150);
-        }];
-        UIImage *loginImage = [UIImage imageNamed:@"login.png"];
+//        [funnlMailIntroView mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.top.equalTo(self.view.mas_top).with.offset(20);
+//            make.left.equalTo(self.view.mas_left).with.offset(0);
+//            make.right.equalTo(self.view.mas_right).with.offset(0);
+//            make.bottom.equalTo(self.view.mas_bottom).with.offset(-150);
+//        }];
+        
+        UIImage *loginImage = [UIImage imageNamed:@"getStarted"];
         UIButton *loginButton = [[UIButton alloc] init];
         [loginButton setImage:loginImage forState:UIControlStateNormal];
-        
-        [loginButton addTarget:self
-                        action:@selector(loginButtonSelected)forControlEvents:UIControlEventTouchUpInside];
+        loginButton.frame = CGRectMake(0, HEIGHT-60, 320, 40);
+        [loginButton addTarget:self action:@selector(loginButtonSelected)forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:loginButton];
         
-        [loginButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(funnlMailIntroView.mas_bottom).with.offset(40);
-            make.left.equalTo(self.view.mas_left).with.offset(7);
-        }];
+//        [loginButton mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.top.equalTo(funnlMailIntroView.mas_bottom).with.offset(40);
+//            make.left.equalTo(self.view.mas_left).with.offset(7);
+//        }];
     }
 }
 

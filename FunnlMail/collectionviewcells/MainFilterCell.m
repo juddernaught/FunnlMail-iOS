@@ -200,8 +200,8 @@
     mailImageView.contentMode = UIViewContentModeCenter;
     mailImageView.image = [UIImage imageNamed:@"add.png"];
     [mailImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-      make.top.equalTo(filterTitleLabel.mas_bottom).with.offset(-10);
-      make.left.equalTo(self.mas_centerX).with.offset(-(40/2));
+      make.top.equalTo(filterTitleLabel.mas_bottom).with.offset(-20);
+      make.left.equalTo(self.mas_centerX).with.offset(-(65/2));
     }];
     settingsButton.hidden = YES;
   }else{

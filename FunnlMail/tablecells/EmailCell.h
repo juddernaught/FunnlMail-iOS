@@ -9,9 +9,9 @@
 #import <UIKit/UIKit.h>
 #import <MailCore/MailCore.h>
 #import "MCSwipeTableViewCell.h"
-#import "RDSwipeableTableViewCell.h"
+//#import "RDSwipeableTableViewCell.h"
 #import "UIColor+HexString.h"
-@interface EmailCell : RDSwipeableTableViewCell
+@interface EmailCell : MCSwipeTableViewCell
 {
     
 }
