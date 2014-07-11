@@ -22,11 +22,11 @@
     UILabel *filterLabel;
     UISearchBar *mailSearchBar;
     UISearchDisplayController *searchDisplayController;
+    NSMutableArray *searchMessages;
     NSArray *funnlArray;
     AppDelegate *tempAppDelegate;
     NSIndexPath *currentIndexPath;
-    @public
-    NSMutableArray *searchMessages;
+    NSTimer *loadNextMsgTimer;
 }
 @property BOOL isSearching;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
@@ -36,7 +36,7 @@
 @property (strong,nonatomic) FunnelModel *filterModel;
 @property (weak) id<MainVCDelegate> mainVCdelegate;
 @property (strong,nonatomic) NSString *emailFolder;
-@property (nonatomic) NSInteger totalNumberofSentMessages;
+
 @property (nonatomic) NSInteger totalNumberOfInboxMessages;
 @property (nonatomic) BOOL isLoading;
 @property (nonatomic, strong) UIActivityIndicatorView *loadMoreActivityView;

@@ -48,7 +48,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
 - (void)viewDidLoad
 {
-    NSLog(@"Did EmailsTableVC load");
     [super viewDidLoad];
     tempCellForDisplay = nil;
     currentIndexPath = nil;
@@ -757,7 +756,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
             vc.folder = self.emailFolder;
             vc.message = msg;
             vc.session = [EmailService instance].imapSession;
-            
             //[self.navigationController pushViewController:vc animated:YES];
             [self setReadMessage:(MessageModel*)searchMessages[indexPath.row]];
             [self.mainVCdelegate pushViewController:vc];
