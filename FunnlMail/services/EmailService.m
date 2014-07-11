@@ -101,7 +101,7 @@ static NSString *currentFolder;
     };
 	
 	// Reset the inbox
-	self.messages = [[NSMutableArray alloc] init];
+	self.Messages = [[NSMutableArray alloc] init];
     self.filterMessages = [[NSMutableArray alloc] init];
     self.sentMessages = [[NSMutableArray alloc] init];
     self.threadIdDictionary = [[NSMutableDictionary alloc] init];
@@ -171,18 +171,26 @@ static NSString *currentFolder;
 	(MCOIMAPMessagesRequestKindHeaders | MCOIMAPMessagesRequestKindStructure |
 	 MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject | MCOIMAPMessagesRequestKindGmailThreadID | MCOIMAPMessagesRequestKindGmailMessageID |	 MCOIMAPMessagesRequestKindFlags);
 	
-    NSString *inboxFolder = @"INBOX";
-	MCOIMAPFolderInfoOperation *inboxFolderInfo = [self.imapSession folderInfoOperation:inboxFolder];
-	
-	[inboxFolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
+    MCOIMAPFolderInfoOperation *FolderInfo;
+
+    if(![folderName isEqualToString:SENT]){
+        FolderInfo = [self.imapSession folderInfoOperation:INBOX];
+	}
+    else{
+        NSLog(@"making sure this is happenging");
+        FolderInfo = [self.imapSession folderInfoOperation:SENT];
+        emailTableViewController.navigationItem.title = @"SENT";
+    }
+    
+	[FolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
      {
          BOOL totalNumberOfMessagesDidChange = self.totalNumberOfInboxMessages != [info messageCount];
          self.totalNumberOfInboxMessages = [info messageCount];
          
          NSUInteger numberOfMessagesToLoad = MIN(self.totalNumberOfInboxMessages, nMessages);
          
-         if (numberOfMessagesToLoad == 0)
-         {
+        if (numberOfMessagesToLoad == 0)
+        {
              self.isLoading = NO;
              return;
          }
@@ -204,23 +212,58 @@ static NSString *currentFolder;
              fetchRange = MCORangeMake(self.totalNumberOfInboxMessages - (numberOfMessagesToLoad - 1),(numberOfMessagesToLoad - 1));
          }
          
-         
-         self.imapMessagesFetchOp = [self.imapSession fetchMessagesByNumberOperationWithFolder:inboxFolder requestKind:requestKind numbers:[MCOIndexSet indexSetWithRange:fetchRange]];
-         [self.imapMessagesFetchOp setProgress:^(unsigned int progress) {
-//             NSLog(@"Progress: %u of %lu", progress, (unsigned long)numberOfMessagesToLoad);
-         }];
+         self.imapMessagesFetchOp =
+         [self.imapSession fetchMessagesByNumberOperationWithFolder:folderName
+                                                        requestKind:requestKind
+                                                            numbers:
+          [MCOIndexSet indexSetWithRange:fetchRange]];
          
 //         __weak EmailService *weakSelf = self;
-         
-         NSLog(@"--- start asyc fetch operation for mail download");
-         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-             [self.imapMessagesFetchOp start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
+         [self.imapMessagesFetchOp start:
+          ^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
+          {
+              AppDelegate *tempAppDelegate = APPDELEGATE;
+              [tempAppDelegate.progressHUD setHidden:YES];
+              [tempAppDelegate.progressHUD show:NO];
+              [fv.tablecontroller.refreshControl endRefreshing];
+              //newly added by iauro001 on 12th June 2014
+              [self insertMessage:messages];
+              //retrieving the message from database
+              NSArray *tempArray = [[MessageService instance] retrieveAllMessages];
+              [self performSelector:@selector(applyingFilters:) withObject:tempArray];
+              _filterMessages = (NSMutableArray*)tempArray;
+              if ([folderName isEqualToString:SENT])
               {
-                  NSLog(@"-- received %d message in fetch opreation",messages.count);
-                  AppDelegate *tempAppDelegate = APPDELEGATE;
-                  [fv.tablecontroller.refreshControl endRefreshing];
-            
-                  dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                  //this is neccessary in order to pull sent messages
+                  //table view doesnt require messageModel but enough other methods require
+                  //for this to be the way to display messages properly
+                  emailTableViewController->searchMessages = [[NSMutableArray alloc]init];
+                  for (MCOIMAPMessage *m in messages) {
+                    
+                      MessageModel *tempMessageModel = [[MessageModel alloc] init];
+                      tempMessageModel.read = m.flags;
+                      tempMessageModel.date = m.header.date;
+                      tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
+                      tempMessageModel.messageJSON = [m serializable];
+                      tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
+                      [emailTableViewController->searchMessages addObject:tempMessageModel];
+                      tempMessageModel = nil;
+                  }
+                  //not sure if this my (Pranav) email alone but sent messages were intially backwards
+                  //my inbox still shows up out of order with no pattern noticeable
+                  //might be just me
+                  emailTableViewController->searchMessages = [NSMutableArray arrayWithArray:[[emailTableViewController->searchMessages reverseObjectEnumerator] allObjects]];
+                  emailTableViewController.isSearching = YES;
+                  emailTableViewController.navigationItem.title = @"Sent";
+                  tempAppDelegate.currentFunnelString = @"Sent";
+                  [emailTableViewController.tableView reloadData];
+              }
+              else if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
+                  [emailTableViewController.tableView reloadData];
+              }
+              else {
+                  self.filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:tempAppDelegate.currentFunnelDS.funnelId top:2000];
+                  [fv.tableView reloadData];
                   
                       NSMutableArray *messageModelArray = [[NSMutableArray alloc] init];
                       for (MCOIMAPMessage *m in messages) {
@@ -237,7 +280,7 @@ static NSString *currentFolder;
                       }
                       [[MessageService instance] insertBulkMessages:messageModelArray];
 //                  [self insertMessage:messages];
-                      NSLog(@"***** insert %d message to db",messages.count);
+                      NSLog(@"***** insert %lu message to db",(unsigned long)messages.count);
    
                       //retrieving the message from database
                       NSArray *tempArray = [[MessageService instance] retrieveAllMessages];
@@ -264,10 +307,9 @@ static NSString *currentFolder;
                           [tempAppDelegate.progressHUD show:NO];
                           [fv.activityIndicator stopAnimating];
                       });
-                  });
+                  };
               }];
-         });
-     }];
+    }];
 }
 
 
@@ -277,7 +319,7 @@ static NSString *currentFolder;
 #pragma mark loadLatestMail
 - (void)loadLatestMail:(NSUInteger)nMessages  withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName
 {
-//	self.isLoading = YES;
+    //	self.isLoading = YES;
 	
 	MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)
 	(MCOIMAPMessagesRequestKindHeaders | MCOIMAPMessagesRequestKindStructure |
@@ -296,10 +338,10 @@ static NSString *currentFolder;
          
          if (numberOfMessagesToLoad == 0)
          {
-//             self.isLoading = NO;
+             //             self.isLoading = NO;
              return;
          }
-         
+         NSLog(@"self.messages.count = %lu\n",(unsigned long)self.messages.count);
          MCORange fetchRange;
          if (!totalNumberOfMessagesDidChange && self.messages.count)
          {
@@ -362,29 +404,7 @@ static NSString *currentFolder;
      }];
 }
 
-- (BOOL)checkForKey:(NSString *)key indict:(NSMutableDictionary*)dict {
-    NSArray *keys = dict.allKeys;
-    for (NSString *key1 in keys) {
-        if ([key1 isEqualToString:key])
-            return FALSE;
-    }
-    return TRUE;
-}
 
-#pragma mark insertIntoDictionary
-- (NSMutableDictionary*)insertIntoDictionary:(NSMutableDictionary*)dict funnel:(FunnelModel*)funnel {
-    if (!dict) {
-        dict = [[NSMutableDictionary alloc] init];
-    }
-    NSMutableDictionary *temp = [[NSMutableDictionary alloc] initWithDictionary:dict];
-    NSString *key = funnel.funnelName;
-    if ([self checkForKey:key indict:dict]) {
-        temp[key] = funnel.funnelColor;
-    }
-    dict = temp;
-    temp = nil;
-    return dict;
-}
 
 //storing messages according to funnels preasent.
 #pragma mark -
@@ -412,7 +432,7 @@ static NSString *currentFolder;
                                                                                 options: NSJSONReadingAllowFragments
                                                                                   error: &error];
                 if (!error) {
-                    tempDict = [self insertIntoDictionary:tempDict funnel:tempFunnelModel];
+                    //tempDict = [self insertIntoDictionary:tempDict funnel:tempFunnelModel];
                 }
                 else {
                     tempDict = [[NSMutableDictionary alloc] init];
@@ -453,7 +473,7 @@ static NSString *currentFolder;
                                                                             options: NSJSONReadingAllowFragments
                                                                               error: &error];
             if (!error) {
-                tempDict = [self insertIntoDictionary:tempDict funnel:funnel];
+                //tempDict = [self insertIntoDictionary:tempDict funnel:funnel];
             } else {
                 tempDict = [[NSMutableDictionary alloc] init];
                 tempDict[funnel.funnelName] = funnel.funnelColor;

@@ -8,6 +8,8 @@
 
 #import "MenuViewController.h"
 #import "UIColor+HexString.h"
+#import "EmailService.h"
+#import "MainVC.h"
 
 @interface MenuViewController ()
 
@@ -91,11 +93,23 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    //    [appDelegate.drawerController closeDrawerAnimated:YES completion:nil];
     AppDelegate *appDelegate = APPDELEGATE;
+    //    [appDelegate.drawerController closeDrawerAnimated:YES completion:nil];
+    if (indexPath.row == 4) {
+        NSLog(@"sent mail requested");
+        //this is required to get to the navigation controller title
+        [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Sent Mails";
+        
+        //The following line is required to get to the emailTableVC in mainVC
+       // [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject;
+        
+        [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:SENT];
+    }
+
     [appDelegate.drawerController closeDrawerAnimated:YES completion:nil];
 }
-
+//populate searchArray instead of messages
+//issearching = YES;
 
 - (void)didReceiveMemoryWarning
 {
