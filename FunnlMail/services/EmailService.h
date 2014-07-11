@@ -22,7 +22,7 @@
 @property (nonatomic, strong) MCOIMAPSession *imapSession;
 @property (nonatomic, strong) MCOSMTPSession *smtpSession;
 @property (nonatomic, strong) MCOIMAPFetchMessagesOperation *imapMessagesFetchOp;
-@property (nonatomic) NSInteger totalNumberOfInboxMessages;
+@property (nonatomic) NSInteger totalNumberOfMessages;
 @property (nonatomic, strong) NSMutableDictionary *threadIdDictionary;
 @property (nonatomic, strong) NSMutableArray *messages;
 @property (nonatomic, strong) NSMutableDictionary *messagePreviews;

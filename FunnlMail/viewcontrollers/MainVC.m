@@ -40,6 +40,14 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 -(void)viewWillAppear:(BOOL)animated{
     [mainView reloadView];
+    AppDelegate *app = APPDELEGATE;
+    if([app.currentFunnelString.lowercaseString isEqualToString:@"all"]){
+         [self setTitle:@"All Mail"];
+        }
+     else {
+         NSLog(@"do we get here tho: %@", self.parentViewController);
+         [self setTitle: @"Sent Mails"];
+         }
 }
 
 
@@ -81,6 +89,8 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     else {
         self.navigationItem.title = tempAppDelegate.currentFunnelString.capitalizedString;
         navigationBarTitleLabel.text = tempAppDelegate.currentFunnelString.capitalizedString;
+        self.navigationItem.title = @"Sent mail";
+        navigationBarTitleLabel.text = @"Sent";
     }
     //>>>>>>> befb26a4459794a789ff1240527bd41eba700a00
     filterLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 44+20, 320, 40)];

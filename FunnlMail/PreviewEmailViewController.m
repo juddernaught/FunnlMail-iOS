@@ -74,10 +74,8 @@ NSNumber *sendNum;
     
     UITextField *to2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 60, 22, height)];
     UITextField *cc2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 90, 30, height)];
-    cc2.delegate = self;
     UITextField *bcc2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 120, 32, height)];
     UITextField *subject2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 150, 50, height)];
-    to.text = [self.address nonEncodedRFC822String];
     
     to2.text = @" To:";
     cc2.text = @" Cc:";
@@ -162,8 +160,21 @@ NSNumber *sendNum;
         NSMutableString *temp = [[NSMutableString alloc] initWithString:@"Re: "];
         [temp appendString:self.message.header.subject];
         subject.text = temp;
+        to.text = [self.address nonEncodedRFC822String];
+        }
+    else if(self.replyAll){
+        NSLog(@"self.reply");
+        NSMutableString *temp = [[NSMutableString alloc] initWithString:@"Re: "];
+        [temp appendString:self.message.header.subject];
+        subject.text = temp;
+        temp = [[NSMutableString alloc] initWithString:[self.address nonEncodedRFC822String]];
+        for (MCOAddress* address in self.addressArray) {
+            [temp appendString:@", "];
+            [temp appendString:[address nonEncodedRFC822String]];
+            }
+        to.text = temp;
     }
-
+    
     [self.view addSubview:to2];
     [self.view addSubview:cc2];
     [self.view addSubview:bcc2];
@@ -230,6 +241,11 @@ NSNumber *sendNum;
             NSLog(@"%@ Error sending email:%@", [EmailService instance].smtpSession.username, error);
         } else {
             NSLog(@"%@ Successfully sent email!", [EmailService instance].smtpSession.username);
+            [[[EmailService instance].imapSession appendMessageOperationWithFolder:SENT messageData:rfc822Data flags:MCOMessageFlagMDNSent] start:^(NSError *error, uint32_t createdUID) {
+                
+                if (error) NSLog(@"error adding message to sent folder");
+                else NSLog(@"successfully appended message to sent folder");
+            }];
         }
     }];
     [self dismissViewControllerAnimated:YES completion:NULL];

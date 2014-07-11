@@ -192,7 +192,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 	if(isSearching == NO){
         if (section == 1)
         {
-            if ([EmailService instance].totalNumberOfInboxMessages >= 0 || [EmailService instance].filterMessages.count > 0)
+            if ([EmailService instance].totalNumberOfMessages >= 0 || [EmailService instance].filterMessages.count > 0)
                 return 1;
             return 0;
         }
@@ -258,8 +258,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 else {
                     cell.senderLabel.text = [self removeAngularBracket:message.header.sender.mailbox];
                 }
-                message.header.subject;
-                message.header.date;
                 
                 CGFloat tempFloat = [self findTheSizeOf:cell.senderLabel.text];
                 
@@ -401,13 +399,13 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                     cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
                 }
                 
-                if ([EmailService instance].messages.count < [EmailService instance].totalNumberOfInboxMessages)
-                    cell.textLabel.text = [NSString stringWithFormat:@"Load %lu more",MIN([EmailService instance].totalNumberOfInboxMessages - [EmailService instance].messages.count, NUMBER_OF_MESSAGES_TO_LOAD)];
+                if ([EmailService instance].messages.count < [EmailService instance].totalNumberOfMessages)
+                    cell.textLabel.text = [NSString stringWithFormat:@"Load %lu more",MIN([EmailService instance].totalNumberOfMessages - [EmailService instance].messages.count, NUMBER_OF_MESSAGES_TO_LOAD)];
                 else
                     cell.textLabel.text = nil;
                 
-                if ([EmailService instance].totalNumberOfInboxMessages > 0)
-                    cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld message(s)",(long)[EmailService instance].totalNumberOfInboxMessages];
+                if ([EmailService instance].totalNumberOfMessages > 0)
+                    cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld message(s)",(long)[EmailService instance].totalNumberOfMessages];
                 cell.accessoryView = self.loadMoreActivityView;
                 
                 if (self.isLoading)
@@ -504,8 +502,8 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                     cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
                 }
                 
-                if ([EmailService instance].messages.count < [EmailService instance].totalNumberOfInboxMessages)
-                    cell.textLabel.text = [NSString stringWithFormat:@"Load %lu more",MIN([EmailService instance].totalNumberOfInboxMessages - [EmailService instance].messages.count, NUMBER_OF_MESSAGES_TO_LOAD_ON_SEARCH)];
+                if ([EmailService instance].messages.count < [EmailService instance].totalNumberOfMessages)
+                    cell.textLabel.text = [NSString stringWithFormat:@"Load %lu more",MIN([EmailService instance].totalNumberOfMessages - [EmailService instance].messages.count, NUMBER_OF_MESSAGES_TO_LOAD_ON_SEARCH)];
                 else
                     cell.textLabel.text = nil;
                 
@@ -733,7 +731,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
             {
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
                 if (!self.isLoading &&
-                    [EmailService instance].messages.count < [EmailService instance].totalNumberOfInboxMessages)
+                    [EmailService instance].messages.count < [EmailService instance].totalNumberOfMessages)
                 {
                     int totalNumberOfMessage = (int)[[MessageService instance] messagesAllTopMessages].count + NUMBER_OF_MESSAGES_TO_LOAD;
 //                    NSLog(@"[EmailsTableViewController didSelect] %d",totalNumberOfMessage);

@@ -22,11 +22,12 @@
     UILabel *filterLabel;
     UISearchBar *mailSearchBar;
     UISearchDisplayController *searchDisplayController;
-    NSMutableArray *searchMessages;
     NSArray *funnlArray;
     AppDelegate *tempAppDelegate;
     NSIndexPath *currentIndexPath;
     NSTimer *loadNextMsgTimer;
+@public
+    NSMutableArray *searchMessages;
 }
 @property BOOL isSearching;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;

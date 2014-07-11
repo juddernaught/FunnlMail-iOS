@@ -105,7 +105,7 @@ static NSString *currentFolder;
     self.filterMessages = [[NSMutableArray alloc] init];
     self.sentMessages = [[NSMutableArray alloc] init];
     self.threadIdDictionary = [[NSMutableDictionary alloc] init];
-	self.totalNumberOfInboxMessages = -1;
+	self.totalNumberOfMessages = -1;
 	self.isLoading = NO;
 	self.messagePreviews = [NSMutableDictionary dictionary];
     self.filterMessagePreviews = [NSMutableDictionary dictionary];
@@ -171,15 +171,23 @@ static NSString *currentFolder;
 	(MCOIMAPMessagesRequestKindHeaders | MCOIMAPMessagesRequestKindStructure |
 	 MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject | MCOIMAPMessagesRequestKindGmailThreadID | MCOIMAPMessagesRequestKindGmailMessageID |	 MCOIMAPMessagesRequestKindFlags);
 	
-    NSString *inboxFolder = @"INBOX";
-	MCOIMAPFolderInfoOperation *inboxFolderInfo = [self.imapSession folderInfoOperation:inboxFolder];
-	
-	[inboxFolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
+    MCOIMAPFolderInfoOperation *FolderInfo;
+    
+    if(![folderName isEqualToString:SENT]){
+        FolderInfo = [self.imapSession folderInfoOperation:INBOX];
+        }
+    else{
+        NSLog(@"making sure this is happenging");
+        FolderInfo = [self.imapSession folderInfoOperation:SENT];
+         emailTableViewController.navigationItem.title = @"SENT";
+        }
+    
+     [FolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
      {
-         BOOL totalNumberOfMessagesDidChange = self.totalNumberOfInboxMessages != [info messageCount];
-         self.totalNumberOfInboxMessages = [info messageCount];
+         BOOL totalNumberOfMessagesDidChange = self.totalNumberOfMessages != [info messageCount];
+         self.totalNumberOfMessages = [info messageCount];
          
-         NSUInteger numberOfMessagesToLoad = MIN(self.totalNumberOfInboxMessages, nMessages);
+         NSUInteger numberOfMessagesToLoad = MIN(self.totalNumberOfMessages, nMessages);
          
          if (numberOfMessagesToLoad == 0)
          {
@@ -195,17 +203,18 @@ static NSString *currentFolder;
          if (!totalNumberOfMessagesDidChange && self.messages.count)
          {
              numberOfMessagesToLoad -= self.messages.count;
-             fetchRange = MCORangeMake(self.totalNumberOfInboxMessages - self.messages.count - (numberOfMessagesToLoad - 1),(numberOfMessagesToLoad - 1));
+             fetchRange = MCORangeMake(self.totalNumberOfMessages - self.messages.count - (numberOfMessagesToLoad - 1),(numberOfMessagesToLoad - 1));
          }
          
          // Else just fetch the last N messages
          else
          {
-             fetchRange = MCORangeMake(self.totalNumberOfInboxMessages - (numberOfMessagesToLoad - 1),(numberOfMessagesToLoad - 1));
+             fetchRange = MCORangeMake(self.totalNumberOfMessages - (numberOfMessagesToLoad - 1),(numberOfMessagesToLoad - 1));
          }
          
          
-         self.imapMessagesFetchOp = [self.imapSession fetchMessagesByNumberOperationWithFolder:inboxFolder requestKind:requestKind numbers:[MCOIndexSet indexSetWithRange:fetchRange]];
+         self.imapMessagesFetchOp = [self.imapSession fetchMessagesByNumberOperationWithFolder:folderName
+ requestKind:requestKind numbers:[MCOIndexSet indexSetWithRange:fetchRange]];
          [self.imapMessagesFetchOp setProgress:^(unsigned int progress) {
 //             NSLog(@"Progress: %u of %lu", progress, (unsigned long)numberOfMessagesToLoad);
          }];
@@ -216,7 +225,7 @@ static NSString *currentFolder;
          dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
              [self.imapMessagesFetchOp start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
               {
-                  NSLog(@"-- received %d message in fetch opreation",messages.count);
+                  NSLog(@"-- received %lu message in fetch opreation",(unsigned long)messages.count);
                   AppDelegate *tempAppDelegate = APPDELEGATE;
                   [fv.tablecontroller.refreshControl endRefreshing];
             
@@ -237,13 +246,40 @@ static NSString *currentFolder;
                       }
                       [[MessageService instance] insertBulkMessages:messageModelArray];
 //                  [self insertMessage:messages];
-                      NSLog(@"***** insert %d message to db",messages.count);
+                      NSLog(@"***** insert %lu message to db",(unsigned long)messages.count);
    
                       //retrieving the message from database
                       NSArray *tempArray = [[MessageService instance] retrieveAllMessages];
                       [self performSelector:@selector(applyingFilters:) withObject:tempArray];
                       self.filterMessages = (NSMutableArray*)tempArray;
-                      if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
+                      if ([folderName isEqualToString:SENT])
+                          {
+                               //this is neccessary in order to pull sent messages
+                               //table view doesnt require messageModel but enough other methods require
+                               //for this to be the way to display messages properly
+                               emailTableViewController->searchMessages = [[NSMutableArray alloc]init];
+                               for (MCOIMAPMessage *m in messages) {
+                                  
+                                   MessageModel *tempMessageModel = [[MessageModel alloc] init];
+                                   tempMessageModel.read = m.flags;
+                                   tempMessageModel.date = m.header.date;
+                                   tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
+                                   tempMessageModel.messageJSON = [m serializable];
+                                   tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
+                                   [emailTableViewController->searchMessages addObject:tempMessageModel];
+                                   tempMessageModel = nil;
+                                   }
+                               //not sure if this my (Pranav) email alone but sent messages were intially backwards
+                               //my inbox still shows up out of order with no pattern noticeable
+                               //might be just me
+                               emailTableViewController->searchMessages = [NSMutableArray arrayWithArray:[[emailTableViewController->searchMessages reverseObjectEnumerator] allObjects]];
+                               emailTableViewController.isSearching = YES;
+                               NSLog(@"does it crash here?");
+                               emailTableViewController.navigationItem.title = @"Sent";
+                               [emailTableViewController.tableView reloadData];
+                               }
+                      else if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
+                          [emailTableViewController.tableView reloadData];
                       }
                       else {
                           self.filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:tempAppDelegate.currentFunnelDS.funnelId top:2000];
@@ -254,7 +290,7 @@ static NSString *currentFolder;
      
                       dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
                           if (tempArray.count < kNUMBER_OF_MESSAGES_TO_DOWNLOAD_IN_BACKGROUND) {
-                              [self loadLastNMessages:self.filterMessages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:fv withFolder:INBOX];
+                              [self loadLastNMessages:self.filterMessages.count + NUMBER_OF_MESSAGES_TO_LOAD withTableController:fv withFolder:folderName];
                           }
                       });
                       
@@ -289,10 +325,10 @@ static NSString *currentFolder;
 	[inboxFolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
      {
          BOOL totalNumberOfMessagesDidChange =
-         self.totalNumberOfInboxMessages != [info messageCount];
-         self.totalNumberOfInboxMessages = [info messageCount];
+         self.totalNumberOfMessages != [info messageCount];
+         self.totalNumberOfMessages = [info messageCount];
          NSUInteger numberOfMessagesToLoad =
-         MIN(self.totalNumberOfInboxMessages, nMessages);
+         MIN(self.totalNumberOfMessages, nMessages);
          
          if (numberOfMessagesToLoad == 0)
          {
@@ -306,14 +342,14 @@ static NSString *currentFolder;
              numberOfMessagesToLoad -= self.messages.count;
              
              fetchRange =
-             MCORangeMake(self.totalNumberOfInboxMessages - self.messages.count - (numberOfMessagesToLoad - 1),
+             MCORangeMake(self.totalNumberOfMessages - self.messages.count - (numberOfMessagesToLoad - 1),
                           (numberOfMessagesToLoad - 1));
          }
          // Else just fetch the last N messages
          else
          {
              fetchRange =
-             MCORangeMake(self.totalNumberOfInboxMessages -
+             MCORangeMake(self.totalNumberOfMessages -
                           (numberOfMessagesToLoad - 1),
                           (numberOfMessagesToLoad - 1));
          }

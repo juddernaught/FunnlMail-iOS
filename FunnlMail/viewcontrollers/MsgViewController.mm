@@ -72,27 +72,31 @@
     messageTableView.tableFooterView = seperator;
     [self.view addSubview:messageTableView];
     
-    UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, self.view.bounds.size.height-28, self.view.bounds.size.width, 28)];
-    centeredButtons.backgroundColor = [UIColor colorWithHexString:@"F7F5F6"];
+    UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, self.view.bounds.size.height-42, self.view.bounds.size.width, 42)];
+    centeredButtons.backgroundColor = [UIColor colorWithHexString:@"FEFEFE"];
     //EBE6E9 spare color i was testing
     
     UIButton *replyButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIButton *replyAllButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIButton *forwardButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [replyButton addTarget:self action:@selector(replyButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    replyButton.frame = CGRectMake(128, 0, 31, 28);
+    replyButton.frame = CGRectMake(70, 0, 42, 42);
     [replyButton setBackgroundImage:[UIImage imageNamed:@"reply.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:replyButton];
+    
+    [replyAllButton addTarget:self action:@selector(replyAllButtonSelected) forControlEvents:UIControlEventTouchUpInside];
+    replyAllButton.frame = CGRectMake(140, 0, 42, 42);
+    [replyAllButton setBackgroundImage:[UIImage imageNamed:@"replyAll.png"] forState:UIControlStateNormal];
+    [centeredButtons addSubview:replyAllButton];
 
     [forwardButton addTarget:self action:@selector(forwardButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    forwardButton.frame = CGRectMake(160, 0, 31, 28);
+    forwardButton.frame = CGRectMake(210, 0, 42, 42);
     [forwardButton setBackgroundImage:[UIImage imageNamed:@"forward.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:forwardButton];
     
-    UIView *sideBorder = [[UIView alloc]
-                          initWithFrame:CGRectMake(159,0,1,28)];
-    sideBorder.backgroundColor = [UIColor lightGrayColor];
     UIView *topBorder = [[UIView alloc]
+                         
                           initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,1)];
     topBorder.backgroundColor = [UIColor lightGrayColor];
     [centeredButtons addSubview:topBorder];
@@ -130,10 +134,10 @@
     [titleLabel setFont:[UIFont systemFontOfSize:22]];
     [titleLabel setTextColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR]];
     if ([tempAppDelegate.currentFunnelString.lowercaseString isEqualToString:@"all"]) {
-        self.navigationItem.title =@"All mails";
+        self.navigationItem.title =@"";
     }
     else {
-        self.navigationItem.title = tempAppDelegate.currentFunnelString.capitalizedString;
+        self.navigationItem.title = @"";
 //        titleLabel.text = tempAppDelegate.currentFunnelString.capitalizedString;
     }
 //    [titleLabel setTextAlignment:NSTextAlignmentCenter];
@@ -571,11 +575,23 @@ typedef void (^DownloadCallback)(NSError * error);
 -(void) replyButtonSelected{
     NSLog(@"reply Email selected");
     PreviewEmailViewController *viewEmail = [[PreviewEmailViewController alloc]init];
-    viewEmail.address = self.address;
+    viewEmail.address = self.message.header.from;
     viewEmail.message = _message;
     viewEmail.folder = _folder;
     viewEmail.imapSession = _session;
     viewEmail.reply = @1;
+    [self presentViewController:viewEmail animated:YES completion:NULL];
+}
+
+-(void) replyAllButtonSelected{
+    NSLog(@"reply Email selected");
+    PreviewEmailViewController *viewEmail = [[PreviewEmailViewController alloc]init];
+    viewEmail.addressArray = self.message.header.to;
+    viewEmail.address = self.message.header.from;
+    viewEmail.message = _message;
+    viewEmail.folder = _folder;
+    viewEmail.imapSession = _session;
+    viewEmail.replyAll = @1;
     [self presentViewController:viewEmail animated:YES completion:NULL];
 }
 
