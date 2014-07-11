@@ -41,7 +41,7 @@
     [self.view addSubview:headerLine];
     
 //    [listView setBackgroundView:[[UIView alloc] init]];
-    listArray =[[NSMutableArray alloc] initWithObjects:@"EMail ID ",@"Edit Funnl Settings",@"Funnl Alerts", @"Share Funnls", @"Sent Mail", @"Archive", @"Trash", @"Help",nil];
+    listArray =[[NSMutableArray alloc] initWithObjects:@"Email Account",@"Edit Funnl Settings",@"Funnl Alerts", @"Share Funnls", @"Sent Mail", @"Archive", @"Trash", @"Help",nil];
     imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"settingListIcon",@"alertListIcon",@"shareListIcon",@"sentListIcon", @"archiveListIcon", @"trashListIcon",@"helpListIcon", nil];
 }
 
