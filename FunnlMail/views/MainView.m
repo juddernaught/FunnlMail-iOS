@@ -47,6 +47,7 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
 }
 
 -(void)reloadView{
+    NSLog(@"Did this Happen in MainView");
     filterArray = [[FunnelService instance] allFunnels];
     [self.collectionView reloadData];
 }
@@ -227,6 +228,7 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
 }
 
 -(void)settingsButtonClicked:(id)sender{
+    NSLog(@"Settings Button Clicked");
   UIButton *b = (UIButton*)sender;
   FunnelModel *fm = (FunnelModel *)filterArray[b.tag];
   NSMutableDictionary *sendersDictionary = [[NSMutableDictionary alloc] init];

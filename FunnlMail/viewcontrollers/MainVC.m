@@ -39,6 +39,17 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 }
 
 -(void)viewWillAppear:(BOOL)animated{
+    AppDelegate *app = APPDELEGATE;
+    NSLog(@"how many times does this occur");
+    //THIS IS WHERE THE TITLE IS INITIALLY SET
+    [self setTitle: app.currentFunnelString];
+    if([app.currentFunnelString.lowercaseString isEqualToString:@"all"]){
+        [self setTitle:@"All Mail"];
+    }
+    else {
+        NSLog(@"do we get here tho: %@", self.parentViewController);
+        [self setTitle: @"Sent Mails"];
+    }
     [mainView reloadView];
 }
 
@@ -63,7 +74,8 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     }];
 
     // Filter Title
-    self.navigationItem.title = currentFilterModel.funnelName;
+    //self.navigationItem.title = currentFilterModel.funnelName;
+    
 //    navigationBarTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
 //    [navigationBarTitleLabel setFont:[UIFont systemFontOfSize:22.0]];
 //    
@@ -203,12 +215,13 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 #pragma mark setFilterTitle
 - (void)setFilterTitle:(NSString*)title
 {
+    
     if ([title.lowercaseString isEqualToString:@"all"]) {
         self.navigationItem.title = @"All mails";
 //        navigationBarTitleLabel.text = @"All mails";
     }
     else {
-        self.navigationItem.title = title;
+        self.navigationItem.title = @"Sent";
 //        navigationBarTitleLabel.text = title;
     }
 }

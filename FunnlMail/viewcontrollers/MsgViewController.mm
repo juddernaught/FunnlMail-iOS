@@ -130,10 +130,12 @@
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
     [titleLabel setFont:[UIFont systemFontOfSize:22]];
     [titleLabel setTextColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR]];
+    
     if ([tempAppDelegate.currentFunnelString.lowercaseString isEqualToString:@"all"]) {
         self.navigationItem.title =@"All mails";
     }
     else {
+        NSLog(@"MsgVC has %@",tempAppDelegate.currentFunnelString.capitalizedString);
         self.navigationItem.title = tempAppDelegate.currentFunnelString.capitalizedString;
 //        titleLabel.text = tempAppDelegate.currentFunnelString.capitalizedString;
     }
