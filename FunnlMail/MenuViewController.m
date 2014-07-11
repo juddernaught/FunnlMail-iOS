@@ -8,8 +8,6 @@
 
 #import "MenuViewController.h"
 #import "UIColor+HexString.h"
-#import "EmailService.h"
-#import "MainVC.h"
 
 @interface MenuViewController ()
 
@@ -30,15 +28,21 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor colorWithHexString:@"#FFFFFF"];
+    self.view.backgroundColor = [UIColor colorWithHexString:@"#4C4C4C"];
     listView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, 260, 568) style:UITableViewStyleGrouped] ;
     listView.delegate = self;
     listView.dataSource = self;
     listView.backgroundColor = [UIColor clearColor];
-    listView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    listView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:listView];
+    
+    UIView *headerLine = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
+    headerLine.backgroundColor = WHITE_CLR;
+    [self.view addSubview:headerLine];
+    
 //    [listView setBackgroundView:[[UIView alloc] init]];
-    listArray =[[NSMutableArray alloc] initWithObjects:@"EMail ID ",@"Edit Funnl Settings",@"Funnl Alerts", @"Share Funnls", @"Sent Mail", @"Archive", @"Trash", @"Help",nil];
+    listArray =[[NSMutableArray alloc] initWithObjects:@"Email Account",@"Edit Funnl Settings",@"Funnl Alerts", @"Share Funnls", @"Sent Mail", @"Archive", @"Trash", @"Help",nil];
+    imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"settingListIcon",@"alertListIcon",@"shareListIcon",@"sentListIcon", @"archiveListIcon", @"trashListIcon",@"helpListIcon", nil];
 }
 
 
@@ -55,8 +59,7 @@
     return 44;
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)_cell forRowAtIndexPath:(NSIndexPath *)indexPath;
-{
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)_cell forRowAtIndexPath:(NSIndexPath *)indexPath;{
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -68,11 +71,18 @@
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	}
     cell.menuLabel.text = [listArray objectAtIndex:indexPath.row] ;
-    cell.menuLabel.highlightedTextColor = UIColorFromRGB(0x448DEC);
     cell.menuLabel.backgroundColor = CLEAR_COLOR;
+    cell.menuLabel.textColor = WHITE_CLR;
+    cell.menuLabel.highlightedTextColor = UIColorFromRGB(0x1B8EEE);
+    
     cell.contentView.backgroundColor = CLEAR_COLOR;
-    cell.selectionStyle = UITableViewCellSelectionStyleGray;
+    cell.backgroundColor = CLEAR_COLOR;
+    cell.contentView.backgroundColor = CLEAR_COLOR;
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [cell setAccessoryType:UITableViewCellAccessoryNone];
+    
+    cell.menuImage.image = [UIImage imageNamed:[imageArray objectAtIndex:indexPath.row]];
+    
 //    cell.selectedBackgroundView = [[UIView alloc] initWithFrame:CGRectZero];
 //    cell.selectedBackgroundView.backgroundColor = [UIColor clearColor];
     return cell;
@@ -81,23 +91,11 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    AppDelegate *appDelegate = APPDELEGATE;
     //    [appDelegate.drawerController closeDrawerAnimated:YES completion:nil];
-    if (indexPath.row == 4) {
-        NSLog(@"sent mail requested");
-        //this is required to get to the navigation controller title
-        [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Sent Mails";
-        
-        //The following line is required to get to the emailTableVC in mainVC
-       // [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject;
-        
-        [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:SENT];
-    }
-
+    AppDelegate *appDelegate = APPDELEGATE;
     [appDelegate.drawerController closeDrawerAnimated:YES completion:nil];
 }
-//populate searchArray instead of messages
-//issearching = YES;
+
 
 - (void)didReceiveMemoryWarning
 {

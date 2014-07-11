@@ -30,9 +30,9 @@
 
 NSString *msgBody;
 NSData * rfc822Data;
-UITextView *to;
-UITextView *cc;
-UITextView *bcc;
+UITextField *to;
+UITextField *cc;
+UITextField *bcc;
 UITextField *subject;
 NSNumber *sendNum;
 
@@ -67,19 +67,17 @@ NSNumber *sendNum;
     [self.view addSubview:centeredButtons];
     
     int height = 30;
-    to = [[UITextView alloc] initWithFrame:CGRectMake(22, 60, 300, height)];
-    cc = [[UITextView alloc] initWithFrame:CGRectMake(30, 90, 290, height)];
-    bcc = [[UITextView alloc]initWithFrame:CGRectMake(32, 120, 288, height)];
+    to = [[UITextField alloc] initWithFrame:CGRectMake(22, 60, 300, height)];
+    cc = [[UITextField alloc] initWithFrame:CGRectMake(30, 90, 290, height)];
+    bcc = [[UITextField alloc]initWithFrame:CGRectMake(32, 120, 288, height)];
     subject = [[UITextField alloc]initWithFrame:CGRectMake(50, 150, 270, height)];
     
     UITextField *to2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 60, 22, height)];
     UITextField *cc2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 90, 30, height)];
+    cc2.delegate = self;
     UITextField *bcc2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 120, 32, height)];
     UITextField *subject2 = [[UITextField alloc] initWithFrame:CGRectMake(0, 150, 50, height)];
-
-    to.dataDetectorTypes = UIDataDetectorTypeLink;
-    cc.dataDetectorTypes = UIDataDetectorTypeLink;
-    bcc.dataDetectorTypes = UIDataDetectorTypeLink;
+    to.text = [self.address nonEncodedRFC822String];
     
     to2.text = @" To:";
     cc2.text = @" Cc:";
@@ -164,19 +162,6 @@ NSNumber *sendNum;
         NSMutableString *temp = [[NSMutableString alloc] initWithString:@"Re: "];
         [temp appendString:self.message.header.subject];
         subject.text = temp;
-        to.text = [self.address nonEncodedRFC822String];
-    }
-    else if(self.replyAll){
-        NSLog(@"self.reply");
-        NSMutableString *temp = [[NSMutableString alloc] initWithString:@"Re: "];
-        [temp appendString:self.message.header.subject];
-        subject.text = temp;
-        temp = [[NSMutableString alloc] initWithString:[self.message.header.from nonEncodedRFC822String]];
-        for (MCOAddress* address in self.message.header.to) {
-            [temp appendString:@", "];
-            [temp appendString:[address nonEncodedRFC822String]];
-        }
-        to.text = temp;
     }
 
     [self.view addSubview:to2];
@@ -194,6 +179,7 @@ NSNumber *sendNum;
 
     self.body = [[UITextView alloc] initWithFrame:CGRectMake(0, 180, 320, self.view.bounds.size.height-140)];
     
+    
     if (!self.compose) {
         MCOIMAPFetchContentOperation *operation = [self.imapSession fetchMessageByUIDOperationWithFolder:@"INBOX" uid:self.message.uid];
         
@@ -205,6 +191,7 @@ NSNumber *sendNum;
             self.body.text = temp;
             temp = nil;
         }];
+        NSLog(@"message is empty");
     }
     [self.view addSubview:self.body];
     
@@ -242,11 +229,7 @@ NSNumber *sendNum;
         if(error) {
             NSLog(@"%@ Error sending email:%@", [EmailService instance].smtpSession.username, error);
         } else {
-            NSLog(@"%@ Successfully sent email!", to.text);
-            [[[EmailService instance].imapSession appendMessageOperationWithFolder:SENT messageData:rfc822Data flags:MCOMessageFlagMDNSent] start:^(NSError *error, uint32_t createdUID) {
-                if (error) NSLog(@"error adding message to sent folder");
-                else NSLog(@"successfully appended message to sent folder");
-            }];
+            NSLog(@"%@ Successfully sent email!", [EmailService instance].smtpSession.username);
         }
     }];
     [self dismissViewControllerAnimated:YES completion:NULL];

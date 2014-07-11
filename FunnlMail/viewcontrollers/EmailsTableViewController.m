@@ -48,7 +48,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
 - (void)viewDidLoad
 {
-    NSLog(@"Did EmailsTableVC load");
     [super viewDidLoad];
     tempCellForDisplay = nil;
     currentIndexPath = nil;
@@ -149,7 +148,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 - (void)fetchLatestEmail
 {
 //    [self.view bringSubviewToFront:tempAppDelegate.progressHUD];
-//    [tempAppDelegate.progressHUD show:YES];
+//    [tempAppDelegate.progressHUD show:YES];=
 //    [tempAppDelegate.progressHUD setHidden:NO];
     [activityIndicator startAnimating];
     [[EmailService instance] loadLatestMail:1 withTableController:self withFolder:INBOX];
@@ -216,8 +215,9 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 if (tempCellForDisplay.tag == indexPath.row) {
                     tempCellForDisplay = nil;
                 }
-                else
-                    [cell resetToOriginalState];
+//                else
+//                    [cell resetToOriginalState];
+
                 [cell.labelNameText setAttributedText:[self returnFunnelString:(MessageModel*)[EmailService instance].filterMessages[indexPath.row]]];
                 cell.tag = indexPath.row;
                 cell.delegate = self;
@@ -313,6 +313,8 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                     [cell.detailDiscloser setHidden:YES];
                 }
                 
+                
+                
                 NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
 //                NSString *cachedPreview = [EmailService instance].filterMessagePreviews[uidKey];
                 NSString *cachedPreview = [(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageBodyToBeRendered];
@@ -340,9 +342,48 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                     }];
                 }
                 
-                cell.delegate = self;
-                cell.tableView = tableView;
-                cell.revealDirection = RDSwipeableTableViewCellRevealDirectionRight | RDSwipeableTableViewCellRevealDirectionLeft;
+//                cell.delegate = self;
+//                cell.tableView = tableView;
+//                cell.revealDirection = RDSwipeableTableViewCellRevealDirectionRight | RDSwipeableTableViewCellRevealDirectionLeft;
+                
+                
+                UIView *archiveView = [self viewWithImageName:@"swipeArchive"];
+                UIColor *yellowColor = [UIColor colorWithHexString:@"#D8D8D8"];
+                
+                UIView *fullFunnlView = [self viewWithImageName:@"swipeFunnl"];
+                UIColor *fullFunnlColor = [UIColor colorWithHexString:@"#D8D8D8"];
+                
+//                UIView *halfFunnlView = [self viewWithImageName:@"FunnlNew1"];
+//                UIColor *halfFunnlColor = [UIColor colorWithHexString:@"#4487E9"];
+                
+                [cell setSwipeGestureWithView:archiveView color:yellowColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+                    NSLog(@"Did swipe \"Archive\" cell");
+                    MCOIMAPOperation *msgOperation = [[EmailService instance].imapSession storeFlagsOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:message.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagDeleted];
+                    [msgOperation start:^(NSError * error)
+                     {
+                         [tableView beginUpdates];
+                         [[EmailService instance].filterMessagePreviews removeObjectForKey:uidKey];
+                         [[EmailService instance].filterMessages removeObjectAtIndex:indexPath.row];
+                         [[EmailService instance].messages removeObjectIdenticalTo:message];
+                         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
+                         [tableView endUpdates];
+                         NSLog(@"selected message flags %u UID is %u",message.flags,message.uid );
+                     }];
+                    [cell swipeToOriginWithCompletion:nil];
+                }];
+                
+                
+                [cell setSwipeGestureWithView:fullFunnlView color:fullFunnlColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+                    NSLog(@"Did swipe full cell, ");
+                    
+                    [cell swipeToOriginWithCompletion:nil];
+                    MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
+                    FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:YES withMessageId:uidKey withMessage:message subViewOnViewController:self];
+                    funnlPopUpView.mainVCdelegate = self.mainVCdelegate;
+                    
+                    [self.view addSubview:funnlPopUpView];
+                    
+                }];
                 
                 return cell;
                 break;
@@ -519,7 +560,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
             button1.tag = cell.tag;
             button1.frame = CGRectMake(cellRect.size.width - 160, 0, 80, cellRect.size.height);
             button1.backgroundColor = [UIColor colorWithHexString:@"#43F377"];
-            [button1 setImage:[UIImage imageNamed:@"CreateFunnlIcon"] forState:UIControlStateNormal];
+            [button1 setImage:[UIImage imageNamed:@"swipeFunnl"] forState:UIControlStateNormal];
             [button1 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             [button1 addTarget:self action:@selector(fullSwipe:) forControlEvents:UIControlEventTouchUpInside];
             [cell.revealView addSubview:button1];
@@ -532,7 +573,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
             UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
             button.tag = cell.tag;
             button.frame = CGRectMake(cellRect.size.width - 80, 0, 80, cellRect.size.height);
-            [button setImage:[UIImage imageNamed:@"CreateFunnlIcon"] forState:UIControlStateNormal];
+            [button setImage:[UIImage imageNamed:@"swipeFunnl"] forState:UIControlStateNormal];
             button.backgroundColor = [UIColor colorWithHexString:@"#43F377"];
             [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             [button addTarget:self action:@selector(fullSwipe:) forControlEvents:UIControlEventTouchUpInside];
@@ -548,7 +589,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
         button.tag = cell.tag;
         button.frame = CGRectMake(0, 0, 80, cellRect.size.height);
         button.backgroundColor = [UIColor colorWithHexString:@"#F9CA47"];
-        [button setImage:[UIImage imageNamed:@"archive"] forState:UIControlStateNormal];
+        [button setImage:[UIImage imageNamed:@"swipeArchive"] forState:UIControlStateNormal];
         [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [button addTarget:self action:@selector(leftSwip:) forControlEvents:UIControlEventTouchUpInside];
         [cell.revealView addSubview:button];
@@ -718,7 +759,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
             vc.folder = self.emailFolder;
             vc.message = msg;
             vc.session = [EmailService instance].imapSession;
-            
             //[self.navigationController pushViewController:vc animated:YES];
             [self setReadMessage:(MessageModel*)searchMessages[indexPath.row]];
             [self.mainVCdelegate pushViewController:vc];
@@ -846,14 +886,14 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 - (UIView *)viewWithImageName:(NSString *)imageName {
     UIImage *image = [UIImage imageNamed:imageName];
     UIImageView *imageView = [[UIImageView alloc] init];
-    if ([imageName isEqualToString:@"archive"]) {
-        imageView.frame = CGRectMake(-10, 0, 40, 40);
+    if ([imageName isEqualToString:@"swipeArchive"]) {
+        imageView.frame = CGRectMake(-40, 0, 80, 80);
     }
     else
-        imageView.frame = CGRectMake(10, 0, 40, 40);
+        imageView.frame = CGRectMake(30, 0, 80, 80);
     [imageView setImage:image];
     imageView.contentMode = UIViewContentModeScaleAspectFit;
-    [imageView setBackgroundColor:[UIColor redColor]];
+    [imageView setBackgroundColor:[UIColor clearColor]];
     return imageView;
 }
 

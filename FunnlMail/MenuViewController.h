@@ -12,6 +12,6 @@
 @interface MenuViewController : UIViewController <UITableViewDataSource,UITableViewDelegate>
 {
     UITableView *listView;
-    NSMutableArray *listArray;
+    NSMutableArray *listArray,*imageArray;
 }
 @end

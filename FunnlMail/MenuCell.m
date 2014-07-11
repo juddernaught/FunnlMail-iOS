@@ -17,25 +17,19 @@
     if (self) {
         // Initialization code
         
-        if(INTERFACE_IS_PAD){
-            menuLabel = [[UILabel alloc] initWithFrame:CGRectMake(150, 0, 300, 100)];
-            menuLabel.font = NORMAL_FONT_XL;
-            [self.contentView addSubview:menuLabel];
-            
-            menuImage = [[UIImageView alloc] initWithFrame:CGRectMake(60, 20, 60, 60)];
-            menuImage.contentMode = UIViewContentModeCenter;
-            [self.contentView addSubview:menuImage];
-            
-        }else{
-            menuLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 0, 150, 44)];
-            menuLabel.font = NORMAL_FONT_L;
-            [self.contentView addSubview:menuLabel];
-            
-            menuImage = [[UIImageView alloc] initWithFrame:CGRectMake(5, 2, 15, 15)];
-            menuImage.contentMode = UIViewContentModeCenter;
-            [self.contentView addSubview:menuImage];
-
-        }
+        menuLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 0, 150, 44)];
+        menuLabel.font = NORMAL_FONT_L;
+        [self.contentView addSubview:menuLabel];
+        menuLabel.highlightedTextColor = UIColorFromRGB(0x1B8EEE);
+ 
+        menuImage = [[UIImageView alloc] initWithFrame:CGRectMake(7, 7, 28, 28)];
+        menuImage.contentMode = UIViewContentModeScaleAspectFit;
+        [self.contentView addSubview:menuImage];
+        
+        UILabel *sepLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 44, 320, 1)];
+        sepLabel.backgroundColor = WHITE_CLR;
+        [self.contentView addSubview:sepLabel];
+                
     }
     return self;
 }

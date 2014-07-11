@@ -47,7 +47,6 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
 }
 
 -(void)reloadView{
-    NSLog(@"Did this Happen in MainView");
     filterArray = [[FunnelService instance] allFunnels];
     [self.collectionView reloadData];
 }
@@ -80,19 +79,19 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
     UIView *headerView =[[UIView alloc] init];
     [self addSubview:headerView];
     [headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.mas_top).with.offset(120-40);
-        make.left.equalTo(self.mas_left).with.offset(80);
+        make.top.equalTo(self.mas_top).with.offset(44);
+        make.left.equalTo(self.mas_left).with.offset(50);
         make.right.equalTo(self.mas_right).with.offset(0);
-        make.bottom.equalTo(self.mas_bottom).with.offset(-330);
+        make.bottom.equalTo(self.mas_bottom).with.offset(-60);
     }];
     UILabel *funnelLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 100, 30)];
     funnelLabel.text = @"Funnls";
     [funnelLabel setTextAlignment:NSTextAlignmentLeft];
     [funnelLabel setFont:[UIFont systemFontOfSize:20]];
     [headerView addSubview:funnelLabel];
-    [headerView setBackgroundColor:[UIColor colorWithHexString:@"#E2E2E2"]];
+    [headerView setBackgroundColor:[UIColor colorWithHexString:@"#CDCDCD"]];
     
-    editButton = [[UIButton alloc] initWithFrame:CGRectMake(320 - 80 - 85 - 10, 10, 85, 30)];
+    editButton = [[UIButton alloc] initWithFrame:CGRectMake(320 - 50 - 85 - 10, 10, 85, 30)];
     [editButton setImage:[UIImage imageNamed:@"manage_Button"] forState:UIControlStateNormal];
     [editButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
 //    [editButton setTitle:@"edit" forState:UIControlStateNormal];
@@ -104,7 +103,7 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
   
   self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
   //self.collectionView.backgroundColor = [UIColor greenColor];
-  self.collectionView.backgroundColor = [UIColor colorWithHexString:@"#E2E2E2"];
+  self.collectionView.backgroundColor = [UIColor colorWithHexString:@"#CDCDCD"];
   self.collectionView.bounces = YES;
   self.collectionView.alwaysBounceVertical = YES;
   self.collectionView.delegate = self;
@@ -116,10 +115,10 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
   [self.collectionView registerClass:[MainFilterCell class] forCellWithReuseIdentifier:ADD_MAIN_FILTER_CELL];
   
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.mas_top).with.offset(120);
-        make.left.equalTo(self.mas_left).with.offset(80);
-        make.right.equalTo(self.mas_right).with.offset(0);
-        make.bottom.equalTo(self.mas_bottom).with.offset(-100);
+        make.top.equalTo(self.mas_top).with.offset(100);
+        make.left.equalTo(self.mas_left).with.offset(55);
+        make.right.equalTo(self.mas_right).with.offset(-8);
+        make.bottom.equalTo(self.mas_bottom).with.offset(-60);
     }];
   
   
@@ -228,7 +227,6 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
 }
 
 -(void)settingsButtonClicked:(id)sender{
-    NSLog(@"Settings Button Clicked");
   UIButton *b = (UIButton*)sender;
   FunnelModel *fm = (FunnelModel *)filterArray[b.tag];
   NSMutableDictionary *sendersDictionary = [[NSMutableDictionary alloc] init];

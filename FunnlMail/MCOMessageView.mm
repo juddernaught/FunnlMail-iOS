@@ -78,6 +78,7 @@ pre {\
 
 - (id)initWithFrame:(CGRect)frame
 {
+    NSLog(@"THIS HAPPENED");
     self = [super initWithFrame:frame];
     
     _webView = [[UIWebView alloc] initWithFrame:[self bounds]];
