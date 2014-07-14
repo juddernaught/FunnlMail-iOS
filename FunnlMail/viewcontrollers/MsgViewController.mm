@@ -122,6 +122,7 @@
             [_messageView setDelegate:self];
             [_messageView setFolder:_folder];
             [_messageView setMessage:msg];
+            
         }];
     }
     //customize back button.

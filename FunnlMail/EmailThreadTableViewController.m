@@ -177,18 +177,6 @@ static NSString *mailCellIdentifier = @"MailCell";
         MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[dataSourceArray[0] messageJSON]];
         textLabel.text = message.header.subject;
     }
-    UIView *funnelView = [[UIView alloc] initWithFrame:CGRectMake(320 - 10 - 20, 25-10, 20, 20)];
-    funnelView.clipsToBounds = YES;
-    funnelView.layer.cornerRadius = 10.0f;
-    [funnelView setBackgroundColor:[UIColor orangeColor]];
-    [headerView addSubview:funnelView];
-    funnelView = nil;
-    funnelView = [[UIView alloc] initWithFrame:CGRectMake(320 - 10 - 20 - 5 - 20, 25-10, 20, 20)];
-    funnelView.clipsToBounds = YES;
-    funnelView.layer.cornerRadius = 10.0f;
-    [funnelView setBackgroundColor:[UIColor greenColor]];
-    [headerView addSubview:funnelView];
-    funnelView = nil;
     
     [headerView addSubview:textLabel];
     textLabel = nil;
