@@ -107,7 +107,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     
-    refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull to Refresh"];
+//    refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull to Refresh"];
     [refreshControl addTarget:self action:@selector(fetchLatestEmail) forControlEvents:UIControlEventValueChanged];
     tablecontroller = [[UITableViewController alloc] init];
     
