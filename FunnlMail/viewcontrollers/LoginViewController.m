@@ -17,6 +17,7 @@
 #import "UIColor+HexString.h"
 #import "AppDelegate.h"
 #import "EmailServersService.h"
+#import <Mixpanel/Mixpanel.h>
 
 #define accessTokenEndpoint @"https://accounts.google.com/o/oauth2/token"
 
@@ -156,6 +157,7 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
         [[self navigationController] popViewControllerAnimated:YES];
         // Authentication failed
     } else {
+        [[Mixpanel sharedInstance] track:@"User Succesfully logged in"];
         NSString * email = [auth userEmail];
         NSString * accessToken = [auth accessToken];
         NSString * refreshToken = [auth refreshToken];

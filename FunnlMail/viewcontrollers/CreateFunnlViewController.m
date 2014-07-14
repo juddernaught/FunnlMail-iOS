@@ -14,6 +14,7 @@
 #import "FunnelModel.h"
 #import "UIColor+HexString.h"
 #import "FunnelService.h"
+#import <Mixpanel/Mixpanel.h>
 
 @interface CreateFunnlViewController ()
 
@@ -425,6 +426,7 @@
             [self.navigationController popViewControllerAnimated:YES];
         });
     });
+    [[Mixpanel sharedInstance] track:@"Funnl deleteButton pressed"];
 }
 
 - (void)deleteOperation {
@@ -471,6 +473,7 @@
     [tempAppDelegate.progressHUD setHidden:NO];
     [self performSelectorInBackground:@selector(tempFunction) withObject:nil];
     NSLog(@"Save Butoon pressed");
+    [[Mixpanel sharedInstance] track:@"Funnl Save Button pressed"];
     if(activeField){
         [activeField resignFirstResponder];
     }

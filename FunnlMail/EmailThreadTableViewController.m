@@ -47,7 +47,7 @@ static NSString *mailCellIdentifier = @"MailCell";
     AppDelegate *tempAppDelegate = APPDELEGATE;
     // Do any additional setup after loading the view.
     if ([tempAppDelegate.currentFunnelString.lowercaseString isEqualToString:@"all"]) {
-        self.navigationItem.title = @"All mails";
+        self.navigationItem.title = @"All Mails";
     }
     else {
         self.navigationItem.title = tempAppDelegate.currentFunnelString.capitalizedString;

@@ -356,6 +356,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 //                UIColor *halfFunnlColor = [UIColor colorWithHexString:@"#4487E9"];
                 
                 [cell setSwipeGestureWithView:archiveView color:yellowColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+                    [[Mixpanel sharedInstance] track:@"Email Archived"];
                     NSLog(@"Did swipe \"Archive\" cell");
                     MCOIMAPOperation *msgOperation = [[EmailService instance].imapSession storeFlagsOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:message.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagDeleted];
                     [msgOperation start:^(NSError * error)
@@ -374,7 +375,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 
                 [cell setSwipeGestureWithView:fullFunnlView color:fullFunnlColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
                     NSLog(@"Did swipe full cell, ");
-                    
+                    [[Mixpanel sharedInstance] track:@"Add email to Funnl"];
                     [cell swipeToOriginWithCompletion:nil];
                     MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
                     FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:YES withMessageId:uidKey withMessage:message subViewOnViewController:self];
@@ -651,6 +652,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 #pragma mark -
 #pragma mark didPressDelete
 - (void)didPressMore:(UIButton*)sender {
+    [[Mixpanel sharedInstance] track:@"User Loaded more emails"];
     MCOIMAPMessage *message = nil;
     int row = 0;
     if (sender.tag < 100000) {
@@ -704,6 +706,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
         {
             case 0:
             {
+                [[Mixpanel sharedInstance] track:@"User Viewed Email"];
                 MCOIMAPMessage *msg = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
                 MsgViewController *vc = [[MsgViewController alloc] init];
                 vc.folder = self.emailFolder;
@@ -753,6 +756,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
             [self searchOnlineWithString:mailSearchBar.text];
         }
         else {
+            [[Mixpanel sharedInstance] track:@"User viewed email"];
             MCOIMAPMessage *msg = [MCOIMAPMessage importSerializable:[(MessageModel*)searchMessages[indexPath.row] messageJSON]];
             MsgViewController *vc = [[MsgViewController alloc] init];
             vc.folder = self.emailFolder;

@@ -15,7 +15,7 @@
 #import "FunnelModel.h"
 #import "EmailService.h"
 #import "AppDelegate.h"
-
+#import <Mixpanel/Mixpanel.h>
 #import "UIColor+HexString.h"
 
 #import <MessageUI/MessageUI.h>
@@ -41,12 +41,13 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 -(void)viewWillAppear:(BOOL)animated{
     [mainView reloadView];
     AppDelegate *app = APPDELEGATE;
+    NSLog(@"viewWillAppear mainVC");
     if([app.currentFunnelString.lowercaseString isEqualToString:@"all"]){
          [self setTitle:@"All Mail"];
         }
      else {
          NSLog(@"do we get here tho: %@", self.parentViewController);
-         [self setTitle: @"Sent Mails"];
+         [self setTitle: @"Sent Mail"];
          }
 }
 
@@ -80,11 +81,11 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 //    self.navigationItem.titleView = navigationBarTitleLabel;
     
     // This is the All bar
-    
+    NSLog(@"viewDidLoad mainVC");
     AppDelegate *tempAppDelegate = APPDELEGATE;
     if ([tempAppDelegate.currentFunnelString.lowercaseString isEqualToString:@"all"]) {
-        navigationBarTitleLabel.text = @"All mails";
-        self.navigationItem.title = @"All mails";
+        navigationBarTitleLabel.text = @"All Mail";
+        self.navigationItem.title = @"All Mail";
     }
     else {
         self.navigationItem.title = tempAppDelegate.currentFunnelString.capitalizedString;
@@ -162,6 +163,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 -(void)menuButtonSelected{
     NSLog(@"Menu button selected");
+    [[Mixpanel sharedInstance] track:@"Side Panel Requested"];
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 //    [appDelegate.drawerController openDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
     [appDelegate.drawerController toggleDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
@@ -169,13 +171,9 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 }
 
 
--(void) mailButtonSelected{
-    NSLog(@"Mail button selected");
-    mainView.hidden = YES;
-}
-
 
 -(void) filterButtonSelected{
+    [[Mixpanel sharedInstance] track:@"Filter Button Selected"];
     AppDelegate *tempAppDelegate = APPDELEGATE;
     if (tempAppDelegate.funnelUpDated) {
         tempAppDelegate.funnelUpDated = FALSE;
@@ -192,6 +190,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 -(void) composeEmailButtonSelected{
     NSLog(@"Compose Email selected");
+    [[Mixpanel sharedInstance] track:@"Compose Email Pressed"];
     mainView.hidden = YES;
     PreviewEmailViewController *mc = [[PreviewEmailViewController alloc] init];
     // Present mail view controller on screen
@@ -212,7 +211,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 - (void)setFilterTitle:(NSString*)title
 {
     if ([title.lowercaseString isEqualToString:@"all"]) {
-        self.navigationItem.title = @"All mails";
+        self.navigationItem.title = @"All Mail";
 //        navigationBarTitleLabel.text = @"All mails";
     }
     else {

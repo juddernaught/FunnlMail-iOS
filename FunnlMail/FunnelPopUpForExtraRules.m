@@ -7,6 +7,7 @@
 //
 
 #import "FunnelPopUpForExtraRules.h"
+#import <Mixpanel/Mixpanel.h>
 static NSString *CONTACT_CELL = @"ContactTableViewCell";
 static NSString *contactCellIdentifier = @"ContactCell";
 @implementation FunnelPopUpForExtraRules
@@ -103,6 +104,7 @@ static NSString *contactCellIdentifier = @"ContactCell";
 #pragma mark -
 #pragma mark Event Handlers
 - (void)updateFunnel:(UIButton*)sender {
+    [[Mixpanel sharedInstance] track:@"Updated Funnl"];
     NSMutableString *senderString = [[NSMutableString alloc] init];
     for (int counter =0 ; counter < contactInCC.count; counter++) {
         ContactTableViewCell *tempCell = (ContactTableViewCell*)[contactsTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:counter inSection:0]];
@@ -140,6 +142,7 @@ static NSString *contactCellIdentifier = @"ContactCell";
 }
 
 - (void)outterButtonClicked:(UIButton *)sender {
+    [[Mixpanel sharedInstance] track:@"Clicked away from funnlPopUp"];
     [self removeFromSuperview];
     [[(EmailsTableViewController*)viewController tableView] reloadData];
 }
