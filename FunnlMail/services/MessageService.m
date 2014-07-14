@@ -123,8 +123,8 @@ static MessageService *instance;
     return success;
 }
 
-- (NSArray*)retrieveHTMLContentWithID:(NSString*)uid {
-    __block NSMutableArray *array = [[NSMutableArray alloc] init];
+- (NSString*)retrieveHTMLContentWithID:(NSString*)uid {
+    __block NSString *htmlContent = [[NSString alloc] initWithFormat:@""];
     __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
     paramDict[@"messageID"] = uid;
     [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
@@ -134,11 +134,29 @@ static MessageService *instance;
         
         while ([resultSet next]) {
             if ([resultSet stringForColumn:@"messageHTMLBody"]) {
-                [array addObject:[resultSet stringForColumn:@"messageHTMLBody"]];
+                htmlContent = [resultSet stringForColumn:@"messageHTMLBody"];
             }
         }
     }];
-    return array;
+    return htmlContent;
+}
+
+- (NSString*)retrievePreviewContentWithID:(NSString*)uid {
+    __block NSString *previewBody = [[NSString alloc] initWithFormat:@""];
+    __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+    paramDict[@"messageID"] = uid;
+    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *resultSet = [db executeQuery:@"select messageBodyToBeRendered from messages where messageID=:messageID" withParameterDictionary:paramDict];
+        
+        //        MessageModel *model;
+        
+        while ([resultSet next]) {
+            if ([resultSet stringForColumn:@"messageBodyToBeRendered"]) {
+                previewBody = [resultSet stringForColumn:@"messageBodyToBeRendered"];
+            }
+        }
+    }];
+    return previewBody;
 }
 
 -(BOOL) updateMessage:(MessageModel *)messageModel{

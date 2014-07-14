@@ -315,9 +315,11 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 
                 
                 NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
-//                NSString *cachedPreview = [EmailService instance].filterMessagePreviews[uidKey];
-                NSString *cachedPreview = [(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageBodyToBeRendered];
-                if (![cachedPreview isEqualToString:EMPTY_DELIMITER])
+                NSString *cachedPreview = [[MessageService instance] retrievePreviewContentWithID:uidKey];
+                if (cachedPreview == nil || cachedPreview.length == 0 )
+                    cachedPreview = @"";
+
+                if (![cachedPreview isEqualToString:@""])
                 {
                     cell.bodyLabel.text = cachedPreview;
                 }
@@ -326,18 +328,23 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                     [cell.messageRenderingOperation start:^(NSString * plainTextBodyString, NSError * error) {
                         if (plainTextBodyString) {
                             if (plainTextBodyString.length > 0) {
+                         
                                 if ([[plainTextBodyString substringWithRange:NSMakeRange(0, 1)] isEqualToString:@" "]) {
-                                    cell.bodyLabel.text = [plainTextBodyString substringWithRange:NSMakeRange(1, plainTextBodyString.length - 1)];
+                                    plainTextBodyString= [plainTextBodyString substringWithRange:NSMakeRange(1, plainTextBodyString.length - 1)];
                                 }
+
+                                if(plainTextBodyString.length > 150){
+                                    NSRange stringRange = {0,150};
+                                    plainTextBodyString = [plainTextBodyString substringWithRange:stringRange];
+                                }
+                                
+                                NSMutableDictionary *paramDict = [[NSMutableDictionary alloc] init];
+                                paramDict[uidKey] = [self removeStartingSpaceFromString:plainTextBodyString];
+                                [[MessageService instance] updateMessageWithDictionary:paramDict];
+                                cell.bodyLabel.text = plainTextBodyString;
                             }
                         }
                         cell.messageRenderingOperation = nil;
-                        if(plainTextBodyString) {
-                            [EmailService instance].filterMessagePreviews[uidKey] = [self removeStartingSpaceFromString:plainTextBodyString];
-                            NSMutableDictionary *paramDict = [[NSMutableDictionary alloc] init];
-                            paramDict[uidKey] = [self removeStartingSpaceFromString:plainTextBodyString];
-                            [[MessageService instance] updateMessageWithDictionary:paramDict];
-                        }
                     }];
                 }
                 

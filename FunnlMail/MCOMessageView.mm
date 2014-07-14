@@ -119,13 +119,10 @@ pre {\
         [_webView loadHTMLString:@"" baseURL:nil];
     }
     else {
-        NSArray *stringArray = (NSArray*)[[MessageService instance] retrieveHTMLContentWithID:uidKey];
-        NSString *string = @"";
-        if (stringArray.count > 0) {
-            string = [stringArray objectAtIndex:0];
-        }
-        else
+        NSString *string = [[MessageService instance] retrieveHTMLContentWithID:uidKey];
+        if (string != nil || string.length == 0 )
             string = @"";
+            
         if (![string isEqualToString:EMPTY_DELIMITER] && string && ![string isEqualToString:@""]) {
             NSMutableString * html = [NSMutableString string];
             [html appendFormat:@"<html><head><script>%@</script><style>%@</style></head>"
