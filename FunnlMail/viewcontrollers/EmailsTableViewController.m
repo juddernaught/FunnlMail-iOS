@@ -132,6 +132,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 	self.loadMoreActivityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     mailSearchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 40)];
     mailSearchBar.delegate = self;
+    mailSearchBar.placeholder = @"Search";
     self.tableView.tableHeaderView = mailSearchBar;
     //    searchDisplayController = [[UISearchDisplayController alloc] initWithSearchBar:searchBar contentsController:self];
     //    searchDisplayController.delegate = self;
