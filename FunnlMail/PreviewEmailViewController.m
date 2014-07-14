@@ -35,6 +35,8 @@ UITextField *cc;
 UITextField *bcc;
 UITextField *subject;
 NSNumber *sendNum;
+UIButton *cancel;
+UIButton *sendButton;
 
 - (void)viewDidLoad
 {
@@ -49,20 +51,21 @@ NSNumber *sendNum;
     UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:centeredButtons];
     self.navigationItem.rightBarButtonItem = rightItem;
     
-    UIButton *cancel = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIButton *sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    cancel = [UIButton buttonWithType:UIButtonTypeCustom];
+    sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [cancel addTarget:self action:@selector(cancelButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    cancel.frame = CGRectMake(0, 0, 33, 28);
-    [cancel setTitle:@"X" forState:UIControlStateNormal];
-    [cancel setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    cancel.frame = CGRectMake(0, 0, 60, 28);
+    [cancel setTitle:@"Cancel" forState:UIControlStateNormal];
+    [cancel setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     [centeredButtons addSubview:cancel];
     
     [sendButton addTarget:self action:@selector(sendButtonSelected) forControlEvents:UIControlEventTouchUpInside];
     sendButton.frame = CGRectMake(260, 0, 50, 28);
     [sendButton setTitle:@"Send" forState:UIControlStateNormal];
-    [sendButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-    //[sendButton setBackgroundImage:[UIImage imageNamed:@"Mail.png"] forState:UIControlStateNormal];
+    [sendButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+    sendButton.userInteractionEnabled = NO;
+    
     [centeredButtons addSubview:sendButton];
     [self.view addSubview:centeredButtons];
     
@@ -96,6 +99,9 @@ NSNumber *sendNum;
     [cc2 setTextColor:[UIColor grayColor]];
     [bcc2 setTextColor:[UIColor grayColor]];
     [subject2 setTextColor:[UIColor grayColor]];
+    
+    [to addTarget:self action:@selector(textFieldChanged) forControlEvents:UIControlEventEditingChanged];
+    [subject addTarget:self action:@selector(textFieldChanged) forControlEvents:UIControlEventEditingChanged];
 
     //actual textview bordering
     UIView *bottomBorder = [[UIView alloc]
@@ -148,6 +154,8 @@ NSNumber *sendNum;
                     initWithFrame:CGRectMake(0,to.frame.size.height-1, subject2.frame.size.width,1)];
     bottomBorder.backgroundColor = [UIColor colorWithHexString:@"D9D9D9"];
     [subject2 addSubview:bottomBorder];
+    
+    bottomBorder = nil;
     
     if (self.forward) {
         NSLog(@"self.forward");
@@ -252,6 +260,7 @@ NSNumber *sendNum;
 
 }
 
+#pragma mark - Cancel
 -(void)cancelButtonSelected{
     NSLog(@"Cancel button pressed");
     to = nil;
@@ -261,6 +270,13 @@ NSNumber *sendNum;
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
+#pragma mark - Did text change
+-(void)textFieldChanged{
+    if(to.text.length != 0 && subject.text.length != 0){
+        [sendButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+        sendButton.userInteractionEnabled = YES;
+    }    
+}
 /*
 #pragma mark - Navigation
 
