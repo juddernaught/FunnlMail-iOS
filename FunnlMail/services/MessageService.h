@@ -32,5 +32,6 @@
 -(BOOL) updateMessageWithDictionary:(NSDictionary *)messageDict;
 -(BOOL) updateMessageWithHTMLContent:(NSDictionary *)messageDict;
 - (NSString*)retrieveHTMLContentWithID:(NSString*)uid;
+- (NSString*)retrievePreviewContentWithID:(NSString*)uid ;
 - (void)insertFunnelJsonForMessages;
 @end

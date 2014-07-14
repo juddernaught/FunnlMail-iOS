@@ -15,6 +15,7 @@
 #import "PreviewEmailViewController.h"
 #import <MessageUI/MessageUI.h>
 #import "AppDelegate.h"
+#import "ComposeViewController.h"
 
 
 @interface MsgViewController () <MCOMessageViewDelegate>
@@ -575,35 +576,38 @@ typedef void (^DownloadCallback)(NSError * error);
 
 -(void) replyButtonSelected{
     NSLog(@"reply Email selected");
-    PreviewEmailViewController *viewEmail = [[PreviewEmailViewController alloc]init];
+    ComposeViewController *viewEmail = [[ComposeViewController alloc]init];
     viewEmail.address = self.message.header.from;
     viewEmail.message = _message;
     viewEmail.folder = _folder;
     viewEmail.imapSession = _session;
     viewEmail.reply = @1;
-    [self presentViewController:viewEmail animated:YES completion:NULL];
+    UINavigationController *navBar=[[UINavigationController alloc]initWithRootViewController:viewEmail];
+    [self presentViewController:navBar animated:YES completion:NULL];
 }
 
 -(void) replyAllButtonSelected{
     NSLog(@"reply Email selected");
-    PreviewEmailViewController *viewEmail = [[PreviewEmailViewController alloc]init];
+    ComposeViewController *viewEmail = [[ComposeViewController alloc]init];
     viewEmail.addressArray = self.message.header.to;
     viewEmail.address = self.message.header.from;
     viewEmail.message = _message;
     viewEmail.folder = _folder;
     viewEmail.imapSession = _session;
     viewEmail.replyAll = @1;
-    [self presentViewController:viewEmail animated:YES completion:NULL];
+    UINavigationController *navBar=[[UINavigationController alloc]initWithRootViewController:viewEmail];
+    [self presentViewController:navBar animated:YES completion:NULL];
 }
 
 -(void) forwardButtonSelected{
     NSLog(@"reply Email selected");
-    PreviewEmailViewController *viewEmail = [[PreviewEmailViewController alloc]init];
+    ComposeViewController *viewEmail = [[ComposeViewController alloc]init];
     viewEmail.message = _message;
     viewEmail.folder = _folder;
     viewEmail.imapSession = _session;
     viewEmail.forward = @1;
-    [self presentViewController:viewEmail animated:YES completion:NULL];
+    UINavigationController *navBar=[[UINavigationController alloc]initWithRootViewController:viewEmail];
+    [self presentViewController:navBar animated:YES completion:NULL];
 }
 
 

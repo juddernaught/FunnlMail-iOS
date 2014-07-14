@@ -12,6 +12,50 @@
 #import <QuartzCore/QuartzCore.h>
 #import "EmailService.h"
 
+static NSString * mainJavascript = @"\
+var imageElements = function() {\
+var imageNodes = document.getElementsByTagName('img');\
+return [].slice.call(imageNodes);\
+};\
+\
+var findCIDImageURL = function() {\
+var images = imageElements();\
+\
+var imgLinks = [];\
+for (var i = 0; i < images.length; i++) {\
+var url = images[i].getAttribute('src');\
+if (url.indexOf('cid:') == 0 || url.indexOf('x-mailcore-image:') == 0)\
+imgLinks.push(url);\
+}\
+return JSON.stringify(imgLinks);\
+};\
+\
+var replaceImageSrc = function(info) {\
+var images = imageElements();\
+\
+for (var i = 0; i < images.length; i++) {\
+var url = images[i].getAttribute('src');\
+if (url.indexOf(info.URLKey) == 0) {\
+images[i].setAttribute('src', info.LocalPathKey);\
+break;\
+}\
+}\
+};\
+";
+
+static NSString * mainStyle = @"\
+body {\
+font-family: Helvetica;\
+font-size: 14px;\
+word-wrap: break-word;\
+-webkit-text-size-adjust:none;\
+-webkit-nbsp-mode: space;\
+}\
+\
+pre {\
+white-space: pre-wrap;\
+}\
+";
 
 @interface PreviewEmailViewController ()
 
@@ -169,7 +213,7 @@ UIButton *sendButton;
         [temp appendString:self.message.header.subject];
         subject.text = temp;
         to.text = [self.address nonEncodedRFC822String];
-        }
+    }
     else if(self.replyAll){
         NSLog(@"self.reply");
         NSMutableString *temp = [[NSMutableString alloc] initWithString:@"Re: "];
@@ -179,7 +223,7 @@ UIButton *sendButton;
         for (MCOAddress* address in self.addressArray) {
             [temp appendString:@", "];
             [temp appendString:[address nonEncodedRFC822String]];
-            }
+        }
         to.text = temp;
     }
     
@@ -200,8 +244,21 @@ UIButton *sendButton;
     
     
     if (!self.compose) {
+        NSString *htmlString = [self getBodyData];
+        NSAttributedString *attributedString = [[NSAttributedString alloc] initWithData:[htmlString dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
+        self.body.attributedText = attributedString;
+
+//Uncomment below line for the plain body reply/replyAll/forward body
+//        [self applyPlainBodyString];
+    }
+    [self.view addSubview:self.body];
+    
+}
+
+-(void)applyPlainBodyString{
+    
         MCOIMAPFetchContentOperation *operation = [self.imapSession fetchMessageByUIDOperationWithFolder:@"INBOX" uid:self.message.uid];
-        
+
         [operation start:^(NSError *error, NSData *data) {
             MCOMessageParser *messageParser = [[MCOMessageParser alloc] initWithData:data];
             msgBody = [messageParser plainTextRendering];
@@ -211,9 +268,52 @@ UIButton *sendButton;
             temp = nil;
         }];
         NSLog(@"message is empty");
-    }
-    [self.view addSubview:self.body];
+}
+
+
+-(NSString*)getBodyData
+{
+    NSString *uidKey = [NSString stringWithFormat:@"%d", self.message.uid];
+    NSString *string = [[MessageService instance] retrieveHTMLContentWithID:uidKey];
+    NSString * content = @"";
+    if (string == nil || string.length == 0 )
+        string = @"";
     
+    if (![string isEqualToString:EMPTY_DELIMITER] && string && ![string isEqualToString:@""]) {
+        NSMutableString * html = [NSMutableString string];
+        [html appendFormat:@"<html><head><script>%@</script><style>%@</style></head>"
+         @"<body>%@</body><iframe src='x-mailcore-msgviewloaded:' style='width: 0px; height: 0px; border: none;'>"
+         @"</iframe></html>", @"", @"", string];
+        return html;
+    }
+    
+    NSMutableDictionary *paramDict = [[NSMutableDictionary alloc] init];
+    if ([_message isKindOfClass:[MCOIMAPMessage class]]) {
+        content = [(MCOIMAPMessage *) self.message htmlRenderingWithFolder:@"INBOX" delegate:self];
+        if (content) {
+            NSArray *tempArray = [content componentsSeparatedByString:@"<head>"];
+            if (tempArray.count > 1) {
+                content = [tempArray objectAtIndex:1];
+            }
+            else {
+                tempArray = [content componentsSeparatedByString:@"Subject:"];
+                if (tempArray.count > 1) {
+                    content = [tempArray objectAtIndex:1];
+                }
+            }
+            paramDict[uidKey] = content;
+            [[MessageService instance] updateMessageWithHTMLContent:paramDict];
+            NSMutableString * html = [NSMutableString string];
+            [html appendFormat:@"<html><head><script>%@</script><style>%@</style></head>"
+             @"<body>%@</body><iframe src='x-mailcore-msgviewloaded:' style='width: 0px; height: 0px; border: none;'>"
+             @"</iframe></html>", mainJavascript, mainStyle, content];
+         
+            return html;
+        }
+        else
+            return @"";
+    }
+    return @"";
 }
 
 - (void)didReceiveMemoryWarning

@@ -192,10 +192,13 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     NSLog(@"Compose Email selected");
     [[Mixpanel sharedInstance] track:@"Compose Email Pressed"];
     mainView.hidden = YES;
-    PreviewEmailViewController *mc = [[PreviewEmailViewController alloc] init];
-    // Present mail view controller on screen
-    mc.compose = @1;
-    [self presentViewController:mc animated:YES completion:NULL];
+//    PreviewEmailViewController *mc = [[PreviewEmailViewController alloc] init];
+//    mc.compose = @1;
+//    [self presentViewController:mc animated:YES completion:NULL];
+    
+    ComposeViewController *mc = [[ComposeViewController alloc] init];
+    UINavigationController *navBar=[[UINavigationController alloc]initWithRootViewController:mc];
+    [self.navigationController presentViewController:navBar animated:YES completion:NULL];
 }
 
 #pragma mark -
