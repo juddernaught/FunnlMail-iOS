@@ -120,7 +120,7 @@ pre {\
     }
     else {
         NSString *string = [[MessageService instance] retrieveHTMLContentWithID:uidKey];
-        if (string != nil || string.length == 0 )
+        if (string == nil || string.length == 0 )
             string = @"";
             
         if (![string isEqualToString:EMPTY_DELIMITER] && string && ![string isEqualToString:@""]) {

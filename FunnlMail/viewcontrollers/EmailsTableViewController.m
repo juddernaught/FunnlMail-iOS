@@ -313,7 +313,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 }
                 
                 
-                
                 NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
                 NSString *cachedPreview = [[MessageService instance] retrievePreviewContentWithID:uidKey];
                 if (cachedPreview == nil || cachedPreview.length == 0 )
