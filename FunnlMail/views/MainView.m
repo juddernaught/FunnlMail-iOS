@@ -17,6 +17,7 @@
 #import "EmailService.h"
 #import "UIColor+HexString.h"
 #import "CreateFunnlViewController.h"
+#import <Mixpanel/Mixpanel.h>
 
 static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
@@ -138,8 +139,10 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
 }
 
 - (void)editButtonPressed:(UIButton*)sender {
+    [[Mixpanel sharedInstance] track:@"Edit button pressed"];
     if (editOn) {
         editOn = FALSE;
+        
         [editButton setImage:[UIImage imageNamed:@"manage_Button"] forState:UIControlStateNormal];
     }
     else {

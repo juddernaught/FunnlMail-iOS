@@ -607,6 +607,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
 - (void)leftSwip:(UIButton*)sender {
     NSLog(@"in [leftSwip]");
+    [[Mixpanel sharedInstance] track:@"left swipe: Archive"];
     MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[sender.tag] messageJSON]];
     
     [_tableView beginUpdates];
@@ -622,6 +623,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 - (void)fullSwipe:(UIButton*)sender {
     [_tableView reloadData];
     NSLog(@"in [fullSwipe]");
+    [[Mixpanel sharedInstance] track:@"fullSwipe: add to funnl pressed"];
     MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[sender.tag] messageJSON]];
     FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:YES withMessageId:[NSString stringWithFormat:@"%d",message.uid] withMessage:message subViewOnViewController:self];
     funnlPopUpView.mainVCdelegate = self.mainVCdelegate;
@@ -631,6 +633,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 - (void)halfSwipe:(UIButton*)sender {
     [_tableView reloadData];
     NSLog(@"in [halfSwipe]");
+    [[Mixpanel sharedInstance] track:@"halfSwipe"];
     MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[sender.tag] messageJSON]];
     if ([[FunnelService instance] allFunnels].count > 1) {
         FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:NO withMessageId:[NSString stringWithFormat:@"%d",message.uid] withMessage:nil subViewOnViewController:self];

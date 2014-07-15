@@ -17,6 +17,7 @@
 #import "AppDelegate.h"
 #import <Mixpanel/Mixpanel.h>
 #import "UIColor+HexString.h"
+#import "ComposeViewController.h"
 
 #import <MessageUI/MessageUI.h>
 
@@ -47,7 +48,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
         }
      else {
          NSLog(@"do we get here tho: %@", self.parentViewController);
-         [self setTitle: @"Sent Mail"];
+         [self setTitle: app.currentFunnelString];
          }
 }
 
