@@ -61,6 +61,10 @@
 		6644FB3319738654004B4587 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6644FB3219738654004B4587 /* libz.dylib */; };
 		6644FB351973865F004B4587 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6644FB341973865F004B4587 /* MobileCoreServices.framework */; };
 		6644FB3719738679004B4587 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6644FB3619738679004B4587 /* StoreKit.framework */; };
+		6644FB401974CF99004B4587 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6644FB3F1974CF99004B4587 /* CoreTelephony.framework */; };
+		6644FB421974D27C004B4587 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6644FB411974D27C004B4587 /* FacebookSDK.framework */; };
+		6644FB441974D696004B4587 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6644FB431974D695004B4587 /* Social.framework */; };
+		6644FB461974D6BA004B4587 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6644FB451974D6BA004B4587 /* Accounts.framework */; };
 		667787F818EF6E4500EF1962 /* libMailCore-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 667787EF18EF6D9800EF1962 /* libMailCore-ios.a */; };
 		667787FA18EF6E9400EF1962 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 667787F918EF6E9400EF1962 /* CFNetwork.framework */; };
 		667787FC18EF6E9900EF1962 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 667787FB18EF6E9900EF1962 /* Security.framework */; };
@@ -297,6 +301,10 @@
 		6644FB3219738654004B4587 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		6644FB341973865F004B4587 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		6644FB3619738679004B4587 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		6644FB3F1974CF99004B4587 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		6644FB411974D27C004B4587 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
+		6644FB431974D695004B4587 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		6644FB451974D6BA004B4587 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		667787E418EF6D9700EF1962 /* mailcore2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = mailcore2.xcodeproj; path = "mailcore2/build-mac/mailcore2.xcodeproj"; sourceTree = SOURCE_ROOT; };
 		667787F918EF6E9400EF1962 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		667787FB18EF6E9900EF1962 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -485,6 +493,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6644FB461974D6BA004B4587 /* Accounts.framework in Frameworks */,
+				6644FB441974D696004B4587 /* Social.framework in Frameworks */,
+				6644FB401974CF99004B4587 /* CoreTelephony.framework in Frameworks */,
+				6644FB421974D27C004B4587 /* FacebookSDK.framework in Frameworks */,
 				6644FB3719738679004B4587 /* StoreKit.framework in Frameworks */,
 				6644FB351973865F004B4587 /* MobileCoreServices.framework in Frameworks */,
 				6644FB3319738654004B4587 /* libz.dylib in Frameworks */,
@@ -747,6 +759,10 @@
 		66F2C46818E3293E00CD593E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6644FB451974D6BA004B4587 /* Accounts.framework */,
+				6644FB431974D695004B4587 /* Social.framework */,
+				6644FB411974D27C004B4587 /* FacebookSDK.framework */,
+				6644FB3F1974CF99004B4587 /* CoreTelephony.framework */,
 				6644FB3619738679004B4587 /* StoreKit.framework */,
 				6644FB341973865F004B4587 /* MobileCoreServices.framework */,
 				6644FB3219738654004B4587 /* libz.dylib */,
