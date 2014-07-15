@@ -133,8 +133,8 @@ static FunnelService *instance;
   __block NSMutableArray *array = [[NSMutableArray alloc] init];
     
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    FMResultSet *resultSet = [db executeQuery:@"SELECT funnelId,funnelName,emailAddresses,phrases,skipFlag,funnelColor FROM funnels"];
-    
+    FMResultSet *resultSet = [db executeQuery:@"SELECT funnels.funnelId as funnelId, funnels.funnelName as funnelName, funnels.emailAddresses as emailAddresses, funnels.phrases as phrases, funnels.skipFlag as skipFlag, funnels.funnelColor as funnelColor, COUNT(read) as readCount FROM funnels INNER JOIN messageFilterXRef ON (messageFilterXRef.funnelId = funnels.funnelId) INNER JOIN messages ON (messageFilterXRef.messageId = messages.messageId AND messages.read = 0) GROUP BY 1, 2, 3, 4, 5, 6 UNION SELECT 0 as funnelId, 'All' asfunnelName, '' as emailAddresses, '', 0 as skipFlag, '#000000' as funnelColor, COUNT(read) as readCount FROM messages where messages.read = 0;" ];
+     
     FunnelModel *model;
 //      FilterModel *modelForFilter;
       int counter = 1;
@@ -147,6 +147,8 @@ static FunnelService *instance;
       model.funnelName = [resultSet stringForColumn:@"funnelName"];
       model.filterTitle = [resultSet stringForColumn:@"funnelName"];
       model.skipFlag = [resultSet intForColumn:@"skipFlag"];
+      model.newMessageCount = [resultSet intForColumn:@"readCount"];
+
 //        modelForFilter.filterTitle = [resultSet stringForColumn:@"funnelName"];
       model.emailAddresses = [resultSet stringForColumn:@"emailAddresses"];
       model.sendersArray = (NSMutableArray *)[[resultSet stringForColumn:@"emailAddresses"] componentsSeparatedByString:@","];

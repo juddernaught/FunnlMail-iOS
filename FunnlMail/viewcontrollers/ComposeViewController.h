@@ -17,6 +17,8 @@
 @interface ComposeViewController : UIViewController <TITokenFieldDelegate, UITextViewDelegate>
 {
     UIScrollView *scrollView;
+    CGRect previousRect;
+
 }
 @property (nonatomic, strong) MCOAddress * address;
 @property (nonatomic, strong) MCOIMAPMessage * message;

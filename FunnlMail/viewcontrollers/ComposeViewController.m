@@ -1,3 +1,4 @@
+
 //
 //  ComposeViewController.m
 //  FunnlMail
@@ -15,6 +16,7 @@
 #import "EmailService.h"
 #import "MBProgressHUD.h"
 #import <Mixpanel/Mixpanel.h>
+
 
 static NSString * mainJavascript = @"\
 var imageElements = function() {\
@@ -147,6 +149,7 @@ NSString *msgBody;
 }
 
 - (void)viewDidLoad {
+     previousRect = CGRectMake(0, 0, 0, 0);
     self.imapSession = [EmailService instance].imapSession;
 
     if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
@@ -162,39 +165,38 @@ NSString *msgBody;
     self.navigationItem.rightBarButtonItem = rightItem;
 
     
-    toFieldView = [self createFieldViewWithFrame:CGRectMake(0, 0, WIDTH, 44)];
+    toFieldView = [self createFieldViewWithFrame:CGRectMake(0, 0, WIDTH, 41)];
     [self.view addSubview:toFieldView];
     [toFieldView.tokenField setPromptText:@"To:"];
 	[toFieldView.tokenField setPlaceholder:@""];
     
-    ccFieldView = [self createFieldViewWithFrame:CGRectMake(0, 44, WIDTH, 44)];
+    ccFieldView = [self createFieldViewWithFrame:CGRectMake(0, 0, WIDTH, 41)];
     [ccFieldView.tokenField setPromptText:@"Cc:"];
 	[ccFieldView.tokenField setPlaceholder:@""];
     [toFieldView.contentView addSubview:ccFieldView];
     ccFieldView.scrollEnabled = NO;
     
-    bccFieldView = [self createFieldViewWithFrame:CGRectMake(0, 44, WIDTH, 44)];
+    bccFieldView = [self createFieldViewWithFrame:CGRectMake(0, 0, WIDTH, 41)];
     [bccFieldView.tokenField setPromptText:@"Bcc:"];
 	[bccFieldView.tokenField setPlaceholder:@""];
-    [ccFieldView.contentView addSubview:bccFieldView];
-        bccFieldView.scrollEnabled = NO;
+    [toFieldView.contentView addSubview:bccFieldView];
+    bccFieldView.scrollEnabled = NO;
     
-    subjectFieldView = [self createFieldViewWithFrame:CGRectMake(0, 44, WIDTH, 44)];
+    subjectFieldView = [self createFieldViewWithFrame:CGRectMake(0, 0, WIDTH, 0)];
     [subjectFieldView.tokenField setPromptText:@"Subject:"];
 	[subjectFieldView.tokenField setPlaceholder:@""];
-    [bccFieldView.contentView addSubview:subjectFieldView];
+    [toFieldView.contentView addSubview:subjectFieldView];
     subjectFieldView.tokenField.hideBubble = YES;
-    subjectFieldView.tokenField.numberOfLines = 1;
     subjectFieldView.scrollEnabled = NO;
 
-	messageView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+	messageView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, 208)];
 	[messageView setScrollEnabled:NO];
 	[messageView setAutoresizingMask:UIViewAutoresizingNone];
 	[messageView setDelegate:self];
 	[messageView setFont:[UIFont systemFontOfSize:15]];
 	[messageView setText:@""];
-    messageView.backgroundColor = [UIColor colorWithHexString:@"#D8D8D8"];
-	[subjectFieldView.contentView addSubview:messageView];
+//    messageView.backgroundColor = [UIColor colorWithHexString:@"#"];
+	[toFieldView.contentView addSubview:messageView];
 	
     if (self.forward) {
         NSLog(@"self.forward");
@@ -228,10 +230,11 @@ NSString *msgBody;
         messageView.attributedText = attributedString;
         
         if(messageView.text.length){
-            CGRect frame = [attributedString boundingRectWithSize:CGSizeMake(WIDTH, 10000) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil];
+            CGRect frame = [attributedString boundingRectWithSize:CGSizeMake(WIDTH, 10000) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading | NSStringDrawingUsesDeviceMetrics context:nil];
             NSLog(@"%@",NSStringFromCGRect(frame));
-            messageView.frame = CGRectMake(messageView.frame.origin.x, messageView.frame.origin.y, WIDTH, frame.size.height);
-            [self resizeViews];
+            messageView.frame = CGRectMake(messageView.frame.origin.x, messageView.frame.origin.y, WIDTH, MAX(208, frame.size.height));
+//            [self textViewDidChange:messageView];
+//            [self resizeViews];
         }
         
 //Uncomment below line for the plain body reply/replyAll/forward body
@@ -250,14 +253,11 @@ NSString *msgBody;
     	[bccFieldView.tokenField setPlaceholder:@""];
     }
 
-    
-    
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 	
 	// You can call this on either the view on the field.
 	// They both do the same thing.
-    [messageView becomeFirstResponder];
     [toFieldView becomeFirstResponder];
 }
 
@@ -289,8 +289,7 @@ NSString *msgBody;
     if (![string isEqualToString:EMPTY_DELIMITER] && string && ![string isEqualToString:@""]) {
         NSMutableString * html = [NSMutableString string];
         [html appendFormat:@"<html><head><script>%@</script><style>%@</style></head>"
-         @"<body>%@</body><iframe src='x-mailcore-msgviewloaded:' style='width: 0px; height: 0px; border: none;'>"
-         @"</iframe></html>", @"", @"", string];
+         @"<body bgColor=\"transparent;\">%@</body></html>", mainJavascript, mainStyle, string];
         return html;
     }
     
@@ -312,9 +311,8 @@ NSString *msgBody;
             [[MessageService instance] updateMessageWithHTMLContent:paramDict];
             NSMutableString * html = [NSMutableString string];
             [html appendFormat:@"<html><head><script>%@</script><style>%@</style></head>"
-             @"<body>%@</body><iframe src='x-mailcore-msgviewloaded:' style='width: 0px; height: 0px; border: none;'>"
-             @"</iframe></html>", mainJavascript, mainStyle, content];
-            
+             @"<body bgColor=\"transparent;\">%@</body></html>", mainJavascript, mainStyle, content];
+
             return html;
         }
         else
@@ -364,17 +362,12 @@ NSString *msgBody;
 }
 
 - (void)resizeViews {
-    int tabBarOffset = self.tabBarController == nil ?  0 : self.tabBarController.tabBar.frame.size.height;
-	[toFieldView setFrame:((CGRect){toFieldView.frame.origin, {self.view.bounds.size.width, self.view.bounds.size.height + tabBarOffset - _keyboardHeight}})];
-	[ccFieldView setFrame:((CGRect){toFieldView.frame.origin, {self.view.bounds.size.width, self.view.bounds.size.height + tabBarOffset - _keyboardHeight}})];
-	[bccFieldView setFrame:((CGRect){toFieldView.frame.origin, {self.view.bounds.size.width, self.view.bounds.size.height + tabBarOffset - _keyboardHeight}})];
-	[subjectFieldView setFrame:((CGRect){toFieldView.frame.origin, {self.view.bounds.size.width, self.view.bounds.size.height + tabBarOffset - _keyboardHeight}})];
-	[messageView setFrame:((CGRect){toFieldView.frame.origin, {self.view.bounds.size.width, self.view.bounds.size.height + tabBarOffset - _keyboardHeight}})];
-//	[messageView setFrame:toFieldView.contentView.bounds];
-//    toFieldView.frame = CGRectMake(0, 0, WIDTH, 44);
-//    ccFieldView.frame = CGRectMake(0, 44, WIDTH, 44);
-//    messageView.frame = CGRectMake(0, 200, WIDTH, HEIGHT-88);
-    
+	[toFieldView setFrame:CGRectMake(toFieldView.frame.origin.x, toFieldView.frame.origin.y, WIDTH, HEIGHT - _keyboardHeight - 64)];
+	[ccFieldView setFrame:CGRectMake(toFieldView.frame.origin.x, 0, WIDTH, ccFieldView.tokenField.frame.size.height+2)];
+	[bccFieldView setFrame:CGRectMake(toFieldView.frame.origin.x, ccFieldView.frame.origin.y + ccFieldView.frame.size.height, WIDTH, bccFieldView.tokenField.frame.size.height+2)];
+	[subjectFieldView setFrame:CGRectMake(toFieldView.frame.origin.x, ccFieldView.frame.size.height + bccFieldView.frame.size.height, WIDTH, 40)];
+	[messageView setFrame:CGRectMake(toFieldView.frame.origin.x,  ccFieldView.frame.size.height + bccFieldView.frame.size.height + subjectFieldView.frame.size.height, WIDTH, messageView.frame.size.height)];
+    [self textViewDidChange:messageView];
 }
 
 - (BOOL)tokenField:(TITokenField *)tokenField willAddToken:(TIToken *)token;{
@@ -385,7 +378,8 @@ NSString *msgBody;
 }
 
 - (BOOL)tokenField:(TITokenField *)tokenField willRemoveToken:(TIToken *)token {
-	return YES;
+    [self resizeViews];
+    return YES;
 }
 
 - (void)tokenFieldChangedEditing:(TITokenField *)tokenField {
@@ -393,8 +387,11 @@ NSString *msgBody;
 	[tokenField setRightViewMode:(tokenField.editing ? UITextFieldViewModeAlways : UITextFieldViewModeNever)];
 }
 
-- (void)tokenFieldFrameDidChange:(TITokenField *)tokenField {
-	[self textViewDidChange:messageView];
+- (void)tokenFieldFrameDidChange:(TITokenField *)tokenField
+{
+    NSLog(@"%@ - %@",[tokenField description], NSStringFromCGRect(tokenField.frame));
+//	[self textViewDidChange:messageView];
+    [self resizeViews];
 }
 
 - (void)textViewDidChange:(UITextView *)textView {
@@ -406,58 +403,35 @@ NSString *msgBody;
 	newTextFrame.size = textView.contentSize;
 	newTextFrame.size.height = newHeight;
 	
-	CGRect newFrame = toFieldView.contentView.frame;
-	newFrame.size.height = newHeight + messageView.frame.size.height;
+	CGRect newFrame = toFieldView.contentView.frame ;
+	newFrame.size.height = newHeight   ;
 	
 	if (newHeight < oldHeight){
 		newTextFrame.size.height = oldHeight;
 		newFrame.size.height = oldHeight;
 	}
+
+    UITextPosition* pos = textView.endOfDocument;//explore others like beginningOfDocument if you want to customize the behaviour
+    CGRect currentRect = [textView caretRectForPosition:pos];
     
-	[toFieldView.contentView setFrame:newFrame];
-	[textView setFrame:newTextFrame];
+    if (currentRect.origin.y > previousRect.origin.y && (textView.contentSize.height + textView.font.lineHeight) > 208){
+        //new line reached, write your code
+        textView.frame = CGRectMake(textView.frame.origin.x,  ccFieldView.frame.size.height + bccFieldView.frame.size.height + subjectFieldView.frame.size.height, WIDTH, textView.frame.size.height + textView.font.lineHeight);
+    }else{
+//        textView.frame = CGRectMake(textView.frame.origin.x, 44, WIDTH, textView.contentSize.height );
+    }
+    [toFieldView.contentView setFrame:newFrame];
+    previousRect = currentRect;
+
 	[toFieldView updateContentSize];
 	[ccFieldView updateContentSize];
 	[bccFieldView updateContentSize];
 	[subjectFieldView updateContentSize];
+
+    [messageView setNeedsDisplay];
+    [messageView setNeedsLayout];
+    [self.view bringSubviewToFront:messageView];
+    NSLog(@" %@ - %@ - %@ - %@",NSStringFromCGSize(toFieldView.contentView.frame.size),NSStringFromCGRect(ccFieldView.frame),NSStringFromCGRect(subjectFieldView.frame),NSStringFromCGRect(messageView.frame));
 }
-
-
-#pragma mark - Custom Search
-
-- (BOOL)tokenField:(TITokenField *)field shouldUseCustomSearchForSearchString:(NSString *)searchString
-{
-    return ([searchString isEqualToString:@"contributors"]);
-}
-
-- (void)tokenField:(TITokenField *)field performCustomSearchForSearchString:(NSString *)searchString withCompletionHandler:(void (^)(NSArray *))completionHandler
-{
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        //Send a Github API request to retrieve the Contributors of this project.
-        //Using a syncrhonous request in a Background Thread to not over-complexify the demo project
-        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:@"https://api.github.com/repos/thermogl/TITokenField/contributors"]];
-        NSURLResponse * response = nil;
-        NSError * error = nil;
-        NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest returningResponse:&response error:&error];
-        
-        NSMutableArray *results = [[NSMutableArray alloc] init];
-        
-        if (error == nil) {
-            NSError *errorJSON;
-            NSArray *contributors = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&errorJSON];
-            
-            for (NSDictionary *user in contributors) {
-                [results addObject:[user objectForKey:@"login"]];
-            }
-        }
-        
-        
-        dispatch_async(dispatch_get_main_queue(), ^(void) {
-            //Finally call the completionHandler with the results array!
-            completionHandler(results);
-        });
-    });
-}
-
 
 @end
