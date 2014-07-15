@@ -825,7 +825,11 @@ static Class gSignInClass = Nil;
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
-    
+    if ([webView.request.URL.absoluteString hasPrefix:@"https://accounts.google.com/o/oauth2/approval"]) {
+        NSLog(@"-------> Got webview Redirect from Google Auth");
+        webView.hidden=YES;
+    }
+
   [self notifyWithName:kGTMOAuth2WebViewStoppedLoading
                webView:webView
                   kind:kGTMOAuth2WebViewFinished];
