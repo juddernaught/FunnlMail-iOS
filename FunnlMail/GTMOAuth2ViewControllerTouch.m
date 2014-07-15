@@ -793,7 +793,14 @@ static Class gSignInClass = Nil;
 - (BOOL)webView:(UIWebView *)webView
   shouldStartLoadWithRequest:(NSURLRequest *)request
               navigationType:(UIWebViewNavigationType)navigationType {
-
+    
+    // Krunal : Here I have added this code to prevent the extra view displaying an access code "Please copy this code, switch to your application and paste it there"
+    if ([webView.request.URL.absoluteString hasPrefix:@"https://accounts.google.com/o/oauth2/approval"]) {
+        NSLog(@"-------> Got webview Redirect from Google Auth");
+        webView.hidden=YES;
+    }
+    
+    
   if (!hasDoneFinalRedirect_) {
     hasDoneFinalRedirect_ = [signIn_ requestRedirectedToRequest:request];
     if (hasDoneFinalRedirect_) {
@@ -810,6 +817,7 @@ static Class gSignInClass = Nil;
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
+
   [self notifyWithName:kGTMOAuth2WebViewStartedLoading
                webView:webView
                   kind:nil];
@@ -817,6 +825,7 @@ static Class gSignInClass = Nil;
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
+    
   [self notifyWithName:kGTMOAuth2WebViewStoppedLoading
                webView:webView
                   kind:kGTMOAuth2WebViewFinished];
@@ -842,6 +851,7 @@ static Class gSignInClass = Nil;
 
     [self updateUI];
   }
+    
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {

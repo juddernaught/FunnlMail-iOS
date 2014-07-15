@@ -32,7 +32,7 @@ NSString *kMyClientID = @"655269106649-rkom4nvj3m9ofdpg6sk53pi65mpivv7d.apps.goo
 NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
 //NSString *kMyClientID = @"994627364215-ctjmrhiul95ts0qrkc38sap3mo3go3ko.apps.googleusercontent.com";     // pre-assigned by service
 //NSString *kMyClientSecret = @"FNZ-x95gkwWqQT7HdJgeqJVW";
-
+@synthesize blockerView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -47,6 +47,10 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
     [super viewDidLoad];
     _receivedData = [[NSMutableData alloc] init];
     _isRefreshing = NO;
+    
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    blockerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+    blockerView.backgroundColor = [UIColor redColor];
     
     NSArray *allServers = [[EmailServersService instance] allEmailServers];
     if (!([allServers count] == 0 || [((EmailServerModel *)[allServers objectAtIndex:0]).refreshToken isEqualToString:@"nil"])) {
@@ -190,6 +194,7 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
         [tempAppDelegate.progressHUD setHidden:NO];
 
         // Authentication succeeded
+
         [self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
     }
 }
@@ -266,7 +271,7 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
         if (self.isRefreshing) {
             self.isRefreshing = NO;
         }
-        
+
         // Notify the caller class that the authorization was successful.
         NSLog(@"%@", @"successfully fetched access token from refresh token");
         isAPIResponse = NO;
@@ -288,7 +293,7 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
     smtpSession.authType = MCOAuthTypeXOAuth2;
     smtpSession.connectionType = MCOConnectionTypeTLS;
     [EmailService instance].smtpSession = smtpSession;
-    
+
     [self loadHomeScreen];
     //[self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
 

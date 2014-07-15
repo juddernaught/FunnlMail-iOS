@@ -14,6 +14,7 @@
 
 @property (nonatomic, retain) UITextField *username;
 @property (nonatomic, retain) UITextField *password;
+@property (nonatomic, retain) UIView *blockerView;
 
 // The mutable data object that is used for storing incoming data in each connection.
 @property (nonatomic, strong) NSMutableData *receivedData;
