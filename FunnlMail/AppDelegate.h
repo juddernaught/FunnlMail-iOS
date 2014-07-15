@@ -22,5 +22,6 @@
 @property (strong, nonatomic) UIActivityIndicatorView *appActivityIndicator;
 @property (strong, nonatomic) NSString *currentFunnelString;
 @property (strong, nonatomic) FunnelModel *currentFunnelDS;
+@property (strong, nonatomic) NSDate *startDate;
 @property BOOL funnelUpDated;
 @end

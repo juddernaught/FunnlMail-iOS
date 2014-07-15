@@ -15,6 +15,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "EmailService.h"
 #import "MBProgressHUD.h"
+#import <Mixpanel/Mixpanel.h>
 
 
 static NSString * mainJavascript = @"\
@@ -83,12 +84,12 @@ NSString *msgBody;
 
 
 -(void)cancelButtonSelected{
+    [[Mixpanel sharedInstance] track:@"Cancel button from composeVC"];
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 -(void)sendButtonSelected{
 //    NSLog(@"%@, %@, ",toFieldView.tokenTitles, toFieldView.tokenField.text, toFieldView);
-    
     MCOMessageBuilder * builder = [[MCOMessageBuilder alloc] init];
     [[builder header] setFrom:[MCOAddress addressWithDisplayName:nil mailbox:self.imapSession.username]];
     NSMutableArray *toArray = [[NSMutableArray alloc] init];
@@ -117,6 +118,7 @@ NSString *msgBody;
                   [MBProgressHUD hideHUDForView:self.view animated:YES];
         } else {
             NSLog(@"%@ Successfully sent email!", [EmailService instance].smtpSession.username);
+            [[Mixpanel sharedInstance] track:@"Send Button from composeVC"];
             [MBProgressHUD hideHUDForView:self.view animated:YES];
             [self dismissViewControllerAnimated:YES completion:NULL];
             [[[EmailService instance].imapSession appendMessageOperationWithFolder:SENT messageData:rfc822Data flags:MCOMessageFlagMDNSent] start:^(NSError *error, uint32_t createdUID) {
@@ -127,7 +129,6 @@ NSString *msgBody;
         }
     }];
     
-
 }
 
 -(TITokenFieldView*)createFieldViewWithFrame:(CGRect)frame{

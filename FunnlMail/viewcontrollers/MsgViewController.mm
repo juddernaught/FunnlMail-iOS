@@ -16,7 +16,7 @@
 #import <MessageUI/MessageUI.h>
 #import "AppDelegate.h"
 #import "ComposeViewController.h"
-
+#import <Mixpanel/Mixpanel.h>
 
 @interface MsgViewController () <MCOMessageViewDelegate>
 
@@ -575,6 +575,7 @@ typedef void (^DownloadCallback)(NSError * error);
 
 
 -(void) replyButtonSelected{
+    [[Mixpanel sharedInstance] track:@"Reply Email Selected"];
     NSLog(@"reply Email selected");
     ComposeViewController *viewEmail = [[ComposeViewController alloc]init];
     viewEmail.address = self.message.header.from;
@@ -587,6 +588,7 @@ typedef void (^DownloadCallback)(NSError * error);
 }
 
 -(void) replyAllButtonSelected{
+    [[Mixpanel sharedInstance] track:@"Reply All selected"];
     NSLog(@"reply Email selected");
     ComposeViewController *viewEmail = [[ComposeViewController alloc]init];
     viewEmail.addressArray = self.message.header.to;
@@ -600,6 +602,7 @@ typedef void (^DownloadCallback)(NSError * error);
 }
 
 -(void) forwardButtonSelected{
+    [[Mixpanel sharedInstance] track:@"Forward selected"];
     NSLog(@"reply Email selected");
     ComposeViewController *viewEmail = [[ComposeViewController alloc]init];
     viewEmail.message = _message;

@@ -13,6 +13,7 @@
 #import "FMDatabase.h"
 #import "FMResultSet.h"
 #import "UIColor+HexString.h"
+#import <Mixpanel/Mixpanel.h>
 
 static FunnelService *instance;
 
@@ -73,6 +74,7 @@ static FunnelService *instance;
 }
 
 -(BOOL) updateFunnel:(FunnelModel *)funnelModel{
+    [[Mixpanel sharedInstance] track:@"Updated funnl"];
   __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
   
   __block BOOL success = NO;

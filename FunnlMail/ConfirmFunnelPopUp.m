@@ -11,6 +11,7 @@
 #import "EmailsTableViewController.h"
 #import "MessageFilterXRefService.h"
 #import "UIColor+HexString.h"
+#import <Mixpanel/Mixpanel.h>
 
 @implementation ConfirmFunnelPopUp
 
@@ -83,11 +84,13 @@
 
 - (void)dismissPopUp:(UIButton*)sender {
     [self removeFromSuperview];
+    [[Mixpanel sharedInstance] track:@"Funnl Popup undo pressed"];
     [[(EmailsTableViewController*)emailViewController tableView] reloadData];
 }
 
 -(void)createAddFunnlView{
     [[MessageFilterXRefService instance] insertMessageXRefMessageID:messageID funnelId:tempDS.funnelId];
+    [[Mixpanel sharedInstance] track:@"Funnl Popup done pressed"];
     [self removeFromSuperview];
     [[(EmailsTableViewController*)emailViewController tableView] reloadData];
 }
