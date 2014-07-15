@@ -10,7 +10,6 @@
 #import "MASConstraintMaker.h"
 #import "View+MASAdditions.h"
 #import "MainFilterCell.h"
-#import "PreviewEmailViewController.h"
 //#import "FilterModel.h"
 #import "FunnelModel.h"
 #import "EmailService.h"
@@ -193,9 +192,6 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     NSLog(@"Compose Email selected");
     [[Mixpanel sharedInstance] track:@"Compose Email Pressed"];
     mainView.hidden = YES;
-//    PreviewEmailViewController *mc = [[PreviewEmailViewController alloc] init];
-//    mc.compose = @1;
-//    [self presentViewController:mc animated:YES completion:NULL];
     
     ComposeViewController *mc = [[ComposeViewController alloc] init];
     UINavigationController *navBar=[[UINavigationController alloc]initWithRootViewController:mc];

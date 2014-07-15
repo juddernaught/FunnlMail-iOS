@@ -12,7 +12,6 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import <ImageIO/ImageIO.h>
 #import "MCOMessageView.h"
-#import "PreviewEmailViewController.h"
 #import <MessageUI/MessageUI.h>
 #import "AppDelegate.h"
 #import "ComposeViewController.h"

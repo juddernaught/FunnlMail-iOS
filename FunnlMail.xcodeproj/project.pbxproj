@@ -89,7 +89,6 @@
 		B76A6522197083280090A995 /* reply.png in Resources */ = {isa = PBXBuildFile; fileRef = B76A6520197083280090A995 /* reply.png */; };
 		B76A6523197083280090A995 /* replyAll.png in Resources */ = {isa = PBXBuildFile; fileRef = B76A6521197083280090A995 /* replyAll.png */; };
 		B76A65251970836D0090A995 /* forward.png in Resources */ = {isa = PBXBuildFile; fileRef = B76A65241970836D0090A995 /* forward.png */; };
-		B7C9B261194E886700F766DA /* PreviewEmailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B7C9B260194E886700F766DA /* PreviewEmailViewController.m */; };
 		CC39517218E6F9700093C787 /* MainFilterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CC39517118E6F9700093C787 /* MainFilterCell.m */; };
 		CC4263B01934B67A00F3C5EB /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = CC4263A61934B67A00F3C5EB /* FMDatabase.m */; };
 		CC4263B11934B67A00F3C5EB /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = CC4263A81934B67A00F3C5EB /* FMDatabaseAdditions.m */; };
@@ -337,8 +336,6 @@
 		B76A6520197083280090A995 /* reply.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reply.png; sourceTree = "<group>"; };
 		B76A6521197083280090A995 /* replyAll.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = replyAll.png; sourceTree = "<group>"; };
 		B76A65241970836D0090A995 /* forward.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = forward.png; sourceTree = "<group>"; };
-		B7C9B25F194E886700F766DA /* PreviewEmailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreviewEmailViewController.h; sourceTree = "<group>"; };
-		B7C9B260194E886700F766DA /* PreviewEmailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreviewEmailViewController.m; sourceTree = "<group>"; };
 		CC1AD1DC18F54BE9000E356C /* MainVCDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainVCDelegate.h; path = viewcontrollers/MainVCDelegate.h; sourceTree = "<group>"; };
 		CC39517018E6F9700093C787 /* MainFilterCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainFilterCell.h; path = collectionviewcells/MainFilterCell.h; sourceTree = "<group>"; };
 		CC39517118E6F9700093C787 /* MainFilterCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainFilterCell.m; path = collectionviewcells/MainFilterCell.m; sourceTree = "<group>"; };
@@ -882,8 +879,6 @@
 				5AA690B519501EC200E4CB64 /* EmailThreadTableViewController.m */,
 				667787FF18EF768B00EF1962 /* MsgViewController.h */,
 				6677880018EF768B00EF1962 /* MsgViewController.mm */,
-				B7C9B25F194E886700F766DA /* PreviewEmailViewController.h */,
-				B7C9B260194E886700F766DA /* PreviewEmailViewController.m */,
 				660BA98C1902CDEA00CDF86E /* LoginViewController.h */,
 				660BA98D1902CDEA00CDF86E /* LoginViewController.m */,
 				FA2F433D193318BE00C1F119 /* CreateFunnlViewController.h */,
@@ -1348,7 +1343,6 @@
 				FA2C9BD4193EDFCB00866BEE /* UIViewController+MMDrawerController.m in Sources */,
 				FA9164CB1973D302006A4726 /* TITokenField.m in Sources */,
 				6677881A18EF84FB00EF1962 /* MCOCIDURLProtocol.mm in Sources */,
-				B7C9B261194E886700F766DA /* PreviewEmailViewController.m in Sources */,
 				FAABF1871952FB720072FFE8 /* FunnlPopupViewCell.m in Sources */,
 				FA2C9BD3193EDFCB00866BEE /* MMDrawerVisualState.m in Sources */,
 				CCD00B5B18F54797007A675F /* MainView.m in Sources */,

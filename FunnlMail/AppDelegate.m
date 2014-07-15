@@ -89,12 +89,15 @@
 //saves the amount of time spent in app
 -(void)endInterval{
     NSTimeInterval time = [self.startDate timeIntervalSinceNow];
+    //timeIntervalSinceNow returns negative value so this is required to convert to positive
     NSInteger ti = 0 - (NSInteger)time;
-    NSInteger secondsInDecimal = (ti % 60)/60;
-    NSInteger minutes = (ti / 60);
-    NSInteger time2 = secondsInDecimal + minutes;
-    NSLog(@"Time: %@",[NSString stringWithFormat:@"%02ld", (long)time2]);
-    [[Mixpanel sharedInstance] track:@"Time Open" properties:@{@"Time": [NSString stringWithFormat:@"%02ld", (long)time2]}];
+    //I know some of these look stupid and could be dont faster, but when i tried ((ti % 60)/60) it would return 00.000
+    //which is mostly unuseable
+    float secondsInDecimal = (ti % 60);
+    float minutes = (ti / 60);
+    float time2 = (float)(secondsInDecimal/60) + minutes;
+    NSLog(@"Time: %@",[NSString stringWithFormat:@"%02f + %02f = %02f", minutes, (secondsInDecimal/60), time2]);
+    [[Mixpanel sharedInstance] track:@"Time Open" properties:@{@"Time": [NSString stringWithFormat:@"%02f", time2]}];
 }
 
 @end
