@@ -364,28 +364,11 @@ NSString *msgBody;
 }
 
 - (void)resizeViews {
-//	[toFieldView setFrame:((CGRect){toFieldView.frame.origin, {WIDTH, HEIGHT  - _keyboardHeight}})];
-//	[ccFieldView setFrame:((CGRect){toFieldView.frame.origin, {WIDTH, HEIGHT  - _keyboardHeight}})];
-//	[bccFieldView setFrame:((CGRect){ccFieldView.frame.origin, {WIDTH, HEIGHT - _keyboardHeight}})];
-//	[subjectFieldView setFrame:((CGRect){bccFieldView.frame.origin, {WIDTH, HEIGHT - _keyboardHeight}})];
-//	[messageView setFrame:((CGRect){subjectFieldView.frame.origin, {WIDTH, HEIGHT - _keyboardHeight}})];
-
 	[toFieldView setFrame:CGRectMake(toFieldView.frame.origin.x, toFieldView.frame.origin.y, WIDTH, HEIGHT - _keyboardHeight - 64)];
-	[ccFieldView setFrame:CGRectMake(toFieldView.frame.origin.x, 0, WIDTH, ccFieldView.tokenField.frame.size.height+1)];
-	[bccFieldView setFrame:CGRectMake(toFieldView.frame.origin.x, ccFieldView.tokenField.frame.origin.y + ccFieldView.tokenField.frame.size.height, WIDTH, bccFieldView.tokenField.frame.size.height)];
-	[subjectFieldView setFrame:CGRectMake(toFieldView.frame.origin.x, ccFieldView.tokenField.frame.size.height + bccFieldView.tokenField.frame.size.height, WIDTH, 40)];
-	[messageView setFrame:CGRectMake(toFieldView.frame.origin.x,  ccFieldView.tokenField.frame.size.height + bccFieldView.tokenField.frame.size.height + subjectFieldView.frame.size.height, messageView.frame.size.width, messageView.frame.size.height)];
-
-    [ self.view bringSubviewToFront:ccFieldView.separator];
-    [ccFieldView.separator setFrame:CGRectMake(0, 0, WIDTH, ccFieldView.tokenField.frame.size.height+1)];
-    
-    [self textViewDidChange:messageView];
-
-    [ccFieldView.separator setFrame:CGRectMake(toFieldView.frame.origin.x, 0, WIDTH, ccFieldView.tokenField.frame.size.height+1)];
-
-//    CGRect newFrame = 
-//    [toFieldView.contentView setFrame:newFrame];
-
+	[ccFieldView setFrame:CGRectMake(toFieldView.frame.origin.x, 0, WIDTH, ccFieldView.tokenField.frame.size.height+2)];
+	[bccFieldView setFrame:CGRectMake(toFieldView.frame.origin.x, ccFieldView.frame.origin.y + ccFieldView.frame.size.height, WIDTH, bccFieldView.tokenField.frame.size.height+2)];
+	[subjectFieldView setFrame:CGRectMake(toFieldView.frame.origin.x, ccFieldView.frame.size.height + bccFieldView.frame.size.height, WIDTH, 40)];
+	[messageView setFrame:CGRectMake(toFieldView.frame.origin.x,  ccFieldView.frame.size.height + bccFieldView.frame.size.height + subjectFieldView.frame.size.height, messageView.frame.size.width, messageView.frame.size.height)];
 }
 
 - (BOOL)tokenField:(TITokenField *)tokenField willAddToken:(TIToken *)token;{
