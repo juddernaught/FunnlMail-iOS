@@ -88,15 +88,17 @@
 	
 	CGFloat tokenFieldBottom = CGRectGetMaxY(_tokenField.frame);
 	
-	_separator = [[UIView alloc] initWithFrame:CGRectMake(0, tokenFieldBottom, self.bounds.size.width, 1)];
-	[_separator setBackgroundColor:[UIColor colorWithWhite:0.7 alpha:0.4]];
-	[self addSubview:_separator];
+
 	
 	// This view is created for convenience, because it resizes and moves with the rest of the subviews.
 	_contentView = [[UIView alloc] initWithFrame:CGRectMake(0, tokenFieldBottom + 1, self.bounds.size.width,
 														   self.bounds.size.height - tokenFieldBottom - 1)];
 	[_contentView setBackgroundColor:[UIColor clearColor]];
 	[self addSubview:_contentView];
+    
+    _separator = [[UIView alloc] initWithFrame:CGRectMake(0, tokenFieldBottom, self.bounds.size.width, 1)];
+	[_separator setBackgroundColor:[UIColor colorWithWhite:0.7 alpha:0.4]];
+	[self addSubview:_separator];
 	
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
 		
@@ -414,7 +416,7 @@
 
 #pragma mark Other
 - (NSString *)description {
-	return [NSString stringWithFormat:@"<TITokenFieldView %p; Token count = %d>", self, self.tokenTitles.count];
+	return [NSString stringWithFormat:@"<TITokenFieldView %p; Token count = %d frame: %@>", self, self.tokenTitles.count,NSStringFromCGRect(self.frame)];
 }
 
 - (void)dealloc {
@@ -462,6 +464,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 @synthesize forcePickSearchResult = _forcePickSearchResult;
 @synthesize hideBubble;
 #pragma mark Init
+
 - (instancetype)initWithFrame:(CGRect)frame {
 	
     if ((self = [super initWithFrame:frame])){
@@ -952,7 +955,7 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 
 #pragma mark Other
 - (NSString *)description {
-	return [NSString stringWithFormat:@"<TITokenField %p; prompt = \"%@\">", self, ((UILabel *)self.leftView).text];
+	return [NSString stringWithFormat:@"<TITokenField %p; prompt = \"%@\" %@>", self, ((UILabel *)self.leftView).text,NSStringFromCGRect(self.frame)];
 }
 
 - (void)dealloc {
