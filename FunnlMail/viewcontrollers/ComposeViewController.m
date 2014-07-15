@@ -232,7 +232,7 @@ NSString *msgBody;
         if(messageView.text.length){
             CGRect frame = [attributedString boundingRectWithSize:CGSizeMake(WIDTH, 10000) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading | NSStringDrawingUsesDeviceMetrics context:nil];
             NSLog(@"%@",NSStringFromCGRect(frame));
-            messageView.frame = CGRectMake(messageView.frame.origin.x, messageView.frame.origin.y, WIDTH, frame.size.height);
+            messageView.frame = CGRectMake(messageView.frame.origin.x, messageView.frame.origin.y, WIDTH, MAX(208, frame.size.height));
 //            [self textViewDidChange:messageView];
 //            [self resizeViews];
         }
@@ -368,7 +368,8 @@ NSString *msgBody;
 	[ccFieldView setFrame:CGRectMake(toFieldView.frame.origin.x, 0, WIDTH, ccFieldView.tokenField.frame.size.height+2)];
 	[bccFieldView setFrame:CGRectMake(toFieldView.frame.origin.x, ccFieldView.frame.origin.y + ccFieldView.frame.size.height, WIDTH, bccFieldView.tokenField.frame.size.height+2)];
 	[subjectFieldView setFrame:CGRectMake(toFieldView.frame.origin.x, ccFieldView.frame.size.height + bccFieldView.frame.size.height, WIDTH, 40)];
-	[messageView setFrame:CGRectMake(toFieldView.frame.origin.x,  ccFieldView.frame.size.height + bccFieldView.frame.size.height + subjectFieldView.frame.size.height, messageView.frame.size.width, messageView.frame.size.height)];
+	[messageView setFrame:CGRectMake(toFieldView.frame.origin.x,  ccFieldView.frame.size.height + bccFieldView.frame.size.height + subjectFieldView.frame.size.height, WIDTH, messageView.frame.size.height)];
+    [self textViewDidChange:messageView];
 }
 
 - (BOOL)tokenField:(TITokenField *)tokenField willAddToken:(TIToken *)token;{
@@ -393,10 +394,7 @@ NSString *msgBody;
     NSLog(@"%@ - %@",[tokenField description], NSStringFromCGRect(tokenField.frame));
 //	[self textViewDidChange:messageView];
     [self resizeViews];
-    
-    
 }
-
 
 - (void)textViewDidChange:(UITextView *)textView {
 	
@@ -420,76 +418,22 @@ NSString *msgBody;
     
     if (currentRect.origin.y > previousRect.origin.y && (textView.contentSize.height + textView.font.lineHeight) > 208){
         //new line reached, write your code
-        textView.frame = CGRectMake(textView.frame.origin.x,  ccFieldView.frame.size.height + bccFieldView.frame.size.height + subjectFieldView.frame.size.height, textView.frame.size.width, textView.frame.size.height + textView.font.lineHeight);
+        textView.frame = CGRectMake(textView.frame.origin.x,  ccFieldView.frame.size.height + bccFieldView.frame.size.height + subjectFieldView.frame.size.height, WIDTH, textView.frame.size.height + textView.font.lineHeight);
     }else{
 //        textView.frame = CGRectMake(textView.frame.origin.x, 44, WIDTH, textView.contentSize.height );
     }
     [toFieldView.contentView setFrame:newFrame];
     previousRect = currentRect;
-    
-    
-//	[ccFieldView.contentView setFrame:CGRectMake(toFieldView.frame.origin.x,toFieldView.frame.origin.y, WIDTH, newFrame.size.height)];
-//	[bccFieldView.contentView setFrame:CGRectMake(ccFieldView.frame.origin.x,ccFieldView.frame.origin.y, WIDTH, newFrame.size.height)];
-//	[subjectFieldView.contentView setFrame:CGRectMake(bccFieldView.frame.origin.x,bccFieldView.frame.origin.y, WIDTH, newFrame.size.height)];
-//	[messageView setFrame:CGRectMake(messageView.frame.origin.x,messageView.frame.origin.y, WIDTH, newFrame.size.height)];
-//	[textView setFrame:newTextFrame];
+
 	[toFieldView updateContentSize];
 	[ccFieldView updateContentSize];
 	[bccFieldView updateContentSize];
 	[subjectFieldView updateContentSize];
 
-//    [toFieldView setContentSize:CGSizeMake(WIDTH, 400)];
-//    [ccFieldView setContentSize:CGSizeMake(WIDTH, 400)];
-//    [bccFieldView setContentSize:CGSizeMake(WIDTH, 400)];
-//    [subjectFieldView setContentSize:CGSizeMake(WIDTH, 400)];
-//    [messageView setContentSize:CGSizeMake(WIDTH, 400)];
-
     [messageView setNeedsDisplay];
     [messageView setNeedsLayout];
     [self.view bringSubviewToFront:messageView];
     NSLog(@" %@ - %@ - %@ - %@",NSStringFromCGSize(toFieldView.contentView.frame.size),NSStringFromCGRect(ccFieldView.frame),NSStringFromCGRect(subjectFieldView.frame),NSStringFromCGRect(messageView.frame));
-
-    subjectFieldView.backgroundColor = [UIColor clearColor];
-//    subjectFieldView.contentSize  = CGSizeMake(WIDTH, 1600);
-    
 }
 
-/*
-#pragma mark - Custom Search
-
-- (BOOL)tokenField:(TITokenField *)field shouldUseCustomSearchForSearchString:(NSString *)searchString
-{
-    return ([searchString isEqualToString:@"contributors"]);
-}
-
-- (void)tokenField:(TITokenField *)field performCustomSearchForSearchString:(NSString *)searchString withCompletionHandler:(void (^)(NSArray *))completionHandler
-{
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        //Send a Github API request to retrieve the Contributors of this project.
-        //Using a syncrhonous request in a Background Thread to not over-complexify the demo project
-        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:@"https://api.github.com/repos/thermogl/TITokenField/contributors"]];
-        NSURLResponse * response = nil;
-        NSError * error = nil;
-        NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest returningResponse:&response error:&error];
-        
-        NSMutableArray *results = [[NSMutableArray alloc] init];
-        
-        if (error == nil) {
-            NSError *errorJSON;
-            NSArray *contributors = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&errorJSON];
-            
-            for (NSDictionary *user in contributors) {
-                [results addObject:[user objectForKey:@"login"]];
-            }
-        }
-        
-        
-        dispatch_async(dispatch_get_main_queue(), ^(void) {
-            //Finally call the completionHandler with the results array!
-            completionHandler(results);
-        });
-    });
-}
-
-*/
 @end
