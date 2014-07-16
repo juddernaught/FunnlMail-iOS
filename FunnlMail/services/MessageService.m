@@ -55,7 +55,10 @@ static MessageService *instance;
         paramDict[@"messageJSON"] = messageModel.messageJSON;
         paramDict[@"read"] = [NSNumber numberWithBool:messageModel.read];
         paramDict[@"date"] = dateTimeInterval;
-        paramDict[@"gmailthreadid"] = messageModel.gmailThreadID;
+        if(messageModel.gmailThreadID != nil)
+            paramDict[@"gmailthreadid"] = messageModel.gmailThreadID;
+        else
+            paramDict[@"gmailthreadid"] = @"0";
         paramDict[@"skipFlag"] = [NSNumber numberWithBool:messageModel.skipFlag];
         
         [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
@@ -185,6 +188,45 @@ static MessageService *instance;
   
   return success;
 }
+
+-(NSArray *) messagesWithFunnelId:(NSString *)funnelId withSearchTerm:(NSString*)searchTerm {
+    //    __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+    
+    //    paramDict[@"limit"] = [NSNumber numberWithInteger:top];
+    __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+    paramDict[@"funnelId"] = funnelId;
+    paramDict[@"searchTerm"] = searchTerm;
+    
+    __block NSMutableArray *array = [[NSMutableArray alloc] init];
+    
+    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+//        FMResultSet *resultSet = [db executeQuery:@"select * from messages INNER JOIN messageFilterXRef ON ( messageFilterXRef.messageID = messages.messageID AND messageFilterXRef.funnelId = :funnelId) WHERE messageJSON LIKE %:searchTerm% order by messageID DESC" withParameterDictionary:paramDict];
+        FMResultSet *resultSet = [db executeQuery:@"select * from messages INNER JOIN messageFilterXRef ON ( messageFilterXRef.messageID = messages.messageID AND messageFilterXRef.funnelId = ?) WHERE messageJSON LIKE '%' || ? || '%' order by messageID DESC",funnelId,searchTerm];
+        
+        MessageModel *model;
+        
+        while ([resultSet next]) {
+            model = [[MessageModel alloc]init];
+            
+            model.messageID = [resultSet stringForColumn:@"messageID"];
+            model.messageJSON = [resultSet stringForColumn:@"messageJSON"];
+            model.read = [resultSet intForColumn:@"read"];
+            model.skipFlag = [resultSet intForColumn:@"skipFlag"];
+            double dateTimeInterval = [resultSet doubleForColumn:@"date"];
+            if ([resultSet stringForColumn:@"funnelJson"]) {
+                model.funnelJson = [resultSet stringForColumn:@"funnelJson"];
+            }
+            else
+                model.funnelJson = @"";
+            model.date = [NSDate dateWithTimeIntervalSince1970:dateTimeInterval];
+            [array addObject:model];
+            //            [array addObject:[MCOIMAPMessage importSerializable:model.messageJSON]];
+        }
+    }];
+    
+    return array;
+}
+
 
 -(NSArray *) messagesAllTopMessages {
 //    __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
