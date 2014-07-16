@@ -166,7 +166,7 @@ static NSString *currentFolder;
 {
     __block EmailsTableViewController *emailTableViewController = fv;
 	self.isLoading = YES;
-	
+    
 	MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)
 	(MCOIMAPMessagesRequestKindHeaders | MCOIMAPMessagesRequestKindStructure |
 	 MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject | MCOIMAPMessagesRequestKindGmailThreadID | MCOIMAPMessagesRequestKindGmailMessageID |	 MCOIMAPMessagesRequestKindFlags);
@@ -257,7 +257,7 @@ static NSString *currentFolder;
                                //this is neccessary in order to pull sent messages
                                //table view doesnt require messageModel but enough other methods require
                                //for this to be the way to display messages properly
-                               emailTableViewController->searchMessages = [[NSMutableArray alloc]init];
+                              emailTableViewController->searchMessages = [[NSMutableArray alloc]init];
                                for (MCOIMAPMessage *m in messages) {
                                   
                                    MessageModel *tempMessageModel = [[MessageModel alloc] init];

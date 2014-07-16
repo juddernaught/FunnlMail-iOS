@@ -228,7 +228,8 @@ NSString *msgBody;
         NSString *htmlString = [self getBodyData];
         NSAttributedString *attributedString = [[NSAttributedString alloc] initWithData:[htmlString dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
         messageView.attributedText = attributedString;
-        
+        NSLog(@"attributedString: %@",attributedString);
+        [self applyPlainBodyString];
         if(messageView.text.length){
             CGRect frame = [attributedString boundingRectWithSize:CGSizeMake(WIDTH, 10000) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading | NSStringDrawingUsesDeviceMetrics context:nil];
             NSLog(@"%@",NSStringFromCGRect(frame));
@@ -269,12 +270,12 @@ NSString *msgBody;
     [operation start:^(NSError *error, NSData *data) {
         MCOMessageParser *messageParser = [[MCOMessageParser alloc] initWithData:data];
         msgBody = [messageParser plainTextRendering];
-        NSMutableString *temp = [[NSMutableString alloc] initWithString:@"____________________________________________________"];
+        NSMutableString *temp = [[NSMutableString alloc] initWithString:@"______________________________________\n"];
         [temp appendString:msgBody];
         messageView.text = temp;
         temp = nil;
     }];
-    NSLog(@"message is empty");
+    NSLog(@"message is not empty");
 }
 
 

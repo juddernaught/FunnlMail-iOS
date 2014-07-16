@@ -196,6 +196,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     mainView.hidden = YES;
     
     ComposeViewController *mc = [[ComposeViewController alloc] init];
+    mc.compose = @1;
     UINavigationController *navBar=[[UINavigationController alloc]initWithRootViewController:mc];
     [self.navigationController presentViewController:navBar animated:YES completion:NULL];
 }

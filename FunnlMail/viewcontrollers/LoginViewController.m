@@ -45,6 +45,8 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
 
 - (void) viewDidLoad {
     [super viewDidLoad];
+    NSLog(@"When does this happen?");
+    NSLog(@"this is the presentingVC of login: %@",self.presentedViewController);
     _receivedData = [[NSMutableData alloc] init];
     _isRefreshing = NO;
     
@@ -81,7 +83,7 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
         self.view.backgroundColor = [UIColor colorWithHexString:@"F6F6F6"];
         
         UIImageView *funnlMailIntroView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"splashScreen"]];
-        funnlMailIntroView.frame = CGRectMake(0, 30, WIDTH, HEIGHT-120);
+        funnlMailIntroView.frame = CGRectMake(-8, 40, WIDTH, HEIGHT-120);
         funnlMailIntroView.userInteractionEnabled = YES;
         [self.view addSubview:funnlMailIntroView];
         
