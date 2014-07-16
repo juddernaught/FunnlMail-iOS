@@ -198,7 +198,7 @@
     typeLabel.hidden = YES;
     dateOfLastMessageLabel.hidden = YES;
     mailImageView.contentMode = UIViewContentModeCenter;
-    mailImageView.image = [UIImage imageNamed:@"add.png"];
+    mailImageView.image = [UIImage imageNamed:@"Add.png"];
     [mailImageView mas_makeConstraints:^(MASConstraintMaker *make) {
       make.top.equalTo(filterTitleLabel.mas_bottom).with.offset(-20);
       make.left.equalTo(self.mas_centerX).with.offset(-(65/2));
