@@ -158,6 +158,16 @@ UITableView *autocompleteTableView;
 shouldChangeCharactersInRange:(NSRange)range
 replacementString:(NSString *)string {
     NSLog(@"what textfield is this: %@", textField);
+    if (textField.tag == 1) {
+        NSLog(@"x,y for toFieldView: %f,%f", toFieldView.bounds.origin.x,toFieldView.bounds.origin.y);
+    
+    }
+    else if (textField.tag == 2){
+        
+    }
+    else {
+        
+    }
     NSLog(@"was this called");
     if(string.length == 0){
         autocompleteTableView.hidden = YES;
@@ -336,18 +346,21 @@ replacementString:(NSString *)string {
     [toFieldView.tokenField setPromptText:@"To:"];
 	[toFieldView.tokenField setPlaceholder:@""];
     toFieldView.delegate = self;
+    toFieldView.tag = 1;
     
     ccFieldView = [self createFieldViewWithFrame:CGRectMake(0, 0, WIDTH, 41)];
     [ccFieldView.tokenField setPromptText:@"Cc:"];
 	[ccFieldView.tokenField setPlaceholder:@""];
     [toFieldView.contentView addSubview:ccFieldView];
     ccFieldView.scrollEnabled = NO;
+    ccFieldView.tag = 2;
     
     bccFieldView = [self createFieldViewWithFrame:CGRectMake(0, 0, WIDTH, 41)];
     [bccFieldView.tokenField setPromptText:@"Bcc:"];
 	[bccFieldView.tokenField setPlaceholder:@""];
     [toFieldView.contentView addSubview:bccFieldView];
     bccFieldView.scrollEnabled = NO;
+    bccFieldView.tag = 3;
     
     subjectFieldView = [self createFieldViewWithFrame:CGRectMake(0, 0, WIDTH, 0)];
     [subjectFieldView.tokenField setPromptText:@"Subject:"];
@@ -409,8 +422,7 @@ replacementString:(NSString *)string {
 //        [self applyPlainBodyString];
     }
     
-    autocompleteTableView = [[UITableView alloc] initWithFrame:
-                             CGRectMake(0, 80, 320, 120) style:UITableViewStylePlain];
+    autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 80, self.view.bounds.size.width, 120)];
     autocompleteTableView.delegate = self;
     autocompleteTableView.dataSource = self;
     autocompleteTableView.scrollEnabled = YES;
