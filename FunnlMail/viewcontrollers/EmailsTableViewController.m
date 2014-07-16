@@ -549,7 +549,8 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 if(self.filterModel == nil || [self.filterModel.funnelId isEqualToString:@"0"]){
 
                     if ([EmailService instance].messages.count < [EmailService instance].totalNumberOfMessages)
-                        cell.textLabel.text = [NSString stringWithFormat:@"Load %lu more",MIN([EmailService instance].totalNumberOfMessages - [EmailService instance].messages.count, NUMBER_OF_MESSAGES_TO_LOAD_ON_SEARCH)];
+//                        cell.textLabel.text = [NSString stringWithFormat:@"Load %lu more",MIN([EmailService instance].totalNumberOfMessages - [EmailService instance].messages.count, NUMBER_OF_MESSAGES_TO_LOAD_ON_SEARCH)];
+                        cell.textLabel.text = @"Load more results";
                     else
                         cell.textLabel.text = nil;
 
@@ -1034,8 +1035,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
             if (searchResult) {
                 MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)
                 (MCOIMAPMessagesRequestKindHeaders | MCOIMAPMessagesRequestKindStructure |
-                 MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject |
-                 MCOIMAPMessagesRequestKindFlags);
+                 MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject | MCOIMAPMessagesRequestKindGmailThreadID | MCOIMAPMessagesRequestKindGmailMessageID |	 MCOIMAPMessagesRequestKindFlags);
                 for (MessageModel *tempMessageMOdel in searchMessages) {
                     [searchResult removeIndex:tempMessageMOdel.messageID.integerValue];
                 }
@@ -1058,6 +1058,8 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                         tempMessageModel.date = m.header.date;
                         tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
                         tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
+                        tempMessageModel.messageJSON = [m serializable];
+                        tempMessageModel.skipFlag = 0;
                         [[MessageService instance] insertMessage:tempMessageModel];
                         [searchMessages addObject:tempMessageModel];
                         tempMessageModel = nil;
