@@ -270,7 +270,7 @@ NSString *msgBody;
     [operation start:^(NSError *error, NSData *data) {
         MCOMessageParser *messageParser = [[MCOMessageParser alloc] initWithData:data];
         msgBody = [messageParser plainTextRendering];
-        NSMutableString *temp = [[NSMutableString alloc] initWithString:@"______________________________________\n"];
+        NSMutableString *temp = [[NSMutableString alloc] initWithString:@"\n\n______________________________________\n"];
         [temp appendString:msgBody];
         messageView.text = temp;
         temp = nil;

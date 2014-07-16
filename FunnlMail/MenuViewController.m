@@ -95,7 +95,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     //    [appDelegate.drawerController closeDrawerAnimated:YES completion:nil];
     AppDelegate *appDelegate = APPDELEGATE;
-    /*if (indexPath.row == 4) {
+    if (indexPath.row == 4) {
         NSLog(@"sent mail requested");
          //The following line is required to get to the emailTableVC in mainVC
          // [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject;
@@ -107,7 +107,7 @@
          [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:SENT];
         }
 
-    [appDelegate.drawerController closeDrawerAnimated:YES completion:nil];*/
+    [appDelegate.drawerController closeDrawerAnimated:YES completion:nil];
 }
 
 
