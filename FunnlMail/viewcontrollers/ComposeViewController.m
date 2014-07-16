@@ -16,7 +16,7 @@
 #import "EmailService.h"
 #import "MBProgressHUD.h"
 #import <Mixpanel/Mixpanel.h>
-
+#import <AddressBook/AddressBook.h>
 
 static NSString * mainJavascript = @"\
 var imageElements = function() {\
@@ -64,7 +64,8 @@ white-space: pre-wrap;\
 ";
 NSData * rfc822Data;
 NSString *msgBody;
-
+NSMutableArray *emailArr,*searchArray;
+UITableView *autocompleteTableView;
 
 @interface ComposeViewController ()
 
@@ -80,6 +81,151 @@ NSString *msgBody;
 	UITextView * messageView;
 	
 	CGFloat _keyboardHeight;
+}
+
+-(void)emailContact
+
+{
+    
+    emailArr = [[NSMutableArray alloc]init];
+    searchArray = [[NSMutableArray alloc]init];
+    
+    ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
+    
+    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
+        ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
+            if (granted) {
+                // First time access has been granted, add the contact
+                
+                NSLog(@"addressBook: %@",addressBook);
+                CFArrayRef people = ABAddressBookCopyArrayOfAllPeople(addressBook);
+                NSLog(@"people == nil? : %d",(people == nil));
+                NSMutableArray *allEmails = [[NSMutableArray alloc] initWithCapacity:CFArrayGetCount(people)];
+                NSLog(@"allEmails.length: %lu",(unsigned long)allEmails.count);
+                for (CFIndex i = 0; i < CFArrayGetCount(people); i++)
+                {
+                    ABRecordRef person = CFArrayGetValueAtIndex(people, i);
+                    ABMultiValueRef emails = ABRecordCopyValue(person, kABPersonEmailProperty);
+                    for (CFIndex j=0; j < ABMultiValueGetCount(emails); j++)
+                    {
+                        NSString* email = (__bridge NSString*)ABMultiValueCopyValueAtIndex(emails, j);
+                        [allEmails addObject:email];
+                        
+                        NSLog(@"EMAIL %@",email);
+                    }
+                    CFRelease(emails);
+                }
+                emailArr = allEmails;
+                NSLog(@"All Email %@",emailArr);
+
+            } else {
+                // User denied access
+                // Display an alert telling user the contact could not be added
+            }
+        });
+    }
+    else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
+        // The user has previously given access, add the contact
+        NSLog(@"addressBook: %@",addressBook);
+        CFArrayRef people = ABAddressBookCopyArrayOfAllPeople(addressBook);
+        NSLog(@"people == nil? : %d",(people == nil));
+        NSMutableArray *allEmails = [[NSMutableArray alloc] initWithCapacity:CFArrayGetCount(people)];
+        NSLog(@"allEmails.length: %lu",(unsigned long)allEmails.count);
+        for (CFIndex i = 0; i < CFArrayGetCount(people); i++)
+        {
+            ABRecordRef person = CFArrayGetValueAtIndex(people, i);
+            ABMultiValueRef emails = ABRecordCopyValue(person, kABPersonEmailProperty);
+            for (CFIndex j=0; j < ABMultiValueGetCount(emails); j++)
+            {
+                NSString* email = (__bridge NSString*)ABMultiValueCopyValueAtIndex(emails, j);
+                if([self validateEmail:email]) [allEmails addObject:email];
+                
+            }
+            CFRelease(emails);
+        }
+        emailArr = allEmails;
+        NSLog(@"All Email %@",emailArr);
+    }
+    else {
+        // The user has previously denied access
+        // Send an alert telling user to change privacy setting in settings app
+    }
+
+    
+}
+
+- (BOOL)textField:(UITextField *)textField
+shouldChangeCharactersInRange:(NSRange)range
+replacementString:(NSString *)string {
+    NSLog(@"what textfield is this: %@", textField);
+    NSLog(@"was this called");
+    if(string.length == 0){
+        autocompleteTableView.hidden = YES;
+        return YES;
+    }
+    NSString *substring = [NSString stringWithString:textField.text];
+    substring = [substring
+                 stringByReplacingCharactersInRange:range withString:string];
+    [self searchAutocompleteEntriesWithSubstring:substring];
+    if(searchArray.count != 0) autocompleteTableView.hidden = NO;
+    else autocompleteTableView.hidden = YES;
+    return YES;
+}
+
+- (BOOL)textViewShouldEndEditing:(UITextView *)textView{
+    NSLog(@"does it know it is over");
+    autocompleteTableView.hidden = YES;
+    return YES;
+}
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    NSLog(@"did press enter");
+    autocompleteTableView.hidden = YES;
+    return YES;
+}
+
+- (BOOL) validateEmail: (NSString *) candidate {
+    NSString *emailRegex = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}";
+    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
+    
+    return [emailTest evaluateWithObject:candidate];
+}
+
+
+- (void)searchAutocompleteEntriesWithSubstring:(NSString *)substring {
+    
+    // Put anything that starts with this substring into the searchArray
+    // The items in this array is what will show up in the table view
+    [searchArray removeAllObjects];
+    for(NSMutableString *curString in emailArr) {
+        
+        substring = [substring stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+
+        if ([curString rangeOfString:substring].location == 0) {
+            [searchArray addObject:curString];
+        }
+
+    }
+    [autocompleteTableView reloadData];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger) section {
+    return searchArray.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    UITableViewCell *cell = nil;
+    static NSString *AutoCompleteRowIdentifier = @"AutoCompleteRowIdentifier";
+    cell = [tableView dequeueReusableCellWithIdentifier:AutoCompleteRowIdentifier];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc]
+                 initWithStyle:UITableViewCellStyleDefault reuseIdentifier:AutoCompleteRowIdentifier];
+    }
+    
+    cell.textLabel.text = [searchArray objectAtIndex:indexPath.row];
+    return cell;
 }
 
 
@@ -131,6 +277,16 @@ NSString *msgBody;
     
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    UITableViewCell *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
+    toFieldView.tokenField.text = selectedCell.textLabel.text;
+    autocompleteTableView.hidden = YES;
+    
+}
+
+
+
 -(TITokenFieldView*)createFieldViewWithFrame:(CGRect)frame{
     TITokenFieldView *tokenFieldView = [[TITokenFieldView alloc] initWithFrame:frame];
 //	[tokenFieldView setSourceArray:[Names listOfNames]];
@@ -149,6 +305,9 @@ NSString *msgBody;
 }
 
 - (void)viewDidLoad {
+    
+    [self emailContact];
+    
      previousRect = CGRectMake(0, 0, 0, 0);
     self.imapSession = [EmailService instance].imapSession;
 
@@ -169,6 +328,7 @@ NSString *msgBody;
     [self.view addSubview:toFieldView];
     [toFieldView.tokenField setPromptText:@"To:"];
 	[toFieldView.tokenField setPlaceholder:@""];
+    toFieldView.delegate = self;
     
     ccFieldView = [self createFieldViewWithFrame:CGRectMake(0, 0, WIDTH, 41)];
     [ccFieldView.tokenField setPromptText:@"Cc:"];
@@ -241,6 +401,14 @@ NSString *msgBody;
 //Uncomment below line for the plain body reply/replyAll/forward body
 //        [self applyPlainBodyString];
     }
+    
+    autocompleteTableView = [[UITableView alloc] initWithFrame:
+                             CGRectMake(0, 80, 320, 120) style:UITableViewStylePlain];
+    autocompleteTableView.delegate = self;
+    autocompleteTableView.dataSource = self;
+    autocompleteTableView.scrollEnabled = YES;
+    autocompleteTableView.hidden = YES;
+    [self.view addSubview:autocompleteTableView];
     
     [toFieldView.tokenField tokenizeText];
     
