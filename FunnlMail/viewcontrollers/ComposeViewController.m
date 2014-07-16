@@ -105,7 +105,14 @@ NSString *msgBody;
     [bccArray addObject:newAddress];
     [[builder header] setBcc:bccArray];
     [[builder header] setSubject:subjectFieldView.tokenField.text];
-    [builder setHTMLBody:messageView.text];
+    
+    NSAttributedString *attrString = messageView.attributedText;
+    NSDictionary *options = @{NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType};
+    
+    NSData *htmlData = [attrString dataFromRange:NSMakeRange(0, [attrString length]) documentAttributes:options error:nil];
+    NSString *htmlString = [[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding];
+    
+    [builder setHTMLBody:htmlString];
     rfc822Data = [builder data];
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -229,7 +236,7 @@ NSString *msgBody;
         NSAttributedString *attributedString = [[NSAttributedString alloc] initWithData:[htmlString dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
         messageView.attributedText = attributedString;
         NSLog(@"attributedString: %@",attributedString);
-        [self applyPlainBodyString];
+//        [self applyPlainBodyString];
         if(messageView.text.length){
             CGRect frame = [attributedString boundingRectWithSize:CGSizeMake(WIDTH, 10000) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading | NSStringDrawingUsesDeviceMetrics context:nil];
             NSLog(@"%@",NSStringFromCGRect(frame));

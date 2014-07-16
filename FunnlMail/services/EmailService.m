@@ -152,7 +152,6 @@ static NSString *currentFolder;
 //            NSLog(folder.path);
 //        }
     }];
-    
 }
 
 //function to be called in background
