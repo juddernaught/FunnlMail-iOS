@@ -113,7 +113,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     UIButton *menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [menuButton addTarget:self action:@selector(menuButtonSelected) forControlEvents:UIControlEventTouchUpInside];
     menuButton.frame = CGRectMake(0, 0, 33, 28);
-    [menuButton setBackgroundImage:[UIImage imageNamed:@"Menu1.png"] forState:UIControlStateNormal];
+    [menuButton setBackgroundImage:[UIImage imageNamed:@"MenuIcon.png"] forState:UIControlStateNormal];
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
     self.navigationItem.leftBarButtonItem = leftItem;
     
@@ -132,13 +132,13 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [centeredButtons addSubview:mailButton];*/
   
     [filterButton addTarget:self action:@selector(filterButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    filterButton.frame = CGRectMake(15, 0, 33, 33);
-    [filterButton setBackgroundImage:[UIImage imageNamed:@"FunnlNew1.png"] forState:UIControlStateNormal];
+    filterButton.frame = CGRectMake(15, -3, 32, 32);
+    [filterButton setImage:[UIImage imageNamed:@"FunnlIcon.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:filterButton];
     
     [composeEmailButton addTarget:self action:@selector(composeEmailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    composeEmailButton.frame = CGRectMake(66, -6, 33, 34);
-    [composeEmailButton setBackgroundImage:[UIImage imageNamed:@"ComposeNew.png"] forState:UIControlStateNormal];
+    composeEmailButton.frame = CGRectMake(66, -6, 35, 35);
+    [composeEmailButton setImage:[UIImage imageNamed:@"ComposeIcon.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:composeEmailButton];
     
     if(emailsTableViewController==nil){

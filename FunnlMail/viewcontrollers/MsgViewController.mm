@@ -421,6 +421,11 @@ typedef void (^DownloadCallback)(NSError * error);
     }
 }
 
+- (void) MCOMessageView:(MCOMessageView *)view getFunlShareString:(NSString *)dataString;
+{
+    NSLog(dataString);
+}
+
 - (NSString *) MCOMessageView_templateForAttachment:(MCOMessageView *)view
 {
     return @"<div><img src=\"http://www.iconshock.com/img_jpg/OFFICE/general/jpg/128/attachment_icon.jpg\"/></div>\

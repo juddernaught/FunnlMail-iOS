@@ -315,7 +315,11 @@ pre {\
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
     
     NSURLRequest *responseRequest = [self webView:webView resource:nil willSendRequest:request redirectResponse:nil fromDataSource:nil];
-    
+    if([request.URL.scheme isEqualToString:@"funnl"]){
+        NSLog(@"funnl scheme detected");
+        NSString *stringData = [request.URL.absoluteString stringByReplacingOccurrencesOfString:@"funnl://" withString:@""];
+            [[self delegate] MCOMessageView:self getFunlShareString:stringData];
+    }
     if(responseRequest == request) {
         return YES;
     } else {

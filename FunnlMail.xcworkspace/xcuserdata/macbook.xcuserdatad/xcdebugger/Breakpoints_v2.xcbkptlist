@@ -9,12 +9,12 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FunnlMail/PreviewEmailViewController.m"
-            timestampString = "427028182.300882"
+            filePath = "FunnlMail/viewcontrollers/ComposeViewController.m"
+            timestampString = "427225431.626438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "344"
-            endingLineNumber = "344"
+            startingLineNumber = "115"
+            endingLineNumber = "115"
             landmarkName = "-sendButtonSelected"
             landmarkType = "5">
          </BreakpointContent>
