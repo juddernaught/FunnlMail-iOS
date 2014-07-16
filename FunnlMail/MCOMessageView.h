@@ -30,6 +30,8 @@
 @optional
 - (void) MCOMessageViewLoadingCompleted:(MCOMessageView *)view;
 
+- (void) MCOMessageView:(MCOMessageView *)view getFunlShareString:(NSString *)dataString;
+
 - (NSData *) MCOMessageView:(MCOMessageView *)view dataForPartWithUniqueID:(NSString *)partUniqueID;
 - (void) MCOMessageView:(MCOMessageView *)view fetchDataForPartWithUniqueID:(NSString *)partUniqueID
      downloadedFinished:(void (^)(NSError * error))downloadFinished;

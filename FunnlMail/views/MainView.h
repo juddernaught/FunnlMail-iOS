@@ -8,15 +8,27 @@
 
 #import <UIKit/UIKit.h>
 #import "MainVCDelegate.h"
+#include <MailCore/MailCore.h>
+#import <MessageUI/MessageUI.h>
+@class MCOMessageView;
+@class MCOIMAPAsyncSession;
+@class MCOMAPMessage;
 
 @interface MainView : UIView<UICollectionViewDelegate,UICollectionViewDataSource,UIGestureRecognizerDelegate>{
     NSArray *filterArray;
     UIButton *editButton;
     BOOL editOn;
+    
 }
 
 @property (strong) UICollectionView *collectionView;
 @property (weak) id<MainVCDelegate> mainVCdelegate;
+
+@property (nonatomic, strong) MCOAddress * address;
+@property (nonatomic, strong) MCOIMAPMessage * message;
+@property (nonatomic, strong) NSString * folder;
+@property (nonatomic, strong) MCOIMAPSession * imapSession;
+
 -(void)reloadView;
 - (void)setupViews;
 @end
