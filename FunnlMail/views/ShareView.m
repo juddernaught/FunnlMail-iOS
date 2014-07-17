@@ -32,6 +32,7 @@ NSString *msgBody;
     if (self) {
         // Initialization code
         self.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.93];
+        self.imapSession = [EmailService instance].imapSession;
         funnelModel = fm;
         [self setupView];
     }
@@ -84,10 +85,10 @@ NSString *msgBody;
     [toFieldView.tokenField setPromptText:@"To:"];
 	[toFieldView.tokenField setPlaceholder:@""];
     toFieldView.delegate = self;
-    toFieldView.tokenField.backgroundColor = CLEAR_COLOR;
-    toFieldView.tag = 1;
-    toFieldView.backgroundColor= CLEAR_COLOR;
     toFieldView.tokenField.textColor = WHITE_CLR;
+    toFieldView.tag = 1;
+    toFieldView.backgroundColor=  CLEAR_COLOR;
+    toFieldView.tokenField.backgroundColor = CLEAR_COLOR;
     
     
     _messageView = [[UITextView alloc] initWithFrame:toFieldView.contentView.bounds];
@@ -96,7 +97,7 @@ NSString *msgBody;
 	[_messageView setAutoresizingMask:UIViewAutoresizingNone];
 	[_messageView setDelegate:self];
     _messageView.backgroundColor= CLEAR_COLOR;
-    _messageView.textColor= WHITE_CLR;
+    _messageView.textColor= LIGHT_GRAY_COLOR;
 	[_messageView setFont:[UIFont systemFontOfSize:15]];
 	[_messageView setText:@"\n\n\n\nShairing Funnls helps your team members | friends get orginized with just one click. None of your personal emails | info is shared."];
 	[toFieldView.contentView addSubview:_messageView];
@@ -107,6 +108,8 @@ NSString *msgBody;
     [sendButton setTitle:@"SEND" forState:UIControlStateNormal];
     [sendButton.titleLabel setFont:[UIFont boldSystemFontOfSize:16]];
     [sendButton setTitleColor:WHITE_CLR forState:UIControlStateNormal];
+    [sendButton setTitleColor:LIGHT_GRAY_COLOR forState:UIControlStateHighlighted];
+    [sendButton addTarget:self action:@selector(shareFunnlClicked:) forControlEvents:UIControlEventTouchUpInside];
     [_messageView addSubview:sendButton];
     
     UITapGestureRecognizer *singleFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
@@ -136,11 +139,12 @@ NSString *msgBody;
     MCOMessageBuilder * builder = [[MCOMessageBuilder alloc] init];
     [[builder header] setFrom:[MCOAddress addressWithDisplayName:nil mailbox:self.imapSession.username]];
     NSMutableArray *toArray = [[NSMutableArray alloc] init];
-    MCOAddress *newAddress = [MCOAddress addressWithMailbox:@"iaurosys@gmail.com"];
+//    MCOAddress *newAddress = [MCOAddress addressWithMailbox:@"iaurosys@gmail.com"];
+    MCOAddress *newAddress = [MCOAddress addressWithMailbox:[toFieldView.tokenTitles componentsJoinedByString:@","]];
     [toArray addObject:newAddress];
     
     NSMutableArray *ccArray = [[NSMutableArray alloc] init];
-    newAddress = [MCOAddress addressWithMailbox:@"iaurosys@gmail.com"];
+    newAddress = [MCOAddress addressWithMailbox:[toFieldView.tokenTitles componentsJoinedByString:@","]];
     [ccArray addObject:newAddress];
     [[builder header] setCc:ccArray];
     
@@ -199,6 +203,7 @@ NSString *msgBody;
         }
         else
         {
+            self.hidden = YES;
             NSLog(@"%@ Successfully sent email!", [EmailService instance].smtpSession.username);
             [MBProgressHUD hideHUDForView:appDelegate.window animated:YES];
             [[[EmailService instance].imapSession appendMessageOperationWithFolder:SENT messageData:rfc822Data flags:MCOMessageFlagMDNSent] start:^(NSError *error, uint32_t createdUID) {

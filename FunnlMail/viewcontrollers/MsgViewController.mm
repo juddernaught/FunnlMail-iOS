@@ -496,9 +496,14 @@ typedef void (^DownloadCallback)(NSError * error);
         }
     }
     
+    
     [[FunnelService instance] insertFunnel:fm];
     [[EmailService instance] applyingFunnel:fm toMessages:[[MessageService instance] messagesAllTopMessages]];
     [EmailService setNewFilterModel:fm];
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"FunnlMail" message:@"Funnl added successfully." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+    [alert show];
+    
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 }
 

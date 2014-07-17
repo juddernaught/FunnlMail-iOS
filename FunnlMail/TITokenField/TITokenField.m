@@ -496,9 +496,9 @@ NSString * const kTextHidden = @"\u200D"; // Zero-Width Joiner
 	[self addTarget:self action:@selector(didEndEditing) forControlEvents:UIControlEventEditingDidEnd];
 	[self addTarget:self action:@selector(didChangeText) forControlEvents:UIControlEventEditingChanged];
 	
-	[self.layer setShadowColor:[[UIColor blackColor] CGColor]];
-	[self.layer setShadowOpacity:0.6];
-	[self.layer setShadowRadius:12];
+//	[self.layer setShadowColor:[[UIColor blackColor] CGColor]];
+//	[self.layer setShadowOpacity:0.6];
+//	[self.layer setShadowRadius:12];
 	
 	[self setPromptText:@"To:"];
     	[self setText:kTextEmpty];
