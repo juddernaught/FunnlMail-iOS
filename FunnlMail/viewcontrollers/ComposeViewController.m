@@ -65,7 +65,7 @@ white-space: pre-wrap;\
 NSData * rfc822Data;
 NSString *msgBody;
 NSMutableArray *emailArr,*searchArray;
-UITableView *autocompleteTableView;
+
 
 @interface ComposeViewController ()
 
@@ -79,10 +79,14 @@ UITableView *autocompleteTableView;
 @implementation ComposeViewController {
 	TITokenFieldView * toFieldView, *ccFieldView, *bccFieldView, *subjectFieldView;
 	UITextView * messageView;
-	
+	UITableView *autocompleteTableView;
 	CGFloat _keyboardHeight;
 }
 
+
+#pragma mark loadContacts
+//this will need to put somewhere so it happens only once
+//it will take longer to do the more contacts there are obviously
 -(void)emailContact
 
 {
@@ -97,11 +101,8 @@ UITableView *autocompleteTableView;
             if (granted) {
                 // First time access has been granted, add the contact
                 
-                NSLog(@"addressBook: %@",addressBook);
                 CFArrayRef people = ABAddressBookCopyArrayOfAllPeople(addressBook);
-                NSLog(@"people == nil? : %d",(people == nil));
                 NSMutableArray *allEmails = [[NSMutableArray alloc] initWithCapacity:CFArrayGetCount(people)];
-                NSLog(@"allEmails.length: %lu",(unsigned long)allEmails.count);
                 for (CFIndex i = 0; i < CFArrayGetCount(people); i++)
                 {
                     ABRecordRef person = CFArrayGetValueAtIndex(people, i);
@@ -111,12 +112,10 @@ UITableView *autocompleteTableView;
                         NSString* email = (__bridge NSString*)ABMultiValueCopyValueAtIndex(emails, j);
                         [allEmails addObject:email];
                         
-                        NSLog(@"EMAIL %@",email);
                     }
                     CFRelease(emails);
                 }
                 emailArr = allEmails;
-                NSLog(@"All Email %@",emailArr);
 
             } else {
                 // User denied access
@@ -126,11 +125,8 @@ UITableView *autocompleteTableView;
     }
     else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
         // The user has previously given access, add the contact
-        NSLog(@"addressBook: %@",addressBook);
         CFArrayRef people = ABAddressBookCopyArrayOfAllPeople(addressBook);
-        NSLog(@"people == nil? : %d",(people == nil));
         NSMutableArray *allEmails = [[NSMutableArray alloc] initWithCapacity:CFArrayGetCount(people)];
-        NSLog(@"allEmails.length: %lu",(unsigned long)allEmails.count);
         for (CFIndex i = 0; i < CFArrayGetCount(people); i++)
         {
             ABRecordRef person = CFArrayGetValueAtIndex(people, i);
@@ -144,7 +140,6 @@ UITableView *autocompleteTableView;
             CFRelease(emails);
         }
         emailArr = allEmails;
-        NSLog(@"All Email %@",emailArr);
     }
     else {
         // The user has previously denied access
@@ -154,24 +149,39 @@ UITableView *autocompleteTableView;
     
 }
 
+#pragma this is what initiates autocomplete
 - (BOOL)textField:(UITextField *)textField
 shouldChangeCharactersInRange:(NSRange)range
 replacementString:(NSString *)string {
-    NSLog(@"what textfield is this: %@", textField);
-    if (textField.tag == 1) {
-        NSLog(@"x,y for toFieldView: %f,%f", toFieldView.bounds.origin.x,toFieldView.bounds.origin.y);
+    if([@"Subject:"  isEqual: ((UILabel *)(TITokenField *)textField.leftView).text]){
+        return YES;
+    }
+    if([@"To:"  isEqual: ((UILabel *)(TITokenField *)textField.leftView).text]){
+        autocompleteTableView.hidden = NO;
+        //[self.view addSubview:autocompleteTableView];
+        
+    }
+    else if ([@"Cc:"  isEqual: ((UILabel *)(TITokenField *)textField.leftView).text]){
+        NSLog(@"cc did start");
+        autocompleteTableView.hidden = NO;
+        //[self.view setFrame:CGRectMake(0,-.0001,self.view.bounds.size.width,self.view.bounds.size.height-100)];
+        //autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 65, self.view.bounds.size.width, 120)];
+        //[self.view addSubview:autocompleteTableView];
+
+    }
+   else if ([@"Bcc:"  isEqual: ((UILabel *)(TITokenField *)textField.leftView).text]){
+       NSLog(@"Bcc did start");
+       autocompleteTableView.hidden = NO;
+       //[self.view setFrame:CGRectMake(0,-30,self.view.bounds.size.width,self.view.bounds.size.height)];
+       //autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 90, self.view.bounds.size.width, 120)];
+       //[self.view addSubview:autocompleteTableView];
+    }
     
-    }
-    else if (textField.tag == 2){
-        
-    }
-    else {
-        
-    }
-    NSLog(@"was this called");
     if(string.length == 0){
         autocompleteTableView.hidden = YES;
-        return YES;
+//        if ([@"Cc:"  isEqual: ((UILabel *)(TITokenField *)textField.leftView).text]){
+//            [self.view setFrame:CGRectMake(0,0,self.view.bounds.size.width,self.view.bounds.size.height)];
+//        }
     }
     NSString *substring = [NSString stringWithString:textField.text];
     substring = [substring
@@ -182,16 +192,28 @@ replacementString:(NSString *)string {
     return YES;
 }
 
-- (BOOL)textViewShouldEndEditing:(UITextView *)textView{
-    NSLog(@"does it know it is over");
-    autocompleteTableView.hidden = YES;
-    return YES;
-}
+//this is the reason it fails when reselecting the tokenFields
+//pranav replace this with textField
+//- (BOOL)textViewShouldEndEditing:(UITextView *)textView{
+//    NSLog(@"does it know it is over");
+//    NSLog(@"cc is this true?: %hhd",[@"Cc:"  isEqual: ((UILabel *)((TITokenField *)textView).leftView).text]);
+//    NSLog(@"bcc is this true?: %hhd",[@"Cc:"  isEqual: ((UILabel *)((TITokenField *)textView).leftView).text]);
+//    autocompleteTableView.hidden = YES;
+//    if(ccFieldView.tokenField.isEditing)[self.view setFrame:CGRectMake(0,25,self.view.bounds.size.width,self.view.bounds.size.height)];
+//    else if (bccFieldView.tokenField.isEditing)[self.view setFrame:CGRectMake(0,50,self.view.bounds.size.width,self.view.bounds.size.height)];
+//    
+//    return YES;
+//}
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     NSLog(@"did press enter");
     autocompleteTableView.hidden = YES;
+    if(ccFieldView.tokenField.isEditing){
+        NSLog(@"ccFieldView isEditing");
+       // [self.view setFrame:CGRectMake(0,60,self.view.bounds.size.width,self.view.bounds.size.height)];
+    }
+//    else if (bccFieldView.tokenField.isEditing)[self.view setFrame:CGRectMake(0,75,self.view.bounds.size.width,self.view.bounds.size.height)];
     return YES;
 }
 
@@ -218,6 +240,30 @@ replacementString:(NSString *)string {
 
     }
     [autocompleteTableView reloadData];
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"didSelctRow");
+    UITableViewCell *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
+    if(toFieldView.tokenField.isEditing){
+        NSLog(@"to is editing");
+        toFieldView.tokenField.text = selectedCell.textLabel.text;
+        //[autocompleteTableView removeFromSuperview];
+    }
+    else if(ccFieldView.tokenField.isEditing){
+        NSLog(@"cc is editing");
+        ccFieldView.tokenField.text = selectedCell.textLabel.text;
+        //[self.view setFrame:CGRectMake(0,25,self.view.bounds.size.width,self.view.bounds.size.height)];
+        //[autocompleteTableView removeFromSuperview];
+    }
+    else{
+        NSLog(@"bcc is editing");
+        bccFieldView.tokenField.text = selectedCell.textLabel.text;
+        //[self.view setFrame:CGRectMake(0,50,self.view.bounds.size.width,self.view.bounds.size.height)];
+        //[autocompleteTableView removeFromSuperview];
+    }
+    autocompleteTableView.hidden = YES;
+    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger) section {
@@ -294,13 +340,7 @@ replacementString:(NSString *)string {
     
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    UITableViewCell *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
-    toFieldView.tokenField.text = selectedCell.textLabel.text;
-    autocompleteTableView.hidden = YES;
-    
-}
+
 
 
 
@@ -345,6 +385,7 @@ replacementString:(NSString *)string {
     [self.view addSubview:toFieldView];
     [toFieldView.tokenField setPromptText:@"To:"];
 	[toFieldView.tokenField setPlaceholder:@""];
+    
     toFieldView.delegate = self;
     toFieldView.tag = 1;
     
@@ -408,7 +449,6 @@ replacementString:(NSString *)string {
         NSString *htmlString = [self getBodyData];
         NSAttributedString *attributedString = [[NSAttributedString alloc] initWithData:[htmlString dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
         messageView.attributedText = attributedString;
-        NSLog(@"attributedString: %@",attributedString);
 //        [self applyPlainBodyString];
         if(messageView.text.length){
             CGRect frame = [attributedString boundingRectWithSize:CGSizeMake(WIDTH, 10000) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading | NSStringDrawingUsesDeviceMetrics context:nil];
@@ -419,14 +459,15 @@ replacementString:(NSString *)string {
         }
         
 //Uncomment below line for the plain body reply/replyAll/forward body
-//        [self applyPlainBodyString];
+//        [self applyPlainBodyString
     }
     
-    autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 80, self.view.bounds.size.width, 120)];
+    autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 121, self.view.bounds.size.width, 180)];
     autocompleteTableView.delegate = self;
     autocompleteTableView.dataSource = self;
     autocompleteTableView.scrollEnabled = YES;
     autocompleteTableView.hidden = YES;
+
     [self.view addSubview:autocompleteTableView];
     
     [toFieldView.tokenField tokenizeText];
@@ -541,6 +582,7 @@ replacementString:(NSString *)string {
 	
 	CGRect keyboardRect = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
 	_keyboardHeight = keyboardRect.size.height > keyboardRect.size.width ? keyboardRect.size.width : keyboardRect.size.height;
+    NSLog(@"what is the keyboard height: %f",_keyboardHeight);
 	[self resizeViews];
 }
 
@@ -577,7 +619,7 @@ replacementString:(NSString *)string {
 
 - (void)tokenFieldFrameDidChange:(TITokenField *)tokenField
 {
-    NSLog(@"%@ - %@",[tokenField description], NSStringFromCGRect(tokenField.frame));
+   // NSLog(@"%@ - %@",[tokenField description], NSStringFromCGRect(tokenField.frame));
 //	[self textViewDidChange:messageView];
     [self resizeViews];
 }
@@ -619,7 +661,7 @@ replacementString:(NSString *)string {
     [messageView setNeedsDisplay];
     [messageView setNeedsLayout];
     [self.view bringSubviewToFront:messageView];
-    NSLog(@" %@ - %@ - %@ - %@",NSStringFromCGSize(toFieldView.contentView.frame.size),NSStringFromCGRect(ccFieldView.frame),NSStringFromCGRect(subjectFieldView.frame),NSStringFromCGRect(messageView.frame));
+    //NSLog(@" %@ - %@ - %@ - %@",NSStringFromCGSize(toFieldView.contentView.frame.size),NSStringFromCGRect(ccFieldView.frame),NSStringFromCGRect(subjectFieldView.frame),NSStringFromCGRect(messageView.frame));
 }
 
 @end
