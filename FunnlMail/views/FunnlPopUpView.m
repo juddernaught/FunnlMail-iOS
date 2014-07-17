@@ -69,24 +69,26 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
 //    int width = 280;
     NSString *messageStr = nil;
     if (isNewCreatePopup) {
-        messageStr = @"Create new Funnel Rule?";
+        messageStr = @"Create new Funnl Rule?";
     }
     else
     {
-        messageStr = @"Move to Funnel";
+        messageStr = @"Move to Funnl";
     }
-    UIView *mainView = [[UIView alloc] initWithFrame:CGRectMake(40, 100, 320 - 80, 80)];
-    [mainView setBackgroundColor:[UIColor whiteColor]];
-    UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 320 - 100, 25)];
+    UIView *mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+    [mainView setBackgroundColor:[UIColor colorWithWhite:0.2 alpha:0.93]];
+    
+    UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 80, 320 - 100, 25)];
     messageLabel.numberOfLines = 1;
-    [messageLabel setFont:[UIFont systemFontOfSize:17]];
+    [messageLabel setFont:[UIFont boldSystemFontOfSize:20]];
     messageLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    [messageLabel setBackgroundColor:[UIColor whiteColor]];
+//    [messageLabel setBackgroundColor:[UIColor whiteColor]];
+    [messageLabel setTextColor:WHITE_CLR];
     messageLabel.text = messageStr;
     [mainView addSubview:messageLabel];
     [mainView setUserInteractionEnabled:YES];
     
-    UILabel *tempLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 30, 320-100, 25)];
+    UILabel *tempLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 100, 320-100, 25)];
     [tempLabel setFont:[UIFont systemFontOfSize:15]];
     [tempLabel setTextColor:[UIColor lightGrayColor]];
     tempLabel.text = @"Select one";
@@ -101,8 +103,8 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
     layout.scrollDirection = UICollectionViewScrollDirectionVertical;
     
     self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
-    //self.collectionView.backgroundColor = [UIColor greenColor];
-    self.collectionView.backgroundColor = [UIColor colorWithHexString:@"#E2E2E2"];
+    self.collectionView.backgroundColor = CLEAR_COLOR;
+//    self.collectionView.backgroundColor = [UIColor colorWithHexString:@"#E2E2E2"];
     self.collectionView.bounces = YES;
     self.collectionView.alwaysBounceVertical = YES;
     self.collectionView.delegate = self;
@@ -114,10 +116,10 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
     [self.collectionView registerClass:[FunnlPopupViewCell class] forCellWithReuseIdentifier:ADD_MAIN_FILTER_CELL];
     
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.mas_top).with.offset(160);
-        make.left.equalTo(self.mas_left).with.offset(40);
-        make.right.equalTo(self.mas_right).with.offset(-40);
-        make.bottom.equalTo(self.mas_bottom).with.offset(-50);
+        make.top.equalTo(self.mas_top).with.offset(130);
+        make.left.equalTo(self.mas_left).with.offset(0);
+        make.right.equalTo(self.mas_right).with.offset(0);
+        make.bottom.equalTo(self.mas_bottom).with.offset(0);
     }];
     
     UITapGestureRecognizer *singleFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
@@ -125,6 +127,15 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
     singleFingerTap.cancelsTouchesInView = NO;
     
     [self addGestureRecognizer:singleFingerTap];
+}
+
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    // test if our control subview is on-screen
+    if ([touch.view isKindOfClass:[UIControl class]]) {
+        return NO; // ignore the touch
+    }
+    return YES; // handle the touch
 }
 
 - (void)handleSingleTap:(UITapGestureRecognizer *)recognizer {

@@ -19,6 +19,7 @@
 #import "CreateFunnlViewController.h"
 #import <Mixpanel/Mixpanel.h>
 #import "MBProgressHUD.h"
+#import "ShareView.h"
 
 static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
@@ -34,7 +35,7 @@ NSString *msgBody;
   if (self) {
     [self setup];
     [self setupViews];
-      editOn = FALSE;
+    editOn = FALSE;
   }
   return self;
 }
@@ -43,6 +44,9 @@ NSString *msgBody;
 {
     self = [super initWithFrame:frame];
     if (self) {
+        [self setup];
+        [self setupViews];
+        editOn = FALSE;
     }
     return self;
 }
@@ -59,7 +63,6 @@ NSString *msgBody;
 
 - (void)setupViews
 {
-    
 	// Do any additional setup after loading the view.
     //changes made by iauro001 on 11 June 2014
     //inserting default @"All" filter
@@ -70,14 +73,9 @@ NSString *msgBody;
     defaultFilter.phrases = @"";
     [[FunnelService instance] insertFunnel:defaultFilter];
     defaultFilter = nil;
-//  filterArray = [EmailService getCurrentFilters];
-//  NSArray *filterArray1 = [[FunnelService instance] allFunnels];
-//    if (filterArray1.count >= filterArray.count) {
-//        filterArray = [[FunnelService instance] allFunnels];
-//        [EmailService instance].filterArray = (NSMutableArray*)filterArray1;
-//    }
+
     filterArray = [[FunnelService instance] allFunnels];
-  self.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
+//   self.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
     
     UIButton *outterButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
     [outterButton addTarget:self action:@selector(outterButtonClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -87,53 +85,62 @@ NSString *msgBody;
     [self addSubview:headerView];
     [headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.mas_top).with.offset(44);
-        make.left.equalTo(self.mas_left).with.offset(50);
+        make.left.equalTo(self.mas_left).with.offset(0);
         make.right.equalTo(self.mas_right).with.offset(0);
         make.bottom.equalTo(self.mas_bottom).with.offset(-60);
     }];
+   
     UILabel *funnelLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 100, 30)];
     funnelLabel.text = @"Funnls";
     [funnelLabel setTextAlignment:NSTextAlignmentLeft];
-    [funnelLabel setFont:[UIFont systemFontOfSize:20]];
+    [funnelLabel setFont:[UIFont boldSystemFontOfSize:20]];
+    funnelLabel.textColor = WHITE_CLR;
     [headerView addSubview:funnelLabel];
-    [headerView setBackgroundColor:[UIColor colorWithHexString:@"#CDCDCD"]];
-    
-    editButton = [[UIButton alloc] initWithFrame:CGRectMake(320 - 50 - 85 - 10, 10, 85, 30)];
+    headerView.backgroundColor = CLEAR_COLOR;
+
+    editButton = [[UIButton alloc] initWithFrame:CGRectMake(320  - 85 - 10, 10, 85, 30)];
     [editButton setImage:[UIImage imageNamed:@"manage_Button"] forState:UIControlStateNormal];
     [editButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
-//    [editButton setTitle:@"edit" forState:UIControlStateNormal];
     [editButton addTarget:self action:@selector(editButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [headerView addSubview:editButton];
-    
-  UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-  layout.scrollDirection = UICollectionViewScrollDirectionVertical;
-  
-  self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
-  //self.collectionView.backgroundColor = [UIColor greenColor];
-  self.collectionView.backgroundColor = [UIColor colorWithHexString:@"#CDCDCD"];
-  self.collectionView.bounces = YES;
-  self.collectionView.alwaysBounceVertical = YES;
-  self.collectionView.delegate = self;
-  self.collectionView.dataSource = self;
-  
-  [self addSubview:self.collectionView];
-  
-  [self.collectionView registerClass:[MainFilterCell class] forCellWithReuseIdentifier:MAIN_FILTER_CELL];
-  [self.collectionView registerClass:[MainFilterCell class] forCellWithReuseIdentifier:ADD_MAIN_FILTER_CELL];
+
+    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    layout.scrollDirection = UICollectionViewScrollDirectionVertical;
+
+    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+    self.collectionView.backgroundColor = CLEAR_COLOR;
+    self.collectionView.bounces = YES;
+    self.collectionView.alwaysBounceVertical = YES;
+    self.collectionView.delegate = self;
+    self.collectionView.dataSource = self;
+    [self addSubview:self.collectionView];
+
+    [self.collectionView registerClass:[MainFilterCell class] forCellWithReuseIdentifier:MAIN_FILTER_CELL];
+    [self.collectionView registerClass:[MainFilterCell class] forCellWithReuseIdentifier:ADD_MAIN_FILTER_CELL];
   
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.mas_top).with.offset(100);
-        make.left.equalTo(self.mas_left).with.offset(55);
-        make.right.equalTo(self.mas_right).with.offset(-8);
-        make.bottom.equalTo(self.mas_bottom).with.offset(-60);
+        make.left.equalTo(self.mas_left).with.offset(0);
+        make.right.equalTo(self.mas_right).with.offset(0);
+        make.bottom.equalTo(self.mas_bottom).with.offset(0);
     }];
   
-  
-//  UITapGestureRecognizer *singleFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
-//  singleFingerTap.delegate = self;
-//  singleFingerTap.cancelsTouchesInView = NO;
-//
-//  [self addGestureRecognizer:singleFingerTap];
+//    self.collectionView.backgroundColor = [UIColor colorWithHexString:@"#CDCDCD"];
+//    [headerView setBackgroundColor:[UIColor colorWithHexString:@"#CDCDCD"]];
+
+    UITapGestureRecognizer *singleFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
+    singleFingerTap.delegate = self;
+    singleFingerTap.cancelsTouchesInView = NO;
+    singleFingerTap.delaysTouchesEnded = NO;
+    [self addGestureRecognizer:singleFingerTap];
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    // test if our control subview is on-screen
+        if ([touch.view isKindOfClass:[UIControl class]]) {
+            return NO; // ignore the touch
+        }
+    return YES; // handle the touch
 }
 
 - (void)outterButtonClicked {
@@ -141,7 +148,7 @@ NSString *msgBody;
 }
 
 - (void)handleSingleTap:(UITapGestureRecognizer *)recognizer {
-  [self setHidden:YES];
+   [self setHidden:YES];
 }
 
 - (void)editButtonPressed:(UIButton*)sender {
@@ -237,67 +244,15 @@ NSString *msgBody;
   creatFunnlViewController = nil;
 }
 
+
+
 -(void)shareButtonClicked:(id)sender{
     UIButton *b = (UIButton*)sender;
     FunnelModel *fm = (FunnelModel *)filterArray[b.tag];
-
-    MCOMessageBuilder * builder = [[MCOMessageBuilder alloc] init];
-    [[builder header] setFrom:[MCOAddress addressWithDisplayName:nil mailbox:self.imapSession.username]];
-    NSMutableArray *toArray = [[NSMutableArray alloc] init];
-    MCOAddress *newAddress = [MCOAddress addressWithMailbox:@"iaurosys@gmail.com"];
-    [toArray addObject:newAddress];
+    ShareView *shareView = [[ShareView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT) withFunnlModel:fm];
+    [self.superview addSubview:shareView];
+    [self setHidden:YES];
     
-    NSMutableArray *ccArray = [[NSMutableArray alloc] init];
-    newAddress = [MCOAddress addressWithMailbox:@"iaurosys@gmail.com"];
-    [ccArray addObject:newAddress];
-    [[builder header] setCc:ccArray];
-    
-    NSString *subjectString = [NSString stringWithFormat:@"Funnl Mail - Makes Email Simpler, '%@' has shared '%@' Funnl with you.",self.imapSession.username,fm.filterTitle];
-    [[builder header] setSubject:subjectString];
-    
-    NSString *funnlLinkStr = [NSString stringWithFormat:@"<a href=funnl://name=%@&from=%@&subject=%@> Get Funnl </a>",fm.filterTitle,[fm.sendersArray componentsJoinedByString:@","],[fm.subjectsArray componentsJoinedByString:@","]];
-    NSString *htmlString = [[NSString alloc] initWithFormat:@"<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\
-                            <html>\
-                            <head>\
-                            <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\
-                            <meta http-equiv=\"Content-Style-Type\" content=\"text/css\">\
-                            <title></title>\
-                            <meta name=\"Generator\" content=\"Cocoa HTML Writer\">\
-                            <style type=\"text/css\">\
-                            p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px '.Helvetica Neue Interface'}\
-                            span.s1 {font-family: '.HelveticaNeueInterface-Regular'; font-weight: normal; font-style: normal; font-size: 12.00pt}\
-                            </style>\
-                            </head>\
-                            <body>\
-                            <p class=\"p1\"><span class=\"s1\">\
-                            Hi,<br/><br/>\
-                            I have  been using Funnl Mail (iOS) to organize my inbox and wanted share Funnl '%@' to help you organize. <br/><br/>%@</span></p>\
-                            </body>\
-                            </html>",fm.filterTitle,funnlLinkStr];
-    [builder setHTMLBody:htmlString];
-    rfc822Data = [builder data];
-
-    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    
-    [MBProgressHUD showHUDAddedTo:appDelegate.window animated:YES];
-    MCOSMTPSendOperation *sendOperation = [[EmailService instance].smtpSession sendOperationWithData:rfc822Data];
-    [sendOperation start:^(NSError *error) {
-        if(error) {
-//            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Error sending email" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-//            [alert show];
-            NSLog(@"%@ Error sending email:%@", [EmailService instance].smtpSession.username, error);
-            [MBProgressHUD hideHUDForView:appDelegate.window animated:YES];
-        } else {
-            NSLog(@"%@ Successfully sent email!", [EmailService instance].smtpSession.username);
-            [[Mixpanel sharedInstance] track:@"Send Button from composeVC"];
-            [MBProgressHUD hideHUDForView:appDelegate.window animated:YES];
-            [[[EmailService instance].imapSession appendMessageOperationWithFolder:SENT messageData:rfc822Data flags:MCOMessageFlagMDNSent] start:^(NSError *error, uint32_t createdUID) {
-                if (error)
-                    NSLog(@"error adding message to sent folder");
-                else NSLog(@"successfully appended message to sent folder");
-            }];
-        }
-    }];
 
 }
 
