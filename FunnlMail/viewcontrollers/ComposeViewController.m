@@ -521,6 +521,8 @@ replacementString:(NSString *)string {
 	[self resizeViews];
 }
 
+
+
 - (void)showContactsPicker:(id)sender {
 	
 	// Show some kind of contacts picker in here.

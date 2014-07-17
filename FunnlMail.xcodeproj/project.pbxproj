@@ -86,6 +86,7 @@
 		CCC9E42B193E8D180028DC84 /* MessageFilterXRefService.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC9E42A193E8D180028DC84 /* MessageFilterXRefService.m */; };
 		CCD00B5B18F54797007A675F /* MainView.m in Sources */ = {isa = PBXBuildFile; fileRef = CCD00B5A18F54797007A675F /* MainView.m */; };
 		D90CB1545C65478EAF879C60 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27D9CEE565FC46E3B3970F17 /* libPods.a */; };
+		FA2B9EA71977F5F800319391 /* ShareView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2B9EA61977F5F800319391 /* ShareView.m */; };
 		FA2C9BAB193DEF5200866BEE /* MCSwipeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2C9BAA193DEF5200866BEE /* MCSwipeTableViewCell.m */; };
 		FA2C9BD1193EDFCB00866BEE /* MMDrawerBarButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2C9BC9193EDFCB00866BEE /* MMDrawerBarButtonItem.m */; };
 		FA2C9BD2193EDFCB00866BEE /* MMDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2C9BCC193EDFCB00866BEE /* MMDrawerController.m */; };
@@ -370,6 +371,8 @@
 		CCC9E42A193E8D180028DC84 /* MessageFilterXRefService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageFilterXRefService.m; path = services/MessageFilterXRefService.m; sourceTree = "<group>"; };
 		CCD00B5918F54797007A675F /* MainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainView.h; path = views/MainView.h; sourceTree = "<group>"; };
 		CCD00B5A18F54797007A675F /* MainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainView.m; path = views/MainView.m; sourceTree = "<group>"; };
+		FA2B9EA51977F5F800319391 /* ShareView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShareView.h; path = views/ShareView.h; sourceTree = "<group>"; };
+		FA2B9EA61977F5F800319391 /* ShareView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShareView.m; path = views/ShareView.m; sourceTree = "<group>"; };
 		FA2C9BA9193DEF5200866BEE /* MCSwipeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCSwipeTableViewCell.h; sourceTree = "<group>"; };
 		FA2C9BAA193DEF5200866BEE /* MCSwipeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCSwipeTableViewCell.m; sourceTree = "<group>"; };
 		FA2C9BC8193EDFCB00866BEE /* MMDrawerBarButtonItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDrawerBarButtonItem.h; sourceTree = "<group>"; };
@@ -869,6 +872,8 @@
 			children = (
 				CCD00B5918F54797007A675F /* MainView.h */,
 				CCD00B5A18F54797007A675F /* MainView.m */,
+				FA2B9EA51977F5F800319391 /* ShareView.h */,
+				FA2B9EA61977F5F800319391 /* ShareView.m */,
 				FAABF17E1952FA750072FFE8 /* FunnlPopUpView.h */,
 				FAABF17F1952FA750072FFE8 /* FunnlPopUpView.m */,
 				5A59DC6C1957FF9D0094B00D /* ConfirmFunnelPopUp.h */,
@@ -1318,6 +1323,7 @@
 				CC8C7ECD18E6F38100E76AE8 /* MASViewConstraint.m in Sources */,
 				FA2F433F193318BE00C1F119 /* CreateFunnlViewController.m in Sources */,
 				CCC9E42B193E8D180028DC84 /* MessageFilterXRefService.m in Sources */,
+				FA2B9EA71977F5F800319391 /* ShareView.m in Sources */,
 				CC4263B01934B67A00F3C5EB /* FMDatabase.m in Sources */,
 				CC8C7ECA18E6F38100E76AE8 /* MASConstraintMaker.m in Sources */,
 				FAABF1801952FA750072FFE8 /* FunnlPopUpView.m in Sources */,

@@ -56,20 +56,21 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
-    mainView = [[MainView alloc] init];
+    mainView = [[MainView alloc] initWithFrame:CGRectMake(0, 20, WIDTH, HEIGHT+40)];
     mainView.hidden = YES;
     mainView.mainVCdelegate = self;
+    mainView.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.93];
+//    mainView.blurRadius = 33;
+    //take snapshot, then move off screen once complete
+//    [mainView updateAsynchronously:YES completion:^{
+//        mainView.frame = CGRectMake(0, 568, 320, 0);
+//    }];
+    
     [self.view addSubview:mainView];
     
     // Set the navigation bar to white
     [self.navigationController.navigationBar setBarTintColor:[UIColor whiteColor]];
     [[UINavigationBar appearance] setTintColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR]];
-    [mainView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view.mas_top).with.offset(20);
-        make.left.equalTo(self.view.mas_left).with.offset(0);
-        make.right.equalTo(self.view.mas_right).with.offset(0);
-        make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
-    }];
     
     // Filter Title
     self.navigationItem.title = currentFilterModel.funnelName;

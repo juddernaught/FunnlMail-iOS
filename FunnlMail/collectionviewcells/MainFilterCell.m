@@ -69,7 +69,7 @@
         [self addConstraint:constraint];
       
         mailImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Mail"]];
-        mailImageView.frame = CGRectMake(0, 0, 29, 23);
+        mailImageView.frame = CGRectMake(0, 0, 30, 20);
         [self addSubview:mailImageView];
       
         shareButton = [[UIButton alloc] initWithFrame:CGRectMake(5 + 2, self.frame.size.height - 32 - 5 + 2, 25, 25)];
@@ -77,7 +77,7 @@
         [self addSubview:shareButton];
         shareButton.hidden = YES;
         
-        notificationButton = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width - 32 - 5 - 32, self.frame.size.height - 32 - 5, 30, 30)];
+        notificationButton = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width/2 - 15, self.frame.size.height - 32 - 5, 30, 30)];
         [notificationButton setImage:[UIImage imageNamed:@"Alert"] forState:UIControlStateNormal];
         [self addSubview:notificationButton];
         notificationButton.hidden = YES;
@@ -88,22 +88,7 @@
 //        [settingsButton setBackgroundColor:[UIColor redColor]];
         settingsButton.hidden = YES;
       
-//        [mailImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-//          make.top.equalTo(filterTitleLabel.mas_bottom).with.offset(0);
-//          make.left.equalTo(self.mas_centerX).with.offset(-(30/2));
-//        }];
-//      
-//        // need to figure out how to do this with Masonry
-//        constraint = [NSLayoutConstraint
-//                      constraintWithItem:mailImageView
-//                      attribute: NSLayoutAttributeHeight
-//                      relatedBy:NSLayoutRelationEqual
-//                      toItem:mailImageView
-//                      attribute:NSLayoutAttributeHeight
-//                      multiplier:0
-//                      constant:23];
-//      
-//        [self addConstraint:constraint];
+
       
         messageCountLabel = [[UILabel alloc] init];
 //        [newMessageCountLabel setFont:[UIFont systemFontOfSize:16]];
@@ -114,7 +99,7 @@
         [self addSubview:messageCountLabel];
       
         [messageCountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-          make.top.equalTo(mailImageView.mas_bottom).with.offset(0);
+          make.top.equalTo(mailImageView.mas_bottom).with.offset(5);
           make.centerX.equalTo(self.mas_centerX).with.offset(0);
         }];
       
@@ -204,11 +189,10 @@
       make.left.equalTo(self.mas_centerX).with.offset(-(65/2));
     }];
     settingsButton.hidden = YES;
-  }
-  else{
+  }else{
         [mailImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-          make.top.equalTo(filterTitleLabel.mas_bottom).with.offset(0);
-          make.left.equalTo(self.mas_centerX).with.offset(-(45/2));
+          make.top.equalTo(filterTitleLabel.mas_bottom).with.offset(5);
+          make.left.equalTo(self.mas_centerX).with.offset(-(30/2));
         }];
     settingsButton.hidden = NO;
     notificationButton.hidden = NO;
