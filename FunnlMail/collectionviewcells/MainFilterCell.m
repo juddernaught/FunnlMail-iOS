@@ -204,7 +204,8 @@
       make.left.equalTo(self.mas_centerX).with.offset(-(65/2));
     }];
     settingsButton.hidden = YES;
-  }else{
+  }
+  else{
         [mailImageView mas_makeConstraints:^(MASConstraintMaker *make) {
           make.top.equalTo(filterTitleLabel.mas_bottom).with.offset(0);
           make.left.equalTo(self.mas_centerX).with.offset(-(45/2));

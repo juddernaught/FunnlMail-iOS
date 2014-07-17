@@ -123,9 +123,9 @@ NSString *msgBody;
   
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.mas_top).with.offset(100);
-        make.left.equalTo(self.mas_left).with.offset(55);
+        make.left.equalTo(self.mas_left).with.offset(0);
         make.right.equalTo(self.mas_right).with.offset(-8);
-        make.bottom.equalTo(self.mas_bottom).with.offset(-60);
+        make.bottom.equalTo(self.mas_bottom).with.offset(0);
     }];
   
   
@@ -237,6 +237,8 @@ NSString *msgBody;
   creatFunnlViewController = nil;
 }
 
+
+
 -(void)shareButtonClicked:(id)sender{
     UIButton *b = (UIButton*)sender;
     FunnelModel *fm = (FunnelModel *)filterArray[b.tag];
@@ -252,10 +254,26 @@ NSString *msgBody;
     [ccArray addObject:newAddress];
     [[builder header] setCc:ccArray];
     
+    NSMutableDictionary *dataDictionary = [NSMutableDictionary dictionaryWithObjects:[NSArray arrayWithObjects:fm.filterTitle,fm.sendersArray,fm.subjectsArray,nil] forKeys:[NSArray arrayWithObjects:@"name",@"senders",@"subjects", nil]];
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataDictionary options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *jsonString;
+    if (! jsonData) {
+        jsonString = @"";
+        NSLog(@"Got an error: %@", error);
+    } else {
+        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+    
+    NSLog(jsonString);
+    NSString *base64EncodedString = [[jsonString dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0];
+
+    
     NSString *subjectString = [NSString stringWithFormat:@"Funnl Mail - Makes Email Simpler, '%@' has shared '%@' Funnl with you.",self.imapSession.username,fm.filterTitle];
     [[builder header] setSubject:subjectString];
     
-    NSString *funnlLinkStr = [NSString stringWithFormat:@"<a href=funnl://name=%@&from=%@&subject=%@> Get Funnl </a>",fm.filterTitle,[fm.sendersArray componentsJoinedByString:@","],[fm.subjectsArray componentsJoinedByString:@","]];
+//    NSString *funnlLinkStr = [NSString stringWithFormat:@"<a href=funnl://name=%@&from=%@&subject=%@> Get Funnl </a>",fm.filterTitle,[fm.sendersArray componentsJoinedByString:@","],[fm.subjectsArray componentsJoinedByString:@","]];
+    NSString *funnlLinkStr = [NSString stringWithFormat:@"<a href=funnl://%@> Get Funnl </a>",base64EncodedString];
     NSString *htmlString = [[NSString alloc] initWithFormat:@"<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\
                             <html>\
                             <head>\

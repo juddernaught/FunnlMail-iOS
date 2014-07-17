@@ -16,6 +16,9 @@
 #import "AppDelegate.h"
 #import "ComposeViewController.h"
 #import <Mixpanel/Mixpanel.h>
+#import "CreateFunnlViewController.h"
+#import "FunnelService.h"
+#import "EmailService.h"
 
 @interface MsgViewController () <MCOMessageViewDelegate>
 
@@ -423,7 +426,80 @@ typedef void (^DownloadCallback)(NSError * error);
 
 - (void) MCOMessageView:(MCOMessageView *)view getFunlShareString:(NSString *)dataString;
 {
-    NSLog(dataString);
+    if(dataString.length){
+        NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:dataString options:0];
+        NSError *error = nil;
+        id jsonObj = [NSJSONSerialization JSONObjectWithData:decodedData options:kNilOptions error:&error];
+        BOOL isValid = [NSJSONSerialization isValidJSONObject:jsonObj];
+        if(isValid){
+            NSString *decodedString = [[NSString alloc] initWithData:decodedData encoding:NSUTF8StringEncoding];
+            NSLog(@"%@", decodedString);
+            NSData *data = [decodedString dataUsingEncoding:NSUTF8StringEncoding];
+            id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+            if([json isKindOfClass:[NSDictionary class]]){
+                NSString *name = [json objectForKey:@"name"];
+                NSArray *sendersArray = [json objectForKey:@"senders"];
+                NSArray *subjectsArray = [json objectForKey:@"subjects"];
+                
+                
+                BOOL isFunnlAlreadyPresent = NO;
+                NSArray *exisitngfunnlsArray = [[FunnelService instance] allFunnels];
+                for (FunnelModel *fm in exisitngfunnlsArray) {
+                    if([[fm.filterTitle lowercaseString] isEqualToString:[name lowercaseString]]){
+                        isFunnlAlreadyPresent = YES;
+                        break;
+                    }
+                }
+                
+                if(isFunnlAlreadyPresent){
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"FunnlMail" message:@"Funnl is already present, please rename the exisiting funnl and try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+                    [alert show];
+                    return;
+                }
+                [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+
+                NSArray *randomColors = GRADIENT_ARRAY;
+                NSInteger gradientInt = arc4random_uniform((uint32_t)randomColors.count);
+                NSString *colorString = [randomColors objectAtIndex:gradientInt];
+                UIColor *color = [UIColor colorWithHexString:colorString];
+                if(color == nil){
+                    color = [UIColor colorWithHexString:@"#2EB82E"];
+                }
+                FunnelModel *funnlModel = [[FunnelModel alloc] initWithBarColor:color filterTitle:name newMessageCount:0 dateOfLastMessage:nil sendersArray:sendersArray subjectsArray:subjectsArray skipAllFlag:NO funnelColor:colorString];
+                [self performSelector:@selector(createFunnl:) withObject:funnlModel afterDelay:0.01];
+              
+                // save to db
+            }
+        }
+        else{
+            NSLog(@"%@",error.description);
+        }
+    }
+}
+
+-(void)createFunnl:(FunnelModel*)fm{
+
+    NSMutableDictionary *sendersDictionary = [[NSMutableDictionary alloc] init];
+    int count = 0;
+    for (NSString *address in fm.sendersArray) {
+        [sendersDictionary setObject:[address lowercaseString] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
+        count ++;
+    }
+    
+    NSMutableDictionary *subjectsDictionary = [[NSMutableDictionary alloc] init];
+    count = 0;
+    for (NSString *subject in fm.subjectsArray) {
+        if (![subject isEqualToString:@""])
+        {
+            [subjectsDictionary setObject:[subject lowercaseString] forKey:[NSIndexPath indexPathForRow:count inSection:2]];
+            count ++;
+        }
+    }
+    
+    [[FunnelService instance] insertFunnel:fm];
+    [[EmailService instance] applyingFunnel:fm toMessages:[[MessageService instance] messagesAllTopMessages]];
+    [EmailService setNewFilterModel:fm];
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 }
 
 - (NSString *) MCOMessageView_templateForAttachment:(MCOMessageView *)view
