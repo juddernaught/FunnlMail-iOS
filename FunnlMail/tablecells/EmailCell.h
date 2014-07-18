@@ -18,6 +18,6 @@
 @property (nonatomic, strong) UILabel *senderLabel,*dateLabel,*subjectLabel,*readLabel,*bodyLabel,*threadLabel;
 @property (nonatomic, strong) MCOIMAPMessageRenderingOperation * messageRenderingOperation;
 @property (nonatomic, strong) UIImageView *detailDiscloser;
-@property (nonatomic, strong) UIView *inclusiveFunnels;
 @property (nonatomic, strong) UILabel *labelNameText;
+@property (nonatomic, strong) UILabel *funnlLabel1,*funnlLabel2,*funnlLabel3;
 @end
