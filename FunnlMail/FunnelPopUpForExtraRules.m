@@ -42,12 +42,14 @@ static NSString *contactCellIdentifier = @"ContactCell";
     UIButton *outterButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
     [outterButton addTarget:self action:@selector(outterButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:outterButton];
-    self.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-    UIView *mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, width, 400)];
-    [mainView setBackgroundColor:[UIColor colorWithHexString:@"#E2E2E2"]];
+    self.backgroundColor = [UIColor clearColor];
+    UIView *mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+//    [mainView setBackgroundColor:[UIColor colorWithHexString:@"#E2E2E2"]];
+    mainView.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.93];
     
-    UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 99, width - 60 - 10, 50)];
+    UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(8, 70, WIDTH - 16 - 40, 50)];
     [messageLabel setBackgroundColor:[UIColor clearColor]];
+    [messageLabel setTextColor:[UIColor whiteColor]];
     [messageLabel setTextAlignment:NSTextAlignmentLeft];
     messageLabel.numberOfLines = 2;
     messageLabel.lineBreakMode = NSLineBreakByWordWrapping;
@@ -61,17 +63,18 @@ static NSString *contactCellIdentifier = @"ContactCell";
     [mainView addSubview:messageLabel];
     messageLabel = nil;
     
-    UIView *seperator = [[UIView alloc] initWithFrame:CGRectMake(0, 150, 280, 0.5)];
+    UIView *seperator = [[UIView alloc] initWithFrame:CGRectMake(0, 140, WIDTH, 0.5)];
     [seperator setBackgroundColor:[UIColor lightGrayColor]];
     [mainView addSubview:seperator];
     seperator = nil;
     
-    UILabel *tempLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 150, width, 40)];
-    tempLabel.textAlignment = NSTextAlignmentCenter;
-    tempLabel.text = @"Also add?";
-    [tempLabel setBackgroundColor:[UIColor clearColor]];
-    [mainView addSubview:tempLabel];
-    tempLabel = nil;
+    alsoAddLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 150, WIDTH, 40)];
+    alsoAddLabel.textAlignment = NSTextAlignmentCenter;
+    alsoAddLabel.text = @"Also add?";
+    [alsoAddLabel setBackgroundColor:[UIColor clearColor]];
+    [alsoAddLabel setTextColor:[UIColor lightGrayColor]];
+    [alsoAddLabel setFont:[UIFont systemFontOfSize:15]];
+    [mainView addSubview:alsoAddLabel];
     
     contactInCC = [[NSMutableArray alloc] initWithArray:message.header.cc];
     flagArray = [[NSMutableArray alloc] init];
@@ -79,16 +82,19 @@ static NSString *contactCellIdentifier = @"ContactCell";
         [flagArray setObject:@"0" atIndexedSubscript:counter];
     }
     
-    contactsTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 190, width, 400 - 190 - 50)];
-    [contactsTableView setBackgroundColor:[UIColor colorWithHexString:@"#E2E2E2"]];
+    contactsTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 190, WIDTH, HEIGHT - 190 - 50)];
+    [contactsTableView setBackgroundColor:CLEAR_COLOR];
     [contactsTableView setSeparatorInset:UIEdgeInsetsZero];
     [contactsTableView registerClass:[ContactTableViewCell class] forCellReuseIdentifier:CONTACT_CELL];
     [contactsTableView registerClass:[ContactTableViewCell class] forCellReuseIdentifier:contactCellIdentifier];
     contactsTableView.delegate = self;
     contactsTableView.dataSource = self;
+    [contactsTableView setTableFooterView:[[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)]];
     [mainView addSubview:contactsTableView];
     
-    UIButton *doneButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 400 - 40, width - 20, 30)];
+    
+    
+    UIButton *doneButton = [[UIButton alloc] initWithFrame:CGRectMake(60, HEIGHT - 50, WIDTH - 120, 40)];
     [doneButton setBackgroundColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR]];
     [doneButton addTarget:self action:@selector(updateFunnel:) forControlEvents:UIControlEventTouchUpInside];
     doneButton.clipsToBounds = YES;
@@ -96,14 +102,47 @@ static NSString *contactCellIdentifier = @"ContactCell";
     [doneButton setTitle:@"Done" forState:UIControlStateNormal];
     [mainView addSubview:doneButton];
     
+    if(contactInCC.count == 0){
+        alsoAddLabel.hidden = YES;
+        doneButton.frame = CGRectMake(60, 190, WIDTH - 120, 40);
+    }
+    else{
+        alsoAddLabel.hidden = NO;
+        doneButton.frame = CGRectMake(60, HEIGHT  - 50, WIDTH - 120, 40);
+    }
+    
+    UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    closeButton.frame = CGRectMake(WIDTH-40, 70, 40, 40);
+    //    [closeButton setBackgroundColor:[UIColor colorWithHexString:@"#1B8EEE"]];
+    //    [closeButton setTitle:@"Close" forState:UIControlStateNormal];
+    //    [closeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:16]];
+    //    [closeButton setTitleColor:WHITE_CLR forState:UIControlStateNormal];
+    //    [closeButton setTitleColor:LIGHT_GRAY_COLOR forState:UIControlStateHighlighted];
+    [closeButton setImage:[UIImage imageNamed:@"MPCloseBtn"] forState:UIControlStateNormal];
+    [closeButton addTarget:self action:@selector(closeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [mainView addSubview:closeButton];
+
+    
     mainView.center = self.center;
     
     [self addSubview:mainView];
 }
 
+-(void)closeButtonClicked:(id)sender{
+    [self setHidden:YES];
+}
+
 #pragma mark -
 #pragma mark Event Handlers
 - (void)updateFunnel:(UIButton*)sender {
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [MBProgressHUD showHUDAddedTo:appDelegate.window animated:YES];
+    [self performSelector:@selector(updateFunnelData) withObject:nil afterDelay:0.1];
+    
+}
+
+-(void)updateFunnelData{
+    
     [[Mixpanel sharedInstance] track:@"Updated Funnl"];
     NSMutableString *senderString = [[NSMutableString alloc] init];
     for (int counter =0 ; counter < contactInCC.count; counter++) {
@@ -129,7 +168,7 @@ static NSString *contactCellIdentifier = @"ContactCell";
     if ([tempFunnelModel.emailAddresses rangeOfString:message.header.sender.mailbox].location == NSNotFound) {
         tempFunnelModel.emailAddresses = [NSString stringWithFormat:@"%@,%@",tempFunnelModel.emailAddresses,message.header.sender.mailbox];
     } else {
-
+        
     }
     NSLog(@"CC %@",tempFunnelModel.emailAddresses);
     [[FunnelService instance] updateFunnel:tempFunnelModel];
@@ -138,7 +177,7 @@ static NSString *contactCellIdentifier = @"ContactCell";
     [[(EmailsTableViewController*)viewController tableView] reloadData];
     AppDelegate *tempAppDelegate = APPDELEGATE;
     tempAppDelegate.funnelUpDated = TRUE;
-    
+    [MBProgressHUD hideAllHUDsForView:tempAppDelegate.window animated:YES];
 }
 
 - (void)outterButtonClicked:(UIButton *)sender {
@@ -165,11 +204,14 @@ static NSString *contactCellIdentifier = @"ContactCell";
     [cell setBackgroundColor:[UIColor clearColor]];
     cell.nameLabel.text = [(MCOAddress*)[contactInCC objectAtIndex:indexPath.row] mailbox];
     if ([[flagArray objectAtIndex:indexPath.row] isEqualToString:@"0"]) {
-        [cell.selectionIndicator setBackgroundColor:[UIColor clearColor]];
+//        [cell.selectionIndicator setBackgroundColor:[UIColor clearColor]];
+        cell.accessoryType = UITableViewCellAccessoryNone;
     }
     else
     {
-        [cell.selectionIndicator setBackgroundColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR]];
+//        [cell.selectionIndicator setBackgroundColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR]];
+        cell.accessoryType = UITableViewCellAccessoryCheckmark;
+
     }
     return cell;
 }
@@ -213,12 +255,15 @@ static NSString *contactCellIdentifier = @"ContactCell";
     ContactTableViewCell *tempCell = (ContactTableViewCell*)[tableView cellForRowAtIndexPath:indexPath];
     if (tempCell.flag) {
         tempCell.flag = FALSE;
-        [tempCell.selectionIndicator setBackgroundColor:[UIColor clearColor]];
+        //[tempCell.selectionIndicator setBackgroundColor:[UIColor clearColor]];
+        tempCell.accessoryType = UITableViewCellAccessoryNone;
     }
     else
     {
         tempCell.flag = TRUE;
         [tempCell.selectionIndicator setBackgroundColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR]];
+        tempCell.accessoryType = UITableViewCellAccessoryCheckmark;
+
     }
 }
 /*

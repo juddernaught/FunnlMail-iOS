@@ -19,6 +19,7 @@
 #import "CreateFunnlViewController.h"
 #import "FunnelService.h"
 #import "EmailService.h"
+#import "FunnelModel.h"
 
 @interface MsgViewController () <MCOMessageViewDelegate>
 
@@ -442,20 +443,20 @@ typedef void (^DownloadCallback)(NSError * error);
                 NSArray *subjectsArray = [json objectForKey:@"subjects"];
                 
                 
-                BOOL isFunnlAlreadyPresent = NO;
-                NSArray *exisitngfunnlsArray = [[FunnelService instance] allFunnels];
-                for (FunnelModel *fm in exisitngfunnlsArray) {
-                    if([[fm.filterTitle lowercaseString] isEqualToString:[name lowercaseString]]){
-                        isFunnlAlreadyPresent = YES;
-                        break;
-                    }
-                }
-                
-                if(isFunnlAlreadyPresent){
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"FunnlMail" message:@"Funnl is already present, please rename the exisiting funnl and try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-                    [alert show];
-                    return;
-                }
+//                BOOL isFunnlAlreadyPresent = NO;
+//                NSArray *exisitngfunnlsArray = [[FunnelService instance] allFunnels];
+//                for (FunnelModel *fm in exisitngfunnlsArray) {
+//                    if([[fm.filterTitle lowercaseString] isEqualToString:[name lowercaseString]]){
+//                        isFunnlAlreadyPresent = YES;
+//                        break;
+//                    }
+//                }
+//                
+//                if(isFunnlAlreadyPresent){
+//                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"FunnlMail" message:@"Funnl is already present, please rename the exisiting funnl and try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+//                    [alert show];
+//                    return;
+//                }
                 [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 
                 NSArray *randomColors = GRADIENT_ARRAY;
@@ -497,12 +498,17 @@ typedef void (^DownloadCallback)(NSError * error);
     }
     
     
-    [[FunnelService instance] insertFunnel:fm];
-    [[EmailService instance] applyingFunnel:fm toMessages:[[MessageService instance] messagesAllTopMessages]];
-    [EmailService setNewFilterModel:fm];
-    
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"FunnlMail" message:@"Funnl added successfully." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-    [alert show];
+//    [[FunnelService instance] insertFunnel:fm];
+//    [[EmailService instance] applyingFunnel:fm toMessages:[[MessageService instance] messagesAllTopMessages]];
+//    [EmailService setNewFilterModel:fm];
+//    
+//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"FunnlMail" message:@"Funnl added successfully." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+//    [alert show];
+
+    CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:subjectsDictionary filterModel:fm];
+    creatFunnlViewController.isEdit = NO;
+    [self.navigationController pushViewController:creatFunnlViewController animated:YES];
+    creatFunnlViewController = nil;
     
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 }

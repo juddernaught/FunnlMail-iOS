@@ -22,6 +22,7 @@
     NSMutableArray *contactInCC;
     NSMutableArray *flagArray;
     id viewController;
+    UILabel *alsoAddLabel;
 }
 - (id)initWithFrame:(CGRect)frame withMessage:(MCOIMAPMessage*)messages withFunnel:(FunnelModel*)funnelDS onViewController:(id)someViewController;
 @end

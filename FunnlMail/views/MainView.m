@@ -122,7 +122,7 @@ NSString *msgBody;
         make.top.equalTo(self.mas_top).with.offset(100);
         make.left.equalTo(self.mas_left).with.offset(0);
         make.right.equalTo(self.mas_right).with.offset(0);
-        make.bottom.equalTo(self.mas_bottom).with.offset(0);
+        make.bottom.equalTo(self.mas_bottom).with.offset(-80);
     }];
   
 //    self.collectionView.backgroundColor = [UIColor colorWithHexString:@"#CDCDCD"];
@@ -219,11 +219,11 @@ NSString *msgBody;
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
 {
-  return UIEdgeInsetsMake(8, 8, 8, 8);
+  return UIEdgeInsetsMake(13, 13, 12, 12);
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return CGSizeMake((self.collectionView.frame.size.width-30)/2, 100);
+    return CGSizeMake((self.collectionView.frame.size.width-36)/2, 120);
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -253,7 +253,80 @@ NSString *msgBody;
     [self.superview addSubview:shareView];
     [self setHidden:YES];
     
+/*    MCOMessageBuilder * builder = [[MCOMessageBuilder alloc] init];
+    [[builder header] setFrom:[MCOAddress addressWithDisplayName:nil mailbox:self.imapSession.username]];
+    NSMutableArray *toArray = [[NSMutableArray alloc] init];
+    MCOAddress *newAddress = [MCOAddress addressWithMailbox:@"iaurosys@gmail.com"];
+    [toArray addObject:newAddress];
+    
+    NSMutableArray *ccArray = [[NSMutableArray alloc] init];
+    newAddress = [MCOAddress addressWithMailbox:@"iaurosys@gmail.com"];
+    [ccArray addObject:newAddress];
+    [[builder header] setCc:ccArray];
+    
+    NSMutableDictionary *dataDictionary = [NSMutableDictionary dictionaryWithObjects:[NSArray arrayWithObjects:fm.filterTitle,fm.sendersArray,fm.subjectsArray,nil] forKeys:[NSArray arrayWithObjects:@"name",@"senders",@"subjects", nil]];
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataDictionary options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *jsonString;
+    if (! jsonData) {
+        jsonString = @"";
+        NSLog(@"Got an error: %@", error);
+    } else {
+        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+    
+    NSLog(jsonString);
+    NSString *base64EncodedString = [[jsonString dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0];
 
+    
+    NSString *subjectString = [NSString stringWithFormat:@"FunnlMail - Makes Email Simpler, '%@' has shared '%@' Funnl with you.",self.imapSession.username,fm.filterTitle];
+    [[builder header] setSubject:subjectString];
+    
+//    NSString *funnlLinkStr = [NSString stringWithFormat:@"<a href=funnl://name=%@&from=%@&subject=%@> Get Funnl </a>",fm.filterTitle,[fm.sendersArray componentsJoinedByString:@","],[fm.subjectsArray componentsJoinedByString:@","]];
+    NSString *funnlLinkStr = [NSString stringWithFormat:@"<a href=funnl://%@> Get Funnl </a>",base64EncodedString];
+    NSString *htmlString = [[NSString alloc] initWithFormat:@"<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\
+                            <html>\
+                            <head>\
+                            <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\
+                            <meta http-equiv=\"Content-Style-Type\" content=\"text/css\">\
+                            <title></title>\
+                            <meta name=\"Generator\" content=\"Cocoa HTML Writer\">\
+                            <style type=\"text/css\">\
+                            p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px '.Helvetica Neue Interface'}\
+                            span.s1 {font-family: '.HelveticaNeueInterface-Regular'; font-weight: normal; font-style: normal; font-size: 12.00pt}\
+                            </style>\
+                            </head>\
+                            <body>\
+                            <p class=\"p1\"><span class=\"s1\">\
+                            Hi,<br/><br/>\
+                            I have  been using Funnl Mail (iOS) to organize my inbox and wanted share Funnl '%@' to help you organize. <br/><br/>%@</span></p>\
+                            </body>\
+                            </html>",fm.filterTitle,funnlLinkStr];
+    [builder setHTMLBody:htmlString];
+    rfc822Data = [builder data];
+
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    
+    [MBProgressHUD showHUDAddedTo:appDelegate.window animated:YES];
+    MCOSMTPSendOperation *sendOperation = [[EmailService instance].smtpSession sendOperationWithData:rfc822Data];
+    [sendOperation start:^(NSError *error) {
+        if(error) {
+//            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Error sending email" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+//            [alert show];
+            NSLog(@"%@ Error sending email:%@", [EmailService instance].smtpSession.username, error);
+            [MBProgressHUD hideHUDForView:appDelegate.window animated:YES];
+        } else {
+            NSLog(@"%@ Successfully sent email!", [EmailService instance].smtpSession.username);
+            [[Mixpanel sharedInstance] track:@"Send Button from composeVC"];
+            [MBProgressHUD hideHUDForView:appDelegate.window animated:YES];
+            [[[EmailService instance].imapSession appendMessageOperationWithFolder:SENT messageData:rfc822Data flags:MCOMessageFlagMDNSent] start:^(NSError *error, uint32_t createdUID) {
+                if (error)
+                    NSLog(@"error adding message to sent folder");
+                else NSLog(@"successfully appended message to sent folder");
+            }];
+        }
+    }];
+*/
 }
 
 -(void)settingsButtonClicked:(id)sender{
