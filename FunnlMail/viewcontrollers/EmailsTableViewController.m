@@ -219,7 +219,25 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 //                else
 //                    [cell resetToOriginalState];
 
-                [cell.labelNameText setAttributedText:[self returnFunnelString:(MessageModel*)[EmailService instance].filterMessages[indexPath.row]]];
+                NSMutableDictionary *funnlLabelDictionary= [self getFunnlsDictionary:(MessageModel*)[EmailService instance].filterMessages[indexPath.row]];
+                int funnlLabelCount = 0;
+                for (NSString *key in funnlLabelDictionary.allKeys) {
+                    if(funnlLabelCount == 0){
+                        cell.funnlLabel1.text = key;
+                        cell.funnlLabel1.textColor = [UIColor colorWithHexString:[funnlLabelDictionary objectForKey:key]];
+                    }
+                    else if(funnlLabelCount == 1){
+                        cell.funnlLabel2.text = key;
+                        if(funnlLabelDictionary.allKeys.count > 1){
+                            cell.funnlLabel2.text = [NSString stringWithFormat:@"%@ + %d ",key,funnlLabelDictionary.allKeys.count-1];
+                            cell.funnlLabel2.textColor = [UIColor colorWithHexString:[funnlLabelDictionary objectForKey:key]];
+                        }
+                    }
+                    
+                    funnlLabelCount++;
+                }
+                
+                //[cell.labelNameText setAttributedText:[self returnFunnelString:(MessageModel*)[EmailService instance].filterMessages[indexPath.row]]];
                 cell.tag = indexPath.row;
                 cell.delegate = self;
                 MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
@@ -259,46 +277,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 else {
                     cell.senderLabel.text = [self removeAngularBracket:message.header.sender.mailbox];
                 }
-                
-                CGFloat tempFloat = [self findTheSizeOf:cell.senderLabel.text];
-                
-                if (tempFloat < 320-105-6-60) {
-                    cell.inclusiveFunnels.frame = CGRectMake(cell.senderLabel.frame.origin.x + tempFloat + 5, cell.senderLabel.frame.origin.y, WIDTH - cell.senderLabel.frame.origin.x - tempFloat - 80, 40);
-                    [cell.inclusiveFunnels setBackgroundColor:[UIColor clearColor]];
-                }
-                else {
-                    cell.inclusiveFunnels.frame = CGRectMake(32 + (320-105-6-60) + 5, cell.senderLabel.frame.origin.y, WIDTH - cell.senderLabel.frame.origin.y - tempFloat - 80, 40);
-                    [cell.inclusiveFunnels setBackgroundColor:[UIColor clearColor]];
-                }
-                
-                if (indexPath.row % 2 == 0) {
-                    UIView *funnelView = [[UIView alloc] initWithFrame:CGRectMake(2, 4, 12, 12)];
-                    funnelView.clipsToBounds = YES;
-                    funnelView.layer.cornerRadius = 6.0f;
-                    [funnelView setBackgroundColor:[UIColor orangeColor]];
-                    [cell.inclusiveFunnels addSubview:funnelView];
-                    funnelView = nil;
-                    funnelView = [[UIView alloc] initWithFrame:CGRectMake(2 + 12 + 2, 4, 12, 12)];
-                    funnelView.clipsToBounds = YES;
-                    funnelView.layer.cornerRadius = 6.0f;
-                    [funnelView setBackgroundColor:[UIColor greenColor]];
-                    [cell.inclusiveFunnels addSubview:funnelView];
-                    funnelView = nil;
-                }
-                else {
-                    UIView *funnelView = [[UIView alloc] initWithFrame:CGRectMake(2, 4, 12, 12)];
-                    funnelView.clipsToBounds = YES;
-                    funnelView.layer.cornerRadius = 6.0f;
-                    [funnelView setBackgroundColor:[UIColor purpleColor]];
-                    [cell.inclusiveFunnels addSubview:funnelView];
-                    funnelView = nil;
-                    funnelView = [[UIView alloc] initWithFrame:CGRectMake(2 + 12 + 2, 4, 12, 12)];
-                    funnelView.clipsToBounds = YES;
-                    funnelView.layer.cornerRadius = 6.0f;
-                    [funnelView setBackgroundColor:[UIColor redColor]];
-                    [cell.inclusiveFunnels addSubview:funnelView];
-                    funnelView = nil;
-                }
                 cell.subjectLabel.text = message.header.subject;
                 
                 if([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread] > 1){
@@ -309,7 +287,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 else{
                     cell.threadLabel.text = @"";
                     [cell.threadLabel setHidden:YES];
-                    [cell.detailDiscloser setHidden:YES];
+                    [cell.detailDiscloser setHidden:NO];
                 }
                 
                 
@@ -469,7 +447,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 else{
                     cell.threadLabel.text = @"";
                     [cell.threadLabel setHidden:YES];
-                    [cell.detailDiscloser setHidden:YES];
+                    [cell.detailDiscloser setHidden:NO];
                 }
                 
                 if(message.header.sender.displayName.length)
@@ -826,6 +804,20 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
 #pragma mark -
 #pragma mark Helper
+
+- (NSMutableDictionary*)getFunnlsDictionary:(MessageModel*)message {
+    NSString *funnelJsonString = [message funnelJson];
+    NSError *error = nil;
+    if (funnelJsonString) {
+        NSData *data = [funnelJsonString dataUsingEncoding:NSUTF8StringEncoding];
+        NSMutableDictionary *tempDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+        if(tempDict != nil)
+            return tempDict;
+        
+    }
+    return nil;
+}
+
 - (NSMutableAttributedString*)returnFunnelString:(MessageModel*)message {
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] init];
     NSString *funnelJsonString = [message funnelJson];
@@ -898,7 +890,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 116;
+    return 98;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath

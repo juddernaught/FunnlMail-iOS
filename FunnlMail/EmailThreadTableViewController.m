@@ -94,7 +94,7 @@ static NSString *mailCellIdentifier = @"MailCell";
     }else{
         cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
     }
-    [cell.detailDiscloser setHidden:YES];
+    [cell.detailDiscloser setHidden:NO];
     [cell.threadLabel setHidden:YES];
     NSTimeInterval interval = [message.header.date timeIntervalSinceNow];
     interval = -interval;

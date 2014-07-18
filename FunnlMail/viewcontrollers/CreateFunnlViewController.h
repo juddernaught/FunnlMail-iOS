@@ -21,12 +21,13 @@
     NSString *funnlName;
     id activeField;
     NSArray *randomColors;
-    BOOL isEdit;
     FunnelModel *oldModel;
     UISwitch *skipAllSwitch;
     BOOL isSkipALl;
 }
 @property (weak) id<MainVCDelegate> mainVCdelegate;
+@property (assign) BOOL isEdit;
+
 -(id)initTableViewWithSenders:(NSMutableDictionary*)sendersDictionary subjects:(NSMutableDictionary*)subjectsDictionary filterModel:(FunnelModel*)model;
 @end
 

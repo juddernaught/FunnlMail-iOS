@@ -21,7 +21,7 @@
 @end
 
 @implementation CreateFunnlViewController
-@synthesize mainVCdelegate;
+@synthesize mainVCdelegate,isEdit;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];

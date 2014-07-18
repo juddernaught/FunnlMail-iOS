@@ -119,7 +119,7 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
         make.top.equalTo(self.mas_top).with.offset(130);
         make.left.equalTo(self.mas_left).with.offset(0);
         make.right.equalTo(self.mas_right).with.offset(0);
-        make.bottom.equalTo(self.mas_bottom).with.offset(0);
+        make.bottom.equalTo(self.mas_bottom).with.offset(-50);
     }];
     
     UITapGestureRecognizer *singleFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
@@ -175,11 +175,11 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
 {
-    return UIEdgeInsetsMake(8, 8, 8, 8);
+    return UIEdgeInsetsMake(13, 12, 12, 12);
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return CGSizeMake((self.collectionView.frame.size.width-30)/2, 100);
+    return CGSizeMake((self.collectionView.frame.size.width-36)/2, 120);
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{

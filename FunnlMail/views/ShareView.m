@@ -61,7 +61,7 @@ NSString *msgBody;
 
 -(void)setupView{
     
-    UILabel *funnelLabel = [[UILabel alloc] initWithFrame:CGRectMake(8, 65, 320-16, 30)];
+    UILabel *funnelLabel = [[UILabel alloc] initWithFrame:CGRectMake(8, 70, 320-50, 30)];
     funnelLabel.text = [NSString stringWithFormat:@"Share Funnl '%@' With",funnelModel.filterTitle];
     funnelLabel.numberOfLines = 1;
     [funnelLabel setTextAlignment:NSTextAlignmentLeft];
@@ -91,19 +91,19 @@ NSString *msgBody;
     toFieldView.tokenField.backgroundColor = CLEAR_COLOR;
     
     
-    _messageView = [[UITextView alloc] initWithFrame:toFieldView.contentView.bounds];
+    _messageView = [[UITextView alloc] initWithFrame:CGRectMake(8, 0, WIDTH-16, toFieldView.frame.size.height)];
 	[_messageView setScrollEnabled:NO];
     _messageView.editable = NO;
 	[_messageView setAutoresizingMask:UIViewAutoresizingNone];
 	[_messageView setDelegate:self];
     _messageView.backgroundColor= CLEAR_COLOR;
     _messageView.textColor= LIGHT_GRAY_COLOR;
-	[_messageView setFont:[UIFont systemFontOfSize:15]];
-	[_messageView setText:@"\n\n\n\nShairing Funnls helps your team members | friends get orginized with just one click. None of your personal emails | info is shared."];
+	[_messageView setFont:[UIFont systemFontOfSize:13]];
+	[_messageView setText:@"\n\n\n\n\n\n\nShairing Funnls helps your team members and friends get organized with just one click. None of your personal emails and info is shared."];
 	[toFieldView.contentView addSubview:_messageView];
 
     UIButton *sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    sendButton.frame = CGRectMake(30, 10, 320-60, 40);
+    sendButton.frame = CGRectMake(20, 60, 320-60, 40);
     [sendButton setBackgroundColor:[UIColor colorWithHexString:@"#1B8EEE"]];
     [sendButton setTitle:@"SEND" forState:UIControlStateNormal];
     [sendButton.titleLabel setFont:[UIFont boldSystemFontOfSize:16]];
@@ -112,14 +112,29 @@ NSString *msgBody;
     [sendButton addTarget:self action:@selector(shareFunnlClicked:) forControlEvents:UIControlEventTouchUpInside];
     [_messageView addSubview:sendButton];
     
+    UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    closeButton.frame = CGRectMake(320-40, 70, 40, 40);
+//    [closeButton setBackgroundColor:[UIColor colorWithHexString:@"#1B8EEE"]];
+//    [closeButton setTitle:@"Close" forState:UIControlStateNormal];
+//    [closeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:16]];
+//    [closeButton setTitleColor:WHITE_CLR forState:UIControlStateNormal];
+//    [closeButton setTitleColor:LIGHT_GRAY_COLOR forState:UIControlStateHighlighted];
+    [closeButton setImage:[UIImage imageNamed:@"MPCloseBtn"] forState:UIControlStateNormal];
+    [closeButton addTarget:self action:@selector(closeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:closeButton];
+    
     UITapGestureRecognizer *singleFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
     singleFingerTap.delegate = self;
     singleFingerTap.cancelsTouchesInView = NO;
     singleFingerTap.delaysTouchesEnded = NO;
-    [self addGestureRecognizer:singleFingerTap];
+//    [self addGestureRecognizer:singleFingerTap];
 
 }
 
+-(void)closeButtonClicked:(id)sender{
+    [toFieldView.tokenField resignFirstResponder];
+    [self setHidden:YES];
+}
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     // test if our control subview is on-screen
@@ -191,7 +206,6 @@ NSString *msgBody;
     rfc822Data = [builder data];
     
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    
     [MBProgressHUD showHUDAddedTo:appDelegate.window animated:YES];
     MCOSMTPSendOperation *sendOperation = [[EmailService instance].smtpSession sendOperationWithData:rfc822Data];
     [sendOperation start:^(NSError *error) {
@@ -232,7 +246,8 @@ NSString *msgBody;
 - (void)resizeViews {
     int tabBarOffset = 40;
 	[toFieldView setFrame:((CGRect){toFieldView.frame.origin, {self.bounds.size.width, self.bounds.size.height + tabBarOffset - _keyboardHeight}})];
-	[_messageView setFrame:toFieldView.contentView.bounds];
+//	[_messageView setFrame:toFieldView.contentView.bounds];
+    [_messageView setFrame:CGRectMake(8, 0, WIDTH-16, toFieldView.frame.size.height)];
     
 }
 

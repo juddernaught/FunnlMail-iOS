@@ -133,7 +133,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [centeredButtons addSubview:mailButton];*/
   
     [filterButton addTarget:self action:@selector(filterButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    filterButton.frame = CGRectMake(15, -3, 32, 32);
+    filterButton.frame = CGRectMake(15, 0, 32, 29);
     [filterButton setImage:[UIImage imageNamed:@"FunnlIcon.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:filterButton];
     

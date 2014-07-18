@@ -11,12 +11,13 @@
 
 
 @implementation EmailCell
-@synthesize dateLabel,senderLabel,subjectLabel,bodyLabel,readLabel,threadLabel,detailDiscloser,inclusiveFunnels,labelNameText;
+@synthesize dateLabel,senderLabel,subjectLabel,bodyLabel,readLabel,threadLabel,detailDiscloser,labelNameText;
+@synthesize funnlLabel1,funnlLabel2,funnlLabel3;
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier];
     labelNameText = [[UILabel alloc] initWithFrame:CGRectMake(32, 96, 320 - 42, 20)];
-//    [labelNameText setBackgroundColor:[UIColor redColor]];
+    [labelNameText setBackgroundColor:[UIColor clearColor]];
     [labelNameText setTextAlignment:NSTextAlignmentRight];
     NSArray *labelArray = [[NSArray alloc] init];
     NSMutableAttributedString *tempAttributedString = [[NSMutableAttributedString alloc] init];
@@ -32,15 +33,29 @@
     labelArray = nil;
     tempAttributedString = nil;
     colorArray = nil;
-    inclusiveFunnels = [[UILabel alloc] init];
-    dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(320-80-10, 10, 80, 20)];
-//    senderLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 7, 320-105-6-60, 20)];
+
     senderLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 10, 320-105, 20)];
-    subjectLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 30, 320-50-32, 20)];
-    bodyLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 50, 320-50-32, 90-47-7+10)];
+    subjectLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 30, 320-105, 20)];
+    bodyLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 50, 320-105, 90-47-7+10)];
+
+//    senderLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 7, 320-105-6-60, 20)];
     readLabel = [[UILabel alloc] initWithFrame:CGRectMake(10-1, 20, 14, 14)];
-    threadLabel = [[UILabel alloc] initWithFrame:CGRectMake(320-20-10-43, 35, 48-5, 20)];
-    detailDiscloser = [[UIImageView alloc] initWithFrame:CGRectMake(320-20-10, 35, 20, 20)];
+    threadLabel = [[UILabel alloc] initWithFrame:CGRectMake(320-20-43, 35, 48-5, 20)];
+    detailDiscloser = [[UIImageView alloc] initWithFrame:CGRectMake(320-20, 35, 20, 20)];
+    
+    dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(320-70-5, 10, 70, 20)];
+    funnlLabel1 = [[UILabel alloc] initWithFrame:CGRectMake(320-70-5, 50, 70, 20)];
+    funnlLabel2 = [[UILabel alloc] initWithFrame:CGRectMake(320-70-5, 70, 70, 20)];
+//    funnlLabel3 = [[UILabel alloc] initWithFrame:CGRectMake(320-70-5, 70, 70, 20)];
+    
+    senderLabel.backgroundColor = [UIColor clearColor];
+    subjectLabel.backgroundColor = [UIColor clearColor];
+    bodyLabel.backgroundColor = [UIColor clearColor];
+    funnlLabel1.backgroundColor = [UIColor clearColor];
+    funnlLabel2.backgroundColor = [UIColor clearColor];
+    funnlLabel3.backgroundColor = [UIColor clearColor];
+
+    
     [detailDiscloser setImage:[UIImage imageNamed:@"arrow.png"]];
     [threadLabel setTextAlignment:NSTextAlignmentRight];
     readLabel.clipsToBounds = YES;
@@ -50,6 +65,9 @@
     bodyLabel.numberOfLines = 3;
     
     dateLabel.font = [UIFont systemFontOfSize:13];
+    funnlLabel1.font = [UIFont systemFontOfSize:13];
+    funnlLabel2.font = [UIFont systemFontOfSize:13];
+    funnlLabel3.font = [UIFont systemFontOfSize:13];
     senderLabel.font = [UIFont boldSystemFontOfSize:16];
     subjectLabel.font = [UIFont systemFontOfSize:14];
     bodyLabel.font = [UIFont systemFontOfSize:14];
@@ -58,13 +76,18 @@
     labelNameText.font = [UIFont systemFontOfSize:13];
     
     dateLabel.textColor = [UIColor blackColor];
+    funnlLabel1.textColor = [UIColor blackColor];
+    funnlLabel2.textColor = [UIColor blackColor];
+    funnlLabel3.textColor = [UIColor blackColor];
     senderLabel.textColor = [UIColor blackColor];
-    [senderLabel setBackgroundColor:[UIColor clearColor]];
     subjectLabel.textColor = [UIColor blackColor];
     bodyLabel.textColor = [UIColor lightGrayColor];
     readLabel.backgroundColor = [UIColor clearColor];
     
     dateLabel.textAlignment = NSTextAlignmentRight;
+    funnlLabel1.textAlignment = NSTextAlignmentRight;
+    funnlLabel2.textAlignment = NSTextAlignmentRight;
+    funnlLabel3.textAlignment = NSTextAlignmentRight;
 //    dateLabel.backgroundColor = [UIColor redColor];
 //    senderLabel.backgroundColor = [UIColor greenColor];
 //    subjectLabel.backgroundColor = [UIColor blueColor];
@@ -79,7 +102,9 @@
     [self.contentView addSubview:readLabel];
     [self.contentView addSubview:detailDiscloser];
     [self.contentView addSubview:labelNameText];
-//    [self.contentView addSubview:inclusiveFunnels];
+    [self.contentView addSubview:funnlLabel1];
+    [self.contentView addSubview:funnlLabel2];
+    [self.contentView addSubview:funnlLabel3];
     return self;
 }
 

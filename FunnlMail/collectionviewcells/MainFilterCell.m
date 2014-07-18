@@ -72,17 +72,17 @@
         mailImageView.frame = CGRectMake(0, 0, 30, 20);
         [self addSubview:mailImageView];
       
-        shareButton = [[UIButton alloc] initWithFrame:CGRectMake(5 + 2, self.frame.size.height - 32 - 5 + 2, 25, 25)];
+        shareButton = [[UIButton alloc] initWithFrame:CGRectMake(5 , self.frame.size.height - 35 - 5, 35, 35)];
         [shareButton setImage:[UIImage imageNamed:@"Share"] forState:UIControlStateNormal];
         [self addSubview:shareButton];
         shareButton.hidden = YES;
         
-        notificationButton = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width/2 - 15, self.frame.size.height - 32 - 5, 30, 30)];
+        notificationButton = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width/2 - 17, self.frame.size.height - 35 - 5, 35, 35)];
         [notificationButton setImage:[UIImage imageNamed:@"Alert"] forState:UIControlStateNormal];
         [self addSubview:notificationButton];
         notificationButton.hidden = YES;
       
-        settingsButton = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width - 32, self.frame.size.height - 32 - 5, 30, 30)];
+        settingsButton = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width - 40, self.frame.size.height - 35 - 5, 35, 35)];
         [settingsButton setImage:[UIImage imageNamed:@"Settings"] forState:UIControlStateNormal];
         [self addSubview:settingsButton];
 //        [settingsButton setBackgroundColor:[UIColor redColor]];
@@ -185,7 +185,7 @@
     mailImageView.contentMode = UIViewContentModeCenter;
     mailImageView.image = [UIImage imageNamed:@"Add.png"];
     [mailImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-      make.top.equalTo(filterTitleLabel.mas_bottom).with.offset(-20);
+      make.top.equalTo(filterTitleLabel.mas_bottom).with.offset(-10);
       make.left.equalTo(self.mas_centerX).with.offset(-(65/2));
     }];
     settingsButton.hidden = YES;
