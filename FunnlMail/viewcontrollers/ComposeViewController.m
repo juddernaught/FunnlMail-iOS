@@ -84,70 +84,6 @@ NSMutableArray *emailArr,*searchArray;
 }
 
 
-#pragma mark loadContacts
-//this will need to put somewhere so it happens only once
-//it will take longer to do the more contacts there are obviously
--(void)emailContact
-
-{
-    
-    emailArr = [[NSMutableArray alloc]init];
-    searchArray = [[NSMutableArray alloc]init];
-    
-    ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
-    
-    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
-        ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
-            if (granted) {
-                // First time access has been granted, add the contact
-                
-                CFArrayRef people = ABAddressBookCopyArrayOfAllPeople(addressBook);
-                NSMutableArray *allEmails = [[NSMutableArray alloc] initWithCapacity:CFArrayGetCount(people)];
-                for (CFIndex i = 0; i < CFArrayGetCount(people); i++)
-                {
-                    ABRecordRef person = CFArrayGetValueAtIndex(people, i);
-                    ABMultiValueRef emails = ABRecordCopyValue(person, kABPersonEmailProperty);
-                    for (CFIndex j=0; j < ABMultiValueGetCount(emails); j++)
-                    {
-                        NSString* email = (__bridge NSString*)ABMultiValueCopyValueAtIndex(emails, j);
-                        [allEmails addObject:email];
-                        
-                    }
-                    CFRelease(emails);
-                }
-                emailArr = allEmails;
-
-            } else {
-                // User denied access
-                // Display an alert telling user the contact could not be added
-            }
-        });
-    }
-    else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
-        // The user has previously given access, add the contact
-        CFArrayRef people = ABAddressBookCopyArrayOfAllPeople(addressBook);
-        NSMutableArray *allEmails = [[NSMutableArray alloc] initWithCapacity:CFArrayGetCount(people)];
-        for (CFIndex i = 0; i < CFArrayGetCount(people); i++)
-        {
-            ABRecordRef person = CFArrayGetValueAtIndex(people, i);
-            ABMultiValueRef emails = ABRecordCopyValue(person, kABPersonEmailProperty);
-            for (CFIndex j=0; j < ABMultiValueGetCount(emails); j++)
-            {
-                NSString* email = (__bridge NSString*)ABMultiValueCopyValueAtIndex(emails, j);
-                if([self validateEmail:email]) [allEmails addObject:email];
-                
-            }
-            CFRelease(emails);
-        }
-        emailArr = allEmails;
-    }
-    else {
-        // The user has previously denied access
-        // Send an alert telling user to change privacy setting in settings app
-    }
-
-    
-}
 
 #pragma this is what initiates autocomplete
 - (BOOL)textField:(UITextField *)textField
@@ -164,7 +100,7 @@ replacementString:(NSString *)string {
     else if ([@"Cc:"  isEqual: ((UILabel *)(TITokenField *)textField.leftView).text]){
         NSLog(@"cc did start");
         autocompleteTableView.hidden = NO;
-        //[self.view setFrame:CGRectMake(0,-.0001,self.view.bounds.size.width,self.view.bounds.size.height-100)];
+        //[self.view setFrame:CGRectMake(0,0,self.view.bounds.size.width,self.view.bounds.size.height)];
         //autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 65, self.view.bounds.size.width, 120)];
         //[self.view addSubview:autocompleteTableView];
 
@@ -211,7 +147,7 @@ replacementString:(NSString *)string {
     autocompleteTableView.hidden = YES;
     if(ccFieldView.tokenField.isEditing){
         NSLog(@"ccFieldView isEditing");
-       // [self.view setFrame:CGRectMake(0,60,self.view.bounds.size.width,self.view.bounds.size.height)];
+        //[self.view setFrame:CGRectMake(0,0,self.view.bounds.size.width,self.view.bounds.size.height+10)];
     }
 //    else if (bccFieldView.tokenField.isEditing)[self.view setFrame:CGRectMake(0,75,self.view.bounds.size.width,self.view.bounds.size.height)];
     return YES;
@@ -665,5 +601,71 @@ replacementString:(NSString *)string {
     [self.view bringSubviewToFront:messageView];
     //NSLog(@" %@ - %@ - %@ - %@",NSStringFromCGSize(toFieldView.contentView.frame.size),NSStringFromCGRect(ccFieldView.frame),NSStringFromCGRect(subjectFieldView.frame),NSStringFromCGRect(messageView.frame));
 }
+
+#pragma mark loadContacts
+//this will need to put somewhere so it happens only once
+//it will take longer to do the more contacts there are obviously
+-(void)emailContact
+
+{
+    
+    emailArr = [[NSMutableArray alloc]init];
+    searchArray = [[NSMutableArray alloc]init];
+    
+    ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
+    
+    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
+        ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
+            if (granted) {
+                // First time access has been granted, add the contact
+                
+                CFArrayRef people = ABAddressBookCopyArrayOfAllPeople(addressBook);
+                NSMutableArray *allEmails = [[NSMutableArray alloc] initWithCapacity:CFArrayGetCount(people)];
+                for (CFIndex i = 0; i < CFArrayGetCount(people); i++)
+                {
+                    ABRecordRef person = CFArrayGetValueAtIndex(people, i);
+                    ABMultiValueRef emails = ABRecordCopyValue(person, kABPersonEmailProperty);
+                    for (CFIndex j=0; j < ABMultiValueGetCount(emails); j++)
+                    {
+                        NSString* email = (__bridge NSString*)ABMultiValueCopyValueAtIndex(emails, j);
+                        [allEmails addObject:email];
+                        
+                    }
+                    CFRelease(emails);
+                }
+                emailArr = allEmails;
+                
+            } else {
+                // User denied access
+                // Display an alert telling user the contact could not be added
+            }
+        });
+    }
+    else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
+        // The user has previously given access, add the contact
+        CFArrayRef people = ABAddressBookCopyArrayOfAllPeople(addressBook);
+        NSMutableArray *allEmails = [[NSMutableArray alloc] initWithCapacity:CFArrayGetCount(people)];
+        for (CFIndex i = 0; i < CFArrayGetCount(people); i++)
+        {
+            ABRecordRef person = CFArrayGetValueAtIndex(people, i);
+            ABMultiValueRef emails = ABRecordCopyValue(person, kABPersonEmailProperty);
+            for (CFIndex j=0; j < ABMultiValueGetCount(emails); j++)
+            {
+                NSString* email = (__bridge NSString*)ABMultiValueCopyValueAtIndex(emails, j);
+                if([self validateEmail:email]) [allEmails addObject:email];
+                
+            }
+            CFRelease(emails);
+        }
+        emailArr = allEmails;
+    }
+    else {
+        // The user has previously denied access
+        // Send an alert telling user to change privacy setting in settings app
+    }
+    
+    
+}
+
 
 @end
