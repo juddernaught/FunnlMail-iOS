@@ -138,8 +138,8 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [centeredButtons addSubview:filterButton];
     
     [composeEmailButton addTarget:self action:@selector(composeEmailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    composeEmailButton.frame = CGRectMake(65, -3, 32, 32);
-    [composeEmailButton setImage:[UIImage imageNamed:@"FunnlIcon.png"] forState:UIControlStateNormal];
+    composeEmailButton.frame = CGRectMake(65, -5, 32, 32);
+    [composeEmailButton setImage:[UIImage imageNamed:@"ComposeIcon.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:composeEmailButton];
     
     if(emailsTableViewController==nil){
