@@ -24,6 +24,5 @@
 // Added by Chad
 @property (assign,nonatomic) NSInteger newMessageCount;
 @property (strong, nonatomic) UILabel *messageCountLabel;
-@property (copy,nonatomic) UIButton *notificationButton,*settingsButton,*shareButton;
 
 @end

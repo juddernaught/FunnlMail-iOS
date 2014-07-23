@@ -117,8 +117,8 @@
             make.top.equalTo(filterTitleLabel.mas_bottom).with.offset(5);
             make.left.equalTo(self.mas_centerX).with.offset(-(30/2));
         }];
-        messageCountLabel.hidden = NO;
-    }
+        
+           }
 }
 
 // Added by Chad
