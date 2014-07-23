@@ -11,11 +11,19 @@
 @interface FunnlPopupViewCell : UICollectionViewCell{
     UIView *coloredBarView;
     UILabel *filterTitleLabel;
-    UIImageView *mailImageView;
+    //UIImageView *mailImageView;
+    UILabel *dateOfLastMessageLabel;
+    UILabel *typeLabel;
 
 }
 
 @property (strong,nonatomic) UIColor *barColor;
 @property (copy,nonatomic) NSString *filterTitle;
+@property (strong, nonatomic) UIImageView *mailImageView;
+
+// Added by Chad
+@property (assign,nonatomic) NSInteger newMessageCount;
+@property (strong, nonatomic) UILabel *messageCountLabel;
+@property (copy,nonatomic) UIButton *notificationButton,*settingsButton,*shareButton;
 
 @end
