@@ -15,13 +15,17 @@
 #import "UIColor+HexString.h"
 #import "FunnelService.h"
 #import <Mixpanel/Mixpanel.h>
+#import <AddressBook/AddressBook.h>
 
 @interface CreateFunnlViewController ()
 
 @end
 
 @implementation CreateFunnlViewController
+UITableView *autocompleteTableView;
+NSMutableArray *emailArr,*searchArray;
 @synthesize mainVCdelegate,isEdit;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -95,26 +99,45 @@
     self.title = @"Create Funnl";
     [self.view setBackgroundColor:[UIColor whiteColor]];
     [self initBarbuttonItem];
+    
+    [self emailContact];
+    
+    autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 160, self.view.bounds.size.width, 180)];
+    autocompleteTableView.delegate = self;
+    autocompleteTableView.dataSource = self;
+    autocompleteTableView.scrollEnabled = YES;
+    autocompleteTableView.hidden = YES;
+    autocompleteTableView.tag = 1;
+    [self.view addSubview:autocompleteTableView];
+    
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 }
+
+
 
 #pragma -
 #pragma mark TableView Datasource & delegate Methods.
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if(section==0){
-        return 1;
-    }
-    else if(section == 1){
-        return dictionaryOfConversations.allKeys.count+1;
-    }
-    else if(section == 2){
-        return dictionaryOfSubjects.allKeys.count+1;
+    if(tableView.tag == 1){
+        return searchArray.count;
     }
     else {
-        return 1;
+        if(section==0){
+            return 1;
+        }
+        else if(section == 1){
+            return dictionaryOfConversations.allKeys.count+1;
+        }
+        else if(section == 2){
+            return dictionaryOfSubjects.allKeys.count+1;
+        }
+        else {
+            return 1;
+        }
     }
 }
 
@@ -140,99 +163,113 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 3) {
-        UITableViewCell *cell = [[UITableViewCell alloc] init];
-        cell.textLabel.text = @"Skip All Mail:";
-        skipAllSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(300-50, 8, 50, 0)];
-        if (oldModel.skipFlag) {
-            [skipAllSwitch setOn:YES];
-        }
-        else {
-            [skipAllSwitch setOn:NO];
-        }
-        [skipAllSwitch addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
-        [cell addSubview:skipAllSwitch];
-        return cell;
-    }
-    TextFieldCell *cell = [[TextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
-    
-    if(indexPath.section == 0)
-    {
-        cell.textField.frame = CGRectMake(10, 2,250, 40);
-        cell.textField.placeholder = @"Enter name";
-        cell.textField.text = funnlName;
-        cell.textField.delegate = self;
-        cell.textField.tag = indexPath.section;
-        cell.tag = cell.contentView.tag = indexPath.row;
-    }
-    else if (indexPath.section == 1)
-    {
-        cell.textField.frame = CGRectMake(10, 2,250, 40);
-        cell.textField.tag = indexPath.section;
-        cell.textField.delegate = self;
-        cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-        cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-        if(indexPath.row != dictionaryOfConversations.allKeys.count && dictionaryOfConversations.allKeys.count > 0){
-            cell.textField.text = [dictionaryOfConversations objectForKey:indexPath];
+    if(tableView.tag == 1){
+        UITableViewCell *cell = nil;
+        static NSString *AutoCompleteRowIdentifier = @"AutoCompleteRowIdentifier";
+        cell = [tableView dequeueReusableCellWithIdentifier:AutoCompleteRowIdentifier];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc]
+                    initWithStyle:UITableViewCellStyleDefault reuseIdentifier:AutoCompleteRowIdentifier];
         }
         
-        if(indexPath.row ==  dictionaryOfConversations.allKeys.count)
-        {
-            [cell.addButton setHidden:NO];
-            [cell.cancelButton setHidden:YES];
-            [cell.addButton setFrame:CGRectMake(270, 2, 40, 40)];
-            [cell.addButton addTarget:self action:@selector(addButtonPressedForConversation:) forControlEvents:UIControlEventTouchUpInside];
-            cell.textField.placeholder = @"Enter Email ID";
-        }else{
-            [cell.addButton setHidden:YES];
-            [cell.cancelButton setHidden:NO];
-            [cell.cancelButton setFrame:CGRectMake(270, 2, 40, 40)];
-            cell.cancelButton.tag = indexPath.row;
-            [cell.cancelButton addTarget:self action:@selector(cancelButtonPressedForConversation:) forControlEvents:UIControlEventTouchUpInside];
-        }
-        cell.tag = cell.contentView.tag = indexPath.row;
+        cell.textLabel.text = [searchArray objectAtIndex:indexPath.row];
+        return cell;
     }
-    else if (indexPath.section == 2)
-    {
-        cell.textField.frame = CGRectMake(10, 2,250, 40);
-        cell.textField.tag = indexPath.section;
-        cell.textField.delegate = self;
-        cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-        cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-        if(indexPath.row != dictionaryOfSubjects.count && dictionaryOfSubjects.count > 0){
-            cell.textField.text = [dictionaryOfSubjects objectForKey:indexPath];
+    else {
+        if (indexPath.section == 3) {
+            UITableViewCell *cell = [[UITableViewCell alloc] init];
+            cell.textLabel.text = @"Skip All Mail:";
+            skipAllSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(300-50, 8, 50, 0)];
+            if (oldModel.skipFlag) {
+                [skipAllSwitch setOn:YES];
+            }
+            else {
+                [skipAllSwitch setOn:NO];
+            }
+            [skipAllSwitch addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
+            [cell addSubview:skipAllSwitch];
+            return cell;
         }
-        if(indexPath.row == dictionaryOfSubjects.allKeys.count)
+        TextFieldCell *cell = [[TextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
+        
+        if(indexPath.section == 0)
         {
-            [cell.addButton setHidden:NO];
-            [cell.cancelButton setHidden:YES];
-            [cell.addButton setFrame:CGRectMake(270, 2, 40, 40)];
-            [cell.addButton addTarget:self action:@selector(addButtonPressedForSubject:) forControlEvents:UIControlEventTouchUpInside];
-            cell.textField.placeholder = @"Enter Subject";
+            cell.textField.frame = CGRectMake(10, 2,250, 40);
+            cell.textField.placeholder = @"Enter name";
+            cell.textField.text = funnlName;
+            cell.textField.delegate = self;
+            cell.textField.tag = indexPath.section;
+            cell.tag = cell.contentView.tag = indexPath.row;
         }
-        else{
-            [cell.addButton setHidden:YES];
-            [cell.cancelButton setHidden:NO];
-            [cell.cancelButton setFrame:CGRectMake(270, 2, 40, 40)];
-            cell.cancelButton.tag = indexPath.row;
-            [cell.cancelButton addTarget:self action:@selector(cancelButtonPressedForSubject:) forControlEvents:UIControlEventTouchUpInside];
+        else if (indexPath.section == 1)
+        {
+            cell.textField.frame = CGRectMake(10, 2,250, 40);
+            cell.textField.tag = indexPath.section;
+            cell.textField.delegate = self;
+            cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+            cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+            if(indexPath.row != dictionaryOfConversations.allKeys.count && dictionaryOfConversations.allKeys.count > 0){
+                cell.textField.text = [dictionaryOfConversations objectForKey:indexPath];
+            }
             
+            if(indexPath.row ==  dictionaryOfConversations.allKeys.count)
+            {
+                [cell.addButton setHidden:NO];
+                [cell.cancelButton setHidden:YES];
+                [cell.addButton setFrame:CGRectMake(270, 2, 40, 40)];
+                [cell.addButton addTarget:self action:@selector(addButtonPressedForConversation:) forControlEvents:UIControlEventTouchUpInside];
+                cell.textField.placeholder = @"Enter Email ID";
+            }else{
+                [cell.addButton setHidden:YES];
+                [cell.cancelButton setHidden:NO];
+                [cell.cancelButton setFrame:CGRectMake(270, 2, 40, 40)];
+                cell.cancelButton.tag = indexPath.row;
+                [cell.cancelButton addTarget:self action:@selector(cancelButtonPressedForConversation:) forControlEvents:UIControlEventTouchUpInside];
+            }
+            cell.tag = cell.contentView.tag = indexPath.row;
         }
-        cell.tag = cell.contentView.tag = indexPath.row;
+        else if (indexPath.section == 2)
+        {
+            cell.textField.frame = CGRectMake(10, 2,250, 40);
+            cell.textField.tag = indexPath.section;
+            cell.textField.delegate = self;
+            cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+            cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+            if(indexPath.row != dictionaryOfSubjects.count && dictionaryOfSubjects.count > 0){
+                cell.textField.text = [dictionaryOfSubjects objectForKey:indexPath];
+            }
+            if(indexPath.row == dictionaryOfSubjects.allKeys.count)
+            {
+                [cell.addButton setHidden:NO];
+                [cell.cancelButton setHidden:YES];
+                [cell.addButton setFrame:CGRectMake(270, 2, 40, 40)];
+                [cell.addButton addTarget:self action:@selector(addButtonPressedForSubject:) forControlEvents:UIControlEventTouchUpInside];
+                cell.textField.placeholder = @"Enter Subject";
+            }
+            else{
+                [cell.addButton setHidden:YES];
+                [cell.cancelButton setHidden:NO];
+                [cell.cancelButton setFrame:CGRectMake(270, 2, 40, 40)];
+                cell.cancelButton.tag = indexPath.row;
+                [cell.cancelButton addTarget:self action:@selector(cancelButtonPressedForSubject:) forControlEvents:UIControlEventTouchUpInside];
+                
+            }
+            cell.tag = cell.contentView.tag = indexPath.row;
+        }
+        else if (indexPath.section == 3) {
+            skipAllSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(130, 235, 0, 0)];
+            if (oldModel.skipFlag) {
+                [skipAllSwitch setOn:YES];
+            }
+            else {
+                [skipAllSwitch setOn:NO];
+            }
+            [skipAllSwitch addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
+            [cell addSubview:skipAllSwitch];
+        }
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        return cell;
     }
-    else if (indexPath.section == 3) {
-        skipAllSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(130, 235, 0, 0)];
-        if (oldModel.skipFlag) {
-            [skipAllSwitch setOn:YES];
-        }
-        else {
-            [skipAllSwitch setOn:NO];
-        }
-        [skipAllSwitch addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
-        [cell addSubview:skipAllSwitch];
-    }
-    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-    return cell;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -241,7 +278,11 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [tableView deselectRowAtIndexPath:indexPath animated:NO];
+    if(tableView.tag == 1){
+        NSLog(@"did select autocomplete row");
+        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    }
+    else [tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -592,25 +633,72 @@
     [tempAppDelegate.progressHUD removeFromSuperview];
 }
 
+- (void)searchAutocompleteEntriesWithSubstring:(NSString *)substring {
+    
+    // Put anything that starts with this substring into the searchArray
+    // The items in this array is what will show up in the table view
+    [searchArray removeAllObjects];
+    for(NSMutableString *curString in emailArr) {
+        
+        substring = [substring stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        
+        if ([curString rangeOfString:substring].location == 0) {
+            [searchArray addObject:curString];
+        }
+        
+    }
+    [autocompleteTableView reloadData];
+}
+
 #pragma mark - TextField delegate
 - (BOOL)textFieldShouldClear:(UITextField *)textField{
     return YES;
 }
 
--(BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
-    activeField = textField;
+- (BOOL)textField:(UITextField *)textField
+shouldChangeCharactersInRange:(NSRange)range
+replacementString:(NSString *)string {
+    if (textField.tag != 1) return NO;
+    NSLog(@"making sure this is happening");
+    autocompleteTableView.hidden = NO;
+    NSLog(@"what is the string: %@",string);
+    NSString *substring = [NSString stringWithString:textField.text];
+    substring = [substring
+                 stringByReplacingCharactersInRange:range withString:string];
+    [self searchAutocompleteEntriesWithSubstring:substring];
+    if(searchArray.count != 0) autocompleteTableView.hidden = NO;
+    else autocompleteTableView.hidden = YES;
     return YES;
 }
+
+
+CGRect temp;//this is necessary to reset view
+-(BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
+    activeField = textField;
+    if (textField.tag == 1) {
+        NSLog(@"Entered Email ID");
+        CGFloat height = (CGFloat)(80+(dictionaryOfConversations.allKeys.count+1)*40);
+        NSLog(@"this is the height: %f",height);
+        temp = self.view.frame;
+        autocompleteTableView.hidden = NO;
+        self.view.frame = CGRectMake(0, -height, 480, self.view.bounds.size.height+height);
+    }
+    return YES;
+}
+
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField;{
     if(textField.tag == 0){
         funnlName = textField.text;
     }
     else if(textField.tag == 1){
+        NSLog(@"is ending");
+        autocompleteTableView.hidden = YES;
         CGPoint textFieldOrigin = [tableview convertPoint:textField.bounds.origin fromView:textField];
         NSIndexPath *indexPath = [tableview indexPathForRowAtPoint:textFieldOrigin];
         if(textField.text.length)
             [dictionaryOfConversations setObject:[textField.text lowercaseString] forKey:indexPath];
+        self.view.frame = temp;
     }
     else if(textField.tag == 2){
         CGPoint textFieldOrigin = [tableview convertPoint:textField.bounds.origin fromView:textField];
@@ -623,6 +711,7 @@
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    NSLog(@"did return");
     [textField resignFirstResponder];
     [tableview reloadData];
     return YES;
@@ -655,6 +744,75 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(void)emailContact
+
+{
+    
+    emailArr = [[NSMutableArray alloc]init];
+    searchArray = [[NSMutableArray alloc]init];
+    
+    ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
+    
+    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
+        ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
+            if (granted) {
+                // First time access has been granted, add the contact
+                
+                CFArrayRef people = ABAddressBookCopyArrayOfAllPeople(addressBook);
+                NSMutableArray *allEmails = [[NSMutableArray alloc] initWithCapacity:CFArrayGetCount(people)];
+                for (CFIndex i = 0; i < CFArrayGetCount(people); i++)
+                {
+                    ABRecordRef person = CFArrayGetValueAtIndex(people, i);
+                    ABMultiValueRef emails = ABRecordCopyValue(person, kABPersonEmailProperty);
+                    for (CFIndex j=0; j < ABMultiValueGetCount(emails); j++)
+                    {
+                        NSString* email = (__bridge NSString*)ABMultiValueCopyValueAtIndex(emails, j);
+                        [allEmails addObject:email];
+                        
+                    }
+                    CFRelease(emails);
+                }
+                emailArr = allEmails;
+                
+            } else {
+                // User denied access
+                // Display an alert telling user the contact could not be added
+            }
+        });
+    }
+    else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
+        // The user has previously given access, add the contact
+        CFArrayRef people = ABAddressBookCopyArrayOfAllPeople(addressBook);
+        NSMutableArray *allEmails = [[NSMutableArray alloc] initWithCapacity:CFArrayGetCount(people)];
+        for (CFIndex i = 0; i < CFArrayGetCount(people); i++)
+        {
+            ABRecordRef person = CFArrayGetValueAtIndex(people, i);
+            ABMultiValueRef emails = ABRecordCopyValue(person, kABPersonEmailProperty);
+            for (CFIndex j=0; j < ABMultiValueGetCount(emails); j++)
+            {
+                NSString* email = (__bridge NSString*)ABMultiValueCopyValueAtIndex(emails, j);
+                if([self validateEmail:email]) [allEmails addObject:email];
+                
+            }
+            CFRelease(emails);
+        }
+        emailArr = allEmails;
+    }
+    else {
+        // The user has previously denied access
+        // Send an alert telling user to change privacy setting in settings app
+    }
+    
+    
+}
+
+- (BOOL) validateEmail: (NSString *) candidate {
+    NSString *emailRegex = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}";
+    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
+    
+    return [emailTest evaluateWithObject:candidate];
 }
 
 

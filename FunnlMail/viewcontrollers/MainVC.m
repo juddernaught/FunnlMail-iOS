@@ -139,6 +139,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     
     [composeEmailButton addTarget:self action:@selector(composeEmailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
     composeEmailButton.frame = CGRectMake(65, -5, 32, 32);
+    if([UIImage imageNamed:@"ComposeIcon.png"] == nil) NSLog(@"this image is not found");
     [composeEmailButton setImage:[UIImage imageNamed:@"ComposeIcon.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:composeEmailButton];
     

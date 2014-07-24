@@ -274,12 +274,15 @@ static NSString *currentFolder;
                                //my inbox still shows up out of order with no pattern noticeable
                                //might be just me
                                emailTableViewController->searchMessages = [NSMutableArray arrayWithArray:[[emailTableViewController->searchMessages reverseObjectEnumerator] allObjects]];
+                              emailTableViewController.emailFolder = SENT;
                                emailTableViewController.isSearching = YES;
                                NSLog(@"does it crash here?");
                                emailTableViewController.navigationItem.title = @"Sent";
                                [emailTableViewController.tableView reloadData];
                                }
                       else if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
+                          emailTableViewController.emailFolder = INBOX;
+                          
                           [emailTableViewController.tableView reloadData];
                       }
                       else {

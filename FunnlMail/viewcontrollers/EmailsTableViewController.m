@@ -457,9 +457,10 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                     else cell.senderLabel.text = message.header.sender.displayName;
                 }
                 else{
-                    NSLog(@"this is the to array: %@",message.header.to);
                     if([self.navigationItem.title isEqualToString:@"Sent"]){
-                        if(message.header.to.firstObject){ //cell.senderLabel.text = message.header.to.firstObject; //NSLog(@"this is the to: %@",message.header.to.firstObject);
+                        if(message.header.to.count){
+                            MCOAddress *temp = message.header.to.firstObject;
+                            cell.senderLabel.text = temp.mailbox;
                         }
                         else cell.senderLabel.text = @"Error retrieving recipients";
                     }
