@@ -102,13 +102,13 @@ NSMutableArray *emailArr,*searchArray;
     
     [self emailContact];
     
-    autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 160, self.view.bounds.size.width, 180)];
+   // autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 160, self.view.bounds.size.width, 180)];
     autocompleteTableView.delegate = self;
     autocompleteTableView.dataSource = self;
     autocompleteTableView.scrollEnabled = YES;
     autocompleteTableView.hidden = YES;
     autocompleteTableView.tag = 1;
-    [self.view addSubview:autocompleteTableView];
+    //[self.view addSubview:autocompleteTableView];
     
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
@@ -679,9 +679,9 @@ CGRect temp;//this is necessary to reset view
         NSLog(@"Entered Email ID");
         CGFloat height = (CGFloat)(80+(dictionaryOfConversations.allKeys.count+1)*40);
         NSLog(@"this is the height: %f",height);
-        temp = self.view.frame;
+        //temp = self.view.frame;
         autocompleteTableView.hidden = NO;
-        self.view.frame = CGRectMake(0, -height, 480, self.view.bounds.size.height+height);
+        //self.view.frame = CGRectMake(0, -height, 480, self.view.bounds.size.height+height);
     }
     return YES;
 }
@@ -698,7 +698,7 @@ CGRect temp;//this is necessary to reset view
         NSIndexPath *indexPath = [tableview indexPathForRowAtPoint:textFieldOrigin];
         if(textField.text.length)
             [dictionaryOfConversations setObject:[textField.text lowercaseString] forKey:indexPath];
-        self.view.frame = temp;
+        //self.view.frame = temp;
     }
     else if(textField.tag == 2){
         CGPoint textFieldOrigin = [tableview convertPoint:textField.bounds.origin fromView:textField];
