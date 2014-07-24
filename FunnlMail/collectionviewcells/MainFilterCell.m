@@ -68,8 +68,8 @@
       
         [self addConstraint:constraint];
       
-        mailImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Mail"]];
-        mailImageView.frame = CGRectMake(0, 0, 30, 20);
+         mailImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Mail"]];
+        //mailImageView.frame = CGRectMake(0, 0, 30, 20);
         [self addSubview:mailImageView];
       
         shareButton = [[UIButton alloc] initWithFrame:CGRectMake(5 , self.frame.size.height - 35 - 5, 35, 35)];
@@ -93,7 +93,7 @@
         messageCountLabel = [[UILabel alloc] init];
 //        [newMessageCountLabel setFont:[UIFont systemFontOfSize:16]];
         messageCountLabel.textAlignment = NSTextAlignmentCenter;
-        messageCountLabel.text = @"0";
+        messageCountLabel.text = @"MainText";
 //        newMessageCountLabel.font = [UIFont fontWithName:@"Helvetica" size:11];
         [messageCountLabel setFont:[UIFont systemFontOfSize:14]];
         [self addSubview:messageCountLabel];

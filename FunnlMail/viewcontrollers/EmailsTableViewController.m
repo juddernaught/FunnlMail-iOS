@@ -218,6 +218,9 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 }
 //                else
 //                    [cell resetToOriginalState];
+                cell.funnlLabel1.text = @"";
+                cell.funnlLabel2.text = @"";
+                cell.funnlLabel3.text = @"";
 
                 NSMutableDictionary *funnlLabelDictionary= [self getFunnlsDictionary:(MessageModel*)[EmailService instance].filterMessages[indexPath.row]];
                 int funnlLabelCount = 0;

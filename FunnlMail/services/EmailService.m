@@ -512,7 +512,9 @@ static NSString *currentFolder;
 {
     MCOMessageHeader *header = [message header];
     for (NSString *senderEmailID in funnel.sendersArray) {
-        if ([senderEmailID.lowercaseString isEqualToString:[[[header sender] mailbox] lowercaseString]]) {
+        MCOAddress *emailAddress = message.header.from;
+        NSString *messageSenderID = [[emailAddress mailbox] lowercaseString];
+        if ([senderEmailID.lowercaseString isEqualToString:messageSenderID]) {
             return TRUE;
         }
     }
