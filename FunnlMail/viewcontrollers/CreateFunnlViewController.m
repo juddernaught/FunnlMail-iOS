@@ -100,7 +100,7 @@ NSMutableArray *emailArr,*searchArray;
     [self.view setBackgroundColor:[UIColor whiteColor]];
     [self initBarbuttonItem];
     
-    [self emailContact];
+    //[self emailContact];
     
    // autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 160, self.view.bounds.size.width, 180)];
     autocompleteTableView.delegate = self;
