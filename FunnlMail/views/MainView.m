@@ -148,7 +148,6 @@ NSString *msgBody;
 }
 
 - (void)handleSingleTap:(UITapGestureRecognizer *)recognizer {
-   
     
     if (editOn) {
         
@@ -157,6 +156,8 @@ NSString *msgBody;
         [editButton setImage:[UIImage imageNamed:@"manage_Button"] forState:UIControlStateNormal];
         
         [self.collectionView reloadData];
+        
+        [self setHidden:YES];
     }
     
     else {
