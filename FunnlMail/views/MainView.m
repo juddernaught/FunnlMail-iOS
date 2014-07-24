@@ -148,7 +148,21 @@ NSString *msgBody;
 }
 
 - (void)handleSingleTap:(UITapGestureRecognizer *)recognizer {
-   [self setHidden:YES];
+    
+    if (editOn) {
+        
+        editOn = FALSE;
+        
+        [editButton setImage:[UIImage imageNamed:@"manage_Button"] forState:UIControlStateNormal];
+        
+        [self.collectionView reloadData];
+        
+        [self setHidden:YES];
+    }
+    
+    else {
+        [self setHidden:YES];
+    }
 }
 
 - (void)editButtonPressed:(UIButton*)sender {
@@ -161,6 +175,7 @@ NSString *msgBody;
     else {
         editOn = TRUE;
         [editButton setImage:[UIImage imageNamed:@"Done_Button"] forState:UIControlStateNormal];
+        
     }
     [self.collectionView reloadData];
 }
