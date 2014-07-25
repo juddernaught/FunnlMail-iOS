@@ -1,10 +1,13 @@
 PODS:
-  - Mixpanel (2.4.0)
+  - Mixpanel (2.4.1)
+  - SSKeychain (1.2.2)
 
 DEPENDENCIES:
   - Mixpanel
+  - SSKeychain
 
 SPEC CHECKSUMS:
-  Mixpanel: 8cdf6fc831ae1f7515f0d8164dcc381990e0a23a
+  Mixpanel: a29ff32db93936dea24162f0dc4fecc4a8f17071
+  SSKeychain: cc48bd3ad24fcd9125adb9e0d23dd50b8bbd08b9
 
 COCOAPODS: 0.33.1

@@ -1,1 +1,2 @@
 pod 'Mixpanel'
+pod 'SSKeychain'

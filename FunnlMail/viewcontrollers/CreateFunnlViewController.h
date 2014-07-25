@@ -23,7 +23,9 @@
     NSArray *randomColors;
     FunnelModel *oldModel;
     UISwitch *skipAllSwitch;
+    UISwitch *enableNotificationsSwitch;
     BOOL isSkipALl;
+    BOOL areNotificationsEnabled;
 }
 @property (weak) id<MainVCDelegate> mainVCdelegate;
 @property (assign) BOOL isEdit;

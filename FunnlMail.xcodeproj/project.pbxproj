@@ -85,6 +85,32 @@
 		CCC9E428193E47980028DC84 /* ServiceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC9E427193E47980028DC84 /* ServiceTests.m */; };
 		CCC9E42B193E8D180028DC84 /* MessageFilterXRefService.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC9E42A193E8D180028DC84 /* MessageFilterXRefService.m */; };
 		CCD00B5B18F54797007A675F /* MainView.m in Sources */ = {isa = PBXBuildFile; fileRef = CCD00B5A18F54797007A675F /* MainView.m */; };
+		D1EFF48519817BBF0031A1D1 /* CIOAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = D1EFF47519817BBF0031A1D1 /* CIOAPIClient.m */; };
+		D1EFF48619817BBF0031A1D1 /* Base64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = D1EFF47819817BBF0031A1D1 /* Base64Transcoder.c */; };
+		D1EFF48719817BBF0031A1D1 /* hmac.c in Sources */ = {isa = PBXBuildFile; fileRef = D1EFF47A19817BBF0031A1D1 /* hmac.c */; };
+		D1EFF48819817BBF0031A1D1 /* OAHMAC_SHA1SignatureProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = D1EFF47D19817BBF0031A1D1 /* OAHMAC_SHA1SignatureProvider.m */; };
+		D1EFF48919817BBF0031A1D1 /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = D1EFF47F19817BBF0031A1D1 /* sha1.c */; };
+		D1EFF48A19817BBF0031A1D1 /* NSString+URLEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = D1EFF48219817BBF0031A1D1 /* NSString+URLEncoding.m */; };
+		D1EFF48B19817BBF0031A1D1 /* OAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = D1EFF48419817BBF0031A1D1 /* OAuth.m */; };
+		D1EFF48E19817BEA0031A1D1 /* CIOExampleAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = D1EFF48D19817BEA0031A1D1 /* CIOExampleAPIClient.m */; };
+		D1EFF49119817BFB0031A1D1 /* CIOAuthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D1EFF49019817BFB0031A1D1 /* CIOAuthViewController.m */; };
+		D1EFF4A9198184C60031A1D1 /* AFHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = D1EFF497198184C60031A1D1 /* AFHTTPClient.m */; };
+		D1EFF4AA198184C60031A1D1 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D1EFF499198184C60031A1D1 /* AFHTTPRequestOperation.m */; };
+		D1EFF4AB198184C60031A1D1 /* AFImageRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D1EFF49B198184C60031A1D1 /* AFImageRequestOperation.m */; };
+		D1EFF4AC198184C60031A1D1 /* AFJSONRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D1EFF49D198184C60031A1D1 /* AFJSONRequestOperation.m */; };
+		D1EFF4AD198184C60031A1D1 /* AFNetworkActivityIndicatorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D1EFF49F198184C60031A1D1 /* AFNetworkActivityIndicatorManager.m */; };
+		D1EFF4AE198184C60031A1D1 /* AFPropertyListRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D1EFF4A2198184C60031A1D1 /* AFPropertyListRequestOperation.m */; };
+		D1EFF4AF198184C60031A1D1 /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D1EFF4A4198184C60031A1D1 /* AFURLConnectionOperation.m */; };
+		D1EFF4B0198184C60031A1D1 /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D1EFF4A6198184C60031A1D1 /* AFXMLRequestOperation.m */; };
+		D1EFF4B1198184C60031A1D1 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = D1EFF4A8198184C60031A1D1 /* UIImageView+AFNetworking.m */; };
+		D1EFF4C119818B6F0031A1D1 /* button-provider-aol.png in Resources */ = {isa = PBXBuildFile; fileRef = D1EFF4B519818B6F0031A1D1 /* button-provider-aol.png */; };
+		D1EFF4C219818B6F0031A1D1 /* button-provider-aol@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D1EFF4B619818B6F0031A1D1 /* button-provider-aol@2x.png */; };
+		D1EFF4C319818B6F0031A1D1 /* button-provider-bg.png in Resources */ = {isa = PBXBuildFile; fileRef = D1EFF4B719818B6F0031A1D1 /* button-provider-bg.png */; };
+		D1EFF4C419818B6F0031A1D1 /* button-provider-bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D1EFF4B819818B6F0031A1D1 /* button-provider-bg@2x.png */; };
+		D1EFF4C519818B6F0031A1D1 /* button-provider-gmail.png in Resources */ = {isa = PBXBuildFile; fileRef = D1EFF4B919818B6F0031A1D1 /* button-provider-gmail.png */; };
+		D1EFF4C619818B6F0031A1D1 /* button-provider-gmail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D1EFF4BA19818B6F0031A1D1 /* button-provider-gmail@2x.png */; };
+		D1EFF4C719818B6F0031A1D1 /* button-provider-yahoo.png in Resources */ = {isa = PBXBuildFile; fileRef = D1EFF4BB19818B6F0031A1D1 /* button-provider-yahoo.png */; };
+		D1EFF4C819818B6F0031A1D1 /* button-provider-yahoo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D1EFF4BC19818B6F0031A1D1 /* button-provider-yahoo@2x.png */; };
 		D90CB1545C65478EAF879C60 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27D9CEE565FC46E3B3970F17 /* libPods.a */; };
 		FA2B9EA71977F5F800319391 /* ShareView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2B9EA61977F5F800319391 /* ShareView.m */; };
 		FA2C9BAB193DEF5200866BEE /* MCSwipeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2C9BAA193DEF5200866BEE /* MCSwipeTableViewCell.m */; };
@@ -371,6 +397,52 @@
 		CCC9E42A193E8D180028DC84 /* MessageFilterXRefService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageFilterXRefService.m; path = services/MessageFilterXRefService.m; sourceTree = "<group>"; };
 		CCD00B5918F54797007A675F /* MainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainView.h; path = views/MainView.h; sourceTree = "<group>"; };
 		CCD00B5A18F54797007A675F /* MainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainView.m; path = views/MainView.m; sourceTree = "<group>"; };
+		D1EFF47419817BBF0031A1D1 /* CIOAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CIOAPIClient.h; sourceTree = "<group>"; };
+		D1EFF47519817BBF0031A1D1 /* CIOAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CIOAPIClient.m; sourceTree = "<group>"; };
+		D1EFF47819817BBF0031A1D1 /* Base64Transcoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Base64Transcoder.c; sourceTree = "<group>"; };
+		D1EFF47919817BBF0031A1D1 /* Base64Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Transcoder.h; sourceTree = "<group>"; };
+		D1EFF47A19817BBF0031A1D1 /* hmac.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hmac.c; sourceTree = "<group>"; };
+		D1EFF47B19817BBF0031A1D1 /* hmac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hmac.h; sourceTree = "<group>"; };
+		D1EFF47C19817BBF0031A1D1 /* OAHMAC_SHA1SignatureProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OAHMAC_SHA1SignatureProvider.h; sourceTree = "<group>"; };
+		D1EFF47D19817BBF0031A1D1 /* OAHMAC_SHA1SignatureProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OAHMAC_SHA1SignatureProvider.m; sourceTree = "<group>"; };
+		D1EFF47E19817BBF0031A1D1 /* OASignatureProviding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OASignatureProviding.h; sourceTree = "<group>"; };
+		D1EFF47F19817BBF0031A1D1 /* sha1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sha1.c; sourceTree = "<group>"; };
+		D1EFF48019817BBF0031A1D1 /* sha1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sha1.h; sourceTree = "<group>"; };
+		D1EFF48119817BBF0031A1D1 /* NSString+URLEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLEncoding.h"; sourceTree = "<group>"; };
+		D1EFF48219817BBF0031A1D1 /* NSString+URLEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLEncoding.m"; sourceTree = "<group>"; };
+		D1EFF48319817BBF0031A1D1 /* OAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OAuth.h; sourceTree = "<group>"; };
+		D1EFF48419817BBF0031A1D1 /* OAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OAuth.m; sourceTree = "<group>"; };
+		D1EFF48C19817BEA0031A1D1 /* CIOExampleAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CIOExampleAPIClient.h; sourceTree = "<group>"; };
+		D1EFF48D19817BEA0031A1D1 /* CIOExampleAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CIOExampleAPIClient.m; sourceTree = "<group>"; };
+		D1EFF48F19817BFB0031A1D1 /* CIOAuthViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CIOAuthViewController.h; sourceTree = "<group>"; };
+		D1EFF49019817BFB0031A1D1 /* CIOAuthViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CIOAuthViewController.m; sourceTree = "<group>"; };
+		D1EFF496198184C60031A1D1 /* AFHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPClient.h; sourceTree = "<group>"; };
+		D1EFF497198184C60031A1D1 /* AFHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPClient.m; sourceTree = "<group>"; };
+		D1EFF498198184C60031A1D1 /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
+		D1EFF499198184C60031A1D1 /* AFHTTPRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPRequestOperation.m; sourceTree = "<group>"; };
+		D1EFF49A198184C60031A1D1 /* AFImageRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFImageRequestOperation.h; sourceTree = "<group>"; };
+		D1EFF49B198184C60031A1D1 /* AFImageRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFImageRequestOperation.m; sourceTree = "<group>"; };
+		D1EFF49C198184C60031A1D1 /* AFJSONRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFJSONRequestOperation.h; sourceTree = "<group>"; };
+		D1EFF49D198184C60031A1D1 /* AFJSONRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFJSONRequestOperation.m; sourceTree = "<group>"; };
+		D1EFF49E198184C60031A1D1 /* AFNetworkActivityIndicatorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkActivityIndicatorManager.h; sourceTree = "<group>"; };
+		D1EFF49F198184C60031A1D1 /* AFNetworkActivityIndicatorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetworkActivityIndicatorManager.m; sourceTree = "<group>"; };
+		D1EFF4A0198184C60031A1D1 /* AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworking.h; sourceTree = "<group>"; };
+		D1EFF4A1198184C60031A1D1 /* AFPropertyListRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFPropertyListRequestOperation.h; sourceTree = "<group>"; };
+		D1EFF4A2198184C60031A1D1 /* AFPropertyListRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFPropertyListRequestOperation.m; sourceTree = "<group>"; };
+		D1EFF4A3198184C60031A1D1 /* AFURLConnectionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLConnectionOperation.h; sourceTree = "<group>"; };
+		D1EFF4A4198184C60031A1D1 /* AFURLConnectionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLConnectionOperation.m; sourceTree = "<group>"; };
+		D1EFF4A5198184C60031A1D1 /* AFXMLRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFXMLRequestOperation.h; sourceTree = "<group>"; };
+		D1EFF4A6198184C60031A1D1 /* AFXMLRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFXMLRequestOperation.m; sourceTree = "<group>"; };
+		D1EFF4A7198184C60031A1D1 /* UIImageView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+AFNetworking.h"; sourceTree = "<group>"; };
+		D1EFF4A8198184C60031A1D1 /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
+		D1EFF4B519818B6F0031A1D1 /* button-provider-aol.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-aol.png"; sourceTree = "<group>"; };
+		D1EFF4B619818B6F0031A1D1 /* button-provider-aol@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-aol@2x.png"; sourceTree = "<group>"; };
+		D1EFF4B719818B6F0031A1D1 /* button-provider-bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-bg.png"; sourceTree = "<group>"; };
+		D1EFF4B819818B6F0031A1D1 /* button-provider-bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-bg@2x.png"; sourceTree = "<group>"; };
+		D1EFF4B919818B6F0031A1D1 /* button-provider-gmail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-gmail.png"; sourceTree = "<group>"; };
+		D1EFF4BA19818B6F0031A1D1 /* button-provider-gmail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-gmail@2x.png"; sourceTree = "<group>"; };
+		D1EFF4BB19818B6F0031A1D1 /* button-provider-yahoo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-yahoo.png"; sourceTree = "<group>"; };
+		D1EFF4BC19818B6F0031A1D1 /* button-provider-yahoo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-yahoo@2x.png"; sourceTree = "<group>"; };
 		FA2B9EA51977F5F800319391 /* ShareView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShareView.h; path = views/ShareView.h; sourceTree = "<group>"; };
 		FA2B9EA61977F5F800319391 /* ShareView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShareView.m; path = views/ShareView.m; sourceTree = "<group>"; };
 		FA2C9BA9193DEF5200866BEE /* MCSwipeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCSwipeTableViewCell.h; sourceTree = "<group>"; };
@@ -813,6 +885,7 @@
 		CC8C7EB018E6F34D00E76AE8 /* external */ = {
 			isa = PBXGroup;
 			children = (
+				D1EFF47219817BBF0031A1D1 /* ContextIO */,
 				FA9164C31973D2FA006A4726 /* TITokenField */,
 				5ACEBEA0195DA0CA00D4EAAA /* RDSwipeableTableViewCell */,
 				FA2C9BC7193EDFCB00866BEE /* MMDrawerController */,
@@ -882,6 +955,99 @@
 				5A59DC7419582A260094B00D /* FunnelPopUpForExtraRules.m */,
 			);
 			name = views;
+			sourceTree = "<group>";
+		};
+		D1EFF47219817BBF0031A1D1 /* ContextIO */ = {
+			isa = PBXGroup;
+			children = (
+				D1EFF4B219818B6F0031A1D1 /* Images */,
+				D1EFF495198184C60031A1D1 /* AFNetworking */,
+				D1EFF48F19817BFB0031A1D1 /* CIOAuthViewController.h */,
+				D1EFF49019817BFB0031A1D1 /* CIOAuthViewController.m */,
+				D1EFF48C19817BEA0031A1D1 /* CIOExampleAPIClient.h */,
+				D1EFF48D19817BEA0031A1D1 /* CIOExampleAPIClient.m */,
+				D1EFF47319817BBF0031A1D1 /* CIOAPIClient */,
+			);
+			path = ContextIO;
+			sourceTree = "<group>";
+		};
+		D1EFF47319817BBF0031A1D1 /* CIOAPIClient */ = {
+			isa = PBXGroup;
+			children = (
+				D1EFF47419817BBF0031A1D1 /* CIOAPIClient.h */,
+				D1EFF47519817BBF0031A1D1 /* CIOAPIClient.m */,
+				D1EFF47619817BBF0031A1D1 /* OAuth */,
+			);
+			path = CIOAPIClient;
+			sourceTree = "<group>";
+		};
+		D1EFF47619817BBF0031A1D1 /* OAuth */ = {
+			isa = PBXGroup;
+			children = (
+				D1EFF47719817BBF0031A1D1 /* Crypto */,
+				D1EFF48119817BBF0031A1D1 /* NSString+URLEncoding.h */,
+				D1EFF48219817BBF0031A1D1 /* NSString+URLEncoding.m */,
+				D1EFF48319817BBF0031A1D1 /* OAuth.h */,
+				D1EFF48419817BBF0031A1D1 /* OAuth.m */,
+			);
+			path = OAuth;
+			sourceTree = "<group>";
+		};
+		D1EFF47719817BBF0031A1D1 /* Crypto */ = {
+			isa = PBXGroup;
+			children = (
+				D1EFF47819817BBF0031A1D1 /* Base64Transcoder.c */,
+				D1EFF47919817BBF0031A1D1 /* Base64Transcoder.h */,
+				D1EFF47A19817BBF0031A1D1 /* hmac.c */,
+				D1EFF47B19817BBF0031A1D1 /* hmac.h */,
+				D1EFF47C19817BBF0031A1D1 /* OAHMAC_SHA1SignatureProvider.h */,
+				D1EFF47D19817BBF0031A1D1 /* OAHMAC_SHA1SignatureProvider.m */,
+				D1EFF47E19817BBF0031A1D1 /* OASignatureProviding.h */,
+				D1EFF47F19817BBF0031A1D1 /* sha1.c */,
+				D1EFF48019817BBF0031A1D1 /* sha1.h */,
+			);
+			path = Crypto;
+			sourceTree = "<group>";
+		};
+		D1EFF495198184C60031A1D1 /* AFNetworking */ = {
+			isa = PBXGroup;
+			children = (
+				D1EFF496198184C60031A1D1 /* AFHTTPClient.h */,
+				D1EFF497198184C60031A1D1 /* AFHTTPClient.m */,
+				D1EFF498198184C60031A1D1 /* AFHTTPRequestOperation.h */,
+				D1EFF499198184C60031A1D1 /* AFHTTPRequestOperation.m */,
+				D1EFF49A198184C60031A1D1 /* AFImageRequestOperation.h */,
+				D1EFF49B198184C60031A1D1 /* AFImageRequestOperation.m */,
+				D1EFF49C198184C60031A1D1 /* AFJSONRequestOperation.h */,
+				D1EFF49D198184C60031A1D1 /* AFJSONRequestOperation.m */,
+				D1EFF49E198184C60031A1D1 /* AFNetworkActivityIndicatorManager.h */,
+				D1EFF49F198184C60031A1D1 /* AFNetworkActivityIndicatorManager.m */,
+				D1EFF4A0198184C60031A1D1 /* AFNetworking.h */,
+				D1EFF4A1198184C60031A1D1 /* AFPropertyListRequestOperation.h */,
+				D1EFF4A2198184C60031A1D1 /* AFPropertyListRequestOperation.m */,
+				D1EFF4A3198184C60031A1D1 /* AFURLConnectionOperation.h */,
+				D1EFF4A4198184C60031A1D1 /* AFURLConnectionOperation.m */,
+				D1EFF4A5198184C60031A1D1 /* AFXMLRequestOperation.h */,
+				D1EFF4A6198184C60031A1D1 /* AFXMLRequestOperation.m */,
+				D1EFF4A7198184C60031A1D1 /* UIImageView+AFNetworking.h */,
+				D1EFF4A8198184C60031A1D1 /* UIImageView+AFNetworking.m */,
+			);
+			path = AFNetworking;
+			sourceTree = "<group>";
+		};
+		D1EFF4B219818B6F0031A1D1 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				D1EFF4B519818B6F0031A1D1 /* button-provider-aol.png */,
+				D1EFF4B619818B6F0031A1D1 /* button-provider-aol@2x.png */,
+				D1EFF4B719818B6F0031A1D1 /* button-provider-bg.png */,
+				D1EFF4B819818B6F0031A1D1 /* button-provider-bg@2x.png */,
+				D1EFF4B919818B6F0031A1D1 /* button-provider-gmail.png */,
+				D1EFF4BA19818B6F0031A1D1 /* button-provider-gmail@2x.png */,
+				D1EFF4BB19818B6F0031A1D1 /* button-provider-yahoo.png */,
+				D1EFF4BC19818B6F0031A1D1 /* button-provider-yahoo@2x.png */,
+			);
+			path = Images;
 			sourceTree = "<group>";
 		};
 		FA2C9BA8193DEF5200866BEE /* MCSwipeTableViewCell */ = {
@@ -1202,12 +1368,15 @@
 				FABAF0821976507E00AA7918 /* Alert.png in Resources */,
 				FABAF0A31976507E00AA7918 /* login.png in Resources */,
 				FABAF07B1976507E00AA7918 /* Forums.png in Resources */,
+				D1EFF4C819818B6F0031A1D1 /* button-provider-yahoo@2x.png in Resources */,
 				FABAF07E1976507E00AA7918 /* Payments.png in Resources */,
 				FABAF0941976507E00AA7918 /* alertListIcon@2x.png in Resources */,
 				FABAF0D31976629000AA7918 /* replyAll@2x.png in Resources */,
+				D1EFF4C719818B6F0031A1D1 /* button-provider-yahoo.png in Resources */,
 				FABAF09F1976507E00AA7918 /* trashListIcon.png in Resources */,
 				FABAF0AC1976507E00AA7918 /* close.png in Resources */,
 				FABAF0D11976629000AA7918 /* forward@2x.png in Resources */,
+				D1EFF4C219818B6F0031A1D1 /* button-provider-aol@2x.png in Resources */,
 				FABAF0771976507E00AA7918 /* Email 3.png in Resources */,
 				FABAF0891976507E00AA7918 /* Edit_Button@2x.png in Resources */,
 				FABAF0A01976507E00AA7918 /* trashListIcon@2x.png in Resources */,
@@ -1221,12 +1390,14 @@
 				FABAF0C11976507E00AA7918 /* swipeArchive@2x.png in Resources */,
 				66F2C48218E3293E00CD593E /* Images.xcassets in Resources */,
 				FA2C9BDE193EF92400866BEE /* Main.storyboard in Resources */,
+				D1EFF4C519818B6F0031A1D1 /* button-provider-gmail.png in Resources */,
 				FABAF0961976507E00AA7918 /* archiveListIcon@2x.png in Resources */,
 				66F2C47418E3293E00CD593E /* InfoPlist.strings in Resources */,
 				FABAF0A11976507E00AA7918 /* getStarted@2x.png in Resources */,
 				FABAF0AA1976507E00AA7918 /* backArrow.png in Resources */,
 				FABAF0901976507E00AA7918 /* Settings@2x.png in Resources */,
 				FA9164CA1973D302006A4726 /* README.markdown in Resources */,
+				D1EFF4C119818B6F0031A1D1 /* button-provider-aol.png in Resources */,
 				FABAF0A71976507E00AA7918 /* Add@2x.png in Resources */,
 				FABAF07D1976507E00AA7918 /* News.png in Resources */,
 				FABAF09B1976507E00AA7918 /* settingListIcon.png in Resources */,
@@ -1237,6 +1408,7 @@
 				FABAF0B11976507E00AA7918 /* cross.png in Resources */,
 				FABAF0C01976507E00AA7918 /* swipeArchive.png in Resources */,
 				FABAF0C31976507E00AA7918 /* swipeFunnl@2x.png in Resources */,
+				D1EFF4C319818B6F0031A1D1 /* button-provider-bg.png in Resources */,
 				FABAF0A81976507E00AA7918 /* arrow.png in Resources */,
 				FABAF0BC1976507E00AA7918 /* reply.png in Resources */,
 				FABAF0AB1976507E00AA7918 /* backArrow@2x.png in Resources */,
@@ -1247,6 +1419,7 @@
 				FABAF0991976507E00AA7918 /* sentListIcon.png in Resources */,
 				FABAF08F1976507E00AA7918 /* Settings.png in Resources */,
 				FABAF0B31976507E00AA7918 /* forward.png in Resources */,
+				D1EFF4C619818B6F0031A1D1 /* button-provider-gmail@2x.png in Resources */,
 				FABAF0D61976634C00AA7918 /* MenuIcon.png in Resources */,
 				FABAF08D1976507E00AA7918 /* manage_Button@2x.png in Resources */,
 				FABAF0B21976507E00AA7918 /* cross@2x.png in Resources */,
@@ -1256,6 +1429,7 @@
 				FABAF09A1976507E00AA7918 /* sentListIcon@2x.png in Resources */,
 				FABAF0751976507E00AA7918 /* Email 1.png in Resources */,
 				FABAF0A61976507E00AA7918 /* Add.png in Resources */,
+				D1EFF4C419818B6F0031A1D1 /* button-provider-bg@2x.png in Resources */,
 				FABAF0881976507E00AA7918 /* Edit_Button.png in Resources */,
 				FABAF0761976507E00AA7918 /* Email 2.png in Resources */,
 				FABAF0A51976507E00AA7918 /* splashScreen@2x.png in Resources */,
@@ -1320,17 +1494,21 @@
 				CCC9E428193E47980028DC84 /* ServiceTests.m in Sources */,
 				CCC9E41F193DF91D0028DC84 /* MessageModel.m in Sources */,
 				CCC9E40F193D5CC20028DC84 /* EmailServersService.m in Sources */,
+				D1EFF4AD198184C60031A1D1 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				CC8C7ECD18E6F38100E76AE8 /* MASViewConstraint.m in Sources */,
 				FA2F433F193318BE00C1F119 /* CreateFunnlViewController.m in Sources */,
 				CCC9E42B193E8D180028DC84 /* MessageFilterXRefService.m in Sources */,
 				FA2B9EA71977F5F800319391 /* ShareView.m in Sources */,
+				D1EFF48619817BBF0031A1D1 /* Base64Transcoder.c in Sources */,
 				CC4263B01934B67A00F3C5EB /* FMDatabase.m in Sources */,
+				D1EFF48E19817BEA0031A1D1 /* CIOExampleAPIClient.m in Sources */,
 				CC8C7ECA18E6F38100E76AE8 /* MASConstraintMaker.m in Sources */,
 				FAABF1801952FA750072FFE8 /* FunnlPopUpView.m in Sources */,
 				CC8C7ED018E6F38100E76AE8 /* View+MASAdditions.m in Sources */,
 				66AEEBAF1936B5D100B6DBE5 /* GTMHTTPFetcher.m in Sources */,
 				CC4263B41934B67A00F3C5EB /* FMResultSet.m in Sources */,
 				FA5627E61936136600238F40 /* MBProgressHUD.m in Sources */,
+				D1EFF4B1198184C60031A1D1 /* UIImageView+AFNetworking.m in Sources */,
 				660BA98E1902CDEA00CDF86E /* LoginViewController.m in Sources */,
 				CC4263B21934B67A00F3C5EB /* FMDatabasePool.m in Sources */,
 				FA2C9BD4193EDFCB00866BEE /* UIViewController+MMDrawerController.m in Sources */,
@@ -1347,6 +1525,8 @@
 				CC8C7EAD18E6F1C100E76AE8 /* MainVC.m in Sources */,
 				FA2C9BD2193EDFCB00866BEE /* MMDrawerController.m in Sources */,
 				FA2C9BDB193EE66400866BEE /* MenuViewController.m in Sources */,
+				D1EFF48719817BBF0031A1D1 /* hmac.c in Sources */,
+				D1EFF49119817BFB0031A1D1 /* CIOAuthViewController.m in Sources */,
 				CC8C7ECC18E6F38100E76AE8 /* MASViewAttribute.m in Sources */,
 				CC8C7ECF18E6F38100E76AE8 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
 				66AEEBAB1936B26B00B6DBE5 /* GTMOAuth2ViewControllerTouch.m in Sources */,
@@ -1358,20 +1538,30 @@
 				FA7A445C193F2FE300ABCB29 /* MenuCell.m in Sources */,
 				5A1FF53D1948263B0056750F /* FunnelModel.m in Sources */,
 				FA9164BE1973D162006A4726 /* ComposeViewController.m in Sources */,
+				D1EFF4AC198184C60031A1D1 /* AFJSONRequestOperation.m in Sources */,
 				FA2C9BD1193EDFCB00866BEE /* MMDrawerBarButtonItem.m in Sources */,
+				D1EFF4AB198184C60031A1D1 /* AFImageRequestOperation.m in Sources */,
 				FA8DDA551933A6420049F83F /* TextFieldCell.m in Sources */,
 				CC4263BA1934BB2000F3C5EB /* SQLiteDatabase.m in Sources */,
 				CC7F72F418E837C9008962C3 /* FilterViewCell.m in Sources */,
 				CC8C7ECB18E6F38100E76AE8 /* MASLayoutConstraint.m in Sources */,
 				CCC9E416193D5CDF0028DC84 /* EmailServerModel.m in Sources */,
 				CC4263B11934B67A00F3C5EB /* FMDatabaseAdditions.m in Sources */,
+				D1EFF48B19817BBF0031A1D1 /* OAuth.m in Sources */,
 				66AEEB811933002D00B6DBE5 /* EmailsTableViewController.m in Sources */,
+				D1EFF4B0198184C60031A1D1 /* AFXMLRequestOperation.m in Sources */,
 				CCC9E41C193DF5E80028DC84 /* FunnelService.m in Sources */,
+				D1EFF4AF198184C60031A1D1 /* AFURLConnectionOperation.m in Sources */,
+				D1EFF48819817BBF0031A1D1 /* OAHMAC_SHA1SignatureProvider.m in Sources */,
+				D1EFF48A19817BBF0031A1D1 /* NSString+URLEncoding.m in Sources */,
 				CCC9E425193E414F0028DC84 /* ServiceUtils.m in Sources */,
 				5A59DC7519582A260094B00D /* FunnelPopUpForExtraRules.m in Sources */,
+				D1EFF48519817BBF0031A1D1 /* CIOAPIClient.m in Sources */,
+				D1EFF4AE198184C60031A1D1 /* AFPropertyListRequestOperation.m in Sources */,
 				639B69D4195254D1004217DB /* EmailThreadTableViewController.m in Sources */,
 				CC7F72F818E83925008962C3 /* EmailService.m in Sources */,
 				66F2C47A18E3293E00CD593E /* AppDelegate.m in Sources */,
+				D1EFF48919817BBF0031A1D1 /* sha1.c in Sources */,
 				CCC9E422193DF9B10028DC84 /* MessageService.m in Sources */,
 				CC8A455C18E832B8009FDBDB /* UIColor+HexString.m in Sources */,
 				CC4263B31934B67A00F3C5EB /* FMDatabaseQueue.m in Sources */,
@@ -1381,6 +1571,8 @@
 				66AEEBA41936B1FC00B6DBE5 /* GTMOAuth2Authentication.m in Sources */,
 				6677881718EF83F800EF1962 /* MCOMessageView.mm in Sources */,
 				CC39517218E6F9700093C787 /* MainFilterCell.m in Sources */,
+				D1EFF4A9198184C60031A1D1 /* AFHTTPClient.m in Sources */,
+				D1EFF4AA198184C60031A1D1 /* AFHTTPRequestOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1516,8 +1708,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "libstdc++";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Daniel Judd (PL7ET6U94G)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Daniel Judd (PL7ET6U94G)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Parag Dulam (NLA62T2KBR)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Parag Dulam (NLA62T2KBR)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1548,7 +1740,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "2E0446D1-C32C-4F76-859F-06D66720154C";
+				PROVISIONING_PROFILE = "5AFCEF47-8CB3-4541-9D07-763211EF5F38";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;

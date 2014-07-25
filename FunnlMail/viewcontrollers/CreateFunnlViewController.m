@@ -15,9 +15,12 @@
 #import "UIColor+HexString.h"
 #import "FunnelService.h"
 #import <Mixpanel/Mixpanel.h>
+#import "CIOExampleAPIClient.h"
+#import "CIOAuthViewController.h"
 
-@interface CreateFunnlViewController ()
-
+@interface CreateFunnlViewController ()<CIOAuthViewController>
+{
+}
 @end
 
 @implementation CreateFunnlViewController
@@ -120,7 +123,7 @@
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 4;
+    return 5;
 }
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;  {
     if(section==0){
@@ -132,10 +135,11 @@
     else if(section == 2){
         return @"Subject (Optional):";
     }
-    else {
+    else if(section == 3){
         return @"Skip all mail:";
+    } else {
+        return @"Enable Notifications:";
     }
-    
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -154,6 +158,22 @@
         [cell addSubview:skipAllSwitch];
         return cell;
     }
+
+    if (indexPath.section == 4) {
+        UITableViewCell *cell = [[UITableViewCell alloc] init];
+        cell.textLabel.text = @"Enable Notifications";
+        enableNotificationsSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(300-50, 8, 50, 0)];
+        if (oldModel.skipFlag) {
+            [enableNotificationsSwitch setOn:YES];
+        }
+        else {
+            [enableNotificationsSwitch setOn:NO];
+        }
+        [enableNotificationsSwitch addTarget:self action:@selector(enableNotifications:) forControlEvents:UIControlEventValueChanged];
+        [cell addSubview:enableNotificationsSwitch];
+        return cell;
+    }
+
     TextFieldCell *cell = [[TextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
     
     if(indexPath.section == 0)
@@ -304,6 +324,18 @@
 
 #pragma mark -
 #pragma mark Helper
+
+- (void)enableNotifications:(UISwitch*)sender {
+    if([sender isOn]){
+        NSLog(@"Switch is ON");
+        areNotificationsEnabled = TRUE;
+    } else{
+        NSLog(@"Switch is OFF");
+        areNotificationsEnabled = FALSE;
+    }
+}
+
+
 - (void)changeSwitch:(UISwitch*)sender {
     if([sender isOn]){
         NSLog(@"Switch is ON");
@@ -477,6 +509,29 @@
     if(activeField){
         [activeField resignFirstResponder];
     }
+    if (![[CIOExampleAPIClient sharedClient] isAuthorized]) {
+        
+        CIOAuthViewController *authViewController = [[CIOAuthViewController alloc] initWithAPIClient:[CIOExampleAPIClient sharedClient] allowCancel:NO];
+        authViewController.delegate = self;
+        UINavigationController *authNavController = [[UINavigationController alloc] initWithRootViewController:authViewController];
+        [self presentViewController:authNavController animated:YES completion:nil];
+        
+        return;
+    } else {
+        NSLog(@"CIOClient is Authorized");
+        [[CIOExampleAPIClient sharedClient] createWebhookWithCallbackURLString:@"http://www.facebook.com" failureNotificationURLString:@"http://www.facebook.com" params:nil success:^(NSDictionary *responseDict) {
+            NSLog(@"created WeHook responseDict %@",responseDict);
+            [[CIOExampleAPIClient sharedClient] getWebhooksWithParams:nil success:^(NSArray *responseArray) {
+                NSLog(@"Webhooks GET Req %@",responseArray);
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                NSLog(@"GET WEBHOOKS ERROR %@",error);
+            }];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"CREATE WEBHOOKS ERROR %@",error);
+        }];
+        
+    }
+
     if(funnlName.length){
         int validCode = [self validateFunnelName:funnlName];
         if (validCode != 1 && !isEdit) {
@@ -591,6 +646,20 @@
     [tempAppDelegate.progressHUD setHidden:YES];
     [tempAppDelegate.progressHUD removeFromSuperview];
 }
+
+
+#pragma mark - CIOAuthViewController delegate
+
+- (void)userCompletedLogin
+{
+    [self.presentedViewController dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void)userCancelledLogin
+{
+    [self.presentedViewController dismissViewControllerAnimated:YES completion:NULL];
+}
+
 
 #pragma mark - TextField delegate
 - (BOOL)textFieldShouldClear:(UITextField *)textField{

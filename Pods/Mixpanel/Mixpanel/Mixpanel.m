@@ -21,7 +21,7 @@
 #import "NSData+MPBase64.h"
 #import "UIView+MPSnapshotImage.h"
 
-#define VERSION @"2.4.0"
+#define VERSION @"2.4.1"
 
 #ifdef MIXPANEL_LOG
 #define MixpanelLog(...) NSLog(__VA_ARGS__)
@@ -150,6 +150,7 @@ static Mixpanel *sharedInstance = nil;
         self.dateFormatter = [[NSDateFormatter alloc] init];
         [_dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"];
         [_dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+        [_dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
 
         self.showSurveyOnActive = YES;
         self.checkForSurveysOnActive = YES;
