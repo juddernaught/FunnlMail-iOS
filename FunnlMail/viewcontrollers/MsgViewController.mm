@@ -207,10 +207,10 @@
     headerHeight = finalY;
     int height = [self calculateSize:_message.header.subject];
     subjectHeight = height;
-    UILabel *subjectLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, 280, height)];
+    UILabel *subjectLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, 280, height + 5)]; // Added +5 to enable multi-line
     [subjectLabel setFont:[UIFont boldSystemFontOfSize:16]];
-    subjectLabel.numberOfLines = 0;
     subjectLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    subjectLabel.numberOfLines = 0;
     subjectLabel.text = _message.header.subject;
     
     subjectView = [[UIView alloc] init];
