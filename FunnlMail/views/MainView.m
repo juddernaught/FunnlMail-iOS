@@ -47,6 +47,7 @@ NSString *msgBody;
         [self setup];
         [self setupViews];
         editOn = FALSE;
+
     }
     return self;
 }
@@ -56,6 +57,8 @@ NSString *msgBody;
 }
 
 -(void)reloadView{
+    editOn = FALSE;
+    [editButton setImage:[UIImage imageNamed:@"manage_Button"] forState:UIControlStateNormal];
     self.imapSession = [EmailService instance].imapSession;
     filterArray = [[FunnelService instance] allFunnels];
     [self.collectionView reloadData];
@@ -144,11 +147,15 @@ NSString *msgBody;
 }
 
 - (void)outterButtonClicked {
-  [self setHidden:YES];
+    editOn = FALSE;
+    [editButton setImage:[UIImage imageNamed:@"manage_Button"] forState:UIControlStateNormal];
+    [self setHidden:YES];
 }
 
 - (void)handleSingleTap:(UITapGestureRecognizer *)recognizer {
-   [self setHidden:YES];
+    editOn = FALSE;
+    [editButton setImage:[UIImage imageNamed:@"manage_Button"] forState:UIControlStateNormal];
+    [self setHidden:YES];
 }
 
 - (void)editButtonPressed:(UIButton*)sender {
