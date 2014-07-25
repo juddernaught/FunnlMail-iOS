@@ -318,7 +318,7 @@ static NSString *currentFolder;
 	(MCOIMAPMessagesRequestKindHeaders | MCOIMAPMessagesRequestKindStructure |
 	 MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject | MCOIMAPMessagesRequestKindGmailThreadID | MCOIMAPMessagesRequestKindGmailMessageID |	 MCOIMAPMessagesRequestKindFlags);
 	
-    NSString *inboxFolder = @"INBOX";
+    NSString *inboxFolder = INBOX;
 	MCOIMAPFolderInfoOperation *inboxFolderInfo = [self.imapSession folderInfoOperation:inboxFolder];
 	
 	[inboxFolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)

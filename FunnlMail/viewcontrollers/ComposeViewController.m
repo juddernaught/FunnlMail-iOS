@@ -17,6 +17,7 @@
 #import "MBProgressHUD.h"
 #import <Mixpanel/Mixpanel.h>
 #import <AddressBook/AddressBook.h>
+#import <CoreText/CoreText.h>
 
 static NSString * mainJavascript = @"\
 var imageElements = function() {\
@@ -287,7 +288,8 @@ replacementString:(NSString *)string {
 
 -(void)cancelButtonSelected{
     [[Mixpanel sharedInstance] track:@"Cancel button from composeVC"];
-    [self dismissViewControllerAnimated:YES completion:NULL];
+//    [self dismissViewControllerAnimated:YES completion:NULL];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(void)sendButtonSelected{
@@ -329,7 +331,8 @@ replacementString:(NSString *)string {
             NSLog(@"%@ Successfully sent email!", [EmailService instance].smtpSession.username);
             [[Mixpanel sharedInstance] track:@"Send Button from composeVC"];
             [MBProgressHUD hideHUDForView:self.view animated:YES];
-            [self dismissViewControllerAnimated:YES completion:NULL];
+            //[self dismissViewControllerAnimated:YES completion:NULL];
+            [self.navigationController popViewControllerAnimated:YES];
             [[[EmailService instance].imapSession appendMessageOperationWithFolder:SENT messageData:rfc822Data flags:MCOMessageFlagMDNSent] start:^(NSError *error, uint32_t createdUID) {
                 if (error)
                     NSLog(@"error adding message to sent folder");
@@ -447,11 +450,20 @@ replacementString:(NSString *)string {
 
     if (!self.compose) {
         NSString *htmlString = [self getBodyData];
-        NSAttributedString *attributedString = [[NSAttributedString alloc] initWithData:[htmlString dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
-        messageView.attributedText = attributedString;
+        htmlString = [ htmlString stringByReplacingOccurrencesOfString:@"<body bgColor=\"transparent;\">" withString:@"<body bgColor=\"transparent;\"><br/><br/>"];
+        
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithData:[htmlString dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
+
+        NSMutableAttributedString *finalAttributedString = [[NSMutableAttributedString alloc] initWithString:@""];
+        [finalAttributedString addAttribute:(NSString*)kCTUnderlineStyleAttributeName
+                          value:[NSNumber numberWithInt:kCTUnderlineStyleSingle]
+                          range:(NSRange){0,[finalAttributedString length]}];
+        
+        [finalAttributedString appendAttributedString:attributedString];
+        messageView.attributedText = finalAttributedString;
 //        [self applyPlainBodyString];
         if(messageView.text.length){
-            CGRect frame = [attributedString boundingRectWithSize:CGSizeMake(WIDTH, 10000) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading | NSStringDrawingUsesDeviceMetrics context:nil];
+            CGRect frame = [finalAttributedString boundingRectWithSize:CGSizeMake(WIDTH, 10000) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading | NSStringDrawingUsesDeviceMetrics context:nil];
             NSLog(@"%@",NSStringFromCGRect(frame));
             messageView.frame = CGRectMake(messageView.frame.origin.x, messageView.frame.origin.y, WIDTH, MAX(208, frame.size.height));
 //            [self textViewDidChange:messageView];
@@ -493,7 +505,7 @@ replacementString:(NSString *)string {
 
 -(void)applyPlainBodyString{
     
-    MCOIMAPFetchContentOperation *operation = [self.imapSession fetchMessageByUIDOperationWithFolder:@"INBOX" uid:self.message.uid];
+    MCOIMAPFetchContentOperation *operation = [self.imapSession fetchMessageByUIDOperationWithFolder:INBOX uid:self.message.uid];
     
     [operation start:^(NSError *error, NSData *data) {
         MCOMessageParser *messageParser = [[MCOMessageParser alloc] initWithData:data];
@@ -524,7 +536,7 @@ replacementString:(NSString *)string {
     
     NSMutableDictionary *paramDict = [[NSMutableDictionary alloc] init];
     if ([_message isKindOfClass:[MCOIMAPMessage class]]) {
-        content = [(MCOIMAPMessage *) self.message htmlRenderingWithFolder:@"INBOX" delegate:self];
+        content = [(MCOIMAPMessage *) self.message htmlRenderingWithFolder:INBOX delegate:self];
         if (content) {
             NSArray *tempArray = [content componentsSeparatedByString:@"<head>"];
             if (tempArray.count > 1) {

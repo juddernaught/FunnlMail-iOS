@@ -180,6 +180,7 @@
 		FABAF0D31976629000AA7918 /* replyAll@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FABAF0D01976629000AA7918 /* replyAll@2x.png */; };
 		FABAF0D61976634C00AA7918 /* MenuIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = FABAF0D41976634C00AA7918 /* MenuIcon.png */; };
 		FABAF0D71976634C00AA7918 /* MenuIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FABAF0D51976634C00AA7918 /* MenuIcon@2x.png */; };
+		FAD311B1198262E500565A90 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAD311B0198262E500565A90 /* CoreText.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -483,6 +484,7 @@
 		FABAF0D01976629000AA7918 /* replyAll@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "replyAll@2x.png"; sourceTree = "<group>"; };
 		FABAF0D41976634C00AA7918 /* MenuIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuIcon.png; sourceTree = "<group>"; };
 		FABAF0D51976634C00AA7918 /* MenuIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MenuIcon@2x.png"; sourceTree = "<group>"; };
+		FAD311B0198262E500565A90 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -490,6 +492,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAD311B1198262E500565A90 /* CoreText.framework in Frameworks */,
 				B703C50419760E27003037FC /* AddressBook.framework in Frameworks */,
 				6644FB461974D6BA004B4587 /* Accounts.framework in Frameworks */,
 				6644FB441974D696004B4587 /* Social.framework in Frameworks */,
@@ -618,6 +621,7 @@
 		66F2C46818E3293E00CD593E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FAD311B0198262E500565A90 /* CoreText.framework */,
 				B703C50319760E27003037FC /* AddressBook.framework */,
 				6644FB451974D6BA004B4587 /* Accounts.framework */,
 				6644FB431974D695004B4587 /* Social.framework */,
