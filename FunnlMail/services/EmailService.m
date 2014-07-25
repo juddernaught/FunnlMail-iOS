@@ -174,11 +174,12 @@ static NSString *currentFolder;
     
     if(![folderName isEqualToString:SENT]){
         FolderInfo = [self.imapSession folderInfoOperation:INBOX];
+        emailTableViewController.navigationItem.title = @"All Mail";
         }
     else{
         NSLog(@"making sure this is happenging");
         FolderInfo = [self.imapSession folderInfoOperation:SENT];
-         emailTableViewController.navigationItem.title = @"SENT";
+         emailTableViewController.navigationItem.title = @"Sent";
         }
     
      [FolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
@@ -251,6 +252,7 @@ static NSString *currentFolder;
                       NSArray *tempArray = [[MessageService instance] retrieveAllMessages];
                       [self performSelector:@selector(applyingFilters:) withObject:tempArray];
                       self.filterMessages = (NSMutableArray*)tempArray;
+                      if(![folderName isEqualToString:SENT]) emailTableViewController.navigationItem.title = @"All Mail";
                       if ([folderName isEqualToString:SENT])
                           {
                                //this is neccessary in order to pull sent messages
@@ -272,12 +274,15 @@ static NSString *currentFolder;
                                //my inbox still shows up out of order with no pattern noticeable
                                //might be just me
                                emailTableViewController->searchMessages = [NSMutableArray arrayWithArray:[[emailTableViewController->searchMessages reverseObjectEnumerator] allObjects]];
+                              emailTableViewController.emailFolder = SENT;
                                emailTableViewController.isSearching = YES;
                                NSLog(@"does it crash here?");
                                emailTableViewController.navigationItem.title = @"Sent";
                                [emailTableViewController.tableView reloadData];
                                }
                       else if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
+                          emailTableViewController.emailFolder = INBOX;
+                          
                           [emailTableViewController.tableView reloadData];
                       }
                       else {

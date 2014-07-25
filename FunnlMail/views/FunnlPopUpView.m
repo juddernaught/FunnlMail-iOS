@@ -167,6 +167,9 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
         FunnelModel *fm = (FunnelModel *)filterArray[indexPath.row];
         cell.barColor = fm.barColor;
         cell.filterTitle = fm.filterTitle;
+        
+        cell.newMessageCount = fm.newMessageCount; //Added by Chad
+        
         //[cell.notificationButton addTarget:self action:@selector(notificationButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     }
     cell.contentView.backgroundColor = [UIColor whiteColor];

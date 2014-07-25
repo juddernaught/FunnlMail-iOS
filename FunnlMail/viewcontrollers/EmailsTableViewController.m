@@ -275,8 +275,9 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 //                }
 //                else
 //                    cell.dateLabel.text = [message.header.date timeAgo];
-                if(message.header.sender.displayName.length)
+                if(message.header.sender.displayName.length){
                     cell.senderLabel.text = [self removeAngularBracket:message.header.sender.displayName];
+                }
                 else {
                     cell.senderLabel.text = [self removeAngularBracket:message.header.sender.mailbox];
                 }
@@ -449,11 +450,21 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                     [cell.detailDiscloser setHidden:NO];
                 }
                 
-                if(message.header.sender.displayName.length)
-                    cell.senderLabel.text = message.header.sender.displayName;
-                else
-                    cell.senderLabel.text = message.header.sender.mailbox;
-                
+                if(message.header.sender.displayName.length){
+                    NSLog(@"how often do we get here");
+                    if([self.navigationItem.title isEqualToString:@"Sent"]) cell.senderLabel.text = message.header.from.displayName;
+                    else cell.senderLabel.text = message.header.sender.displayName;
+                }
+                else{
+                    if([self.navigationItem.title isEqualToString:@"Sent"]){
+                        if(message.header.to.count){
+                            MCOAddress *temp = message.header.to.firstObject;
+                            cell.senderLabel.text = temp.mailbox;
+                        }
+                        else cell.senderLabel.text = @"Error retrieving recipients";
+                    }
+                    else cell.senderLabel.text = message.header.sender.mailbox;
+                }
                 cell.subjectLabel.text = message.header.subject;
                 cell.threadLabel.text = @"";
                 

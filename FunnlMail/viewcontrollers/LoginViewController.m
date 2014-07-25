@@ -45,8 +45,6 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
 
 - (void) viewDidLoad {
     [super viewDidLoad];
-    NSLog(@"When does this happen?");
-    NSLog(@"this is the presentingVC of login: %@",self.presentedViewController);
     _receivedData = [[NSMutableData alloc] init];
     _isRefreshing = NO;
     

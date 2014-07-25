@@ -168,6 +168,7 @@ NSString *msgBody;
     else {
         editOn = TRUE;
         [editButton setImage:[UIImage imageNamed:@"Done_Button"] forState:UIControlStateNormal];
+        
     }
     [self.collectionView reloadData];
 }
