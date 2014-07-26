@@ -58,6 +58,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     self.emailFolder = INBOX;
     searchMessages = [[NSMutableArray alloc] init];
     isSearching = NO;
+    self.ClearTable = 0;
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
 
@@ -190,6 +191,10 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if(self.ClearTable) {
+        NSLog(@"clear table == %d",self.ClearTable);
+        return 0;
+    }
 	if(isSearching == NO){
         if (section == 1)
         {
@@ -455,7 +460,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 }
                 
                 if(message.header.sender.displayName.length){
-                    NSLog(@"how often do we get here");
                     if([self.navigationItem.title isEqualToString:@"Sent"]) cell.senderLabel.text = message.header.from.displayName;
                     else cell.senderLabel.text = message.header.sender.displayName;
                 }

@@ -172,15 +172,19 @@ static NSString *currentFolder;
 	
     MCOIMAPFolderInfoOperation *FolderInfo;
     
-    if(![folderName isEqualToString:SENT]){
+    if([folderName isEqualToString:INBOX]){
         FolderInfo = [self.imapSession folderInfoOperation:INBOX];
         emailTableViewController.navigationItem.title = @"All Mail";
         }
-    else{
+    else if([folderName isEqualToString:SENT]){
         NSLog(@"making sure this is happenging");
         FolderInfo = [self.imapSession folderInfoOperation:SENT];
          emailTableViewController.navigationItem.title = @"Sent";
         }
+    else if([folderName isEqualToString:TRASH]){
+        FolderInfo = [self.imapSession folderInfoOperation:TRASH];
+    }
+    else FolderInfo = [self.imapSession folderInfoOperation:TRASH];
     
      [FolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
      {
@@ -252,7 +256,7 @@ static NSString *currentFolder;
                       NSArray *tempArray = [[MessageService instance] retrieveAllMessages];
                       [self performSelector:@selector(applyingFilters:) withObject:tempArray];
                       self.filterMessages = (NSMutableArray*)tempArray;
-                      if(![folderName isEqualToString:SENT]) emailTableViewController.navigationItem.title = @"All Mail";
+                      if(![folderName isEqualToString:SENT] && ![folderName isEqualToString:TRASH]) emailTableViewController.navigationItem.title = @"All Mail";
                       if ([folderName isEqualToString:SENT])
                           {
                                //this is neccessary in order to pull sent messages
@@ -278,11 +282,54 @@ static NSString *currentFolder;
                                emailTableViewController.isSearching = YES;
                                NSLog(@"does it crash here?");
                                emailTableViewController.navigationItem.title = @"Sent";
-                               [emailTableViewController.tableView reloadData];
                                }
-                      else if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
-                          emailTableViewController.emailFolder = INBOX;
+                      else if ([folderName isEqualToString:TRASH]){
+                          emailTableViewController->searchMessages = [[NSMutableArray alloc]init];
+                          for (MCOIMAPMessage *m in messages) {
+                              
+                              MessageModel *tempMessageModel = [[MessageModel alloc] init];
+                              tempMessageModel.read = m.flags;
+                              tempMessageModel.date = m.header.date;
+                              tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
+                              tempMessageModel.messageJSON = [m serializable];
+                              tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
+                              [emailTableViewController->searchMessages addObject:tempMessageModel];
+                              tempMessageModel = nil;
+                          }
+                          //not sure if this my (Pranav) email alone but sent messages were intially backwards
+                          //my inbox still shows up out of order with no pattern noticeable
+                          //might be just me
+                          emailTableViewController->searchMessages = [NSMutableArray arrayWithArray:[[emailTableViewController->searchMessages reverseObjectEnumerator] allObjects]];
+                          emailTableViewController.emailFolder = TRASH;
+                          emailTableViewController.isSearching = YES;
+                          NSLog(@"does it crash here?");
+                          emailTableViewController.navigationItem.title = @"Trash";
                           
+                      }
+                      else if ([folderName isEqualToString:ARCHIVE]){
+                          emailTableViewController->searchMessages = [[NSMutableArray alloc]init];
+                          for (MCOIMAPMessage *m in messages) {
+                              
+                              MessageModel *tempMessageModel = [[MessageModel alloc] init];
+                              tempMessageModel.read = m.flags;
+                              tempMessageModel.date = m.header.date;
+                              tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
+                              tempMessageModel.messageJSON = [m serializable];
+                              tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
+                              [emailTableViewController->searchMessages addObject:tempMessageModel];
+                              tempMessageModel = nil;
+                          }
+                          //not sure if this my (Pranav) email alone but sent messages were intially backwards
+                          //my inbox still shows up out of order with no pattern noticeable
+                          //might be just me
+                          emailTableViewController->searchMessages = [NSMutableArray arrayWithArray:[[emailTableViewController->searchMessages reverseObjectEnumerator] allObjects]];
+                          emailTableViewController.emailFolder = ARCHIVE;
+                          emailTableViewController.isSearching = YES;
+                          NSLog(@"does it crash here?");
+                      }
+                      else if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
+                          NSLog(@"when does this happen");
+                          emailTableViewController.emailFolder = INBOX;
                           [emailTableViewController.tableView reloadData];
                       }
                       else {
