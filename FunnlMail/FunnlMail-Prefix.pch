@@ -28,7 +28,8 @@
 
 #define INBOX @"INBOX"
 #define SENT @"[Gmail]/Sent Mail"
-
+#define TRASH @"[Gmail]/Trash"
+#define ARCHIVE @"[Gmail]/All Mail"
 
 #define CLIENT_ID @"the-client-id"
 #define CLIENT_SECRET @"the-client-secret"

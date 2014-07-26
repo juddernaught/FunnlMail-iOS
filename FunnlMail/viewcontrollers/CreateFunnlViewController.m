@@ -64,11 +64,11 @@ NSMutableArray *emailArr,*searchArray;
         else
             dictionaryOfSubjects = [[NSMutableDictionary alloc] init];
         
-        tableview = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStyleGrouped];
-        tableview.frame = CGRectMake(0, 66, WIDTH, HEIGHT - 66);
-        [tableview setDataSource:self];
-        [tableview setDelegate:self];
-        [self.view addSubview:tableview];
+        Tableview = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStyleGrouped];
+        Tableview.frame = CGRectMake(0, 66, WIDTH, HEIGHT - 66);
+        [Tableview setDataSource:self];
+        [Tableview setDelegate:self];
+        [self.view addSubview:Tableview];
         
         if(isEdit){
             UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(10, 0, 300, 60)];
@@ -79,7 +79,7 @@ NSMutableArray *emailArr,*searchArray;
             [deleteButton.layer setBorderColor:[UIColor colorWithHexString:@"#448DEC"].CGColor];
             [deleteButton.layer setBorderWidth:1];
             [footerView addSubview:deleteButton];
-            tableview.tableFooterView = footerView;
+            Tableview.tableFooterView = footerView;
             [deleteButton addTarget:self action:@selector(deleteButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         }
         
@@ -100,15 +100,16 @@ NSMutableArray *emailArr,*searchArray;
     [self.view setBackgroundColor:[UIColor whiteColor]];
     [self initBarbuttonItem];
     
-    //[self emailContact];
+    [self emailContact];
     
-   // autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 160, self.view.bounds.size.width, 180)];
+    autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 300, self.view.bounds.size.width, 180)];
     autocompleteTableView.delegate = self;
     autocompleteTableView.dataSource = self;
     autocompleteTableView.scrollEnabled = YES;
     autocompleteTableView.hidden = YES;
     autocompleteTableView.tag = 1;
-    //[self.view addSubview:autocompleteTableView];
+   // [self.view addSubview:autocompleteTableView];
+    
     
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
@@ -143,9 +144,13 @@ NSMutableArray *emailArr,*searchArray;
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+    if(tableView.tag == 1) return 1;
     return 4;
 }
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;  {
+    if(tableView.tag == 1){
+        return nil;
+    }
     if(section==0){
         return @"Name:";
     }
@@ -273,16 +278,28 @@ NSMutableArray *emailArr,*searchArray;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if(tableView.tag == 1) return 60;
     return 44;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if(tableView.tag == 1){
-        NSLog(@"did select autocomplete row");
-        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+//        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+//        NSString *temp = cell.textLabel.text;
+//        NSLog(@"description: %ld",(long)cell.textLabel.text);
+//        cell = [Tableview cellForRowAtIndexPath: [NSIndexPath indexPathForRow:0 inSection:1]];
+//        cell.textLabel.text = temp;
+//        NSLog(@"description2: %@",cell);
+//        temp = nil;
+//        [tableView deselectRowAtIndexPath:indexPath animated:NO];
+//        autocompleteTableView.hidden = YES;
+        
     }
-    else [tableView deselectRowAtIndexPath:indexPath animated:NO];
+    else{
+        NSLog(@"how often did i select a row");
+        [tableView deselectRowAtIndexPath:indexPath animated:NO];
+    }
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -375,24 +392,24 @@ NSMutableArray *emailArr,*searchArray;
 
 -(void)addButtonPressedForConversation:(UIButton *)sender
 {
-    CGPoint buttonOrigin = [tableview convertPoint:sender.bounds.origin fromView:sender];
-    NSIndexPath *indexPath = [tableview indexPathForRowAtPoint:buttonOrigin];
-    TextFieldCell *cell = (TextFieldCell*)[tableview cellForRowAtIndexPath:indexPath];
+    CGPoint buttonOrigin = [Tableview convertPoint:sender.bounds.origin fromView:sender];
+    NSIndexPath *indexPath = [Tableview indexPathForRowAtPoint:buttonOrigin];
+    TextFieldCell *cell = (TextFieldCell*)[Tableview cellForRowAtIndexPath:indexPath];
     UITextField *textField = (UITextField*)[cell viewWithTag:indexPath.section];
     [textField becomeFirstResponder];
     [textField resignFirstResponder];
-    [tableview reloadData];
+    [Tableview reloadData];
 }
 
 -(void)addButtonPressedForSubject:(UIButton *)sender
 {
-    CGPoint buttonOrigin = [tableview convertPoint:sender.bounds.origin fromView:sender];
-    NSIndexPath *indexPath = [tableview indexPathForRowAtPoint:buttonOrigin];
-    TextFieldCell *cell = (TextFieldCell*)[tableview cellForRowAtIndexPath:indexPath];
+    CGPoint buttonOrigin = [Tableview convertPoint:sender.bounds.origin fromView:sender];
+    NSIndexPath *indexPath = [Tableview indexPathForRowAtPoint:buttonOrigin];
+    TextFieldCell *cell = (TextFieldCell*)[Tableview cellForRowAtIndexPath:indexPath];
     UITextField *textField = (UITextField*)[cell viewWithTag:indexPath.section];
     [textField becomeFirstResponder];
     [textField resignFirstResponder];
-    [tableview reloadData];
+    [Tableview reloadData];
 }
 
 -(void)cancelButtonPressedForConversation:(id)sender{
@@ -400,7 +417,7 @@ NSMutableArray *emailArr,*searchArray;
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:b.tag inSection:1];
     
     [dictionaryOfConversations removeObjectForKey:indexPath];
-    [tableview deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
+    [Tableview deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
     NSSortDescriptor *rowDescriptor = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
     NSArray *sortedRows = [dictionaryOfConversations.allKeys sortedArrayUsingDescriptors:@[rowDescriptor]];
     //NSLog(@"%@",sortedRows.description);
@@ -411,7 +428,7 @@ NSMutableArray *emailArr,*searchArray;
         count++;
     }
     dictionaryOfConversations = [NSMutableDictionary dictionaryWithDictionary:tmpDictionary];
-    [tableview reloadData];
+    [Tableview reloadData];
     tmpDictionary = nil;
 }
 
@@ -420,7 +437,7 @@ NSMutableArray *emailArr,*searchArray;
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:b.tag inSection:2];
     
     [dictionaryOfSubjects removeObjectForKey:indexPath];
-    [tableview deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
+    [Tableview deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
     NSSortDescriptor *rowDescriptor = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
     NSArray *sortedRows = [dictionaryOfSubjects.allKeys sortedArrayUsingDescriptors:@[rowDescriptor]];
     //NSLog(@"%@",sortedRows.description);
@@ -658,10 +675,8 @@ NSMutableArray *emailArr,*searchArray;
 - (BOOL)textField:(UITextField *)textField
 shouldChangeCharactersInRange:(NSRange)range
 replacementString:(NSString *)string {
-    if (textField.tag != 1) return NO;
-    NSLog(@"making sure this is happening");
-    autocompleteTableView.hidden = NO;
-    NSLog(@"what is the string: %@",string);
+    if (textField.tag != 1) return YES;
+    [self.view bringSubviewToFront:autocompleteTableView];
     NSString *substring = [NSString stringWithString:textField.text];
     substring = [substring
                  stringByReplacingCharactersInRange:range withString:string];
@@ -680,7 +695,6 @@ CGRect temp;//this is necessary to reset view
         CGFloat height = (CGFloat)(80+(dictionaryOfConversations.allKeys.count+1)*40);
         NSLog(@"this is the height: %f",height);
         //temp = self.view.frame;
-        autocompleteTableView.hidden = NO;
         //self.view.frame = CGRectMake(0, -height, 480, self.view.bounds.size.height+height);
     }
     return YES;
@@ -694,26 +708,26 @@ CGRect temp;//this is necessary to reset view
     else if(textField.tag == 1){
         NSLog(@"is ending");
         autocompleteTableView.hidden = YES;
-        CGPoint textFieldOrigin = [tableview convertPoint:textField.bounds.origin fromView:textField];
-        NSIndexPath *indexPath = [tableview indexPathForRowAtPoint:textFieldOrigin];
+        CGPoint textFieldOrigin = [Tableview convertPoint:textField.bounds.origin fromView:textField];
+        NSIndexPath *indexPath = [Tableview indexPathForRowAtPoint:textFieldOrigin];
         if(textField.text.length)
             [dictionaryOfConversations setObject:[textField.text lowercaseString] forKey:indexPath];
-        //self.view.frame = temp;
+        //self.view.frame = CGRectMake(0, 0, 480, self.view.bounds.size.height-(CGFloat)(80+(dictionaryOfConversations.allKeys.count+1)*40));
     }
     else if(textField.tag == 2){
-        CGPoint textFieldOrigin = [tableview convertPoint:textField.bounds.origin fromView:textField];
-        NSIndexPath *indexPath = [tableview indexPathForRowAtPoint:textFieldOrigin];
+        CGPoint textFieldOrigin = [Tableview convertPoint:textField.bounds.origin fromView:textField];
+        NSIndexPath *indexPath = [Tableview indexPathForRowAtPoint:textFieldOrigin];
         if(textField.text.length)
             [dictionaryOfSubjects setObject:[textField.text lowercaseString] forKey:indexPath];
     }
-    [tableview reloadData];
+    //[Tableview reloadData];
     return YES;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     NSLog(@"did return");
     [textField resignFirstResponder];
-    [tableview reloadData];
+    [Tableview reloadData];
     return YES;
 }
 
@@ -724,8 +738,8 @@ CGRect temp;//this is necessary to reset view
     NSTimeInterval duration = [[[sender userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     [UIView animateWithDuration:duration animations:^{
         UIEdgeInsets edgeInsets = UIEdgeInsetsMake(50, 0, kbSize.height, 0);
-        [tableview setContentInset:edgeInsets];
-        [tableview setScrollIndicatorInsets:edgeInsets];
+        [Tableview setContentInset:edgeInsets];
+        [Tableview setScrollIndicatorInsets:edgeInsets];
     }];
 }
 
@@ -734,8 +748,8 @@ CGRect temp;//this is necessary to reset view
     NSTimeInterval duration = [[[sender userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     [UIView animateWithDuration:duration animations:^{
         UIEdgeInsets edgeInsets = UIEdgeInsetsMake(50, 0, 0, 0);;
-        [tableview setContentInset:edgeInsets];
-        [tableview setScrollIndicatorInsets:edgeInsets];
+        [Tableview setContentInset:edgeInsets];
+        [Tableview setScrollIndicatorInsets:edgeInsets];
     }];
 }
 

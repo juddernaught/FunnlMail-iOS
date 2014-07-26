@@ -37,7 +37,7 @@
 @property (strong,nonatomic) FunnelModel *filterModel;
 @property (weak) id<MainVCDelegate> mainVCdelegate;
 @property (strong,nonatomic) NSString *emailFolder;
-
+@property (nonatomic) int ClearTable;
 @property (nonatomic) NSInteger totalNumberOfInboxMessages;
 @property (nonatomic) BOOL isLoading;
 @property (nonatomic, strong) UIActivityIndicatorView *loadMoreActivityView;
