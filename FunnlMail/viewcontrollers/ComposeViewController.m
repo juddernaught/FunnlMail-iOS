@@ -376,11 +376,15 @@ replacementString:(NSString *)string {
         NSMutableString *temp = [[NSMutableString alloc] initWithString:@"Re: "];
         [temp appendString:self.message.header.subject];
         subjectFieldView.tokenField.text = temp;
+        
         temp = [[NSMutableString alloc] initWithString:[self.address nonEncodedRFC822String]];
+        
         for (MCOAddress* address in self.addressArray) {
             [temp appendString:@", "];
             [temp appendString:[address nonEncodedRFC822String]];
+            
         }
+        
         toFieldView.tokenField.text = temp;
     }
 
