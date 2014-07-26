@@ -338,15 +338,12 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 //                cell.tableView = tableView;
 //                cell.revealDirection = RDSwipeableTableViewCellRevealDirectionRight | RDSwipeableTableViewCellRevealDirectionLeft;
                 
-                
                 UIView *archiveView = [self viewWithImageName:@"swipeArchive"];
                 UIColor *yellowColor = [UIColor colorWithHexString:@"#D8D8D8"];
                 
                 UIView *fullFunnlView = [self viewWithImageName:@"swipeFunnl"];
                 UIColor *fullFunnlColor = [UIColor colorWithHexString:@"#D8D8D8"];
                 
-//                UIView *halfFunnlView = [self viewWithImageName:@"FunnlNew1"];
-//                UIColor *halfFunnlColor = [UIColor colorWithHexString:@"#4487E9"];
                 
                 [cell setSwipeGestureWithView:archiveView color:yellowColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
                     [[Mixpanel sharedInstance] track:@"Email Archived"];
@@ -409,8 +406,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 {
                     [tempAppDelegate.progressHUD show:NO];
                     [self.loadMoreActivityView stopAnimating];
-                }
-                
+                }                
                 return cell;
                 break;
             }
@@ -476,7 +472,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 cell.subjectLabel.text = message.header.subject;
                 cell.threadLabel.text = @"";
                 
-                
                 NSString *cachedPreview = [[MessageService instance] retrievePreviewContentWithID:uidKey];
                 if (cachedPreview == nil || cachedPreview.length == 0 )
                     cachedPreview = @"";
@@ -499,7 +494,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                                     NSRange stringRange = {0,150};
                                     plainTextBodyString = [plainTextBodyString substringWithRange:stringRange];
                                 }
-                                
                                 NSMutableDictionary *paramDict = [[NSMutableDictionary alloc] init];
                                 paramDict[uidKey] = [self removeStartingSpaceFromString:plainTextBodyString];
                                 [[MessageService instance] updateMessageWithDictionary:paramDict];
@@ -510,23 +504,43 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                     }];
                 }
 
-//                cell.messageRenderingOperation = [[EmailService instance].imapSession plainTextBodyRenderingOperationWithMessage:message folder:self.emailFolder];
-//                [cell.messageRenderingOperation start:^(NSString * plainTextBodyString, NSError * error) {
-//                    if (plainTextBodyString) {
-//                        if (plainTextBodyString.length > 0) {
-//                            if ([[plainTextBodyString substringWithRange:NSMakeRange(0, 1)] isEqualToString:@" "]) {
-//                                cell.bodyLabel.text = [plainTextBodyString substringWithRange:NSMakeRange(1, plainTextBodyString.length - 1)];
-//                            }
-//                        }
-//                    }
-//                    cell.messageRenderingOperation = nil;
-//                    if(plainTextBodyString) {
-//                        [EmailService instance].filterMessagePreviews[uidKey] = [self removeStartingSpaceFromString:plainTextBodyString];
-//                        NSMutableDictionary *paramDict = [[NSMutableDictionary alloc] init];
-//                        paramDict[uidKey] = [self removeStartingSpaceFromString:plainTextBodyString];
-//                        [[MessageService instance] updateMessageWithDictionary:paramDict];
-//                    }
-//                }];
+                UIView *archiveView = [self viewWithImageName:@"swipeArchive"];
+                UIColor *yellowColor = [UIColor colorWithHexString:@"#D8D8D8"];
+                
+                UIView *fullFunnlView = [self viewWithImageName:@"swipeFunnl"];
+                UIColor *fullFunnlColor = [UIColor colorWithHexString:@"#D8D8D8"];
+                
+                
+                [cell setSwipeGestureWithView:archiveView color:yellowColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+                    [[Mixpanel sharedInstance] track:@"Email Archived"];
+                    NSLog(@"Did swipe \"Archive\" cell");
+                    MCOIMAPOperation *msgOperation = [[EmailService instance].imapSession storeFlagsOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:message.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagDeleted];
+                    [msgOperation start:^(NSError * error)
+                     {
+                         [tableView beginUpdates];
+//                         [[EmailService instance].filterMessagePreviews removeObjectForKey:uidKey];
+                         [searchMessages removeObjectAtIndex:indexPath.row];
+                         [searchMessages removeObjectIdenticalTo:message];
+                         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
+                         [tableView endUpdates];
+                         NSLog(@"selected message flags %u UID is %u",message.flags,message.uid );
+                     }];
+                    [cell swipeToOriginWithCompletion:nil];
+                }];
+                
+                
+                [cell setSwipeGestureWithView:fullFunnlView color:fullFunnlColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+                    NSLog(@"Did swipe full cell, -----");
+                    [[Mixpanel sharedInstance] track:@"Add email to Funnl"];
+                    [cell swipeToOriginWithCompletion:nil];
+                    MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)searchMessages[indexPath.row] messageJSON]];
+                    FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:YES withMessageId:uidKey withMessage:message subViewOnViewController:self];
+                    funnlPopUpView.mainVCdelegate = self.mainVCdelegate;
+                    
+                    [self.view addSubview:funnlPopUpView];
+                    
+                }];
+
                 return cell;
             }
             case 1:

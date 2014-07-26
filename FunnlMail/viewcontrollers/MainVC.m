@@ -198,8 +198,9 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     
     ComposeViewController *mc = [[ComposeViewController alloc] init];
     mc.compose = @1;
-    UINavigationController *navBar=[[UINavigationController alloc]initWithRootViewController:mc];
-    [self.navigationController presentViewController:navBar animated:YES completion:NULL];
+//    UINavigationController *navBar=[[UINavigationController alloc]initWithRootViewController:mc];
+//    [self.navigationController presentViewController:navBar animated:YES completion:NULL];
+    [self.navigationController pushViewController:mc animated:YES];
 }
 
 #pragma mark -
