@@ -469,9 +469,8 @@ replacementString:(NSString *)string {
     
     if (![string isEqualToString:EMPTY_DELIMITER] && string && ![string isEqualToString:@""]) {
         NSMutableString * html = [NSMutableString string];
-        [html appendString:@"------------------------------------------------------------------"]; 
-        [html appendFormat:@"<html><head><script>%@</script><style>%@</style></head>"
-         @"<body bgColor=\"transparent;\">%@</body></html>", mainJavascript, mainStyle, string];
+                [html appendFormat:@"<html><br><br><br><font color='red'><head>------------------------------------------------------------------<script>%@</script><style>%@</style></head>"
+         @"<body bgColor=\"transparent;\">%@</body></font></html>", mainJavascript, mainStyle, string];
         return html;
     }
     
