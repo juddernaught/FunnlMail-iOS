@@ -55,6 +55,7 @@
 		B703C50419760E27003037FC /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B703C50319760E27003037FC /* AddressBook.framework */; };
 		B751C88F1940FDFF0051DF0B /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B751C88E1940FDFF0051DF0B /* MessageUI.framework */; };
 		B75F56A6197F056F00518743 /* FunnlMail VIP logo.png in Resources */ = {isa = PBXBuildFile; fileRef = B75F56A5197F056F00518743 /* FunnlMail VIP logo.png */; };
+		B7701DC41985F58C001CA2DC /* mail2.png in Resources */ = {isa = PBXBuildFile; fileRef = B7701DC31985F58C001CA2DC /* mail2.png */; };
 		CC39517218E6F9700093C787 /* MainFilterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CC39517118E6F9700093C787 /* MainFilterCell.m */; };
 		CC4263B01934B67A00F3C5EB /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = CC4263A61934B67A00F3C5EB /* FMDatabase.m */; };
 		CC4263B11934B67A00F3C5EB /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = CC4263A81934B67A00F3C5EB /* FMDatabaseAdditions.m */; };
@@ -308,6 +309,7 @@
 		B703C50319760E27003037FC /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		B751C88E1940FDFF0051DF0B /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		B75F56A5197F056F00518743 /* FunnlMail VIP logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "FunnlMail VIP logo.png"; sourceTree = "<group>"; };
+		B7701DC31985F58C001CA2DC /* mail2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mail2.png; sourceTree = "<group>"; };
 		CC1AD1DC18F54BE9000E356C /* MainVCDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainVCDelegate.h; path = viewcontrollers/MainVCDelegate.h; sourceTree = "<group>"; };
 		CC39517018E6F9700093C787 /* MainFilterCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainFilterCell.h; path = collectionviewcells/MainFilterCell.h; sourceTree = "<group>"; };
 		CC39517118E6F9700093C787 /* MainFilterCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainFilterCell.m; path = collectionviewcells/MainFilterCell.m; sourceTree = "<group>"; };
@@ -1015,6 +1017,7 @@
 		FABAF04F1976507E00AA7918 /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				B7701DC31985F58C001CA2DC /* mail2.png */,
 				FABAF0501976507E00AA7918 /* getStarted@2x.png */,
 				FABAF0511976507E00AA7918 /* intro.png */,
 				FABAF0521976507E00AA7918 /* login.png */,
@@ -1245,6 +1248,7 @@
 				FABAF0C01976507E00AA7918 /* swipeArchive.png in Resources */,
 				FABAF0C31976507E00AA7918 /* swipeFunnl@2x.png in Resources */,
 				FABAF0A81976507E00AA7918 /* arrow.png in Resources */,
+				B7701DC41985F58C001CA2DC /* mail2.png in Resources */,
 				FABAF0BC1976507E00AA7918 /* reply.png in Resources */,
 				FABAF0AB1976507E00AA7918 /* backArrow@2x.png in Resources */,
 				FABAF0971976507E00AA7918 /* helpListIcon.png in Resources */,
