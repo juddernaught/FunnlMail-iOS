@@ -105,6 +105,8 @@ static NSString *currentFolder;
     self.filterMessages = [[NSMutableArray alloc] init];
     self.sentMessages = [[NSMutableArray alloc] init];
     self.threadIdDictionary = [[NSMutableDictionary alloc] init];
+    self.primaryMessages = [[NSMutableArray alloc] init];
+
 	self.totalNumberOfMessages = -1;
 	self.isLoading = NO;
 	self.messagePreviews = [NSMutableDictionary dictionary];
@@ -244,6 +246,22 @@ static NSString *currentFolder;
                           tempMessageModel.messageJSON = [m serializable];
                           tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
                           tempMessageModel.skipFlag = 0;
+                          tempMessageModel.categoryName = @"";
+
+                          if(SHOW_PRIMARY_INBOX){
+                              NSString *gmailMessageID =  [NSString stringWithFormat:@"%qx", m.gmailMessageID];
+                              //NSLog(@"%@",gmailMessageID);
+                              NSMutableArray *primaryArray = [[EmailService instance] primaryMessages];
+                              NSPredicate *p = [NSPredicate predicateWithFormat:@"SELF matches[c] %@", gmailMessageID];
+                              NSArray *b = [primaryArray filteredArrayUsingPredicate:p];
+                              
+                              if(b.count){
+                                  tempMessageModel.categoryName = @"CATEGORY_PERSONAL";
+                              }
+                              else{
+                                  tempMessageModel.categoryName = @"";
+                              }
+                          }
                           [messageModelArray addObject:tempMessageModel];
 //                          [[MessageService instance] insertMessage:tempMessageModel];
                           tempMessageModel = nil;

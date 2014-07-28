@@ -16,7 +16,7 @@
 @property (assign) int skipFlag;
 @property (strong) NSDate *date;
 //newly added by iauro001 on June 17th 2014
-@property (strong) NSString *gmailThreadID;
+@property (strong) NSString *gmailThreadID,*categoryName;
 @property int numberOfEmailInThread;
 @property (strong, nonatomic) NSString *messageBodyToBeRendered;
 @property (strong, nonatomic) NSString *messageHTMLBody;

@@ -10,7 +10,9 @@
 #import "MenuViewController.h"
 #import "MMDrawerController.h"
 #import "EmailServerModel.h"
-@interface LoginViewController : UIViewController <NSURLConnectionDataDelegate>
+#import "GTMHTTPFetcher.h"
+#import "GTMOAuth2ViewControllerTouch.h"
+@interface LoginViewController : UIViewController <NSURLConnectionDataDelegate,GTMFetcherAuthorizationProtocol,GTMHTTPFetcherServiceProtocol>
 
 @property (nonatomic, retain) UITextField *username;
 @property (nonatomic, retain) UITextField *password;

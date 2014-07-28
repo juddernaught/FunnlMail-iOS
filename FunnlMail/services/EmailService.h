@@ -30,6 +30,8 @@
 @property (nonatomic, strong) NSMutableDictionary *filterMessagePreviews;
 @property (nonatomic, strong) NSMutableArray *sentMessages;
 @property (nonatomic, strong) NSMutableDictionary *sentMessagePreviews;
+@property (nonatomic, strong) NSMutableArray *primaryMessages;
+@property (nonatomic, strong) NSString *userEmailID,*userImageURL;
 +(EmailService *)instance;
 +(NSArray *) getCurrentFilters;
 +(void)setNewFilterModel:(FunnelModel*)model;

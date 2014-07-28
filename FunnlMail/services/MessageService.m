@@ -55,6 +55,7 @@ static MessageService *instance;
         paramDict[@"messageJSON"] = messageModel.messageJSON;
         paramDict[@"read"] = [NSNumber numberWithBool:messageModel.read];
         paramDict[@"date"] = dateTimeInterval;
+        paramDict[@"categoryName"] = messageModel.categoryName;
         if(messageModel.gmailThreadID != nil)
             paramDict[@"gmailthreadid"] = messageModel.gmailThreadID;
         else
@@ -62,7 +63,7 @@ static MessageService *instance;
         paramDict[@"skipFlag"] = [NSNumber numberWithBool:messageModel.skipFlag];
         
         [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-            success = [db executeUpdate:@"INSERT OR REPLACE INTO messages (messageID,messageJSON,read,date,gmailthreadid,skipFlag) VALUES (:messageID,:messageJSON,:read,:date,:gmailthreadid,:skipFlag)" withParameterDictionary:paramDict];
+            success = [db executeUpdate:@"INSERT OR REPLACE INTO messages (messageID,messageJSON,read,date,gmailthreadid,skipFlag,categoryName) VALUES (:messageID,:messageJSON,:read,:date,:gmailthreadid,:skipFlag,:categoryName)" withParameterDictionary:paramDict];
         }];
         
     }
@@ -82,9 +83,10 @@ static MessageService *instance;
   paramDict[@"date"] = dateTimeInterval;
   paramDict[@"gmailthreadid"] = messageModel.gmailThreadID;
   paramDict[@"skipFlag"] = [NSNumber numberWithBool:messageModel.skipFlag];
-  
+  paramDict[@"categoryName"] = messageModel.categoryName;
+
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    success = [db executeUpdate:@"INSERT OR REPLACE INTO messages (messageID,messageJSON,read,date,gmailthreadid,skipFlag) VALUES (:messageID,:messageJSON,:read,:date,:gmailthreadid,:skipFlag)" withParameterDictionary:paramDict];
+    success = [db executeUpdate:@"INSERT OR REPLACE INTO messages (messageID,messageJSON,read,date,gmailthreadid,skipFlag,categoryName) VALUES (:messageID,:messageJSON,:read,:date,:gmailthreadid,:skipFlag,:categoryName)" withParameterDictionary:paramDict];
   }];
   
   return success;
@@ -297,9 +299,16 @@ static MessageService *instance;
 //newly added function by iauro001 on 13th June 2014
 -(NSArray *) retrieveAllMessages{
     __block NSMutableArray *array = [[NSMutableArray alloc] init];
-    
+    __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+    paramDict[@"categoryName"] = @"CATEGORY_PERSONAL";
+
     [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, messageBodyToBeRendered, date, t_count,skipFlag,funnelJson FROM messages INNER JOIN (SELECT MAX(messageID) as t_msgID, COUNT(*) as t_count FROM messages where skipFlag = 0 GROUP BY gmailthreadid) t ON ( messages. messageID = t.t_msgID ) order by messageID DESC;" withParameterDictionary:nil];
+        FMResultSet *resultSet ;
+        if(SHOW_PRIMARY_INBOX)
+            resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, messageBodyToBeRendered, date, t_count,skipFlag,funnelJson FROM messages INNER JOIN (SELECT MAX(messageID) as t_msgID, COUNT(*) as t_count FROM messages where skipFlag = 0 AND categoryName = :categoryName GROUP BY gmailthreadid) t ON ( messages. messageID = t.t_msgID ) order by messageID DESC;" withParameterDictionary:paramDict];
+        else
+            resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, messageBodyToBeRendered, date, t_count,skipFlag,funnelJson FROM messages INNER JOIN (SELECT MAX(messageID) as t_msgID, COUNT(*) as t_count FROM messages where skipFlag = 0 GROUP BY gmailthreadid) t ON ( messages. messageID = t.t_msgID ) order by messageID DESC;" withParameterDictionary:nil];
+        
         
         MessageModel *model;
         while ([resultSet next]) {
