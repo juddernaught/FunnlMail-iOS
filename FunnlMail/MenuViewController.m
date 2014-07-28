@@ -10,7 +10,8 @@
 #import "UIColor+HexString.h"
 #import "EmailService.h"
 #import "MainVC.h"
-#import "MainView.h"
+#import "SDWebImageDownloader.h"
+#import "UIImageView+WebCache.h"
 
 
 
@@ -88,8 +89,19 @@
     cell.contentView.backgroundColor = CLEAR_COLOR;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [cell setAccessoryType:UITableViewCellAccessoryNone];
-     
-    cell.menuImage.image = [UIImage imageNamed:[imageArray objectAtIndex:indexPath.row]];
+    
+    if(indexPath.row == 0){
+        NSString *imageUrl = [imageArray objectAtIndex:indexPath.row];
+        if([imageUrl hasPrefix:@"http"]){
+            [cell.menuImage setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"userimage-placeholder.png"] options:SDWebImageProgressiveDownload completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
+            }];
+        }
+        else
+            cell.menuImage.image = [UIImage imageNamed:[imageArray objectAtIndex:indexPath.row]];
+
+    }
+    else
+        cell.menuImage.image = [UIImage imageNamed:[imageArray objectAtIndex:indexPath.row]];
     
 //    cell.selectedBackgroundView = [[UIView alloc] initWithFrame:CGRectZero];
 //    cell.selectedBackgroundView.backgroundColor = [UIColor clearColor];
@@ -102,7 +114,6 @@
     //    [appDelegate.drawerController closeDrawerAnimated:YES completion:nil];
     AppDelegate *appDelegate = APPDELEGATE;
     MenuCell *tempCell = (MenuCell *)[tableView cellForRowAtIndexPath:indexPath];
-    NSLog(@"what is tempCell.text: %@",tempCell.menuLabel.text);
     if ([tempCell.menuLabel.text isEqualToString:@"Sent Mail"]) {
         NSLog(@"sent mail requested");
          //The following line is required to get to the emailTableVC in mainVC
@@ -131,7 +142,6 @@
         filterArray = [[[FunnelService instance] allFunnels] mutableCopy];
         tempAppDelegate.currentFunnelString = [[(FunnelModel *)filterArray[indexPath.row] funnelName] lowercaseString];
         tempAppDelegate.currentFunnelDS = (FunnelModel *)filterArray[indexPath.row];
-        [self.mainVCdelegate filterSelected:(FunnelModel *)filterArray[indexPath.row]];
     }
     else if ([tempCell.menuLabel.text isEqualToString:@"Funnl Alerts"]){
         NSLog(@"funl alert requested");

@@ -14,6 +14,7 @@
 {
 
 }
-@property (weak) id<MainVCDelegate> mainVCdelegate;
+@property (nonatomic,retain) NSMutableArray *listArray,*imageArray;
+@property (nonatomic,retain) UITableView *listView;
 
 @end

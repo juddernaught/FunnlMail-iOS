@@ -61,6 +61,7 @@ NSString *msgBody;
     [editButton setImage:[UIImage imageNamed:@"manage_Button"] forState:UIControlStateNormal];
     self.imapSession = [EmailService instance].imapSession;
     filterArray = [[FunnelService instance] allFunnels];
+    NSLog(@"what is filterArray.count: %lu",(unsigned long)filterArray.count);
     [self.collectionView reloadData];
 }
 
