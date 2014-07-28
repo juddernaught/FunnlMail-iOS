@@ -376,11 +376,15 @@ replacementString:(NSString *)string {
         NSMutableString *temp = [[NSMutableString alloc] initWithString:@"Re: "];
         [temp appendString:self.message.header.subject];
         subjectFieldView.tokenField.text = temp;
+        
         temp = [[NSMutableString alloc] initWithString:[self.address nonEncodedRFC822String]];
+        
         for (MCOAddress* address in self.addressArray) {
             [temp appendString:@", "];
             [temp appendString:[address nonEncodedRFC822String]];
+            
         }
+        
         toFieldView.tokenField.text = temp;
     }
 
@@ -465,8 +469,8 @@ replacementString:(NSString *)string {
     
     if (![string isEqualToString:EMPTY_DELIMITER] && string && ![string isEqualToString:@""]) {
         NSMutableString * html = [NSMutableString string];
-        [html appendFormat:@"<html><head><script>%@</script><style>%@</style></head>"
-         @"<body bgColor=\"transparent;\">%@</body></html>", mainJavascript, mainStyle, string];
+                [html appendFormat:@"<html><br><br><br><font color='red'><head>------------------------------------------------------------------<script>%@</script><style>%@</style></head>"
+         @"<body bgColor=\"transparent;\">%@</body></font></html>", mainJavascript, mainStyle, string];
         return html;
     }
     

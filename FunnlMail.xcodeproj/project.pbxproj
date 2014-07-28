@@ -1024,6 +1024,7 @@
 		FABAF04F1976507E00AA7918 /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				B7701DC31985F58C001CA2DC /* mail2.png */,
 				FABAF0501976507E00AA7918 /* getStarted@2x.png */,
 				FABAF0511976507E00AA7918 /* intro.png */,
 				FABAF0521976507E00AA7918 /* login.png */,
@@ -1256,6 +1257,7 @@
 				FABAF0C01976507E00AA7918 /* swipeArchive.png in Resources */,
 				FABAF0C31976507E00AA7918 /* swipeFunnl@2x.png in Resources */,
 				FABAF0A81976507E00AA7918 /* arrow.png in Resources */,
+				B7701DC41985F58C001CA2DC /* mail2.png in Resources */,
 				FABAF0BC1976507E00AA7918 /* reply.png in Resources */,
 				FABAF0AB1976507E00AA7918 /* backArrow@2x.png in Resources */,
 				FABAF0971976507E00AA7918 /* helpListIcon.png in Resources */,
