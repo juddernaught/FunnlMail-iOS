@@ -10,6 +10,10 @@
 #import "UIColor+HexString.h"
 #import "EmailService.h"
 #import "MainVC.h"
+#import "MainView.h"
+
+
+
 
 @interface MenuViewController ()
 
@@ -113,12 +117,36 @@
     else if ([tempCell.menuLabel.text isEqualToString:@"Archive"]){
         NSLog(@"archive mail requested");
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Archive";
-        [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:ARCHIVE];
+        AppDelegate *tempAppDelegate = APPDELEGATE;
+        [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:tempAppDelegate.currentFunnelDS.funnelId top:2000];
     }
     else if ([tempCell.menuLabel.text isEqualToString:@"Trash"]){
         NSLog(@"trash mail requested");
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Trash";
         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:TRASH];
+    }
+    else if ([tempCell.menuLabel.text isEqualToString:@"Inbox"]) {
+        AppDelegate *tempAppDelegate = APPDELEGATE;
+        NSMutableArray * filterArray = [[NSMutableArray alloc] init];
+        filterArray = [[[FunnelService instance] allFunnels] mutableCopy];
+        tempAppDelegate.currentFunnelString = [[(FunnelModel *)filterArray[indexPath.row] funnelName] lowercaseString];
+        tempAppDelegate.currentFunnelDS = (FunnelModel *)filterArray[indexPath.row];
+        [self.mainVCdelegate filterSelected:(FunnelModel *)filterArray[indexPath.row]];
+    }
+    else if ([tempCell.menuLabel.text isEqualToString:@"Funnl Alerts"]){
+        NSLog(@"funl alert requested");
+        
+    }
+    else if ([tempCell.menuLabel.text isEqualToString:@"Help/FAQs"]){
+        NSLog(@" help/qafs requested");
+    }
+    else if ([tempCell.menuLabel.text isEqualToString:@"Send Feedback"]){
+        NSLog(@" Feedback requested");
+    }
+    else if ([tempCell.menuLabel.text isEqualToString:@"Drafts"]){
+        NSLog(@"Drafts mail requested");
+        [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Drafts";
+        [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:DRAFTS];
     }
 
     [appDelegate.drawerController closeDrawerAnimated:YES completion:nil];

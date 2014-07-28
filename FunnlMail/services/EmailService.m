@@ -327,6 +327,27 @@ static NSString *currentFolder;
                           emailTableViewController.isSearching = YES;
                           NSLog(@"does it crash here?");
                       }
+                      else if ([folderName isEqualToString:DRAFTS]){
+                          emailTableViewController->searchMessages = [[NSMutableArray alloc]init];
+                          for (MCOIMAPMessage *m in messages) {
+                              
+                              MessageModel *tempMessageModel = [[MessageModel alloc] init];
+                              tempMessageModel.read = m.flags;
+                              tempMessageModel.date = m.header.date;
+                              tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
+                              tempMessageModel.messageJSON = [m serializable];
+                              tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
+                              [emailTableViewController->searchMessages addObject:tempMessageModel];
+                              tempMessageModel = nil;
+                          }
+                          //not sure if this my (Pranav) email alone but sent messages were intially backwards
+                          //my inbox still shows up out of order with no pattern noticeable
+                          //might be just me
+                          emailTableViewController->searchMessages = [NSMutableArray arrayWithArray:[[emailTableViewController->searchMessages reverseObjectEnumerator] allObjects]];
+                          emailTableViewController.emailFolder = ARCHIVE;
+                          emailTableViewController.isSearching = YES;
+                          NSLog(@"does it crash here?");
+                      }
                       else if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
                           NSLog(@"when does this happen");
                           emailTableViewController.emailFolder = INBOX;

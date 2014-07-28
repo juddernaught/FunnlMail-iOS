@@ -9,9 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "MenuCell.h"
 #import "AppDelegate.h"
+#import "MainVCDelegate.h"
 @interface MenuViewController : UIViewController <UITableViewDataSource,UITableViewDelegate>
 {
     UITableView *listView;
     NSMutableArray *listArray,*imageArray;
 }
+@property (weak) id<MainVCDelegate> mainVCdelegate;
+
 @end
