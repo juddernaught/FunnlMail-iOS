@@ -354,12 +354,19 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                          [tableView beginUpdates];
                          [[EmailService instance].filterMessagePreviews removeObjectForKey:uidKey];
                          [[EmailService instance].filterMessages removeObjectAtIndex:indexPath.row];
+                         [[[EmailService instance].imapSession copyMessagesOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:message.uid] destFolder:ARCHIVE] start:^(NSError *error, NSDictionary *uidMapping) {
+                             if (error) NSLog(@"there was an error appending to archive");
+                             else NSLog(@"message appended to archive");
+                         }];
                          [[EmailService instance].messages removeObjectIdenticalTo:message];
                          [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
                          [tableView endUpdates];
                          NSLog(@"selected message flags %u UID is %u",message.flags,message.uid );
                      }];
                     [cell swipeToOriginWithCompletion:nil];
+                    
+
+                    
                 }];
                 
                 

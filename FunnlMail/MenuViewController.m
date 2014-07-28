@@ -43,8 +43,8 @@
     [self.view addSubview:headerLine];
     
 //    [listView setBackgroundView:[[UIView alloc] init]];
-    listArray =[[NSMutableArray alloc] initWithObjects:@"Email Account",@"Edit Funnl Settings",@"Funnl Alerts", @"Share Funnls", @"Sent Mail", @"Archive", @"Trash", @"Help",nil];
-    imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"settingListIcon",@"alertListIcon",@"shareListIcon",@"sentListIcon", @"archiveListIcon", @"trashListIcon",@"helpListIcon", nil];
+    listArray =[[NSMutableArray alloc] initWithObjects:@"Email Account",@"Inbox",@"Funnl Alerts", @"Sent Mail", @"Archive",@"Drafts", @"Trash", @"Help/FAQ",@"Send Feedback",nil];
+    imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"settingListIcon",@"alertListIcon",@"shareListIcon",@"sentListIcon", @"archiveListIcon",@"Edit_Button", @"trashListIcon",@"helpListIcon", nil];
 }
 
 
@@ -72,7 +72,9 @@
 		cell = [[MenuCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	}
-    cell.menuLabel.text = [listArray objectAtIndex:indexPath.row] ;
+    NSLog(@"what is gmailUser: %@",[EmailService instance].imapSession.gmailUserDisplayName);
+    if (indexPath.row == 0) cell.menuLabel.text = [EmailService instance].imapSession.username;
+    else cell.menuLabel.text = [listArray objectAtIndex:indexPath.row];
     cell.menuLabel.backgroundColor = CLEAR_COLOR;
     cell.menuLabel.textColor = WHITE_CLR;
     cell.menuLabel.highlightedTextColor = UIColorFromRGB(0x1B8EEE);
@@ -82,7 +84,7 @@
     cell.contentView.backgroundColor = CLEAR_COLOR;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [cell setAccessoryType:UITableViewCellAccessoryNone];
-    
+     
     cell.menuImage.image = [UIImage imageNamed:[imageArray objectAtIndex:indexPath.row]];
     
 //    cell.selectedBackgroundView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -95,7 +97,9 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     //    [appDelegate.drawerController closeDrawerAnimated:YES completion:nil];
     AppDelegate *appDelegate = APPDELEGATE;
-    if (indexPath.row == 4) {
+    MenuCell *tempCell = (MenuCell *)[tableView cellForRowAtIndexPath:indexPath];
+    NSLog(@"what is tempCell.text: %@",tempCell.menuLabel.text);
+    if ([tempCell.menuLabel.text isEqualToString:@"Sent Mail"]) {
         NSLog(@"sent mail requested");
          //The following line is required to get to the emailTableVC in mainVC
          // [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject;
@@ -106,12 +110,12 @@
         //((EmailsTableViewController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject).isSearching = YES;
          [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:SENT];
     }
-    else if (indexPath.row == 5){
+    else if ([tempCell.menuLabel.text isEqualToString:@"Archive"]){
         NSLog(@"archive mail requested");
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Archive";
         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:ARCHIVE];
     }
-    else if (indexPath.row == 6){
+    else if ([tempCell.menuLabel.text isEqualToString:@"Trash"]){
         NSLog(@"trash mail requested");
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Trash";
         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:TRASH];
