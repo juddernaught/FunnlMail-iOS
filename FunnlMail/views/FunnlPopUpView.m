@@ -217,9 +217,10 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
 }
 
 -(void)createAddFunnlView{
-    
     MCOAddress *emailAddress = message.header.from;
+    MCOAddress *listservEmailAdress = message.header.sender; //Added by Chad
     NSMutableArray *mailArray = [[NSMutableArray alloc] init];
+
     BOOL flag = TRUE;
     for (MCOAddress *emailID in message.header.cc) {
         if ([emailAddress.mailbox.lowercaseString isEqual:emailID.mailbox.lowercaseString]) {
@@ -227,9 +228,23 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
         }
     }
     if (flag) {
-        [mailArray addObject:emailAddress];
+        
+        // Check if the 2 email addresses are equivalent and if the listserv email is already in the array
+        
+        if (![emailAddress.mailbox.lowercaseString isEqual:listservEmailAdress.mailbox.lowercaseString]) {
+            //for (MCOAddress *emailID in message.header.cc) {
+              //  if (![listservEmailAdress.mailbox.lowercaseString isEqual:emailID.mailbox.lowercaseString]) {
+                    [mailArray addObject:listservEmailAdress];
+              // }
+           // }
+
+            
+        }
+                [mailArray addObject:emailAddress];
+        
+        
     }
-    [mailArray addObjectsFromArray:message.header.cc];
+    //[mailArray addObjectsFromArray:message.header.cc];
     
     NSMutableDictionary *sendersDictionary = [[NSMutableDictionary alloc] init];
     int count = 0;

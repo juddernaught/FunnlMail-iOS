@@ -254,16 +254,20 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                         cell.readLabel.backgroundColor = [UIColor clearColor];
                         cell.readLabel.hidden = YES;
                     }
-                    else
+                    else {
+                        cell.readLabel.hidden = NO;
                         cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
+                    }
                 }
                 else{
                     if([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] read]) {
                         cell.readLabel.backgroundColor = [UIColor clearColor];
                         cell.readLabel.hidden = YES;
                     }
-                    else
+                    else {
+                        cell.readLabel.hidden = NO;
                         cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
+                    }
                 }
                 
                 NSTimeInterval interval = [message.header.date timeIntervalSinceNow];
@@ -440,16 +444,20 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                         cell.readLabel.backgroundColor = [UIColor clearColor];
                         cell.readLabel.hidden = YES;
                     }
-                    else
+                    else {
+                        cell.readLabel.hidden = NO;
                         cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
+                    }
                 }
                 else{
                     if([(MessageModel*)searchMessages[indexPath.row] read]) {
                         cell.readLabel.backgroundColor = [UIColor clearColor];
                         cell.readLabel.hidden = YES;
                     }
-                    else
+                    else {
+                        cell.readLabel.hidden = NO;
                         cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
+                    }
                 }
                 
                 if([(MessageModel*)searchMessages[indexPath.row] numberOfEmailInThread] > 1){
