@@ -115,7 +115,7 @@ static NSString *currentFolder;
     [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
     if ([EmailService instance].filterMessages.count == 0) {
         AppDelegate *tempAppDelegate = APPDELEGATE;
-        if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
+        if ([[tempAppDelegate.currentFunnelString lowercaseString] isEqualToString:[ALL_FUNNL lowercaseString]]) {
             [fv.tableView reloadData];
         }
         else {
@@ -176,7 +176,7 @@ static NSString *currentFolder;
     
     if([folderName isEqualToString:INBOX]){
         FolderInfo = [self.imapSession folderInfoOperation:INBOX];
-        emailTableViewController.navigationItem.title = @"All Mail";
+        emailTableViewController.navigationItem.title = ALL_FUNNL;
         }
     else if([folderName isEqualToString:SENT]){
         NSLog(@"making sure this is happenging");
@@ -272,9 +272,10 @@ static NSString *currentFolder;
    
                       //retrieving the message from database
                       NSArray *tempArray = [[MessageService instance] retrieveAllMessages];
-                      [self performSelector:@selector(applyingFilters:) withObject:tempArray];
+                      //[self performSelector:@selector(applyingFilters:) withObject:tempArray];
+                      [self applyingFilters:tempArray];
                       self.filterMessages = (NSMutableArray*)tempArray;
-                      if(![folderName isEqualToString:SENT] && ![folderName isEqualToString:TRASH]) emailTableViewController.navigationItem.title = @"All Mail";
+                      if(![folderName isEqualToString:SENT] && ![folderName isEqualToString:TRASH]) emailTableViewController.navigationItem.title = ALL_FUNNL;
                       if ([folderName isEqualToString:SENT])
                           {
                                //this is neccessary in order to pull sent messages
@@ -345,7 +346,7 @@ static NSString *currentFolder;
                           emailTableViewController.isSearching = YES;
                           NSLog(@"does it crash here?");
                       }
-                      else if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
+                      else if ([[tempAppDelegate.currentFunnelString lowercaseString] isEqualToString:[ALL_FUNNL lowercaseString]]) {
                           NSLog(@"when does this happen");
                           emailTableViewController.emailFolder = INBOX;
                           [emailTableViewController.tableView reloadData];
@@ -504,18 +505,18 @@ static NSString *currentFolder;
         for (int count = 0; count < messages.count; count++) {
             MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[messages objectAtIndex:count] messageJSON]];
             if([message.header.subject isEqual:NULL] || [message.header.subject isEqualToString:@""] || [message.header.subject isEqualToString:@"(no subject)"]){
-                NSLog(@"aaa");
+                NSLog(@"Empty subject in --> Applying Filters");
             }
             if ([self checkForFunnel:tempFunnelModel forMessage:message]) {
-                
-                
                 NSString *funnelID = tempFunnelModel.funnelId;
                 NSString *messageID = [NSString stringWithFormat:@"%d",message.uid];
+                if (tempFunnelModel.skipFlag) {
+                    MessageModel *temp = (MessageModel*)[messages objectAtIndex:count];
+                    temp.skipFlag = temp.skipFlag + 1;
+                }
                 NSString *funnelJsonString = [(MessageModel*)[messages objectAtIndex:count] funnelJson];
                 NSError *error = nil;
-                NSMutableDictionary *tempDict = (NSMutableDictionary*)[NSJSONSerialization JSONObjectWithData:[funnelJsonString dataUsingEncoding:NSUTF8StringEncoding]
-                                                                                options: NSJSONReadingAllowFragments
-                                                                                  error: &error];
+                NSMutableDictionary *tempDict = (NSMutableDictionary*)[NSJSONSerialization JSONObjectWithData:[funnelJsonString dataUsingEncoding:NSUTF8StringEncoding] options: NSJSONReadingAllowFragments error: &error];
                 if (!error) {
                     tempDict = [self insertIntoDictionary:tempDict funnel:tempFunnelModel];
                 }
@@ -583,7 +584,7 @@ static NSString *currentFolder;
             return TRUE;
         }
     }
-    if ([funnel.funnelName.lowercaseString isEqualToString:@"all"]) {
+    if ([[funnel.funnelName lowercaseString] isEqualToString:[ALL_FUNNL lowercaseString]]) {
         
     }
     else {
@@ -672,7 +673,7 @@ static NSString *currentFolder;
     }
     NSMutableArray *combinedMessages = [NSMutableArray arrayWithArray:self.messages];
     // TODO: remove the if statement. Primary is currently the same as the All Mail view.
-    if (fv.filterModel && ![fv.filterModel.filterTitle isEqual:NULL] && ![fv.filterModel.filterTitle isEqualToString: @"All"] ) {
+    if (fv.filterModel && ![fv.filterModel.filterTitle isEqual:NULL] && ![[fv.filterModel.filterTitle lowercaseString] isEqualToString: [ALL_FUNNL lowercaseString]] ) {
         NSMutableDictionary *dictionary = [fv.filterModel getEmailsForFunnl:fv.filterModel.filterTitle];
         NSSet *funnlEmailList = [dictionary objectForKey:@"senders"];
         NSMutableSet *funnlSubjectList =  [NSMutableSet setWithArray:[dictionary objectForKey:@"subjects"]];
@@ -702,7 +703,7 @@ static NSString *currentFolder;
         self.filterMessages = [[NSMutableArray alloc] initWithArray:[combinedMessages sortedArrayUsingDescriptors:@[sort]]];
     }
     AppDelegate *tempAppDelegate = APPDELEGATE;
-    if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
+    if ([[tempAppDelegate.currentFunnelString lowercaseString] isEqualToString:[ALL_FUNNL lowercaseString]]) {
         [fv.tableView reloadData];
     }
     {
@@ -737,7 +738,7 @@ static NSString *currentFolder;
 
 +(void)addInitialFilter{
     
-  defaultFilter = [[FunnelModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#2EB82E"] filterTitle:@"All" newMessageCount:16 dateOfLastMessage:[NSDate new]];
+  defaultFilter = [[FunnelModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#2EB82E"] filterTitle:ALL_FUNNL newMessageCount:16 dateOfLastMessage:[NSDate new]];
   [filterArray addObject:defaultFilter];
   
 //    [filterArray addObject:[[FilterModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#FF85FF"] filterTitle:@"Meetings" newMessageCount:5 dateOfLastMessage:[NSDate new]]];

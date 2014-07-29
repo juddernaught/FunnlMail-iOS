@@ -69,8 +69,8 @@ NSString *msgBody;
 	// Do any additional setup after loading the view.
     //changes made by iauro001 on 11 June 2014
     //inserting default @"All" filter
-    FunnelModel *defaultFilter = [[FunnelModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#2EB82E"] filterTitle:@"All" newMessageCount:16 dateOfLastMessage:[NSDate new]];
-    defaultFilter.funnelName = @"All";
+    FunnelModel *defaultFilter = [[FunnelModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#2EB82E"] filterTitle:ALL_FUNNL newMessageCount:16 dateOfLastMessage:[NSDate new]];
+    defaultFilter.funnelName = ALL_FUNNL;
     defaultFilter.funnelId = @"0";
     defaultFilter.emailAddresses = @"";
     defaultFilter.phrases = @"";
@@ -206,12 +206,21 @@ NSString *msgBody;
     [cell.shareButton addTarget:self action:@selector(shareButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     cell.notificationButton.tag = indexPath.row;
     //[cell.notificationButton addTarget:self action:@selector(notificationButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-      if (editOn && ![fm.funnelName.lowercaseString isEqualToString:@"all"]) {
-          [cell.notificationButton setHidden:NO];
-          [cell.settingsButton setHidden:NO];
-          [cell.shareButton setHidden:NO];
-          [cell.mailImageView setHidden:YES];
-          [cell.messageCountLabel setHidden:YES];
+      if (editOn) {
+          if(![fm.funnelName.lowercaseString isEqualToString:[ALL_FUNNL lowercaseString]]){
+              [cell.notificationButton setHidden:NO];
+              [cell.settingsButton setHidden:NO];
+              [cell.shareButton setHidden:NO];
+              [cell.mailImageView setHidden:YES];
+              [cell.messageCountLabel setHidden:YES];
+          }
+          else{
+              [cell.notificationButton setHidden:YES];
+              [cell.settingsButton setHidden:NO];
+              [cell.shareButton setHidden:YES];
+              [cell.mailImageView setHidden:YES];
+              [cell.messageCountLabel setHidden:YES];
+          }
       }
       else {
           [cell.notificationButton setHidden:YES];
@@ -340,27 +349,34 @@ NSString *msgBody;
 -(void)settingsButtonClicked:(id)sender{
   UIButton *b = (UIButton*)sender;
   FunnelModel *fm = (FunnelModel *)filterArray[b.tag];
-  NSMutableDictionary *sendersDictionary = [[NSMutableDictionary alloc] init];
-  int count = 0;
-  for (NSString *address in fm.sendersArray) {
-    [sendersDictionary setObject:[address lowercaseString] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
-    count ++;
+  if([[fm.funnelName lowercaseString]  isEqualToString:[ALL_FUNNL lowercaseString]]){
+      PrimarySettingViewController *primarySettingController = [[PrimarySettingViewController alloc] init];
+      [self.mainVCdelegate pushViewController:primarySettingController];
+      primarySettingController = nil;
+
   }
-  
-  NSMutableDictionary *subjectsDictionary = [[NSMutableDictionary alloc] init];
-  count = 0;
-  for (NSString *subject in fm.subjectsArray) {
-      if (![subject isEqualToString:@""])
-      {
-          [subjectsDictionary setObject:[subject lowercaseString] forKey:[NSIndexPath indexPathForRow:count inSection:2]];
+  else{
+      NSMutableDictionary *sendersDictionary = [[NSMutableDictionary alloc] init];
+      int count = 0;
+      for (NSString *address in fm.sendersArray) {
+          [sendersDictionary setObject:[address lowercaseString] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
           count ++;
       }
+      
+      NSMutableDictionary *subjectsDictionary = [[NSMutableDictionary alloc] init];
+      count = 0;
+      for (NSString *subject in fm.subjectsArray) {
+          if (![subject isEqualToString:@""])
+          {
+              [subjectsDictionary setObject:[subject lowercaseString] forKey:[NSIndexPath indexPathForRow:count inSection:2]];
+              count ++;
+          }
+      }
+      CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:subjectsDictionary filterModel:fm];
+      creatFunnlViewController.mainVCdelegate = self.mainVCdelegate;
+      [self.mainVCdelegate pushViewController:creatFunnlViewController];
+      creatFunnlViewController = nil;
   }
-  
-  CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:subjectsDictionary filterModel:fm];
-  creatFunnlViewController.mainVCdelegate = self.mainVCdelegate;
-  [self.mainVCdelegate pushViewController:creatFunnlViewController];
-  creatFunnlViewController = nil;
 }
 
 -(void)notificationButtonClicked:(id)sender{

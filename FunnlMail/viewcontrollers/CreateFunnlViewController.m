@@ -94,7 +94,7 @@ NSMutableArray *emailArr,*searchArray;
     tempAppDelegate = APPDELEGATE;
     [self.view addSubview:tempAppDelegate.progressHUD];
     [self.view bringSubviewToFront:tempAppDelegate.progressHUD];
-    isSkipALl = oldModel.skipFlag;
+    isSkipAll = oldModel.skipFlag;
     randomColors = GRADIENT_ARRAY;
     self.title = @"Create Funnl";
     [self.view setBackgroundColor:[UIColor whiteColor]];
@@ -161,7 +161,7 @@ NSMutableArray *emailArr,*searchArray;
         return @"Subject (Optional):";
     }
     else {
-        return @"Skip all mail:";
+        return [NSString stringWithFormat:@"Skip %@:",ALL_FUNNL];
     }
     
 }
@@ -183,7 +183,7 @@ NSMutableArray *emailArr,*searchArray;
     else {
         if (indexPath.section == 3) {
             UITableViewCell *cell = [[UITableViewCell alloc] init];
-            cell.textLabel.text = @"Skip All Mail:";
+            cell.textLabel.text = [NSString stringWithFormat:@"Skip %@",ALL_FUNNL];
             skipAllSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(300-50, 8, 50, 0)];
             if (oldModel.skipFlag) {
                 [skipAllSwitch setOn:YES];
@@ -365,10 +365,10 @@ NSMutableArray *emailArr,*searchArray;
 - (void)changeSwitch:(UISwitch*)sender {
     if([sender isOn]){
         NSLog(@"Switch is ON");
-        isSkipALl = TRUE;
+        isSkipAll = TRUE;
     } else{
         NSLog(@"Switch is OFF");
-        isSkipALl = FALSE;
+        isSkipAll = FALSE;
     }
 }
 
@@ -383,7 +383,7 @@ NSMutableArray *emailArr,*searchArray;
 - (void)incrementCounterAgainstTheMessage {
     NSArray *messageArray = [[MessageFilterXRefService instance] messagesWithFunnelId:oldModel.funnelId];
     for (MessageModel *tempModel in messageArray) {
-        tempModel.skipFlag ++;
+        tempModel.skipFlag++;
         [[MessageService instance] updateMessage:tempModel];
     }
 }
@@ -561,7 +561,7 @@ NSMutableArray *emailArr,*searchArray;
                 color = [UIColor colorWithHexString:@"#2EB82E"];
             }
             FunnelModel *model;
-            model = [[FunnelModel alloc]initWithBarColor:color filterTitle:funnlName newMessageCount:0 dateOfLastMessage:[NSDate new] sendersArray:(NSMutableArray*)[dictionaryOfConversations allValues] subjectsArray:(NSMutableArray*)[dictionaryOfSubjects allValues] skipAllFlag:isSkipALl funnelColor:[randomColors objectAtIndex:gradientInt]];
+            model = [[FunnelModel alloc]initWithBarColor:color filterTitle:funnlName newMessageCount:0 dateOfLastMessage:[NSDate new] sendersArray:(NSMutableArray*)[dictionaryOfConversations allValues] subjectsArray:(NSMutableArray*)[dictionaryOfSubjects allValues] skipAllFlag:isSkipAll funnelColor:[randomColors objectAtIndex:gradientInt]];
             model.funnelId = oldModel.funnelId;
             FunnelModel *modelForFunnl = [[FunnelModel alloc] init];
             modelForFunnl.funnelName = model.filterTitle;
@@ -596,7 +596,7 @@ NSMutableArray *emailArr,*searchArray;
                 modelForFunnl.phrases = @"";
             senderEmailIds = nil;
             tempArrayForSender = nil;
-            model.skipFlag = isSkipALl;
+            model.skipFlag = isSkipAll;
             if(isEdit){
                 //                [EmailService editFilter:model withOldFilter:oldModel];
                 // save to db
@@ -605,11 +605,11 @@ NSMutableArray *emailArr,*searchArray;
                 [[FunnelService instance] updateFunnel:model];
                 [[EmailService instance] applyingFunnel:model toMessages:[[MessageService instance] messagesAllTopMessages]];
 
-                if (oldModel.skipFlag == isSkipALl) {
+                if (oldModel.skipFlag == isSkipAll) {
                     NSLog(@"No changes had occured!!");
                 }
                 else {
-                    if (isSkipALl) {
+                    if (isSkipAll) {
                         [self incrementCounterAgainstTheMessage];
                     }
                     else {
@@ -621,7 +621,7 @@ NSMutableArray *emailArr,*searchArray;
             }else{
                 [[FunnelService instance] insertFunnel:model];
                 [[EmailService instance] applyingFunnel:model toMessages:[[MessageService instance] messagesAllTopMessages]];
-                if (isSkipALl) {
+                if (isSkipAll) {
 //                    [self incrementCounterAgainstTheMessage];
                 }
                 else {

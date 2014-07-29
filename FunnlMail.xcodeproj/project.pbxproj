@@ -123,6 +123,7 @@
 		FAAF172419863CDD00E877D4 /* UIImage+MultiFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = FAAF171419863CDD00E877D4 /* UIImage+MultiFormat.m */; };
 		FAAF172519863CDD00E877D4 /* UIImage+WebP.m in Sources */ = {isa = PBXBuildFile; fileRef = FAAF171619863CDD00E877D4 /* UIImage+WebP.m */; };
 		FAAF172619863CDD00E877D4 /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = FAAF171819863CDD00E877D4 /* UIImageView+WebCache.m */; };
+		FAAF172F198777FC00E877D4 /* PrimarySettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAAF172E198777FC00E877D4 /* PrimarySettingViewController.m */; };
 		FABAF0751976507E00AA7918 /* Email 1.png in Resources */ = {isa = PBXBuildFile; fileRef = FABAF0211976507E00AA7918 /* Email 1.png */; };
 		FABAF0761976507E00AA7918 /* Email 2.png in Resources */ = {isa = PBXBuildFile; fileRef = FABAF0221976507E00AA7918 /* Email 2.png */; };
 		FABAF0771976507E00AA7918 /* Email 3.png in Resources */ = {isa = PBXBuildFile; fileRef = FABAF0231976507E00AA7918 /* Email 3.png */; };
@@ -458,6 +459,8 @@
 		FAAF171619863CDD00E877D4 /* UIImage+WebP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+WebP.m"; sourceTree = "<group>"; };
 		FAAF171719863CDD00E877D4 /* UIImageView+WebCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+WebCache.h"; sourceTree = "<group>"; };
 		FAAF171819863CDD00E877D4 /* UIImageView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+WebCache.m"; sourceTree = "<group>"; };
+		FAAF172D198777FC00E877D4 /* PrimarySettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PrimarySettingViewController.h; path = viewcontrollers/PrimarySettingViewController.h; sourceTree = "<group>"; };
+		FAAF172E198777FC00E877D4 /* PrimarySettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PrimarySettingViewController.m; path = viewcontrollers/PrimarySettingViewController.m; sourceTree = "<group>"; };
 		FABAF0211976507E00AA7918 /* Email 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Email 1.png"; sourceTree = "<group>"; };
 		FABAF0221976507E00AA7918 /* Email 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Email 2.png"; sourceTree = "<group>"; };
 		FABAF0231976507E00AA7918 /* Email 3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Email 3.png"; sourceTree = "<group>"; };
@@ -830,6 +833,8 @@
 				FA2C9BDA193EE66400866BEE /* MenuViewController.m */,
 				FA9164BC1973D162006A4726 /* ComposeViewController.h */,
 				FA9164BD1973D162006A4726 /* ComposeViewController.m */,
+				FAAF172D198777FC00E877D4 /* PrimarySettingViewController.h */,
+				FAAF172E198777FC00E877D4 /* PrimarySettingViewController.m */,
 			);
 			name = viewcontrollers;
 			sourceTree = "<group>";
@@ -1434,6 +1439,7 @@
 				FA9164CB1973D302006A4726 /* TITokenField.m in Sources */,
 				FAAF171C19863CDD00E877D4 /* SDWebImageCompat.m in Sources */,
 				6677881A18EF84FB00EF1962 /* MCOCIDURLProtocol.mm in Sources */,
+				FAAF172F198777FC00E877D4 /* PrimarySettingViewController.m in Sources */,
 				FAABF1871952FB720072FFE8 /* FunnlPopupViewCell.m in Sources */,
 				FA2C9BD3193EDFCB00866BEE /* MMDrawerVisualState.m in Sources */,
 				CCD00B5B18F54797007A675F /* MainView.m in Sources */,

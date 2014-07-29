@@ -17,6 +17,8 @@
 #import <Mixpanel/Mixpanel.h>
 #import "UIColor+HexString.h"
 #import "ComposeViewController.h"
+#import "MainView.h"
+
 
 #import <MessageUI/MessageUI.h>
 
@@ -42,8 +44,8 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [mainView reloadView];
     AppDelegate *app = APPDELEGATE;
     NSLog(@"viewWillAppear mainVC");
-    if([app.currentFunnelString.lowercaseString isEqualToString:@"all"]){
-         [self setTitle:@"All Mail"];
+    if([app.currentFunnelString.lowercaseString isEqualToString:[ALL_FUNNL lowercaseString]]){
+         [self setTitle:ALL_FUNNL];
         }
      else {
          NSLog(@"do we get here tho: %@", self.parentViewController);
@@ -84,9 +86,9 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     // This is the All bar
     NSLog(@"viewDidLoad mainVC");
     AppDelegate *tempAppDelegate = APPDELEGATE;
-    if ([tempAppDelegate.currentFunnelString.lowercaseString isEqualToString:@"all"]) {
-        navigationBarTitleLabel.text = @"All Mail";
-        self.navigationItem.title = @"All Mail";
+    if ([tempAppDelegate.currentFunnelString.lowercaseString isEqualToString:[ALL_FUNNL lowercaseString]]) {
+        navigationBarTitleLabel.text = ALL_FUNNL;
+        self.navigationItem.title = ALL_FUNNL;
     }
     else {
         self.navigationItem.title = tempAppDelegate.currentFunnelString.capitalizedString;
@@ -102,7 +104,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [filterLabel addSubview:_activityIndicator];
     filterLabel.textColor = [UIColor whiteColor];
     filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#2EB82E"]);
-    filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle: @"All");
+    filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle: ALL_FUNNL);
     filterLabel.textAlignment = NSTextAlignmentCenter;
     //[self.view addSubview:filterLabel];
 //    self.navigationItem.title = filterLabel.text;
@@ -139,7 +141,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     
     [composeEmailButton addTarget:self action:@selector(composeEmailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
     composeEmailButton.frame = CGRectMake(65, -5, 32, 32);
-    [composeEmailButton setImage:[UIImage imageNamed:@"composeIcon.png"] forState:UIControlStateNormal];
+    [composeEmailButton setImage:[UIImage imageNamed:@"ComposeIcon.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:composeEmailButton];
     
     if(emailsTableViewController==nil){
@@ -215,8 +217,8 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 #pragma mark setFilterTitle
 - (void)setFilterTitle:(NSString*)title
 {
-    if ([title.lowercaseString isEqualToString:@"all"]) {
-        self.navigationItem.title = @"All Mail";
+    if ([title.lowercaseString isEqualToString:[ALL_FUNNL lowercaseString]]) {
+        self.navigationItem.title = ALL_FUNNL;
 //        navigationBarTitleLabel.text = @"All mails";
     }
     else {

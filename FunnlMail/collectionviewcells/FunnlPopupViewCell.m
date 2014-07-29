@@ -49,7 +49,7 @@
         filterTitleLabel.numberOfLines = 0;
         filterTitleLabel.lineBreakMode = NSLineBreakByWordWrapping;
         filterTitleLabel.textAlignment = NSTextAlignmentCenter;
-        filterTitleLabel.text = @"Primary";
+        filterTitleLabel.text = ALL_FUNNL;
         //filterTitleLabel.backgroundColor = [UIColor orangeColor];
         [self addSubview:filterTitleLabel];
         

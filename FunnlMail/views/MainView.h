@@ -10,6 +10,8 @@
 #import "MainVCDelegate.h"
 #include <MailCore/MailCore.h>
 #import <MessageUI/MessageUI.h>
+#import "PrimarySettingViewController.h"
+
 @class MCOMessageView;
 @class MCOIMAPAsyncSession;
 @class MCOMAPMessage;

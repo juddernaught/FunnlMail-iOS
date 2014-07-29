@@ -102,7 +102,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     [filterLabel addSubview:activityIndicator];
     filterLabel.textColor = [UIColor whiteColor];
     filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#2EB82E"]);
-    filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : @"Alllllllllllllllllll");
+    filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : ALL_FUNNL);
     filterLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:filterLabel];
     
@@ -164,7 +164,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     
     if(filterLabel!=nil){
         filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#2EB82E"]);
-        filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : @"All");
+        filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : ALL_FUNNL);
         [[EmailService instance] loadLastNMessages:[EmailService instance].messages.count withTableController:self withFolder:self.emailFolder];
     }
 }
@@ -181,7 +181,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 #pragma mark - Table View
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
+    if ([[tempAppDelegate.currentFunnelString lowercaseString] isEqualToString:[ALL_FUNNL lowercaseString]]) {
         return 2;
     }
     if (isSearching) {

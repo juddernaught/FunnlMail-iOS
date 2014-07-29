@@ -47,7 +47,7 @@
         filterTitleLabel = [[UILabel alloc] init];
         [filterTitleLabel setFont:[UIFont systemFontOfSize:18]];
         filterTitleLabel.textAlignment = NSTextAlignmentCenter;
-        filterTitleLabel.text = @"Primary";
+        filterTitleLabel.text = ALL_FUNNL;
         //filterTitleLabel.backgroundColor = [UIColor orangeColor];
         [self addSubview:filterTitleLabel];
       
@@ -198,7 +198,7 @@
     notificationButton.hidden = NO;
   }
   
-  if([filterTitleLabel.text isEqualToString:@"All"]){
+  if([[filterTitleLabel.text lowercaseString] isEqualToString:[ALL_FUNNL lowercaseString]]){
     settingsButton.hidden = YES;
     notificationButton.hidden = NO;
   }

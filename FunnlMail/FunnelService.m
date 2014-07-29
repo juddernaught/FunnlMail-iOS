@@ -95,7 +95,7 @@ static FunnelService *instance;
 -(NSArray *) getFunnelsExceptAllFunnel{
     __block NSMutableArray *array = [[NSMutableArray alloc] init];
     __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
-    paramDict[@"funnelName"] = @"All";
+    paramDict[@"funnelName"] = ALL_FUNNL;
     
     [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
         FMResultSet *resultSet = [db executeQuery:@"SELECT funnelId,funnelName,emailAddresses,phrases,skipFlag,funnelColor FROM funnels WHERE funnelName !=:funnelName" withParameterDictionary:paramDict];
@@ -133,7 +133,9 @@ static FunnelService *instance;
   __block NSMutableArray *array = [[NSMutableArray alloc] init];
     
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    FMResultSet *resultSet = [db executeQuery:@"SELECT funnels.funnelId as funnelId, funnels.funnelName as funnelName, funnels.emailAddresses as emailAddresses, funnels.phrases as phrases, funnels.skipFlag as skipFlag, funnels.funnelColor as funnelColor, (COUNT(read) - SUM (read )) as readCount FROM funnels INNER JOIN messageFilterXRef ON (messageFilterXRef.funnelId = funnels.funnelId) INNER JOIN messages ON (messageFilterXRef.messageId = messages.messageId) GROUP BY 1, 2, 3, 4, 5, 6 UNION SELECT 0 as funnelId, 'All' asfunnelName, '' as emailAddresses, '', 0 as skipFlag, '#000000' as funnelColor, COUNT(read) as readCount FROM messages where messages.read = 0;" ];
+      
+    NSString *query = [NSString stringWithFormat:@"SELECT funnels.funnelId as funnelId, funnels.funnelName as funnelName, funnels.emailAddresses as emailAddresses, funnels.phrases as phrases, funnels.skipFlag as skipFlag, funnels.funnelColor as funnelColor, (COUNT(read) - SUM (read )) as readCount FROM funnels INNER JOIN messageFilterXRef ON (messageFilterXRef.funnelId = funnels.funnelId) INNER JOIN messages ON (messageFilterXRef.messageId = messages.messageId) GROUP BY 1, 2, 3, 4, 5, 6 UNION SELECT 0 as funnelId, '%@' asfunnelName, '' as emailAddresses, '', 0 as skipFlag, '#000000' as funnelColor, COUNT(read) as readCount FROM messages where messages.read = 0;",ALL_FUNNL];
+    FMResultSet *resultSet = [db executeQuery:query];
      
     FunnelModel *model;
 //      FilterModel *modelForFilter;

@@ -32,7 +32,7 @@
     funnelUpDated = FALSE;
     progressHUD = [[MBProgressHUD alloc] init];
     //initializing currentFunnelString to "All"
-    currentFunnelString = @"all";
+    currentFunnelString = ALL_FUNNL;
     currentFunnelDS = nil;
     appActivityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(320 - 20 - 10, 10, 20, 20)];
     //FunnlViewController *fvc = [[FunnlViewController alloc] init];
