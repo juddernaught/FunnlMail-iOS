@@ -227,24 +227,26 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
             flag = FALSE;
         }
     }
+    
     if (flag) {
         
         // Check if the 2 email addresses are equivalent and if the listserv email is already in the array
         
         if (![emailAddress.mailbox.lowercaseString isEqual:listservEmailAdress.mailbox.lowercaseString]) {
             //for (MCOAddress *emailID in message.header.cc) {
-              //  if (![listservEmailAdress.mailbox.lowercaseString isEqual:emailID.mailbox.lowercaseString]) {
+              // if ([listservEmailAdress.mailbox.lowercaseString isEqual:emailID.mailbox.lowercaseString]) {
                     [mailArray addObject:listservEmailAdress];
               // }
-           // }
-
-            
+            //}
         }
                 [mailArray addObject:emailAddress];
-        
-        
     }
-    //[mailArray addObjectsFromArray:message.header.cc];
+    
+    for (MCOAddress *emailID in message.header.cc) {
+     if (![listservEmailAdress.mailbox.lowercaseString isEqual:emailID.mailbox.lowercaseString]) {
+    [mailArray addObjectsFromArray:message.header.cc];
+     }
+    }
     
     NSMutableDictionary *sendersDictionary = [[NSMutableDictionary alloc] init];
     int count = 0;
