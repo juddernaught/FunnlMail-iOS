@@ -90,9 +90,14 @@ static NSString *mailCellIdentifier = @"MailCell";
     EmailCell *cell = [tableView dequeueReusableCellWithIdentifier:mailCellIdentifier forIndexPath:indexPath];
     MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[dataSourceArray[indexPath.row] messageJSON]];
     if([(MessageModel*)dataSourceArray[indexPath.row] read]){
-        cell.readLabel.backgroundColor = [UIColor clearColor];
+        //cell.readLabel.backgroundColor = [UIColor clearColor];
+        cell.readLabel.hidden = YES;
+        
+
     }else{
         cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
+        
+
     }
     [cell.detailDiscloser setHidden:NO];
     [cell.threadLabel setHidden:YES];

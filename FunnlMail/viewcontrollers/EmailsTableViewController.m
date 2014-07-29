@@ -250,14 +250,18 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 cell.delegate = self;
                 MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
                 if ([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread] > 1) {
-                    if ([self isThreadRead:[NSString stringWithFormat:@"%llul",message.gmailThreadID]])
+                    if ([self isThreadRead:[NSString stringWithFormat:@"%llul",message.gmailThreadID]]) {
                         cell.readLabel.backgroundColor = [UIColor clearColor];
+                        cell.readLabel.hidden = YES;
+                    }
                     else
                         cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
                 }
                 else{
-                    if([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] read])
+                    if([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] read]) {
                         cell.readLabel.backgroundColor = [UIColor clearColor];
+                        cell.readLabel.hidden = YES;
+                    }
                     else
                         cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
                 }
@@ -432,14 +436,18 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                     cell.dateLabel.text = [message.header.date timeAgo];
                 
                 if ([(MessageModel*)searchMessages[indexPath.row] numberOfEmailInThread] > 1) {
-                    if ([self isThreadRead:[NSString stringWithFormat:@"%llul",message.gmailThreadID]])
+                    if ([self isThreadRead:[NSString stringWithFormat:@"%llul",message.gmailThreadID]]) {
                         cell.readLabel.backgroundColor = [UIColor clearColor];
+                        cell.readLabel.hidden = YES;
+                    }
                     else
                         cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
                 }
                 else{
-                    if([(MessageModel*)searchMessages[indexPath.row] read])
+                    if([(MessageModel*)searchMessages[indexPath.row] read]) {
                         cell.readLabel.backgroundColor = [UIColor clearColor];
+                        cell.readLabel.hidden = YES;
+                    }
                     else
                         cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
                 }
