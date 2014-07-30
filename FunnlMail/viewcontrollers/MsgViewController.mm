@@ -218,7 +218,7 @@
     subjectLabel = nil;
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"d MMMM yyyy h:mm a"];
+    [dateFormatter setDateFormat:@"d MMMM yyyy h:mm a"]; //Changed by Chad
     UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 10 + height + 3, 280, 15)];
     [dateLabel setFont:[UIFont systemFontOfSize:14]];
     [dateLabel setTextColor:[UIColor blackColor]];

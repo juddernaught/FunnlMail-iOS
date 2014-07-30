@@ -106,7 +106,7 @@ static NSString *mailCellIdentifier = @"MailCell";
     interval = -interval;
     if([message.header.date isToday]){
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"hh:mm a"];
+        [dateFormatter setDateFormat:@"h:mm a"]; // Changed by Chad
         NSString *dateString = [dateFormatter stringFromDate:message.header.date];
         cell.dateLabel.text = dateString;
     }

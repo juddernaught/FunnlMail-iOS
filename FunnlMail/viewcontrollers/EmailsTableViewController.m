@@ -274,7 +274,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 interval = -interval;
                 if (interval <= 24*60*60) {
                     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-                    [dateFormatter setDateFormat:@"hh:mm a"];
+                    [dateFormatter setDateFormat:@"h:mm a"]; //Changed by Chad
                     NSString *dateString = [dateFormatter stringFromDate:message.header.date];
                     cell.dateLabel.text = dateString.uppercaseString;
                 }
@@ -432,7 +432,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
                 if([message.header.date isToday]){
                     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-                    [dateFormatter setDateFormat:@"HH:mm"];
+                    [dateFormatter setDateFormat:@"h:mm"]; // Changed by Chad
                     NSString *dateString = [dateFormatter stringFromDate:message.header.date];
                     cell.dateLabel.text = dateString;
                 }
