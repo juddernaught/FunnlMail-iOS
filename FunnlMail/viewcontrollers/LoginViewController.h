@@ -28,4 +28,8 @@
 // A flag indicating whether an access token refresh is on the way or not.
 @property (nonatomic) BOOL isRefreshing;
 
+//pageController for demoPage
+@property (strong, nonatomic) UIPageViewController *pageController;
+
+
 @end
