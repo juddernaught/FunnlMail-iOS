@@ -91,7 +91,7 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
         
         NSArray *viewControllers = [NSArray arrayWithObject:initialViewController];
         
-        self.pageController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 60);
+        self.pageController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 45);
         [self.pageController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
         
         [self addChildViewController:self.pageController];

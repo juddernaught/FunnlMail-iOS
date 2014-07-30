@@ -25,7 +25,6 @@
 }
 -(id)initWithImage:(NSString *)image{
     [self.view setBackgroundColor:[UIColor blackColor]];
-    NSLog(@"what is image: %@",image);
     UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:image]];
     imageView.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
     [self.view addSubview:imageView];

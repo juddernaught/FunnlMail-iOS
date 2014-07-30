@@ -58,7 +58,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     self.emailFolder = INBOX;
     searchMessages = [[NSMutableArray alloc] init];
     isSearching = NO;
-    self.ClearTable = 0;
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
 
@@ -191,10 +190,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if(self.ClearTable) {
-        NSLog(@"clear table == %d",self.ClearTable);
-        return 0;
-    }
 	if(isSearching == NO){
         if (section == 1)
         {
@@ -237,7 +232,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                     else if(funnlLabelCount == 1){
                         cell.funnlLabel2.text = key;
                         if(funnlLabelDictionary.allKeys.count > 1){
-                            cell.funnlLabel2.text = [NSString stringWithFormat:@"%@ + %d ",key,funnlLabelDictionary.allKeys.count-1];
+                            cell.funnlLabel2.text = [NSString stringWithFormat:@"%@ + %lu ",key,funnlLabelDictionary.allKeys.count-1];
                             cell.funnlLabel2.textColor = [UIColor colorWithHexString:[funnlLabelDictionary objectForKey:key]];
                         }
                     }
@@ -1017,6 +1012,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 }
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar;{
+    NSLog(@"what is height of tableview: %f",self.tableView.frame.size.height);
     
 }
 
