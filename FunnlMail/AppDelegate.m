@@ -7,16 +7,18 @@
 //
 
 #import "AppDelegate.h"
-#import "LoginViewController.h"
 #import "SQLiteDatabase.h"
 #import "ServiceTests.h"
 #import <Mixpanel/Mixpanel.h>
 #import <Parse/Parse.h>
+#import "MainVC.h"
+#import "LoginViewController.h"
+#import "EmailService.h"
 
 #define MIXPANEL_TOKEN @"08b1e55d72f1b22a8e5696c2b56a6777"
 
 @implementation AppDelegate
-@synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated;
+@synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -48,10 +50,10 @@
     //
     //[ServiceTests runTests];
   
-    LoginViewController *vc = [[LoginViewController alloc]init];
-    vc.view.backgroundColor = [UIColor clearColor];
+    loginViewController = [[LoginViewController alloc]init];
+    loginViewController.view.backgroundColor = [UIColor clearColor];
     self.window.backgroundColor = [UIColor whiteColor];
-    UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:vc];
+    UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:loginViewController];
     self.window.rootViewController = nav;
     self.startDate = [NSDate date];
 
@@ -83,7 +85,9 @@
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     self.startDate = [NSDate date];
-    
+    if([EmailService instance].emailsTableViewController){        
+        [[EmailService instance] performSelector:@selector(checkMailsAtStart:) withObject:[EmailService instance].emailsTableViewController afterDelay:0.1];
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -107,8 +111,7 @@
     [[Mixpanel sharedInstance] track:@"Time Open" properties:@{@"Time": [NSString stringWithFormat:@"%02f", time2]}];
 }
 
-- (void)application:(UIApplication *)application
-didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
     // Store the deviceToken in the current installation and save it to Parse.
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];

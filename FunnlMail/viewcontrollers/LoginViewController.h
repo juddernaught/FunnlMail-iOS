@@ -12,6 +12,7 @@
 #import "EmailServerModel.h"
 #import "GTMHTTPFetcher.h"
 #import "GTMOAuth2ViewControllerTouch.h"
+@class MainVC;
 @interface LoginViewController : UIViewController <NSURLConnectionDataDelegate,GTMFetcherAuthorizationProtocol,GTMHTTPFetcherServiceProtocol>
 
 @property (nonatomic, retain) UITextField *username;
@@ -24,8 +25,8 @@
 @property (nonatomic, strong) NSURLConnection *urlConnection;
 
 @property (nonatomic, strong) EmailServerModel *emailServerModel;
-
+@property (nonatomic, strong) MainVC *mainViewController;
 // A flag indicating whether an access token refresh is on the way or not.
 @property (nonatomic) BOOL isRefreshing;
-
+-(void)getPrimaryMessages:(NSString*)emailStr nextPageToken:(NSString*)nextPage;
 @end
