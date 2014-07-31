@@ -11,6 +11,7 @@ messageBodyToBeRendered TEXT,
 messageHTMLBody TEXT,
 skipFlag INTEGER,
 funnelJson TEXT,
+categoryName TEXT,
 PRIMARY KEY (messageID)
 );
 

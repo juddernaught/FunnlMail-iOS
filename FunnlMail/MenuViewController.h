@@ -11,7 +11,9 @@
 #import "AppDelegate.h"
 @interface MenuViewController : UIViewController <UITableViewDataSource,UITableViewDelegate>
 {
-    UITableView *listView;
-    NSMutableArray *listArray,*imageArray;
+
 }
+@property (nonatomic,retain) NSMutableArray *listArray,*imageArray;
+@property (nonatomic,retain) UITableView *listView;
+
 @end

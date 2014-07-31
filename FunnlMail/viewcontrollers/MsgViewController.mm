@@ -138,7 +138,7 @@
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
     [titleLabel setFont:[UIFont systemFontOfSize:22]];
     [titleLabel setTextColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR]];
-    if ([tempAppDelegate.currentFunnelString.lowercaseString isEqualToString:@"all"]) {
+    if ([tempAppDelegate.currentFunnelString.lowercaseString isEqualToString:[ALL_FUNNL lowercaseString]]) {
         self.navigationItem.title =@"";
     }
     else {
@@ -207,10 +207,10 @@
     headerHeight = finalY;
     int height = [self calculateSize:_message.header.subject];
     subjectHeight = height;
-    UILabel *subjectLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, 280, height)];
+    UILabel *subjectLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, 280, height + 5)]; // Added +5 to enable multi-line
     [subjectLabel setFont:[UIFont boldSystemFontOfSize:16]];
-    subjectLabel.numberOfLines = 0;
     subjectLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    subjectLabel.numberOfLines = 0;
     subjectLabel.text = _message.header.subject;
     
     subjectView = [[UIView alloc] init];
@@ -218,7 +218,7 @@
     subjectLabel = nil;
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"d MMMM yyyy h:mm a"];
+    [dateFormatter setDateFormat:@"d MMMM yyyy h:mm a"]; //Changed by Chad
     UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 10 + height + 3, 280, 15)];
     [dateLabel setFont:[UIFont systemFontOfSize:14]];
     [dateLabel setTextColor:[UIColor blackColor]];
@@ -674,8 +674,9 @@ typedef void (^DownloadCallback)(NSError * error);
     viewEmail.folder = _folder;
     viewEmail.imapSession = _session;
     viewEmail.reply = @1;
-    UINavigationController *navBar=[[UINavigationController alloc]initWithRootViewController:viewEmail];
-    [self presentViewController:navBar animated:YES completion:NULL];
+//    UINavigationController *navBar=[[UINavigationController alloc]initWithRootViewController:viewEmail];
+    //[self presentViewController:navBar animated:YES completion:NULL];
+    [self.navigationController pushViewController:viewEmail animated:YES];
 }
 
 -(void) replyAllButtonSelected{
@@ -688,8 +689,9 @@ typedef void (^DownloadCallback)(NSError * error);
     viewEmail.folder = _folder;
     viewEmail.imapSession = _session;
     viewEmail.replyAll = @1;
-    UINavigationController *navBar=[[UINavigationController alloc]initWithRootViewController:viewEmail];
-    [self presentViewController:navBar animated:YES completion:NULL];
+//    UINavigationController *navBar=[[UINavigationController alloc]initWithRootViewController:viewEmail];
+//    [self presentViewController:navBar animated:YES completion:NULL];
+    [self.navigationController pushViewController:viewEmail animated:YES];
 }
 
 -(void) forwardButtonSelected{
@@ -700,8 +702,9 @@ typedef void (^DownloadCallback)(NSError * error);
     viewEmail.folder = _folder;
     viewEmail.imapSession = _session;
     viewEmail.forward = @1;
-    UINavigationController *navBar=[[UINavigationController alloc]initWithRootViewController:viewEmail];
-    [self presentViewController:navBar animated:YES completion:NULL];
+//    UINavigationController *navBar=[[UINavigationController alloc]initWithRootViewController:viewEmail];
+//    [self presentViewController:navBar animated:YES completion:NULL];
+        [self.navigationController pushViewController:viewEmail animated:YES];
 }
 
 

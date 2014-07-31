@@ -167,6 +167,9 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
         FunnelModel *fm = (FunnelModel *)filterArray[indexPath.row];
         cell.barColor = fm.barColor;
         cell.filterTitle = fm.filterTitle;
+        
+        cell.newMessageCount = fm.newMessageCount; //Added by Chad
+        
         //[cell.notificationButton addTarget:self action:@selector(notificationButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     }
     cell.contentView.backgroundColor = [UIColor whiteColor];
@@ -214,19 +217,36 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
 }
 
 -(void)createAddFunnlView{
-    
     MCOAddress *emailAddress = message.header.from;
+    MCOAddress *listservEmailAdress = message.header.sender; //Added by Chad
     NSMutableArray *mailArray = [[NSMutableArray alloc] init];
+
     BOOL flag = TRUE;
     for (MCOAddress *emailID in message.header.cc) {
         if ([emailAddress.mailbox.lowercaseString isEqual:emailID.mailbox.lowercaseString]) {
             flag = FALSE;
         }
     }
+    
     if (flag) {
-        [mailArray addObject:emailAddress];
+        
+        // Check if the 2 email addresses are equivalent and if the listserv email is already in the array
+        
+        if (![emailAddress.mailbox.lowercaseString isEqual:listservEmailAdress.mailbox.lowercaseString]) {
+            //for (MCOAddress *emailID in message.header.cc) {
+              // if ([listservEmailAdress.mailbox.lowercaseString isEqual:emailID.mailbox.lowercaseString]) {
+                    [mailArray addObject:listservEmailAdress];
+              // }
+            //}
+        }
+                [mailArray addObject:emailAddress];
     }
+    
+    for (MCOAddress *emailID in message.header.cc) {
+     if (![listservEmailAdress.mailbox.lowercaseString isEqual:emailID.mailbox.lowercaseString]) {
     [mailArray addObjectsFromArray:message.header.cc];
+     }
+    }
     
     NSMutableDictionary *sendersDictionary = [[NSMutableDictionary alloc] init];
     int count = 0;

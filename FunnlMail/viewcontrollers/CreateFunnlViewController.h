@@ -15,7 +15,7 @@
 @interface CreateFunnlViewController : UIViewController<UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate>
 {
     AppDelegate *tempAppDelegate;
-    UITableView *tableview;
+    UITableView *Tableview;
     UITextField *nameTextField,*conversattionTextField,*subjectTextField;
     NSMutableDictionary *dictionaryOfConversations,*dictionaryOfSubjects;
     NSString *funnlName;
@@ -24,8 +24,8 @@
     FunnelModel *oldModel;
     UISwitch *skipAllSwitch;
     UISwitch *enableNotificationsSwitch;
-    BOOL isSkipALl;
     BOOL areNotificationsEnabled;
+    BOOL isSkipAll;
 }
 @property (weak) id<MainVCDelegate> mainVCdelegate;
 @property (assign) BOOL isEdit;

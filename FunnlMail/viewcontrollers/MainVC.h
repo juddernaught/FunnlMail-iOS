@@ -8,12 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "EmailsTableViewController.h"
-#import "MainView.h"
 #import "MainVCDelegate.h"
 //#import "FilterModel.h"
 #import "FunnelModel.h"
 
-
+@class MainView;
 @interface MainVC : UIViewController<MainVCDelegate>{
 //  MainView *mainView;
   EmailsTableViewController *emailsTableViewController;

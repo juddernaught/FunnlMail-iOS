@@ -17,6 +17,7 @@
 #import "MBProgressHUD.h"
 #import <Mixpanel/Mixpanel.h>
 #import <AddressBook/AddressBook.h>
+#import <CoreText/CoreText.h>
 
 static NSString * mainJavascript = @"\
 var imageElements = function() {\
@@ -84,70 +85,6 @@ NSMutableArray *emailArr,*searchArray;
 }
 
 
-#pragma mark loadContacts
-//this will need to put somewhere so it happens only once
-//it will take longer to do the more contacts there are obviously
--(void)emailContact
-
-{
-    
-    emailArr = [[NSMutableArray alloc]init];
-    searchArray = [[NSMutableArray alloc]init];
-    
-    ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
-    
-    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
-        ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
-            if (granted) {
-                // First time access has been granted, add the contact
-                
-                CFArrayRef people = ABAddressBookCopyArrayOfAllPeople(addressBook);
-                NSMutableArray *allEmails = [[NSMutableArray alloc] initWithCapacity:CFArrayGetCount(people)];
-                for (CFIndex i = 0; i < CFArrayGetCount(people); i++)
-                {
-                    ABRecordRef person = CFArrayGetValueAtIndex(people, i);
-                    ABMultiValueRef emails = ABRecordCopyValue(person, kABPersonEmailProperty);
-                    for (CFIndex j=0; j < ABMultiValueGetCount(emails); j++)
-                    {
-                        NSString* email = (__bridge NSString*)ABMultiValueCopyValueAtIndex(emails, j);
-                        [allEmails addObject:email];
-                        
-                    }
-                    CFRelease(emails);
-                }
-                emailArr = allEmails;
-
-            } else {
-                // User denied access
-                // Display an alert telling user the contact could not be added
-            }
-        });
-    }
-    else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
-        // The user has previously given access, add the contact
-        CFArrayRef people = ABAddressBookCopyArrayOfAllPeople(addressBook);
-        NSMutableArray *allEmails = [[NSMutableArray alloc] initWithCapacity:CFArrayGetCount(people)];
-        for (CFIndex i = 0; i < CFArrayGetCount(people); i++)
-        {
-            ABRecordRef person = CFArrayGetValueAtIndex(people, i);
-            ABMultiValueRef emails = ABRecordCopyValue(person, kABPersonEmailProperty);
-            for (CFIndex j=0; j < ABMultiValueGetCount(emails); j++)
-            {
-                NSString* email = (__bridge NSString*)ABMultiValueCopyValueAtIndex(emails, j);
-                if([self validateEmail:email]) [allEmails addObject:email];
-                
-            }
-            CFRelease(emails);
-        }
-        emailArr = allEmails;
-    }
-    else {
-        // The user has previously denied access
-        // Send an alert telling user to change privacy setting in settings app
-    }
-
-    
-}
 
 #pragma this is what initiates autocomplete
 - (BOOL)textField:(UITextField *)textField
@@ -164,7 +101,7 @@ replacementString:(NSString *)string {
     else if ([@"Cc:"  isEqual: ((UILabel *)(TITokenField *)textField.leftView).text]){
         NSLog(@"cc did start");
         autocompleteTableView.hidden = NO;
-        //[self.view setFrame:CGRectMake(0,-.0001,self.view.bounds.size.width,self.view.bounds.size.height-100)];
+        //[self.view setFrame:CGRectMake(0,0,self.view.bounds.size.width,self.view.bounds.size.height)];
         //autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 65, self.view.bounds.size.width, 120)];
         //[self.view addSubview:autocompleteTableView];
 
@@ -211,7 +148,7 @@ replacementString:(NSString *)string {
     autocompleteTableView.hidden = YES;
     if(ccFieldView.tokenField.isEditing){
         NSLog(@"ccFieldView isEditing");
-       // [self.view setFrame:CGRectMake(0,60,self.view.bounds.size.width,self.view.bounds.size.height)];
+        //[self.view setFrame:CGRectMake(0,0,self.view.bounds.size.width,self.view.bounds.size.height+10)];
     }
 //    else if (bccFieldView.tokenField.isEditing)[self.view setFrame:CGRectMake(0,75,self.view.bounds.size.width,self.view.bounds.size.height)];
     return YES;
@@ -287,7 +224,8 @@ replacementString:(NSString *)string {
 
 -(void)cancelButtonSelected{
     [[Mixpanel sharedInstance] track:@"Cancel button from composeVC"];
-    [self dismissViewControllerAnimated:YES completion:NULL];
+//    [self dismissViewControllerAnimated:YES completion:NULL];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(void)sendButtonSelected{
@@ -329,7 +267,8 @@ replacementString:(NSString *)string {
             NSLog(@"%@ Successfully sent email!", [EmailService instance].smtpSession.username);
             [[Mixpanel sharedInstance] track:@"Send Button from composeVC"];
             [MBProgressHUD hideHUDForView:self.view animated:YES];
-            [self dismissViewControllerAnimated:YES completion:NULL];
+            //[self dismissViewControllerAnimated:YES completion:NULL];
+            [self.navigationController popViewControllerAnimated:YES];
             [[[EmailService instance].imapSession appendMessageOperationWithFolder:SENT messageData:rfc822Data flags:MCOMessageFlagMDNSent] start:^(NSError *error, uint32_t createdUID) {
                 if (error)
                     NSLog(@"error adding message to sent folder");
@@ -437,21 +376,34 @@ replacementString:(NSString *)string {
         NSMutableString *temp = [[NSMutableString alloc] initWithString:@"Re: "];
         [temp appendString:self.message.header.subject];
         subjectFieldView.tokenField.text = temp;
+        
         temp = [[NSMutableString alloc] initWithString:[self.address nonEncodedRFC822String]];
+        
         for (MCOAddress* address in self.addressArray) {
             [temp appendString:@", "];
             [temp appendString:[address nonEncodedRFC822String]];
+            
         }
+        
         toFieldView.tokenField.text = temp;
     }
 
     if (!self.compose) {
         NSString *htmlString = [self getBodyData];
-        NSAttributedString *attributedString = [[NSAttributedString alloc] initWithData:[htmlString dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
-        messageView.attributedText = attributedString;
+        htmlString = [ htmlString stringByReplacingOccurrencesOfString:@"<body bgColor=\"transparent;\">" withString:@"<body bgColor=\"transparent;\"><br/><br/>"];
+        
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithData:[htmlString dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
+
+        NSMutableAttributedString *finalAttributedString = [[NSMutableAttributedString alloc] initWithString:@""];
+        [finalAttributedString addAttribute:(NSString*)kCTUnderlineStyleAttributeName
+                          value:[NSNumber numberWithInt:kCTUnderlineStyleSingle]
+                          range:(NSRange){0,[finalAttributedString length]}];
+        
+        [finalAttributedString appendAttributedString:attributedString];
+        messageView.attributedText = finalAttributedString;
 //        [self applyPlainBodyString];
         if(messageView.text.length){
-            CGRect frame = [attributedString boundingRectWithSize:CGSizeMake(WIDTH, 10000) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading | NSStringDrawingUsesDeviceMetrics context:nil];
+            CGRect frame = [finalAttributedString boundingRectWithSize:CGSizeMake(WIDTH, 10000) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading | NSStringDrawingUsesDeviceMetrics context:nil];
             NSLog(@"%@",NSStringFromCGRect(frame));
             messageView.frame = CGRectMake(messageView.frame.origin.x, messageView.frame.origin.y, WIDTH, MAX(208, frame.size.height));
 //            [self textViewDidChange:messageView];
@@ -493,7 +445,7 @@ replacementString:(NSString *)string {
 
 -(void)applyPlainBodyString{
     
-    MCOIMAPFetchContentOperation *operation = [self.imapSession fetchMessageByUIDOperationWithFolder:@"INBOX" uid:self.message.uid];
+    MCOIMAPFetchContentOperation *operation = [self.imapSession fetchMessageByUIDOperationWithFolder:INBOX uid:self.message.uid];
     
     [operation start:^(NSError *error, NSData *data) {
         MCOMessageParser *messageParser = [[MCOMessageParser alloc] initWithData:data];
@@ -517,14 +469,14 @@ replacementString:(NSString *)string {
     
     if (![string isEqualToString:EMPTY_DELIMITER] && string && ![string isEqualToString:@""]) {
         NSMutableString * html = [NSMutableString string];
-        [html appendFormat:@"<html><head><script>%@</script><style>%@</style></head>"
-         @"<body bgColor=\"transparent;\">%@</body></html>", mainJavascript, mainStyle, string];
+                [html appendFormat:@"<html><br><br><br><font color='purple'><head>------------------------------------------------------------------<script>%@</script><style>%@</style></head>"
+         @"<body bgColor=\"transparent;\">%@</body></font></html>", mainJavascript, mainStyle, string];
         return html;
     }
     
     NSMutableDictionary *paramDict = [[NSMutableDictionary alloc] init];
     if ([_message isKindOfClass:[MCOIMAPMessage class]]) {
-        content = [(MCOIMAPMessage *) self.message htmlRenderingWithFolder:@"INBOX" delegate:self];
+        content = [(MCOIMAPMessage *) self.message htmlRenderingWithFolder:INBOX delegate:self];
         if (content) {
             NSArray *tempArray = [content componentsSeparatedByString:@"<head>"];
             if (tempArray.count > 1) {
@@ -665,5 +617,71 @@ replacementString:(NSString *)string {
     [self.view bringSubviewToFront:messageView];
     //NSLog(@" %@ - %@ - %@ - %@",NSStringFromCGSize(toFieldView.contentView.frame.size),NSStringFromCGRect(ccFieldView.frame),NSStringFromCGRect(subjectFieldView.frame),NSStringFromCGRect(messageView.frame));
 }
+
+#pragma mark loadContacts
+//this will need to put somewhere so it happens only once
+//it will take longer to do the more contacts there are obviously
+-(void)emailContact
+
+{
+    
+    emailArr = [[NSMutableArray alloc]init];
+    searchArray = [[NSMutableArray alloc]init];
+    
+    ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
+    
+    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
+        ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
+            if (granted) {
+                // First time access has been granted, add the contact
+                
+                CFArrayRef people = ABAddressBookCopyArrayOfAllPeople(addressBook);
+                NSMutableArray *allEmails = [[NSMutableArray alloc] initWithCapacity:CFArrayGetCount(people)];
+                for (CFIndex i = 0; i < CFArrayGetCount(people); i++)
+                {
+                    ABRecordRef person = CFArrayGetValueAtIndex(people, i);
+                    ABMultiValueRef emails = ABRecordCopyValue(person, kABPersonEmailProperty);
+                    for (CFIndex j=0; j < ABMultiValueGetCount(emails); j++)
+                    {
+                        NSString* email = (__bridge NSString*)ABMultiValueCopyValueAtIndex(emails, j);
+                        [allEmails addObject:email];
+                        
+                    }
+                    CFRelease(emails);
+                }
+                emailArr = allEmails;
+                
+            } else {
+                // User denied access
+                // Display an alert telling user the contact could not be added
+            }
+        });
+    }
+    else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
+        // The user has previously given access, add the contact
+        CFArrayRef people = ABAddressBookCopyArrayOfAllPeople(addressBook);
+        NSMutableArray *allEmails = [[NSMutableArray alloc] initWithCapacity:CFArrayGetCount(people)];
+        for (CFIndex i = 0; i < CFArrayGetCount(people); i++)
+        {
+            ABRecordRef person = CFArrayGetValueAtIndex(people, i);
+            ABMultiValueRef emails = ABRecordCopyValue(person, kABPersonEmailProperty);
+            for (CFIndex j=0; j < ABMultiValueGetCount(emails); j++)
+            {
+                NSString* email = (__bridge NSString*)ABMultiValueCopyValueAtIndex(emails, j);
+                if([self validateEmail:email]) [allEmails addObject:email];
+                
+            }
+            CFRelease(emails);
+        }
+        emailArr = allEmails;
+    }
+    else {
+        // The user has previously denied access
+        // Send an alert telling user to change privacy setting in settings app
+    }
+    
+    
+}
+
 
 @end

@@ -27,12 +27,12 @@
 
 @implementation LoginViewController
 
-
+static NSString *const kKeychainItemName = @"OAuth2 Sample: Gmail";
 NSString *kMyClientID = @"655269106649-rkom4nvj3m9ofdpg6sk53pi65mpivv7d.apps.googleusercontent.com";     // pre-assigned by service
 NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
 //NSString *kMyClientID = @"994627364215-ctjmrhiul95ts0qrkc38sap3mo3go3ko.apps.googleusercontent.com";     // pre-assigned by service
 //NSString *kMyClientSecret = @"FNZ-x95gkwWqQT7HdJgeqJVW";
-@synthesize blockerView;
+@synthesize blockerView,mainViewController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -45,8 +45,6 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
 
 - (void) viewDidLoad {
     [super viewDidLoad];
-    NSLog(@"When does this happen?");
-    NSLog(@"this is the presentingVC of login: %@",self.presentedViewController);
     _receivedData = [[NSMutableData alloc] init];
     _isRefreshing = NO;
     
@@ -139,7 +137,6 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
         }
     }
     
-    static NSString *const kKeychainItemName = @"OAuth2 Sample: Gmail";
     
     // pre-assigned by service
     
@@ -167,6 +164,8 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
         NSString * email = [auth userEmail];
         NSString * accessToken = [auth accessToken];
         NSString * refreshToken = [auth refreshToken];
+        
+        
         self.emailServerModel = [[EmailServerModel alloc] init];
         self.emailServerModel.emailAddress = email;
         self.emailServerModel.accessToken = accessToken;
@@ -196,14 +195,111 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
         [tempAppDelegate.progressHUD setHidden:NO];
 
         // Authentication succeeded
-
+        
         [self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
     }
 }
 
+
+
+-(void)getUserInfo{
+    //    NSURL *url = [NSURL URLWithString:@"https://www.googleapis.com/gmail/v1/users/krunal.chaudhari@iauro.com/labels"];
+    NSURL *url = [NSURL URLWithString:@"https://www.googleapis.com/oauth2/v1/userinfo?alt=json"];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPMethod:@"GET"];
+    
+    GTMOAuth2Authentication *currentAuth = [GTMOAuth2ViewControllerTouch authForGoogleFromKeychainForName:kKeychainItemName clientID:kMyClientID clientSecret:kMyClientSecret];
+    GTMHTTPFetcher* myFetcher = [GTMHTTPFetcher fetcherWithRequest:request];
+    [myFetcher setAuthorizer:currentAuth];
+    [myFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error) {
+        if (error != nil) {
+          // status code or network error
+            NSLog(@"--user info error %@: ", [error description]);
+        } else {
+          // succeeded
+//            NSString* newStr = [[NSString alloc] initWithData:retrievedData encoding:NSUTF8StringEncoding];
+//            NSLog(@"user Info: %@",newStr);
+            NSDictionary* json = [NSJSONSerialization JSONObjectWithData:retrievedData options:kNilOptions error:&error];
+            
+            NSString* currentEmail = [json objectForKey:@"email"];
+            NSString* currentName = [json objectForKey:@"name"];
+            NSString* currentUserImageURL = [json objectForKey:@"picture"];
+
+            [EmailService instance].userEmailID = currentEmail;
+            [EmailService instance].userImageURL = currentUserImageURL;
+
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            [EmailService instance].primaryMessages = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"PRIMARY"]];
+            NSString *nextPageToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"PRIMARY_PAGE_TOKEN"];
+            if(nextPageToken == nil || nextPageToken.length <= 0){
+                nextPageToken = @"";
+            }
+            
+            AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+            [appDelegate.menuController.listArray replaceObjectAtIndex:0 withObject:currentName];
+            [appDelegate.menuController.imageArray replaceObjectAtIndex:0 withObject:[EmailService instance].userImageURL];
+            [appDelegate.menuController.listView reloadData];
+            
+            NSLog(@"email: %@", currentEmail);
+            [self getPrimaryMessages:currentEmail nextPageToken:nextPageToken];
+            
+        }
+    }];
+}
+
+-(void)getPrimaryMessages:(NSString*)emailStr nextPageToken:(NSString*)nextPage{
+    //https://www.googleapis.com/gmail/v1/users/krunal.chaudhari%40iauro.com/messages
+    NSString *newAPIStr = @"";
+
+    if(nextPage.length){
+        newAPIStr = [NSString stringWithFormat:@"https://www.googleapis.com/gmail/v1/users/%@/messages?pageToken=%@&labelIds=CATEGORY_PERSONAL",emailStr,nextPage];
+    }
+    else{
+        newAPIStr = [NSString stringWithFormat:@"https://www.googleapis.com/gmail/v1/users/%@/messages?fields=messages(id,labelIds,threadId),nextPageToken&labelIds=CATEGORY_PERSONAL",emailStr];
+    }
+    
+    NSURL *url = [NSURL URLWithString:newAPIStr];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPMethod:@"GET"];
+    
+    GTMOAuth2Authentication *currentAuth = [GTMOAuth2ViewControllerTouch authForGoogleFromKeychainForName:kKeychainItemName clientID:kMyClientID clientSecret:kMyClientSecret];
+    GTMHTTPFetcher* myFetcher = [GTMHTTPFetcher fetcherWithRequest:request];
+    [myFetcher setAuthorizer:currentAuth];
+    [myFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error) {
+        if (error != nil) {
+            // status code or network error
+            NSLog(@"--Message info error %@: ", [error description]);
+        } else {
+            // succeeded
+//            NSString* newStr = [[NSString alloc] initWithData:retrievedData encoding:NSUTF8StringEncoding];
+//            NSLog(@"Message Info: %@",newStr);
+            NSDictionary* json = [NSJSONSerialization JSONObjectWithData:retrievedData options:kNilOptions error:&error];
+            NSArray* messageArray =[json objectForKey:@"messages"];
+            NSString *nextPageToken = [json objectForKey:@"nextPageToken"];
+            for (NSDictionary *dictionary in messageArray) {
+                [[EmailService instance].primaryMessages addObject:[dictionary objectForKey:@"id"]];
+            }
+            
+            NSMutableArray *pArray = [[EmailService instance] primaryMessages];
+            [[NSUserDefaults standardUserDefaults] setObject:pArray forKey:@"PRIMARY"];
+            [[NSUserDefaults standardUserDefaults] setObject:nextPageToken forKey:@"PRIMARY_PAGE_TOKEN"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            
+            if([EmailService instance].primaryMessages.count < 1000)
+                [self getPrimaryMessages:emailStr nextPageToken:nextPageToken];
+            else
+                NSLog(@"----- Primary messages count > %d",pArray.count);
+        }
+    }];
+}
+
 -(void)loadHomeScreen {
-    MainVC *mainvc = [[MainVC alloc] init];
-    UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:mainvc];
+    [self getUserInfo];
+
+    mainViewController = [[MainVC alloc] init];
+    UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:mainViewController];
     
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     appDelegate.menuController = [[MenuViewController alloc] init];

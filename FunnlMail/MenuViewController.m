@@ -10,13 +10,15 @@
 #import "UIColor+HexString.h"
 #import "EmailService.h"
 #import "MainVC.h"
+#import "SDWebImageDownloader.h"
+#import "UIImageView+WebCache.h"
 
 @interface MenuViewController ()
 
 @end
 
 @implementation MenuViewController
-
+@synthesize listArray,imageArray,listView;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -45,6 +47,7 @@
 //    [listView setBackgroundView:[[UIView alloc] init]];
     listArray =[[NSMutableArray alloc] initWithObjects:@"Email Account",@"Edit Funnl Settings",@"Funnl Alerts", @"Share Funnls", @"Sent Mail", @"Archive", @"Trash", @"Help",nil];
     imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"settingListIcon",@"alertListIcon",@"shareListIcon",@"sentListIcon", @"archiveListIcon", @"trashListIcon",@"helpListIcon", nil];
+    
 }
 
 
@@ -83,7 +86,18 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [cell setAccessoryType:UITableViewCellAccessoryNone];
     
-    cell.menuImage.image = [UIImage imageNamed:[imageArray objectAtIndex:indexPath.row]];
+    if(indexPath.row == 0){
+        NSString *imageUrl = [imageArray objectAtIndex:indexPath.row];
+        if([imageUrl hasPrefix:@"http"]){
+            [cell.menuImage setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"userimage-placeholder.png"] options:SDWebImageProgressiveDownload completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
+            }];
+        }
+        else
+            cell.menuImage.image = [UIImage imageNamed:[imageArray objectAtIndex:indexPath.row]];
+
+    }
+    else
+        cell.menuImage.image = [UIImage imageNamed:[imageArray objectAtIndex:indexPath.row]];
     
 //    cell.selectedBackgroundView = [[UIView alloc] initWithFrame:CGRectZero];
 //    cell.selectedBackgroundView.backgroundColor = [UIColor clearColor];
@@ -104,8 +118,18 @@
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Sent Mails";
 
         //((EmailsTableViewController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject).isSearching = YES;
-         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:SENT];
-        }
+         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:SENT withFetchRange:MCORangeEmpty];
+    }
+    else if (indexPath.row == 5){
+        NSLog(@"archive mail requested");
+        [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Archive";
+        [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:ARCHIVE withFetchRange:MCORangeEmpty];
+    }
+    else if (indexPath.row == 6){
+        NSLog(@"trash mail requested");
+        [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Trash";
+        [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:TRASH withFetchRange:MCORangeEmpty];
+    }
 
     [appDelegate.drawerController closeDrawerAnimated:YES completion:nil];
 }

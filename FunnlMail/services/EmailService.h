@@ -30,6 +30,9 @@
 @property (nonatomic, strong) NSMutableDictionary *filterMessagePreviews;
 @property (nonatomic, strong) NSMutableArray *sentMessages;
 @property (nonatomic, strong) NSMutableDictionary *sentMessagePreviews;
+@property (nonatomic, strong) NSMutableArray *primaryMessages;
+@property (nonatomic, strong) NSString *userEmailID,*userImageURL;
+@property (nonatomic, strong) EmailsTableViewController *emailsTableViewController;
 +(EmailService *)instance;
 +(NSArray *) getCurrentFilters;
 +(void)setNewFilterModel:(FunnelModel*)model;
@@ -40,6 +43,7 @@
 - (void)applyingFunnel:(FunnelModel*)funnel toMessages:(NSArray*)messages;
 - (void)applyingFilters:(NSArray*)messages;
 - (void) startLogin :(EmailsTableViewController *) fv;
-- (void)loadLastNMessages:(NSUInteger)nMessages  withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName;
+- (void)loadLastNMessages:(NSUInteger)nMessages withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName withFetchRange:(MCORange)newFetchRange;
 - (void)loadLatestMail:(NSUInteger)nMessages  withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName;
+- (void)checkMailsAtStart:(EmailsTableViewController*)fv;
 @end
