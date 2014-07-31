@@ -67,15 +67,22 @@ NSString *msgBody;
 - (void)setupViews
 {
 	// Do any additional setup after loading the view.
-    //changes made by iauro001 on 11 June 2014
     //inserting default @"All" filter
-    FunnelModel *defaultFilter = [[FunnelModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#2EB82E"] filterTitle:ALL_FUNNL newMessageCount:16 dateOfLastMessage:[NSDate new]];
+    FunnelModel *defaultFilter = [[FunnelModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#2EB82E"] filterTitle:ALL_FUNNL newMessageCount:0 dateOfLastMessage:[NSDate new]];
     defaultFilter.funnelName = ALL_FUNNL;
     defaultFilter.funnelId = @"0";
     defaultFilter.emailAddresses = @"";
     defaultFilter.phrases = @"";
     [[FunnelService instance] insertFunnel:defaultFilter];
     defaultFilter = nil;
+    
+    FunnelModel *otherFilter = [[FunnelModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#4986E7"] filterTitle:ALL_OTHER_FUNNL newMessageCount:0 dateOfLastMessage:[NSDate new]];
+    otherFilter.funnelName = ALL_OTHER_FUNNL;
+    otherFilter.funnelId = @"1";
+    otherFilter.emailAddresses = @"";
+    otherFilter.phrases = @"";
+    [[FunnelService instance] insertFunnel:otherFilter];
+    otherFilter = nil;
 
     filterArray = [[FunnelService instance] allFunnels];
 //   self.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
@@ -207,17 +214,17 @@ NSString *msgBody;
     cell.notificationButton.tag = indexPath.row;
     //[cell.notificationButton addTarget:self action:@selector(notificationButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
       if (editOn) {
-          if(![fm.funnelName.lowercaseString isEqualToString:[ALL_FUNNL lowercaseString]]){
-              [cell.notificationButton setHidden:NO];
+          if([fm.funnelName.lowercaseString isEqualToString:[ALL_FUNNL lowercaseString]] || [fm.funnelName.lowercaseString isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]){
+              [cell.notificationButton setHidden:YES];
               [cell.settingsButton setHidden:NO];
-              [cell.shareButton setHidden:NO];
+              [cell.shareButton setHidden:YES];
               [cell.mailImageView setHidden:YES];
               [cell.messageCountLabel setHidden:YES];
           }
           else{
-              [cell.notificationButton setHidden:YES];
+              [cell.notificationButton setHidden:NO];
               [cell.settingsButton setHidden:NO];
-              [cell.shareButton setHidden:YES];
+              [cell.shareButton setHidden:NO];
               [cell.mailImageView setHidden:YES];
               [cell.messageCountLabel setHidden:YES];
           }
@@ -349,7 +356,7 @@ NSString *msgBody;
 -(void)settingsButtonClicked:(id)sender{
   UIButton *b = (UIButton*)sender;
   FunnelModel *fm = (FunnelModel *)filterArray[b.tag];
-  if([[fm.funnelName lowercaseString]  isEqualToString:[ALL_FUNNL lowercaseString]]){
+  if([[fm.funnelName lowercaseString]  isEqualToString:[ALL_FUNNL lowercaseString]] || [[fm.funnelName lowercaseString]  isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]){
       PrimarySettingViewController *primarySettingController = [[PrimarySettingViewController alloc] init];
       [self.mainVCdelegate pushViewController:primarySettingController];
       primarySettingController = nil;

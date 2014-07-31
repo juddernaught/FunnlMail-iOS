@@ -184,7 +184,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 #pragma mark - Table View
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    if ([[tempAppDelegate.currentFunnelString lowercaseString] isEqualToString:[ALL_FUNNL lowercaseString]]) {
+    if ([[tempAppDelegate.currentFunnelString lowercaseString] isEqualToString:[ALL_FUNNL lowercaseString]] || [[tempAppDelegate.currentFunnelString lowercaseString] isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]) {
         return 2;
     }
     if (isSearching) {
@@ -338,7 +338,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                                 NSMutableDictionary *paramDict = [[NSMutableDictionary alloc] init];
                                 paramDict[uidKey] = [self removeStartingSpaceFromString:plainTextBodyString];
                                 [[MessageService instance] updateMessageWithDictionary:paramDict];
-                                cell.bodyLabel.text = plainTextBodyString;
+                                cell.bodyLabel.text = [[MessageService instance] retrievePreviewContentWithID:uidKey];
                             }
                         }
                         cell.messageRenderingOperation = nil;
@@ -351,7 +351,10 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 
                 UIView *archiveView = [self viewWithImageName:@"swipeArchive"];
                 UIColor *yellowColor = [UIColor colorWithHexString:@"#F8CB0A"];
-                
+
+                UIView *trashView = [self viewWithImageName:@"swipeTrash"];
+                UIColor *redColor = [UIColor colorWithHexString:@"#E03D13"];
+
                 UIView *fullFunnlView = [self viewWithImageName:@"swipeFunnl"];
                 UIColor *fullFunnlColor = [UIColor colorWithHexString:@"#92F190"];
                 
@@ -359,6 +362,23 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 [cell setSwipeGestureWithView:archiveView color:yellowColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
                     [[Mixpanel sharedInstance] track:@"Email Archived"];
                     NSLog(@"Did swipe \"Archive\" cell");
+                    MCOIMAPOperation *msgOperation = [[EmailService instance].imapSession storeFlagsOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:message.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagDeleted];
+                    [msgOperation start:^(NSError * error)
+                     {
+                         [tableView beginUpdates];
+                         [[EmailService instance].filterMessagePreviews removeObjectForKey:uidKey];
+                         [[EmailService instance].filterMessages removeObjectAtIndex:indexPath.row];
+                         [[EmailService instance].messages removeObjectIdenticalTo:message];
+                         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
+                         [tableView endUpdates];
+                         NSLog(@"selected message flags %u UID is %u",message.flags,message.uid );
+                     }];
+                    [cell swipeToOriginWithCompletion:nil];
+                }];
+                
+                [cell setSwipeGestureWithView:trashView color:redColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState2 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+                    [[Mixpanel sharedInstance] track:@"Email Archived"];
+                    NSLog(@"Did swipe \"Trash\" cell");
                     MCOIMAPOperation *msgOperation = [[EmailService instance].imapSession storeFlagsOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:message.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagDeleted];
                     [msgOperation start:^(NSError * error)
                      {
@@ -401,8 +421,10 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                     cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
                 }
                 
-                if ([EmailService instance].messages.count < [EmailService instance].totalNumberOfMessages)
-                    cell.textLabel.text = [NSString stringWithFormat:@"Load %lu more",MIN([EmailService instance].totalNumberOfMessages - [EmailService instance].messages.count, NUMBER_OF_MESSAGES_TO_LOAD)];
+                if ([EmailService instance].messages.count < [EmailService instance].totalNumberOfMessages){
+                    cell.textLabel.text = @"Load more";
+                }
+//                    cell.textLabel.text = [NSString stringWithFormat:@"Load %lu more",MIN([EmailService instance].totalNumberOfMessages - [EmailService instance].messages.count, NUMBER_OF_MESSAGES_TO_LOAD)];
                 else
                     cell.textLabel.text = nil;
                 
@@ -574,7 +596,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                     cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
                 }
                 
-                if(self.filterModel == nil || [self.filterModel.funnelId isEqualToString:@"0"]){
+                if(self.filterModel == nil || [self.filterModel.funnelId isEqualToString:@"0"] || [self.filterModel.funnelId isEqualToString:@"1"]){
 
                     if ([EmailService instance].messages.count < [EmailService instance].totalNumberOfMessages)
 //                        cell.textLabel.text = [NSString stringWithFormat:@"Load %lu more",MIN([EmailService instance].totalNumberOfMessages - [EmailService instance].messages.count, NUMBER_OF_MESSAGES_TO_LOAD_ON_SEARCH)];
@@ -821,7 +843,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     }
     else{
         if (indexPath.section == 1) {
-            if(self.filterModel == nil || [self.filterModel.funnelId isEqualToString:@"0"]){
+            if(self.filterModel == nil || [self.filterModel.funnelId isEqualToString:@"0"] || [self.filterModel.funnelId isEqualToString:@"1"]){
                 [self searchOnlineWithString:mailSearchBar.text];
             }
             else{
@@ -1031,7 +1053,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     [searchBar resignFirstResponder];
     NSString *searchText = searchBar.text;
     isSearching = YES;
-    if(self.filterModel == nil || [self.filterModel.funnelId isEqualToString:@"0"]){
+    if(self.filterModel == nil || [self.filterModel.funnelId isEqualToString:@"0"] || [self.filterModel.funnelId isEqualToString:@"1"]){
         //All mailbox
         [self searchInMemory:searchText];
     }

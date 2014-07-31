@@ -242,21 +242,20 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
             [appDelegate.menuController.listView reloadData];
             
             NSLog(@"email: %@", currentEmail);
-            [self getPrimaryMessages:currentEmail nextPageToken:nextPageToken];
+            [self getPrimaryMessages:currentEmail nextPageToken:nextPageToken numberOfMaxResult:100];
             
         }
     }];
 }
 
--(void)getPrimaryMessages:(NSString*)emailStr nextPageToken:(NSString*)nextPage{
-    //https://www.googleapis.com/gmail/v1/users/krunal.chaudhari%40iauro.com/messages
+-(void)getPrimaryMessages:(NSString*)emailStr nextPageToken:(NSString*)nextPage numberOfMaxResult:(NSInteger)maxResult{
     NSString *newAPIStr = @"";
 
     if(nextPage.length){
-        newAPIStr = [NSString stringWithFormat:@"https://www.googleapis.com/gmail/v1/users/%@/messages?pageToken=%@&labelIds=CATEGORY_PERSONAL",emailStr,nextPage];
+        newAPIStr = [NSString stringWithFormat:@"https://www.googleapis.com/gmail/v1/users/%@/messages?pageToken=%@&labelIds=CATEGORY_PERSONAL&maxResults=%d",emailStr,nextPage,maxResult];
     }
     else{
-        newAPIStr = [NSString stringWithFormat:@"https://www.googleapis.com/gmail/v1/users/%@/messages?fields=messages(id,labelIds,threadId),nextPageToken&labelIds=CATEGORY_PERSONAL",emailStr];
+        newAPIStr = [NSString stringWithFormat:@"https://www.googleapis.com/gmail/v1/users/%@/messages?fields=messages(id,labelIds,threadId),nextPageToken&labelIds=CATEGORY_PERSONAL&maxResults=%d",emailStr,maxResult];
     }
     
     NSURL *url = [NSURL URLWithString:newAPIStr];
@@ -270,7 +269,7 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
     [myFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error) {
         if (error != nil) {
             // status code or network error
-            NSLog(@"--Message info error %@: ", [error description]);
+            //NSLog(@"--Message info error %@: ", [error description]);
         } else {
             // succeeded
 //            NSString* newStr = [[NSString alloc] initWithData:retrievedData encoding:NSUTF8StringEncoding];
@@ -288,7 +287,7 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
             [[NSUserDefaults standardUserDefaults] synchronize];
             
             if([EmailService instance].primaryMessages.count < 1000)
-                [self getPrimaryMessages:emailStr nextPageToken:nextPageToken];
+                [self getPrimaryMessages:emailStr nextPageToken:nextPageToken numberOfMaxResult:100];
             else
                 NSLog(@"----- Primary messages count > %d",pArray.count);
         }

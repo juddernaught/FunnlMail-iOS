@@ -138,7 +138,7 @@
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
     [titleLabel setFont:[UIFont systemFontOfSize:22]];
     [titleLabel setTextColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR]];
-    if ([tempAppDelegate.currentFunnelString.lowercaseString isEqualToString:[ALL_FUNNL lowercaseString]]) {
+    if ([tempAppDelegate.currentFunnelString.lowercaseString isEqualToString:[ALL_FUNNL lowercaseString]] || [tempAppDelegate.currentFunnelString.lowercaseString isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]) {
         self.navigationItem.title =@"";
     }
     else {
