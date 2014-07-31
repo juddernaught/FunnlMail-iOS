@@ -86,12 +86,12 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
         self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
         
         self.pageController.dataSource = self;
-        images = @[@"AlertListIcon.png", @"archiveListIcon.png", @"trashListIcon.png", @"sentListIcon.png"];
+        images = @[@"1.png", @"2.png", @"3.png", @"Welcome.png"];
         PageContentVC *initialViewController = [self viewControllerAtIndex:0];
         
         NSArray *viewControllers = [NSArray arrayWithObject:initialViewController];
         
-        self.pageController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 45);
+        self.pageController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 40);
         [self.pageController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
         
         [self addChildViewController:self.pageController];
@@ -99,10 +99,6 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
         [self.pageController didMoveToParentViewController:self];
         //
         
-        UIImageView *funnlMailIntroView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"splashScreen"]];
-        funnlMailIntroView.frame = CGRectMake(-8, 40, WIDTH, HEIGHT-120);
-        funnlMailIntroView.userInteractionEnabled = YES;
-        //[self.view addSubview:funnlMailIntroView];
         
 //        [funnlMailIntroView mas_makeConstraints:^(MASConstraintMaker *make) {
 //            make.top.equalTo(self.view.mas_top).with.offset(20);
@@ -114,7 +110,7 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
         UIImage *loginImage = [UIImage imageNamed:@"getStarted"];
         loginButton = [[UIButton alloc] init];
         [loginButton setImage:loginImage forState:UIControlStateNormal];
-        loginButton.frame = CGRectMake(0, HEIGHT-60, 320, 40);
+        loginButton.frame = CGRectMake(0, HEIGHT-50, 320, 40);
         [loginButton addTarget:self action:@selector(loginButtonSelected)forControlEvents:UIControlEventTouchUpInside];
         loginButton.hidden = YES;
         [self.view addSubview:loginButton];

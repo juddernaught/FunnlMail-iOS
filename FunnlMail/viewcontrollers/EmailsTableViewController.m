@@ -27,12 +27,14 @@
 static NSString *FILTER_VIEW_CELL = @"FilterViewCell";
 static NSString *mailCellIdentifier = @"MailCell";
 static NSString *inboxInfoIdentifier = @"InboxStatusCell";
+UIView *greyView;
 
 @interface EmailsTableViewController ()
 @end
 
 @implementation EmailsTableViewController
 @synthesize tablecontroller,activityIndicator,isSearching;
+
 
 #pragma mark -
 #pragma mark Lifecycle
@@ -58,12 +60,17 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     self.emailFolder = INBOX;
     searchMessages = [[NSMutableArray alloc] init];
     isSearching = NO;
+    greyView = [[UIView alloc] initWithFrame:CGRectMake(0, 104, self.view.bounds.size.width, self.view.bounds.size.height)];
+    greyView.hidden = YES;
+    [greyView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.78]];
+    [self.view addSubview:greyView];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
 
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 //    loadNextMsgTimer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(loadNextMessages) userInfo:nil repeats:YES];
+    
     
 }
 
@@ -1008,21 +1015,28 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 }
 
 - (BOOL)searchBar:(UISearchBar *)searchBar shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
+    if (text.length) greyView.hidden = NO;
+    else greyView.hidden = YES;
     return YES;
 }
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar;{
-    NSLog(@"what is height of tableview: %f",self.tableView.frame.size.height);
+    NSLog(@"what is origin.y of tableview: %f",self.tableView.frame.origin.y);
+    
+    [self.view bringSubviewToFront:greyView];
+    greyView.hidden = NO;
+
     
 }
 
 - (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar;{
-    
+    greyView.hidden = YES;
 }
 
 #pragma mark SearchFunction
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
     [searchBar resignFirstResponder];
+    greyView.hidden = YES;
     NSString *searchText = searchBar.text;
     isSearching = YES;
     if(self.filterModel == nil || [self.filterModel.funnelId isEqualToString:@"0"]){

@@ -57,6 +57,10 @@
 		B75F56A6197F056F00518743 /* FunnlMail VIP logo.png in Resources */ = {isa = PBXBuildFile; fileRef = B75F56A5197F056F00518743 /* FunnlMail VIP logo.png */; };
 		B7701DC41985F58C001CA2DC /* mail2.png in Resources */ = {isa = PBXBuildFile; fileRef = B7701DC31985F58C001CA2DC /* mail2.png */; };
 		B7871FC41987FB1C00EBD9C0 /* PageContentVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B7871FC31987FB1C00EBD9C0 /* PageContentVC.m */; };
+		B7E8997F1989DB350072DB1A /* 1.png in Resources */ = {isa = PBXBuildFile; fileRef = B7E8997C1989DB350072DB1A /* 1.png */; };
+		B7E899801989DB350072DB1A /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = B7E8997D1989DB350072DB1A /* 2.png */; };
+		B7E899811989DB350072DB1A /* 3.png in Resources */ = {isa = PBXBuildFile; fileRef = B7E8997E1989DB350072DB1A /* 3.png */; };
+		B7E899871989DB410072DB1A /* Welcome.png in Resources */ = {isa = PBXBuildFile; fileRef = B7E899861989DB410072DB1A /* Welcome.png */; };
 		CC39517218E6F9700093C787 /* MainFilterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CC39517118E6F9700093C787 /* MainFilterCell.m */; };
 		CC4263B01934B67A00F3C5EB /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = CC4263A61934B67A00F3C5EB /* FMDatabase.m */; };
 		CC4263B11934B67A00F3C5EB /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = CC4263A81934B67A00F3C5EB /* FMDatabaseAdditions.m */; };
@@ -327,6 +331,10 @@
 		B7701DC31985F58C001CA2DC /* mail2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mail2.png; sourceTree = "<group>"; };
 		B7871FC21987FB1C00EBD9C0 /* PageContentVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageContentVC.h; sourceTree = "<group>"; };
 		B7871FC31987FB1C00EBD9C0 /* PageContentVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageContentVC.m; sourceTree = "<group>"; };
+		B7E8997C1989DB350072DB1A /* 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1.png; sourceTree = "<group>"; };
+		B7E8997D1989DB350072DB1A /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2.png; sourceTree = "<group>"; };
+		B7E8997E1989DB350072DB1A /* 3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 3.png; sourceTree = "<group>"; };
+		B7E899861989DB410072DB1A /* Welcome.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Welcome.png; sourceTree = "<group>"; };
 		CC1AD1DC18F54BE9000E356C /* MainVCDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainVCDelegate.h; path = viewcontrollers/MainVCDelegate.h; sourceTree = "<group>"; };
 		CC39517018E6F9700093C787 /* MainFilterCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainFilterCell.h; path = collectionviewcells/MainFilterCell.h; sourceTree = "<group>"; };
 		CC39517118E6F9700093C787 /* MainFilterCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainFilterCell.m; path = collectionviewcells/MainFilterCell.m; sourceTree = "<group>"; };
@@ -1105,7 +1113,11 @@
 				B7701DC31985F58C001CA2DC /* mail2.png */,
 				FABAF0501976507E00AA7918 /* getStarted@2x.png */,
 				FABAF0511976507E00AA7918 /* intro.png */,
+				B7E899861989DB410072DB1A /* Welcome.png */,
 				FABAF0521976507E00AA7918 /* login.png */,
+				B7E8997C1989DB350072DB1A /* 1.png */,
+				B7E8997D1989DB350072DB1A /* 2.png */,
+				B7E8997E1989DB350072DB1A /* 3.png */,
 				FABAF0531976507E00AA7918 /* splashScreen.png */,
 				FABAF0541976507E00AA7918 /* splashScreen@2x.png */,
 			);
@@ -1300,6 +1312,7 @@
 				FABAF07E1976507E00AA7918 /* Payments.png in Resources */,
 				FABAF0941976507E00AA7918 /* alertListIcon@2x.png in Resources */,
 				FABAF0D31976629000AA7918 /* replyAll@2x.png in Resources */,
+				B7E899811989DB350072DB1A /* 3.png in Resources */,
 				FABAF09F1976507E00AA7918 /* trashListIcon.png in Resources */,
 				FABAF0AC1976507E00AA7918 /* close.png in Resources */,
 				FABAF0D11976629000AA7918 /* forward@2x.png in Resources */,
@@ -1310,13 +1323,16 @@
 				FABAF08C1976507E00AA7918 /* manage_Button.png in Resources */,
 				FABAF0851976507E00AA7918 /* Done_Button@2x.png in Resources */,
 				FABAF0C81976573400AA7918 /* ComposeIcon.png in Resources */,
+				B7E899801989DB350072DB1A /* 2.png in Resources */,
 				FABAF0C21976507E00AA7918 /* swipeFunnl.png in Resources */,
 				FABAF0CB1976573400AA7918 /* FunnlIcon@2x.png in Resources */,
 				FABAF0A41976507E00AA7918 /* splashScreen.png in Resources */,
 				FABAF0C11976507E00AA7918 /* swipeArchive@2x.png in Resources */,
+				B7E8997F1989DB350072DB1A /* 1.png in Resources */,
 				66F2C48218E3293E00CD593E /* Images.xcassets in Resources */,
 				FA2C9BDE193EF92400866BEE /* Main.storyboard in Resources */,
 				FABAF0961976507E00AA7918 /* archiveListIcon@2x.png in Resources */,
+				B7E899871989DB410072DB1A /* Welcome.png in Resources */,
 				66F2C47418E3293E00CD593E /* InfoPlist.strings in Resources */,
 				FABAF0A11976507E00AA7918 /* getStarted@2x.png in Resources */,
 				FABAF0AA1976507E00AA7918 /* backArrow.png in Resources */,
