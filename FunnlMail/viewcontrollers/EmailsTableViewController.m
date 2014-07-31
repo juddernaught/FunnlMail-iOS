@@ -52,7 +52,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     tempCellForDisplay = nil;
     currentIndexPath = nil;
     tempAppDelegate = APPDELEGATE;
-    [[EmailService instance] startLogin: self];
+//    [[EmailService instance] startLogin: self];
     [self setupView];
     // MUSTFIX: code doesn't work without below line, but it doesn't seem like it really belongs
     self.emailFolder = INBOX;
@@ -64,9 +64,11 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-//    loadNextMsgTimer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(loadNextMessages) userInfo:nil repeats:YES];
     
+
 }
+
+
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -153,7 +155,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 //    [tempAppDelegate.progressHUD show:YES];=
 //    [tempAppDelegate.progressHUD setHidden:NO];
     [activityIndicator startAnimating];
-    [[EmailService instance] loadLatestMail:1 withTableController:self withFolder:INBOX];
+    [[EmailService instance] loadLatestMail:10 withTableController:self withFolder:INBOX];
 }
 
 -(void) setFilterModel:(FunnelModel *)filterModel{
@@ -165,7 +167,8 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     if(filterLabel!=nil){
         filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#2EB82E"]);
         filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : ALL_FUNNL);
-        [[EmailService instance] loadLastNMessages:[EmailService instance].messages.count withTableController:self withFolder:self.emailFolder];
+        NSLog(@"Call to loadLastNMessages from setFilterModel function");
+        [[EmailService instance] loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD withTableController:self withFolder:self.emailFolder  withFetchRange:MCORangeEmpty];
     }
 }
 
@@ -347,10 +350,10 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 //                cell.revealDirection = RDSwipeableTableViewCellRevealDirectionRight | RDSwipeableTableViewCellRevealDirectionLeft;
                 
                 UIView *archiveView = [self viewWithImageName:@"swipeArchive"];
-                UIColor *yellowColor = [UIColor colorWithHexString:@"#D8D8D8"];
+                UIColor *yellowColor = [UIColor colorWithHexString:@"#F8CB0A"];
                 
                 UIView *fullFunnlView = [self viewWithImageName:@"swipeFunnl"];
-                UIColor *fullFunnlColor = [UIColor colorWithHexString:@"#D8D8D8"];
+                UIColor *fullFunnlColor = [UIColor colorWithHexString:@"#92F190"];
                 
                 
                 [cell setSwipeGestureWithView:archiveView color:yellowColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
@@ -369,7 +372,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                      }];
                     [cell swipeToOriginWithCompletion:nil];
                 }];
-                
                 
                 [cell setSwipeGestureWithView:fullFunnlView color:fullFunnlColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
                     NSLog(@"Did swipe full cell, ");
@@ -714,16 +716,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     [cell.revealView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 }
 
--(void)loadNextMessages{
-    int totalNumberOfMessage = (int)[[MessageService instance] messagesAllTopMessages].count + NUMBER_OF_MESSAGES_TO_LOAD;
-    if(totalNumberOfMessage < 2000){
-        [[EmailService instance] loadLastNMessages:totalNumberOfMessage withTableController:self withFolder:INBOX];
-        //                    NSLog(@"[EmailsTableViewController didSelect] %d",totalNumberOfMessage);
-    }
-    else{
-        
-    }
-}
 
 #pragma mark -
 #pragma mark didPressDelete
@@ -814,7 +806,8 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 {
                     int totalNumberOfMessage = (int)[[MessageService instance] messagesAllTopMessages].count + NUMBER_OF_MESSAGES_TO_LOAD;
 //                    NSLog(@"[EmailsTableViewController didSelect] %d",totalNumberOfMessage);
-                    [[EmailService instance] loadLastNMessages:totalNumberOfMessage withTableController:self withFolder:INBOX];
+                    NSLog(@"Call to loadLastNMessages from  didSelectRowAtIndexPath   function & isSearching = NO");
+                    [[EmailService instance] loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD withTableController:self withFolder:INBOX  withFetchRange:MCORangeEmpty];
                     cell.accessoryView = self.loadMoreActivityView;
                     [self.loadMoreActivityView startAnimating];
                 }

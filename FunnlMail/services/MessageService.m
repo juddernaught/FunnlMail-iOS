@@ -203,7 +203,7 @@ static MessageService *instance;
     
     [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
 //        FMResultSet *resultSet = [db executeQuery:@"select * from messages INNER JOIN messageFilterXRef ON ( messageFilterXRef.messageID = messages.messageID AND messageFilterXRef.funnelId = :funnelId) WHERE messageJSON LIKE %:searchTerm% order by messageID DESC" withParameterDictionary:paramDict];
-        FMResultSet *resultSet = [db executeQuery:@"select * from messages INNER JOIN messageFilterXRef ON ( messageFilterXRef.messageID = messages.messageID AND messageFilterXRef.funnelId = ?) WHERE messageJSON LIKE '%' || ? || '%' order by messageID DESC",funnelId,searchTerm];
+        FMResultSet *resultSet = [db executeQuery:@"select * from messages INNER JOIN messageFilterXRef ON ( messageFilterXRef.messageID = messages.messageID AND messageFilterXRef.funnelId = ?) WHERE messageJSON LIKE '%' || ? || '%' order by CAST(messageID as integer) DESC",funnelId,searchTerm];
         
         MessageModel *model;
         
@@ -238,7 +238,7 @@ static MessageService *instance;
     __block NSMutableArray *array = [[NSMutableArray alloc] init];
     
     [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, date, skipFlag, funnelJson FROM messages order by messageID DESC" withParameterDictionary:nil];
+        FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, date, skipFlag, funnelJson FROM messages order by CAST(messageID as integer)  DESC" withParameterDictionary:nil];
         
         MessageModel *model;
         
@@ -274,7 +274,7 @@ static MessageService *instance;
   __block NSMutableArray *array = [[NSMutableArray alloc] init];
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, date FROM messages order by messageID DESC limit :limit" withParameterDictionary:paramDict];
+    FMResultSet *resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, date FROM messages order by CAST(messageID as integer)  DESC limit :limit" withParameterDictionary:paramDict];
       
     MessageModel *model;
     
@@ -305,9 +305,9 @@ static MessageService *instance;
     [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
         FMResultSet *resultSet ;
         if(SHOW_PRIMARY_INBOX)
-            resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, messageBodyToBeRendered, date, t_count,skipFlag,funnelJson FROM messages INNER JOIN (SELECT MAX(messageID) as t_msgID, COUNT(*) as t_count FROM messages where skipFlag = 0 AND categoryName = :categoryName GROUP BY gmailthreadid) t ON ( messages. messageID = t.t_msgID ) order by messageID DESC;" withParameterDictionary:paramDict];
+            resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, messageBodyToBeRendered, date, t_count,skipFlag,funnelJson FROM messages INNER JOIN (SELECT MAX(messageID) as t_msgID, COUNT(*) as t_count FROM messages where skipFlag = 0 AND categoryName = :categoryName GROUP BY gmailthreadid) t ON ( messages. messageID = t.t_msgID ) order by CAST(messageID as integer)  DESC;" withParameterDictionary:paramDict];
         else
-            resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, messageBodyToBeRendered, date, t_count,skipFlag,funnelJson FROM messages INNER JOIN (SELECT MAX(messageID) as t_msgID, COUNT(*) as t_count FROM messages where skipFlag = 0 GROUP BY gmailthreadid) t ON ( messages. messageID = t.t_msgID ) order by messageID DESC;" withParameterDictionary:nil];
+            resultSet = [db executeQuery:@"SELECT messageID, messageJSON, read, messageBodyToBeRendered, date, t_count,skipFlag,funnelJson FROM messages INNER JOIN (SELECT MAX(messageID) as t_msgID, COUNT(*) as t_count FROM messages where skipFlag = 0 GROUP BY gmailthreadid) t ON ( messages. messageID = t.t_msgID ) order by CAST(messageID as integer)  DESC;" withParameterDictionary:nil];
         
         
         MessageModel *model;
@@ -388,7 +388,7 @@ static MessageService *instance;
     __block NSMutableArray *array = [[NSMutableArray alloc] init];
     
     [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet *resultSet = [db executeQuery:@"SELECT max(messageID) as maxID FROM messages" withParameterDictionary:nil];
+        FMResultSet *resultSet = [db executeQuery:@"SELECT messageID as maxID FROM messages order by CAST(messageID as integer) desc LIMIT 1;" withParameterDictionary:nil];
         while ([resultSet next]) {
             NSString *tempString = [resultSet stringForColumn:@"maxID"];
             if (tempString) {
@@ -400,6 +400,24 @@ static MessageService *instance;
     
     return array;
 }
+
+
+- (NSArray *) retrieveOldestMessages{
+    __block NSMutableArray *array = [[NSMutableArray alloc] init];
+    
+    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *resultSet = [db executeQuery:@"SELECT messageID as minID FROM messages order by CAST(messageID as integer) ASC LIMIT 1;" withParameterDictionary:nil];
+        while ([resultSet next]) {
+            NSString *tempString = [resultSet stringForColumn:@"minID"];
+            if (tempString) {
+                [array addObject:tempString];
+            }
+            tempString = nil;
+        }
+    }];
+    return array;
+}
+
 
 
 
@@ -440,7 +458,7 @@ static MessageService *instance;
     __block NSMutableArray *array = [[NSMutableArray alloc] init];
     
     [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet *resultSet = [db executeQuery:@"select messageID, messageJSON, read, messageBodyToBeRendered, messageHTMLBody, date from messages where gmailthreadid = :gmailthreadid and skipFlag=0 order by messageID DESC;" withParameterDictionary:paramDict];
+        FMResultSet *resultSet = [db executeQuery:@"select messageID, messageJSON, read, messageBodyToBeRendered, messageHTMLBody, date from messages where gmailthreadid = :gmailthreadid and skipFlag=0 order by CAST(messageID as integer)  DESC;" withParameterDictionary:paramDict];
         
         MessageModel *model;
         while ([resultSet next]) {
@@ -498,7 +516,7 @@ static MessageService *instance;
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
 //    FMResultSet *resultSet = [db executeQuery:@"SELECT DISTINCT * FROM messageFilterXRef,messages WHERE messages.messageID=messageFilterXRef.messageID and messageFilterXRef.funnelId=:funnelId order by messageID DESC limit :limit" withParameterDictionary:paramDict];
-      FMResultSet *resultSet = [db executeQuery:@"SELECT messages.messageID, messages.messageJSON, messages.read, messages.messageBodyToBeRendered, messages.messageHTMLBody, messages.date, t.t_count, messages.funnelJson FROM messages INNER JOIN (SELECT MAX(messages.messageID) as t_msgID, COUNT(*) as t_count FROM messages INNER JOIN messageFilterXRef ON ( messages.messageID = messageFilterXRef.messageID ) WHERE messageFilterXRef.funnelId =:funnelId  GROUP BY gmailthreadid) t ON ( messages. messageID = t.t_msgID ) order by messages.messageID DESC limit :limit;" withParameterDictionary:paramDict];
+      FMResultSet *resultSet = [db executeQuery:@"SELECT messages.messageID, messages.messageJSON, messages.read, messages.messageBodyToBeRendered, messages.messageHTMLBody, messages.date, t.t_count, messages.funnelJson FROM messages INNER JOIN (SELECT MAX(messages.messageID) as t_msgID, COUNT(*) as t_count FROM messages INNER JOIN messageFilterXRef ON ( messages.messageID = messageFilterXRef.messageID ) WHERE messageFilterXRef.funnelId =:funnelId  GROUP BY gmailthreadid) t ON ( messages. messageID = t.t_msgID ) order by CAST(messages.messageID as integer)  DESC limit :limit;" withParameterDictionary:paramDict];
       
     
     MessageModel *model;

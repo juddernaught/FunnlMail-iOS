@@ -32,7 +32,7 @@ NSString *kMyClientID = @"655269106649-rkom4nvj3m9ofdpg6sk53pi65mpivv7d.apps.goo
 NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
 //NSString *kMyClientID = @"994627364215-ctjmrhiul95ts0qrkc38sap3mo3go3ko.apps.googleusercontent.com";     // pre-assigned by service
 //NSString *kMyClientSecret = @"FNZ-x95gkwWqQT7HdJgeqJVW";
-@synthesize blockerView;
+@synthesize blockerView,mainViewController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -297,9 +297,9 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
 
 -(void)loadHomeScreen {
     [self getUserInfo];
-    
-    MainVC *mainvc = [[MainVC alloc] init];
-    UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:mainvc];
+
+    mainViewController = [[MainVC alloc] init];
+    UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:mainViewController];
     
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     appDelegate.menuController = [[MenuViewController alloc] init];

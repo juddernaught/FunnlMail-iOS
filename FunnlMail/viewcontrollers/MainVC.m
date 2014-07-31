@@ -44,13 +44,15 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [mainView reloadView];
     AppDelegate *app = APPDELEGATE;
     NSLog(@"viewWillAppear mainVC");
-    if([app.currentFunnelString.lowercaseString isEqualToString:[ALL_FUNNL lowercaseString]]){
+    if([app.currentFunnelString.lowercaseString isEqualToString:[ALL_FUNNL lowercaseString]])
+    {
          [self setTitle:ALL_FUNNL];
-        }
-     else {
+    }
+    else
+    {
          NSLog(@"do we get here tho: %@", self.parentViewController);
          [self setTitle: app.currentFunnelString];
-         }
+    }
 }
 
 
@@ -147,7 +149,6 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     if(emailsTableViewController==nil){
         emailsTableViewController = [[EmailsTableViewController alloc]init];
         emailsTableViewController.mainVCdelegate = self;
-        
         [self addChildViewController:emailsTableViewController];
         [self.view insertSubview:emailsTableViewController.view atIndex:0];
         
@@ -157,9 +158,11 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
             make.right.equalTo(self.view.mas_right).with.offset(0);
             make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
         }];
-    }
+        [[EmailService instance] startLogin:emailsTableViewController];
 
+    }
 }
+
 
 #pragma mark -
 #pragma mark Event-Handler
