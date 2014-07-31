@@ -15,12 +15,9 @@
 #import "UIColor+HexString.h"
 #import "FunnelService.h"
 #import <Mixpanel/Mixpanel.h>
-<<<<<<< HEAD
 #import "CIOExampleAPIClient.h"
 #import "CIOAuthViewController.h"
-=======
 #import <AddressBook/AddressBook.h>
->>>>>>> 385b1e81bc58c1cc058862f19cfef130e4e69375
 
 @interface CreateFunnlViewController ()<CIOAuthViewController>
 {
@@ -150,12 +147,8 @@ NSMutableArray *emailArr,*searchArray;
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-<<<<<<< HEAD
-    return 5;
-=======
     if(tableView.tag == 1) return 1;
-    return 4;
->>>>>>> 385b1e81bc58c1cc058862f19cfef130e4e69375
+    return 5;
 }
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;  {
     if(tableView.tag == 1){
@@ -170,15 +163,10 @@ NSMutableArray *emailArr,*searchArray;
     else if(section == 2){
         return @"Subject (Optional):";
     }
-<<<<<<< HEAD
     else if(section == 3){
-        return @"Skip all mail:";
+        return [NSString stringWithFormat:@"Skip %@:",ALL_FUNNL];
     } else {
         return @"Enable Notifications:";
-=======
-    else {
-        return [NSString stringWithFormat:@"Skip %@:",ALL_FUNNL];
->>>>>>> 385b1e81bc58c1cc058862f19cfef130e4e69375
     }
 }
 
@@ -195,46 +183,21 @@ NSMutableArray *emailArr,*searchArray;
         
         cell.textLabel.text = [searchArray objectAtIndex:indexPath.row];
         return cell;
-    }
-<<<<<<< HEAD
-
-    if (indexPath.section == 4) {
-        UITableViewCell *cell = [[UITableViewCell alloc] init];
-        cell.textLabel.text = @"Enable Notifications";
-        enableNotificationsSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(300-50, 8, 50, 0)];
-        if (oldModel.skipFlag) {
-            [enableNotificationsSwitch setOn:YES];
+    } else {
+        if (indexPath.section == 4) {
+            UITableViewCell *cell = [[UITableViewCell alloc] init];
+            cell.textLabel.text = @"Enable Notifications";
+            enableNotificationsSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(300-50, 8, 50, 0)];
+            if (oldModel.skipFlag) {
+                [enableNotificationsSwitch setOn:YES];
+            }
+            else {
+                [enableNotificationsSwitch setOn:NO];
+            }
+            [enableNotificationsSwitch addTarget:self action:@selector(enableNotifications:) forControlEvents:UIControlEventValueChanged];
+            [cell addSubview:enableNotificationsSwitch];
+            return cell;
         }
-        else {
-            [enableNotificationsSwitch setOn:NO];
-        }
-        [enableNotificationsSwitch addTarget:self action:@selector(enableNotifications:) forControlEvents:UIControlEventValueChanged];
-        [cell addSubview:enableNotificationsSwitch];
-        return cell;
-    }
-
-    TextFieldCell *cell = [[TextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
-    
-    if(indexPath.section == 0)
-    {
-        cell.textField.frame = CGRectMake(10, 2,250, 40);
-        cell.textField.placeholder = @"Enter name";
-        cell.textField.text = funnlName;
-        cell.textField.delegate = self;
-        cell.textField.tag = indexPath.section;
-        cell.tag = cell.contentView.tag = indexPath.row;
-    }
-    else if (indexPath.section == 1)
-    {
-        cell.textField.frame = CGRectMake(10, 2,250, 40);
-        cell.textField.tag = indexPath.section;
-        cell.textField.delegate = self;
-        cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-        cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-        if(indexPath.row != dictionaryOfConversations.allKeys.count && dictionaryOfConversations.allKeys.count > 0){
-            cell.textField.text = [dictionaryOfConversations objectForKey:indexPath];
-=======
-    else {
         if (indexPath.section == 3) {
             UITableViewCell *cell = [[UITableViewCell alloc] init];
             cell.textLabel.text = [NSString stringWithFormat:@"Skip %@",ALL_FUNNL];
@@ -248,7 +211,6 @@ NSMutableArray *emailArr,*searchArray;
             [skipAllSwitch addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
             [cell addSubview:skipAllSwitch];
             return cell;
->>>>>>> 385b1e81bc58c1cc058862f19cfef130e4e69375
         }
         TextFieldCell *cell = [[TextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
         
