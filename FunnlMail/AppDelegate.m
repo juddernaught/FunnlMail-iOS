@@ -12,6 +12,7 @@
 #import "ServiceTests.h"
 #import <Mixpanel/Mixpanel.h>
 #import <Parse/Parse.h>
+#import "CIOExampleAPIClient.h"
 
 #define MIXPANEL_TOKEN @"08b1e55d72f1b22a8e5696c2b56a6777"
 
@@ -21,6 +22,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // MixPanel setup
+    //[[CIOExampleAPIClient sharedClient] clearCredentials];
     [Mixpanel sharedInstanceWithToken:@"08b1e55d72f1b22a8e5696c2b56a6777"];
     [[Mixpanel sharedInstance] track:@"App opened"];
     // Parse setup
@@ -112,12 +114,17 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
     // Store the deviceToken in the current installation and save it to Parse.
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    if (![currentInstallation channels]) {
+        [currentInstallation setChannels:@[@"testers"]];
+    }
+    [currentInstallation addUniqueObject:@"aUser" forKey:@"testers"];
     [currentInstallation setDeviceTokenFromData:deviceToken];
     [currentInstallation saveInBackground];
 }
 
 - (void)application:(UIApplication *)application
 didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    NSLog(@"didReceiveRemoteNotification: %@",userInfo);
     [PFPush handlePush:userInfo];
 }
 

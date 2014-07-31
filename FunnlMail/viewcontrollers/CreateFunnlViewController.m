@@ -512,7 +512,7 @@
         return;
     } else {
         NSLog(@"CIOClient is Authorized");
-        [[CIOExampleAPIClient sharedClient] createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:@{@"filter_from": @"paragdulam@hotmail.com"} success:^(NSDictionary *responseDict) {
+        [[CIOExampleAPIClient sharedClient] createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:@{@"filter_from": @"paragdulam@hotmail.com",@"sync_period":@"0"} success:^(NSDictionary *responseDict) {
             NSLog(@"created WeHook responseDict %@",responseDict);
             [[CIOExampleAPIClient sharedClient] getWebhooksWithParams:nil success:^(NSArray *responseArray) {
                 NSLog(@"Webhooks GET Req %@",responseArray);
