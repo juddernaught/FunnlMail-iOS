@@ -157,7 +157,7 @@ static NSString *currentFolder;
 	self.isLoading = YES;
     
 	MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)
-	(MCOIMAPMessagesRequestKindHeaders | MCOIMAPMessagesRequestKindStructure |
+	(MCOIMAPMessagesRequestKindUid | MCOIMAPMessagesRequestKindHeaders | MCOIMAPMessagesRequestKindStructure |
 	 MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject | MCOIMAPMessagesRequestKindGmailThreadID | MCOIMAPMessagesRequestKindGmailMessageID |	 MCOIMAPMessagesRequestKindFlags);
 	
     MCOIMAPFolderInfoOperation *FolderInfo;
@@ -198,17 +198,24 @@ static NSString *currentFolder;
              fetchRange = newFetchRange;
          }
          
-         NSLog(@"fetchRange: %qu - %qu",fetchRange.location, fetchRange.length);
-         NSUInteger numberOfMessagesToLoad = nMessages;
+         u_int64_t numberOfMessagesToLoad = fetchRange.length - fetchRange.location ;
+         NSLog(@"fetchRange: %qu - %qu = %qu",fetchRange.location, fetchRange.length, numberOfMessagesToLoad);
          if (numberOfMessagesToLoad == 0)
          {
              self.isLoading = NO;
              return;
          }
+         MCOIndexSet *uids = [MCOIndexSet indexSetWithRange:fetchRange];
+         self.imapMessagesFetchOp = [self.imapSession fetchMessagesByUIDOperationWithFolder:folderName requestKind:requestKind uids:uids];
+
+//         uint64_t location = info.uidNext;
+//         uint64_t size = fetchRange.location;
+//         MCOIndexSet *numbers = [MCOIndexSet indexSetWithRange:MCORangeMake(location, size)];
+//         self.imapMessagesFetchOp = [self.imapSession fetchMessagesByNumberOperationWithFolder:folderName requestKind:requestKind numbers:numbers];
+
          
-         self.imapMessagesFetchOp = [self.imapSession fetchMessagesByUIDOperationWithFolder:folderName requestKind:requestKind uids:[MCOIndexSet indexSetWithRange:fetchRange]];
          [self.imapMessagesFetchOp setProgress:^(unsigned int progress) {
-             //NSLog(@"Progress: %u of %lu", progress, (unsigned long)numberOfMessagesToLoad);
+             NSLog(@"Progress: %u of %lu", progress, (unsigned long)numberOfMessagesToLoad);
          }];
          
          //         __weak EmailService *weakSelf = self;
@@ -370,12 +377,8 @@ static NSString *currentFolder;
 - (void)loadLatestMail:(NSUInteger)nMessages withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName
 {
     //	self.isLoading = YES;
-	
-	MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)
-	(MCOIMAPMessagesRequestKindHeaders | MCOIMAPMessagesRequestKindStructure |
-	 MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject | MCOIMAPMessagesRequestKindGmailThreadID | MCOIMAPMessagesRequestKindGmailMessageID |	 MCOIMAPMessagesRequestKindFlags);
-	
-    NSString *inboxFolder = INBOX;
+		
+    NSString *inboxFolder = folderName;
 	MCOIMAPFolderInfoOperation *inboxFolderInfo = [self.imapSession folderInfoOperation:inboxFolder];
 	[inboxFolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
      {
@@ -390,6 +393,10 @@ static NSString *currentFolder;
          else{
          }
          NSInteger inDatabaseMessageID = [[tempArray objectAtIndex:0] integerValue];
+         if(inDatabaseMessageID){
+             inDatabaseMessageID = inDatabaseMessageID - 10;
+         }
+         
          NSInteger numberOfMessagesToLoad = (self.totalNumberOfMessages) - inDatabaseMessageID;
          
          MCORange fetchRange;
@@ -405,34 +412,18 @@ static NSString *currentFolder;
              [tempAppDelegate.progressHUD show:NO];
              [tempAppDelegate.progressHUD setHidden:YES];
              [fv.tablecontroller.refreshControl endRefreshing];
-             return ;
          }
-         /*
-         self.imapMessagesFetchOp =
-         [self.imapSession fetchMessagesByUIDOperationWithFolder:inboxFolder requestKind:requestKind uids:[MCOIndexSet indexSetWithRange:fetchRange]];
-         //         [self.imapSession fetchMessagesByNumberOperationWithFolder:inboxFolder requestKind:requestKind numbers:[MCOIndexSet indexSetWithRange:fetchRange]];
-         
-         [self.imapMessagesFetchOp setProgress:^(unsigned int progress) {
-             NSLog(@"Progress: %u of %lu", progress, (unsigned long)numberOfMessagesToLoad);
-         }];
-         
-         [self.imapMessagesFetchOp start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
-          {
-              if (messages.count > 0) {
-                  MCOIMAPMessage *tempVariable = [messages objectAtIndex:0];
-                  NSLog(@"Total number of messages: %d ",tempVariable.uid);
-                  NSLog(@"Call to loadLastNMessages from loadLatestMail function 2");
-                  //                  [self loadLastNMessages:-1 withTableController:fv withFolder:INBOX  withFetchRange:fetchRange];
-              }
-              else{
-                  AppDelegate *tempAppDelegate = APPDELEGATE;
-                  [tempAppDelegate.progressHUD show:NO];
-                  [tempAppDelegate.progressHUD setHidden:YES];
-                  [fv.tablecontroller.refreshControl endRefreshing];
-                  return ;
-              }
-          }];*/
+         if(IS_AUTO_REFRESH_ENABLE){
+             [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(startAutoRefresh) object:nil];
+             [self performSelector:@selector(startAutoRefresh) withObject:nil afterDelay:AUTOREFRESH_DELAY];
+         }
      }];
+    
+}
+
+-(void)startAutoRefresh{
+//    [[EmailService instance] loadLatestMail:NUMBER_OF_NEW_MESSAGES_TO_CHECK withTableController:fv withFolder:INBOX];
+    [self loadLatestMail:NUMBER_OF_NEW_MESSAGES_TO_CHECK withTableController:self.emailsTableViewController withFolder:INBOX];
 }
 
 - (BOOL)checkForKey:(NSString *)key indict:(NSMutableDictionary*)dict {

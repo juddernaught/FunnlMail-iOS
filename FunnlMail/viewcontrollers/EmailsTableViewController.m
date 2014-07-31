@@ -65,7 +65,10 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
+
 }
+
+
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -347,10 +350,10 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 //                cell.revealDirection = RDSwipeableTableViewCellRevealDirectionRight | RDSwipeableTableViewCellRevealDirectionLeft;
                 
                 UIView *archiveView = [self viewWithImageName:@"swipeArchive"];
-                UIColor *yellowColor = [UIColor colorWithHexString:@"#D8D8D8"];
+                UIColor *yellowColor = [UIColor colorWithHexString:@"#F8CB0A"];
                 
                 UIView *fullFunnlView = [self viewWithImageName:@"swipeFunnl"];
-                UIColor *fullFunnlColor = [UIColor colorWithHexString:@"#D8D8D8"];
+                UIColor *fullFunnlColor = [UIColor colorWithHexString:@"#92F190"];
                 
                 
                 [cell setSwipeGestureWithView:archiveView color:yellowColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
@@ -369,7 +372,6 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                      }];
                     [cell swipeToOriginWithCompletion:nil];
                 }];
-                
                 
                 [cell setSwipeGestureWithView:fullFunnlView color:fullFunnlColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
                     NSLog(@"Did swipe full cell, ");
