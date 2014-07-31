@@ -137,11 +137,11 @@
         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:TRASH];
     }
     else if ([tempCell.menuLabel.text isEqualToString:@"Inbox"]) {
-        AppDelegate *tempAppDelegate = APPDELEGATE;
+        /*AppDelegate *tempAppDelegate = APPDELEGATE;
         NSMutableArray * filterArray = [[NSMutableArray alloc] init];
         filterArray = [[[FunnelService instance] allFunnels] mutableCopy];
         tempAppDelegate.currentFunnelString = [[(FunnelModel *)filterArray[indexPath.row] funnelName] lowercaseString];
-        tempAppDelegate.currentFunnelDS = (FunnelModel *)filterArray[indexPath.row];
+        tempAppDelegate.currentFunnelDS = (FunnelModel *)filterArray[indexPath.row];*/
     }
     else if ([tempCell.menuLabel.text isEqualToString:@"Funnl Alerts"]){
         NSLog(@"funl alert requested");
