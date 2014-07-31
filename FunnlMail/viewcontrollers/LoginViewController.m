@@ -86,7 +86,7 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
         self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
         
         self.pageController.dataSource = self;
-        images = @[@"1.png", @"2.png", @"3.png", @"Welcome.png"];
+        images = @[@"WHITEsliders1nobar.png", @"WHITEsliders2.png", @"WHITEsliders3.png", @"WHITEsliders4.png",@"WHITEsliders5.png"];
         PageContentVC *initialViewController = [self viewControllerAtIndex:0];
         
         NSArray *viewControllers = [NSArray arrayWithObject:initialViewController];
@@ -450,7 +450,7 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
         loginButton.hidden = NO;
         return nil;
     }
-    loginButton.hidden = YES;
+    else loginButton.hidden = YES;
     
     return [self viewControllerAtIndex:index];
     

@@ -293,8 +293,6 @@ static NSString *currentFolder;
                                    tempMessageModel = nil;
                                    }
                                //not sure if this my (Pranav) email alone but sent messages were intially backwards
-                               //my inbox still shows up out of order with no pattern noticeable
-                               //might be just me
                                emailTableViewController->searchMessages = [NSMutableArray arrayWithArray:[[emailTableViewController->searchMessages reverseObjectEnumerator] allObjects]];
                               emailTableViewController.emailFolder = SENT;
                                emailTableViewController.isSearching = YES;
@@ -314,9 +312,7 @@ static NSString *currentFolder;
                               [emailTableViewController->searchMessages addObject:tempMessageModel];
                               tempMessageModel = nil;
                           }
-                          //not sure if this my (Pranav) email alone but sent messages were intially backwards
-                          //my inbox still shows up out of order with no pattern noticeable
-                          //might be just me
+                          //not sure if this my (Pranav) email alone but messages were intially backwards
                           emailTableViewController->searchMessages = [NSMutableArray arrayWithArray:[[emailTableViewController->searchMessages reverseObjectEnumerator] allObjects]];
                           emailTableViewController.emailFolder = TRASH;
                           emailTableViewController.isSearching = YES;
@@ -337,9 +333,7 @@ static NSString *currentFolder;
                               [emailTableViewController->searchMessages addObject:tempMessageModel];
                               tempMessageModel = nil;
                           }
-                          //not sure if this my (Pranav) email alone but sent messages were intially backwards
-                          //my inbox still shows up out of order with no pattern noticeable
-                          //might be just me
+                          //not sure if this my (Pranav) email alone but messages were intially backwards
                           emailTableViewController->searchMessages = [NSMutableArray arrayWithArray:[[emailTableViewController->searchMessages reverseObjectEnumerator] allObjects]];
                           emailTableViewController.emailFolder = ARCHIVE;
                           emailTableViewController.isSearching = YES;
@@ -358,13 +352,10 @@ static NSString *currentFolder;
                               [emailTableViewController->searchMessages addObject:tempMessageModel];
                               tempMessageModel = nil;
                           }
-                          //not sure if this my (Pranav) email alone but sent messages were intially backwards
-                          //my inbox still shows up out of order with no pattern noticeable
-                          //might be just me
+                          //not sure if this my (Pranav) email alone but messages were intially backwards
                           emailTableViewController->searchMessages = [NSMutableArray arrayWithArray:[[emailTableViewController->searchMessages reverseObjectEnumerator] allObjects]];
                           emailTableViewController.emailFolder = ARCHIVE;
                           emailTableViewController.isSearching = YES;
-                          NSLog(@"does it crash here?");
                       }
                       else if ([tempAppDelegate.currentFunnelString isEqualToString:@"all"]) {
                           NSLog(@"when does this happen");
