@@ -199,8 +199,6 @@
 		FABAF0C31976507E00AA7918 /* swipeFunnl@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FABAF0741976507E00AA7918 /* swipeFunnl@2x.png */; };
 		FABAF0C81976573400AA7918 /* ComposeIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = FABAF0C41976573400AA7918 /* ComposeIcon.png */; };
 		FABAF0C91976573400AA7918 /* ComposeIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FABAF0C51976573400AA7918 /* ComposeIcon@2x.png */; };
-		FABAF0CA1976573400AA7918 /* FunnlIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = FABAF0C61976573400AA7918 /* FunnlIcon.png */; };
-		FABAF0CB1976573400AA7918 /* FunnlIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FABAF0C71976573400AA7918 /* FunnlIcon@2x.png */; };
 		FABAF0CD1976621C00AA7918 /* Mail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FABAF0CC1976621C00AA7918 /* Mail@2x.png */; };
 		FABAF0D11976629000AA7918 /* forward@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FABAF0CE1976629000AA7918 /* forward@2x.png */; };
 		FABAF0D21976629000AA7918 /* reply@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FABAF0CF1976629000AA7918 /* reply@2x.png */; };
@@ -546,8 +544,6 @@
 		FABAF0741976507E00AA7918 /* swipeFunnl@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipeFunnl@2x.png"; sourceTree = "<group>"; };
 		FABAF0C41976573400AA7918 /* ComposeIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ComposeIcon.png; sourceTree = "<group>"; };
 		FABAF0C51976573400AA7918 /* ComposeIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ComposeIcon@2x.png"; sourceTree = "<group>"; };
-		FABAF0C61976573400AA7918 /* FunnlIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FunnlIcon.png; sourceTree = "<group>"; };
-		FABAF0C71976573400AA7918 /* FunnlIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "FunnlIcon@2x.png"; sourceTree = "<group>"; };
 		FABAF0CC1976621C00AA7918 /* Mail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Mail@2x.png"; sourceTree = "<group>"; };
 		FABAF0CE1976629000AA7918 /* forward@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "forward@2x.png"; sourceTree = "<group>"; };
 		FABAF0CF1976629000AA7918 /* reply@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "reply@2x.png"; sourceTree = "<group>"; };
@@ -1155,8 +1151,6 @@
 			children = (
 				FABAF0C41976573400AA7918 /* ComposeIcon.png */,
 				FABAF0C51976573400AA7918 /* ComposeIcon@2x.png */,
-				FABAF0C61976573400AA7918 /* FunnlIcon.png */,
-				FABAF0C71976573400AA7918 /* FunnlIcon@2x.png */,
 				FABAF0561976507E00AA7918 /* Add.png */,
 				FABAF0571976507E00AA7918 /* Add@2x.png */,
 				FABAF0D41976634C00AA7918 /* MenuIcon.png */,
@@ -1319,7 +1313,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				FABAF0981976507E00AA7918 /* helpListIcon@2x.png in Resources */,
-				FABAF0CA1976573400AA7918 /* FunnlIcon.png in Resources */,
 				FABAF07C1976507E00AA7918 /* Meetings.png in Resources */,
 				FABAF0A21976507E00AA7918 /* intro.png in Resources */,
 				FABAF09C1976507E00AA7918 /* settingListIcon@2x.png in Resources */,
@@ -1354,7 +1347,6 @@
 				FABAF0C81976573400AA7918 /* ComposeIcon.png in Resources */,
 				B7E899801989DB350072DB1A /* 2.png in Resources */,
 				FABAF0C21976507E00AA7918 /* swipeFunnl.png in Resources */,
-				FABAF0CB1976573400AA7918 /* FunnlIcon@2x.png in Resources */,
 				FABAF0A41976507E00AA7918 /* splashScreen.png in Resources */,
 				B7430115198AC19C00FE7B4D /* WHITEsliders5.png in Resources */,
 				FABAF0C11976507E00AA7918 /* swipeArchive@2x.png in Resources */,
