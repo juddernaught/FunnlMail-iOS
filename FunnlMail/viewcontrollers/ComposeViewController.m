@@ -90,6 +90,36 @@ NSMutableArray *emailArr,*searchArray;
 - (BOOL)textField:(UITextField *)textField
 shouldChangeCharactersInRange:(NSRange)range
 replacementString:(NSString *)string {
+    if([@"Subject:"  isEqual: ((UILabel *)(TITokenField *)textField.leftView).text]){
+        return YES;
+    }
+    if([@"To:"  isEqual: ((UILabel *)(TITokenField *)textField.leftView).text]){
+        autocompleteTableView.hidden = NO;
+        //[self.view addSubview:autocompleteTableView];
+        
+    }
+    else if ([@"Cc:"  isEqual: ((UILabel *)(TITokenField *)textField.leftView).text]){
+        NSLog(@"cc did start");
+        autocompleteTableView.hidden = NO;
+        //[self.view setFrame:CGRectMake(0,0,self.view.bounds.size.width,self.view.bounds.size.height)];
+        //autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 65, self.view.bounds.size.width, 120)];
+        //[self.view addSubview:autocompleteTableView];
+
+    }
+   else if ([@"Bcc:"  isEqual: ((UILabel *)(TITokenField *)textField.leftView).text]){
+       NSLog(@"Bcc did start");
+       autocompleteTableView.hidden = NO;
+       //[self.view setFrame:CGRectMake(0,-30,self.view.bounds.size.width,self.view.bounds.size.height)];
+       //autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 90, self.view.bounds.size.width, 120)];
+       //[self.view addSubview:autocompleteTableView];
+    }
+    
+    if(string.length == 0){
+        autocompleteTableView.hidden = YES;
+//        if ([@"Cc:"  isEqual: ((UILabel *)(TITokenField *)textField.leftView).text]){
+//            [self.view setFrame:CGRectMake(0,0,self.view.bounds.size.width,self.view.bounds.size.height)];
+//        }
+    }
     NSString *substring = [NSString stringWithString:textField.text];
     substring = [substring
                  stringByReplacingCharactersInRange:range withString:string];
@@ -439,7 +469,7 @@ replacementString:(NSString *)string {
     
     if (![string isEqualToString:EMPTY_DELIMITER] && string && ![string isEqualToString:@""]) {
         NSMutableString * html = [NSMutableString string];
-                [html appendFormat:@"<html><br><br><br><font color='red'><head>------------------------------------------------------------------<script>%@</script><style>%@</style></head>"
+                [html appendFormat:@"<html><br><br><br><font color='purple'><head>------------------------------------------------------------------<script>%@</script><style>%@</style></head>"
          @"<body bgColor=\"transparent;\">%@</body></font></html>", mainJavascript, mainStyle, string];
         return html;
     }

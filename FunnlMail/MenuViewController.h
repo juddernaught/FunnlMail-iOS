@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "MenuCell.h"
 #import "AppDelegate.h"
-#import "MainVCDelegate.h"
 @interface MenuViewController : UIViewController <UITableViewDataSource,UITableViewDelegate>
 {
 

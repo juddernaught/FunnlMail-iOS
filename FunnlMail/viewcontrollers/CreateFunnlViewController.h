@@ -23,7 +23,7 @@
     NSArray *randomColors;
     FunnelModel *oldModel;
     UISwitch *skipAllSwitch;
-    BOOL isSkipALl;
+    BOOL isSkipAll;
 }
 @property (weak) id<MainVCDelegate> mainVCdelegate;
 @property (assign) BOOL isEdit;

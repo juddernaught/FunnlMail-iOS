@@ -46,8 +46,8 @@ static NSString *mailCellIdentifier = @"MailCell";
     [super viewDidLoad];
     AppDelegate *tempAppDelegate = APPDELEGATE;
     // Do any additional setup after loading the view.
-    if ([tempAppDelegate.currentFunnelString.lowercaseString isEqualToString:@"all"]) {
-        self.navigationItem.title = @"All Mails";
+    if ([[tempAppDelegate.currentFunnelString.lowercaseString lowercaseString] isEqualToString:[ALL_FUNNL lowercaseString]]) {
+        self.navigationItem.title = ALL_FUNNL;
     }
     else {
         self.navigationItem.title = tempAppDelegate.currentFunnelString.capitalizedString;
@@ -91,8 +91,14 @@ static NSString *mailCellIdentifier = @"MailCell";
     MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[dataSourceArray[indexPath.row] messageJSON]];
     if([(MessageModel*)dataSourceArray[indexPath.row] read]){
         cell.readLabel.backgroundColor = [UIColor clearColor];
+        cell.readLabel.hidden = YES;
+        
+
     }else{
+        cell.readLabel.hidden = NO;
         cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
+        
+
     }
     [cell.detailDiscloser setHidden:NO];
     [cell.threadLabel setHidden:YES];
@@ -100,7 +106,7 @@ static NSString *mailCellIdentifier = @"MailCell";
     interval = -interval;
     if([message.header.date isToday]){
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"hh:mm a"];
+        [dateFormatter setDateFormat:@"h:mm a"]; // Changed by Chad
         NSString *dateString = [dateFormatter stringFromDate:message.header.date];
         cell.dateLabel.text = dateString;
     }

@@ -46,15 +46,16 @@ static FunnelService *instance;
   __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
   
   __block BOOL success = NO;
-    if ([funnelModel.funnelId isEqualToString:@"0"]) {
-        paramDict[@"funnelId"] = @"0";
+    if ([funnelModel.funnelId isEqualToString:@"0"] || [funnelModel.funnelId isEqualToString:@"1"]) {
+        paramDict[@"funnelId"] = funnelModel.funnelId;
     }
     else
         paramDict[@"funnelId"] = [[NSUUID UUID] UUIDString];
-  paramDict[@"funnelName"] = funnelModel.funnelName;
-  paramDict[@"emailAddresses"] = funnelModel.emailAddresses;
-  paramDict[@"phrases"] = funnelModel.phrases;
-  paramDict[@"skipFlag"] = [NSNumber numberWithBool:funnelModel.skipFlag];
+    
+    paramDict[@"funnelName"] = funnelModel.funnelName;
+    paramDict[@"emailAddresses"] = funnelModel.emailAddresses;
+    paramDict[@"phrases"] = funnelModel.phrases;
+    paramDict[@"skipFlag"] = [NSNumber numberWithBool:funnelModel.skipFlag];
     if (funnelModel.funnelColor) {
         paramDict[@"funnelColor"] = funnelModel.funnelColor;
     }
@@ -95,10 +96,14 @@ static FunnelService *instance;
 -(NSArray *) getFunnelsExceptAllFunnel{
     __block NSMutableArray *array = [[NSMutableArray alloc] init];
     __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
-    paramDict[@"funnelName"] = @"All";
+    paramDict[@"funnelName"] = ALL_FUNNL;
     
     [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet *resultSet = [db executeQuery:@"SELECT funnelId,funnelName,emailAddresses,phrases,skipFlag,funnelColor FROM funnels WHERE funnelName !=:funnelName" withParameterDictionary:paramDict];
+//        FMResultSet *resultSet = [db executeQuery:@"SELECT funnelId,funnelName,emailAddresses,phrases,skipFlag,funnelColor FROM funnels WHERE funnelName !=:funnelName" withParameterDictionary:paramDict];
+        
+        NSString *query = [NSString stringWithFormat:@"SELECT funnelId,funnelName,emailAddresses,phrases,skipFlag,funnelColor FROM funnels WHERE funnelName NOT IN ('%@','%@');",ALL_FUNNL,ALL_OTHER_FUNNL];
+        FMResultSet *resultSet = [db executeQuery:query];
+        
         
         FunnelModel *model;
         int counter = 1;
@@ -133,8 +138,12 @@ static FunnelService *instance;
   __block NSMutableArray *array = [[NSMutableArray alloc] init];
     
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    FMResultSet *resultSet = [db executeQuery:@"SELECT funnels.funnelId as funnelId, funnels.funnelName as funnelName, funnels.emailAddresses as emailAddresses, funnels.phrases as phrases, funnels.skipFlag as skipFlag, funnels.funnelColor as funnelColor, (COUNT(read) - SUM (read )) as readCount FROM funnels INNER JOIN messageFilterXRef ON (messageFilterXRef.funnelId = funnels.funnelId) INNER JOIN messages ON (messageFilterXRef.messageId = messages.messageId) GROUP BY 1, 2, 3, 4, 5, 6 UNION SELECT 0 as funnelId, 'All' asfunnelName, '' as emailAddresses, '', 0 as skipFlag, '#000000' as funnelColor, COUNT(read) as readCount FROM messages where messages.read = 0;" ];
-     
+      
+    NSString *query = [NSString stringWithFormat:@"SELECT funnels.funnelId as funnelId, funnels.funnelName as funnelName, funnels.emailAddresses as emailAddresses, funnels.phrases as phrases, funnels.skipFlag as skipFlag, funnels.funnelColor as funnelColor, (COUNT(read) - SUM (read )) as readCount FROM funnels INNER JOIN messageFilterXRef ON (messageFilterXRef.funnelId = funnels.funnelId) INNER JOIN messages ON (messageFilterXRef.messageId = messages.messageId) GROUP BY 1, 2, 3, 4, 5, 6\
+        UNION SELECT 0 as funnelId, '%@' asfunnelName, '' as emailAddresses, '', 0 as skipFlag, '#000000' as funnelColor, COUNT(read) as readCount FROM messages where messages.read = 0\
+        UNION SELECT 1 as funnelId, '%@' asfunnelName, '' as emailAddresses, '', 0 as skipFlag, '#000000' as funnelColor, COUNT(read) as readCount FROM messages where messages.read = 0 AND messages.categoryName <> '%@'\
+                       ;",ALL_FUNNL,ALL_OTHER_FUNNL,PRIMARY_CATEGORY_NAME];
+    FMResultSet *resultSet = [db executeQuery:query];
     FunnelModel *model;
 //      FilterModel *modelForFilter;
       int counter = 1;

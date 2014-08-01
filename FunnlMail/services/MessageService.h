@@ -15,7 +15,7 @@
 
 -(BOOL) insertMessage:(MessageModel *)messageModel;
 -(BOOL) insertBulkMessages:(NSArray *)messageModelArray;
--(BOOL) updateMessage:(MessageModel *)messageModel;
+-(void) updateMessage:(MessageModel *)messageModel;
 -(NSArray *) messagesWithTop:(NSInteger)top;
 -(NSArray *) messagesWithStart:(NSInteger)start count:(NSInteger)count;
 -(NSArray *) messagesWithFunnelId:(NSString *)funnelId top:(NSInteger)top;
@@ -25,13 +25,15 @@
 -(BOOL) deleteMessage:(NSString *)messageID;
 //newly added on 13th June 2014 by iauro001
 -(NSArray *) retrieveAllMessages;
-- (NSArray *) retrieveLatestMessages;
+-(NSArray *) retrieveOtherMessagesThanPrimary;
+-(NSArray *) retrieveLatestMessages;
+-(NSArray *) retrieveOldestMessages;
 //newly added on 17th June 2014 by iauro001
 -(NSArray *) retrieveAllMessagesForThread:(NSString*)gmailthreadID;
 -(NSArray *) retrieveAllMessagesWithSameGmailID:(NSString*)gmailID;
 -(NSArray *) messagesAllTopMessages;
--(BOOL) updateMessageWithDictionary:(NSDictionary *)messageDict;
--(BOOL) updateMessageWithHTMLContent:(NSDictionary *)messageDict;
+-(void) updateMessageWithDictionary:(NSDictionary *)messageDict;
+-(void) updateMessageWithHTMLContent:(NSDictionary *)messageDict;
 - (NSString*)retrieveHTMLContentWithID:(NSString*)uid;
 - (NSString*)retrievePreviewContentWithID:(NSString*)uid ;
 - (void)insertFunnelJsonForMessages;

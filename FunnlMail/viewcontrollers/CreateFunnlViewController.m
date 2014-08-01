@@ -24,7 +24,6 @@
 @implementation CreateFunnlViewController
 UITableView *autocompleteTableView;
 NSMutableArray *emailArr,*searchArray;
-bool didSelect;//didSelect from autocomplete table
 @synthesize mainVCdelegate,isEdit;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -95,14 +94,24 @@ bool didSelect;//didSelect from autocomplete table
     tempAppDelegate = APPDELEGATE;
     [self.view addSubview:tempAppDelegate.progressHUD];
     [self.view bringSubviewToFront:tempAppDelegate.progressHUD];
-    isSkipALl = oldModel.skipFlag;
+    isSkipAll = oldModel.skipFlag;
     randomColors = GRADIENT_ARRAY;
     self.title = @"Create Funnl";
-    didSelect = NO;
     [self.view setBackgroundColor:[UIColor whiteColor]];
     [self initBarbuttonItem];
+    
     [self emailContact];
-    NSLog(@"what is the original view height: %f",self.view.bounds.size.height);
+    
+    autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 300, self.view.bounds.size.width, 180)];
+    autocompleteTableView.delegate = self;
+    autocompleteTableView.dataSource = self;
+    autocompleteTableView.scrollEnabled = YES;
+    autocompleteTableView.hidden = YES;
+    autocompleteTableView.tag = 1;
+   // [self.view addSubview:autocompleteTableView];
+    
+    
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 }
@@ -152,7 +161,7 @@ bool didSelect;//didSelect from autocomplete table
         return @"Subject (Optional):";
     }
     else {
-        return @"Skip all mail:";
+        return [NSString stringWithFormat:@"Skip %@:",ALL_FUNNL];
     }
     
 }
@@ -174,7 +183,7 @@ bool didSelect;//didSelect from autocomplete table
     else {
         if (indexPath.section == 3) {
             UITableViewCell *cell = [[UITableViewCell alloc] init];
-            cell.textLabel.text = @"Skip All Mail:";
+            cell.textLabel.text = [NSString stringWithFormat:@"Skip %@",ALL_FUNNL];
             skipAllSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(300-50, 8, 50, 0)];
             if (oldModel.skipFlag) {
                 [skipAllSwitch setOn:YES];
@@ -276,13 +285,15 @@ bool didSelect;//didSelect from autocomplete table
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if(tableView.tag == 1){
-        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-        [dictionaryOfConversations setObject:[cell.textLabel.text lowercaseString] forKey:[NSIndexPath indexPathForRow:dictionaryOfConversations.count inSection:1]];
-        [tableView deselectRowAtIndexPath:indexPath animated:NO];
-        autocompleteTableView.hidden = YES;
-        didSelect = YES;
-        cell = nil;
-        [Tableview reloadData];
+//        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+//        NSString *temp = cell.textLabel.text;
+//        NSLog(@"description: %ld",(long)cell.textLabel.text);
+//        cell = [Tableview cellForRowAtIndexPath: [NSIndexPath indexPathForRow:0 inSection:1]];
+//        cell.textLabel.text = temp;
+//        NSLog(@"description2: %@",cell);
+//        temp = nil;
+//        [tableView deselectRowAtIndexPath:indexPath animated:NO];
+//        autocompleteTableView.hidden = YES;
         
     }
     else{
@@ -354,10 +365,10 @@ bool didSelect;//didSelect from autocomplete table
 - (void)changeSwitch:(UISwitch*)sender {
     if([sender isOn]){
         NSLog(@"Switch is ON");
-        isSkipALl = TRUE;
+        isSkipAll = TRUE;
     } else{
         NSLog(@"Switch is OFF");
-        isSkipALl = FALSE;
+        isSkipAll = FALSE;
     }
 }
 
@@ -372,7 +383,7 @@ bool didSelect;//didSelect from autocomplete table
 - (void)incrementCounterAgainstTheMessage {
     NSArray *messageArray = [[MessageFilterXRefService instance] messagesWithFunnelId:oldModel.funnelId];
     for (MessageModel *tempModel in messageArray) {
-        tempModel.skipFlag ++;
+        tempModel.skipFlag++;
         [[MessageService instance] updateMessage:tempModel];
     }
 }
@@ -545,13 +556,12 @@ bool didSelect;//didSelect from autocomplete table
         if(dictionaryOfConversations.allKeys.count){
             
             NSInteger gradientInt = arc4random_uniform((uint32_t)randomColors.count);
-            NSLog(@"funelService.Count: %lu",(unsigned long)[[FunnelService instance] allFunnels].count);
             UIColor *color = [UIColor colorWithHexString:[randomColors objectAtIndex:gradientInt]];
             if(color == nil){
                 color = [UIColor colorWithHexString:@"#2EB82E"];
             }
             FunnelModel *model;
-            model = [[FunnelModel alloc]initWithBarColor:color filterTitle:funnlName newMessageCount:0 dateOfLastMessage:[NSDate new] sendersArray:(NSMutableArray*)[dictionaryOfConversations allValues] subjectsArray:(NSMutableArray*)[dictionaryOfSubjects allValues] skipAllFlag:isSkipALl funnelColor:[randomColors objectAtIndex:gradientInt]];
+            model = [[FunnelModel alloc]initWithBarColor:color filterTitle:funnlName newMessageCount:0 dateOfLastMessage:[NSDate new] sendersArray:(NSMutableArray*)[dictionaryOfConversations allValues] subjectsArray:(NSMutableArray*)[dictionaryOfSubjects allValues] skipAllFlag:isSkipAll funnelColor:[randomColors objectAtIndex:gradientInt]];
             model.funnelId = oldModel.funnelId;
             FunnelModel *modelForFunnl = [[FunnelModel alloc] init];
             modelForFunnl.funnelName = model.filterTitle;
@@ -586,7 +596,7 @@ bool didSelect;//didSelect from autocomplete table
                 modelForFunnl.phrases = @"";
             senderEmailIds = nil;
             tempArrayForSender = nil;
-            model.skipFlag = isSkipALl;
+            model.skipFlag = isSkipAll;
             if(isEdit){
                 //                [EmailService editFilter:model withOldFilter:oldModel];
                 // save to db
@@ -595,11 +605,11 @@ bool didSelect;//didSelect from autocomplete table
                 [[FunnelService instance] updateFunnel:model];
                 [[EmailService instance] applyingFunnel:model toMessages:[[MessageService instance] messagesAllTopMessages]];
 
-                if (oldModel.skipFlag == isSkipALl) {
+                if (oldModel.skipFlag == isSkipAll) {
                     NSLog(@"No changes had occured!!");
                 }
                 else {
-                    if (isSkipALl) {
+                    if (isSkipAll) {
                         [self incrementCounterAgainstTheMessage];
                     }
                     else {
@@ -611,7 +621,7 @@ bool didSelect;//didSelect from autocomplete table
             }else{
                 [[FunnelService instance] insertFunnel:model];
                 [[EmailService instance] applyingFunnel:model toMessages:[[MessageService instance] messagesAllTopMessages]];
-                if (isSkipALl) {
+                if (isSkipAll) {
 //                    [self incrementCounterAgainstTheMessage];
                 }
                 else {
@@ -682,27 +692,11 @@ CGRect temp;//this is necessary to reset view
     activeField = textField;
     if (textField.tag == 1) {
         NSLog(@"Entered Email ID");
-        NSLog(@"what is the view height: %f",self.view.bounds.size.height);
-        CGFloat height = (CGFloat)((dictionaryOfConversations.allKeys.count+1)*40);
-        NSLog(@"what is the height: %f",height);
+        CGFloat height = (CGFloat)(80+(dictionaryOfConversations.allKeys.count+1)*40);
+        NSLog(@"this is the height: %f",height);
         //temp = self.view.frame;
-        autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 260+((dictionaryOfConversations.allKeys.count+1)*40), self.view.bounds.size.width, 180)];
-        autocompleteTableView.delegate = self;
-        autocompleteTableView.dataSource = self;
-        autocompleteTableView.scrollEnabled = YES;
-        autocompleteTableView.hidden = YES;
-        autocompleteTableView.tag = 1;
-        [self.view addSubview:autocompleteTableView];
-        self.view.frame = CGRectMake(0, (-100), 480, self.view.bounds.size.height+40);
-//        CGPoint textFieldOrigin = [Tableview convertPoint:textField.bounds.origin fromView:textField];
-//        NSIndexPath *indexPath = [Tableview indexPathForRowAtPoint:textFieldOrigin];
-//        [Tableview beginUpdates];
-//        [Tableview scrollToRowAtIndexPath: indexPath
-//                             atScrollPosition:UITableViewScrollPositionTop
-//                                     animated:YES];
-//        [Tableview endUpdates];
+        //self.view.frame = CGRectMake(0, -height, 480, self.view.bounds.size.height+height);
     }
-
     return YES;
 }
 
@@ -716,11 +710,9 @@ CGRect temp;//this is necessary to reset view
         autocompleteTableView.hidden = YES;
         CGPoint textFieldOrigin = [Tableview convertPoint:textField.bounds.origin fromView:textField];
         NSIndexPath *indexPath = [Tableview indexPathForRowAtPoint:textFieldOrigin];
-        if(textField.text.length && !didSelect)
+        if(textField.text.length)
             [dictionaryOfConversations setObject:[textField.text lowercaseString] forKey:indexPath];
-        if(didSelect) didSelect = NO;
-        self.view.frame = CGRectMake(0, 0, 480, self.view.bounds.size.height);//-((dictionaryOfConversations.allKeys.count)*40)
-        NSLog(@"what is the view height: %f, after ending",self.view.bounds.size.height);
+        //self.view.frame = CGRectMake(0, 0, 480, self.view.bounds.size.height-(CGFloat)(80+(dictionaryOfConversations.allKeys.count+1)*40));
     }
     else if(textField.tag == 2){
         CGPoint textFieldOrigin = [Tableview convertPoint:textField.bounds.origin fromView:textField];
@@ -728,7 +720,7 @@ CGRect temp;//this is necessary to reset view
         if(textField.text.length)
             [dictionaryOfSubjects setObject:[textField.text lowercaseString] forKey:indexPath];
     }
-    [Tableview reloadData];
+    //[Tableview reloadData];
     return YES;
 }
 

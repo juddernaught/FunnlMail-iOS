@@ -13,9 +13,6 @@
 #import "SDWebImageDownloader.h"
 #import "UIImageView+WebCache.h"
 
-
-
-
 @interface MenuViewController ()
 
 @end
@@ -48,8 +45,9 @@
     [self.view addSubview:headerLine];
     
 //    [listView setBackgroundView:[[UIView alloc] init]];
-    listArray =[[NSMutableArray alloc] initWithObjects:@"Email Account",@"Inbox",@"Funnl Alerts", @"Sent Mail", @"Archive",@"Drafts", @"Trash", @"Help/FAQ",@"Send Feedback",nil];
-    imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"settingListIcon",@"alertListIcon",@"shareListIcon",@"sentListIcon", @"archiveListIcon",@"Edit_Button", @"trashListIcon",@"helpListIcon", nil];
+    listArray =[[NSMutableArray alloc] initWithObjects:@"Email Account",@"Edit Funnl Settings",@"Funnl Alerts", @"Share Funnls", @"Sent Mail", @"Archive", @"Trash", @"Help",nil];
+    imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"settingListIcon",@"alertListIcon",@"shareListIcon",@"sentListIcon", @"archiveListIcon", @"trashListIcon",@"helpListIcon", nil];
+    
 }
 
 
@@ -77,9 +75,7 @@
 		cell = [[MenuCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	}
-    NSLog(@"what is gmailUser: %@",[EmailService instance].imapSession.gmailUserDisplayName);
-    if (indexPath.row == 0) cell.menuLabel.text = [EmailService instance].imapSession.username;
-    else cell.menuLabel.text = [listArray objectAtIndex:indexPath.row];
+    cell.menuLabel.text = [listArray objectAtIndex:indexPath.row] ;
     cell.menuLabel.backgroundColor = CLEAR_COLOR;
     cell.menuLabel.textColor = WHITE_CLR;
     cell.menuLabel.highlightedTextColor = UIColorFromRGB(0x1B8EEE);
@@ -113,8 +109,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     //    [appDelegate.drawerController closeDrawerAnimated:YES completion:nil];
     AppDelegate *appDelegate = APPDELEGATE;
-    MenuCell *tempCell = (MenuCell *)[tableView cellForRowAtIndexPath:indexPath];
-    if ([tempCell.menuLabel.text isEqualToString:@"Sent Mail"]) {
+    if (indexPath.row == 4) {
         NSLog(@"sent mail requested");
          //The following line is required to get to the emailTableVC in mainVC
          // [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject;
@@ -123,40 +118,17 @@
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Sent Mails";
 
         //((EmailsTableViewController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject).isSearching = YES;
-         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:SENT];
+         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:SENT withFetchRange:MCORangeEmpty];
     }
-    else if ([tempCell.menuLabel.text isEqualToString:@"Archive"]){
+    else if (indexPath.row == 5){
         NSLog(@"archive mail requested");
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Archive";
-        AppDelegate *tempAppDelegate = APPDELEGATE;
-        [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:tempAppDelegate.currentFunnelDS.funnelId top:2000];
+        [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:ARCHIVE withFetchRange:MCORangeEmpty];
     }
-    else if ([tempCell.menuLabel.text isEqualToString:@"Trash"]){
+    else if (indexPath.row == 6){
         NSLog(@"trash mail requested");
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Trash";
-        [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:TRASH];
-    }
-    else if ([tempCell.menuLabel.text isEqualToString:@"Inbox"]) {
-        /*AppDelegate *tempAppDelegate = APPDELEGATE;
-        NSMutableArray * filterArray = [[NSMutableArray alloc] init];
-        filterArray = [[[FunnelService instance] allFunnels] mutableCopy];
-        tempAppDelegate.currentFunnelString = [[(FunnelModel *)filterArray[indexPath.row] funnelName] lowercaseString];
-        tempAppDelegate.currentFunnelDS = (FunnelModel *)filterArray[indexPath.row];*/
-    }
-    else if ([tempCell.menuLabel.text isEqualToString:@"Funnl Alerts"]){
-        NSLog(@"funl alert requested");
-        
-    }
-    else if ([tempCell.menuLabel.text isEqualToString:@"Help/FAQs"]){
-        NSLog(@" help/qafs requested");
-    }
-    else if ([tempCell.menuLabel.text isEqualToString:@"Send Feedback"]){
-        NSLog(@" Feedback requested");
-    }
-    else if ([tempCell.menuLabel.text isEqualToString:@"Drafts"]){
-        NSLog(@"Drafts mail requested");
-        [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Drafts";
-        [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:DRAFTS];
+        [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:TRASH withFetchRange:MCORangeEmpty];
     }
 
     [appDelegate.drawerController closeDrawerAnimated:YES completion:nil];

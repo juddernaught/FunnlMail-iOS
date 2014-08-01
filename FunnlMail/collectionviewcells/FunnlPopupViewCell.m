@@ -49,7 +49,7 @@
         filterTitleLabel.numberOfLines = 0;
         filterTitleLabel.lineBreakMode = NSLineBreakByWordWrapping;
         filterTitleLabel.textAlignment = NSTextAlignmentCenter;
-        filterTitleLabel.text = @"Primary";
+        filterTitleLabel.text = ALL_FUNNL;
         //filterTitleLabel.backgroundColor = [UIColor orangeColor];
         [self addSubview:filterTitleLabel];
         
@@ -59,7 +59,7 @@
             make.width.equalTo(coloredBarView.mas_width).with.offset(0);
         }];
         
-        mailImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Mail.png"]];
+        mailImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mail.png"]];
         mailImageView.frame = CGRectMake(0, 0, 29, 23);
         [self addSubview:mailImageView];
         
@@ -105,7 +105,7 @@
         dateOfLastMessageLabel.hidden = YES;
         
         mailImageView.contentMode = UIViewContentModeCenter;
-        mailImageView.image = [UIImage imageNamed:@"Add.png"];
+        mailImageView.image = [UIImage imageNamed:@"addIcon.png"];
         [mailImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(filterTitleLabel.mas_bottom).with.offset(15);
             make.left.equalTo(self.mas_centerX).with.offset(-(65/2));

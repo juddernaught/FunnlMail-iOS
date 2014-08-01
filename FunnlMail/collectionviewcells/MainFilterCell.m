@@ -47,7 +47,7 @@
         filterTitleLabel = [[UILabel alloc] init];
         [filterTitleLabel setFont:[UIFont systemFontOfSize:18]];
         filterTitleLabel.textAlignment = NSTextAlignmentCenter;
-        filterTitleLabel.text = @"Primary";
+        filterTitleLabel.text = ALL_FUNNL;
         //filterTitleLabel.backgroundColor = [UIColor orangeColor];
         [self addSubview:filterTitleLabel];
       
@@ -183,7 +183,7 @@
     typeLabel.hidden = YES;
     dateOfLastMessageLabel.hidden = YES;
     mailImageView.contentMode = UIViewContentModeCenter;
-    mailImageView.image = [UIImage imageNamed:@"Add.png"];
+    mailImageView.image = [UIImage imageNamed:@"addIcon.png"];
     [mailImageView mas_makeConstraints:^(MASConstraintMaker *make) {
       make.top.equalTo(filterTitleLabel.mas_bottom).with.offset(-10);
       make.left.equalTo(self.mas_centerX).with.offset(-(65/2));
@@ -198,7 +198,7 @@
     notificationButton.hidden = NO;
   }
   
-  if([filterTitleLabel.text isEqualToString:@"All"]){
+  if([[filterTitleLabel.text lowercaseString] isEqualToString:[ALL_FUNNL lowercaseString]] || [[filterTitleLabel.text lowercaseString] isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]){
     settingsButton.hidden = YES;
     notificationButton.hidden = NO;
   }
