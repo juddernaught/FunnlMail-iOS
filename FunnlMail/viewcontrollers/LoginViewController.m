@@ -18,6 +18,7 @@
 #import "AppDelegate.h"
 #import "EmailServersService.h"
 #import <Mixpanel/Mixpanel.h>
+#import "PageContentVC.h"
 
 #define accessTokenEndpoint @"https://accounts.google.com/o/oauth2/token"
 
@@ -30,6 +31,8 @@
 static NSString *const kKeychainItemName = @"OAuth2 Sample: Gmail";
 NSString *kMyClientID = @"655269106649-rkom4nvj3m9ofdpg6sk53pi65mpivv7d.apps.googleusercontent.com";     // pre-assigned by service
 NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
+NSArray *images;
+UIButton *loginButton;
 //NSString *kMyClientID = @"994627364215-ctjmrhiul95ts0qrkc38sap3mo3go3ko.apps.googleusercontent.com";     // pre-assigned by service
 //NSString *kMyClientSecret = @"FNZ-x95gkwWqQT7HdJgeqJVW";
 @synthesize blockerView,mainViewController;
@@ -80,10 +83,38 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
     else {
         self.view.backgroundColor = [UIColor colorWithHexString:@"F6F6F6"];
         
-        UIImageView *funnlMailIntroView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"splashScreen"]];
-        funnlMailIntroView.frame = CGRectMake(-8, 40, WIDTH, HEIGHT-120);
-        funnlMailIntroView.userInteractionEnabled = YES;
-        [self.view addSubview:funnlMailIntroView];
+        //adding demo page
+        
+        self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
+        
+        
+        
+        self.pageController.dataSource = self;
+        
+        images = @[@"WHITEsliders1nobar.png", @"WHITEsliders2.png", @"WHITEsliders3.png", @"WHITEsliders4.png",@"WHITEsliders5.png"];
+        
+        PageContentVC *initialViewController = [self viewControllerAtIndex:0];
+        
+        
+        
+        NSArray *viewControllers = [NSArray arrayWithObject:initialViewController];
+        
+        
+        
+        self.pageController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 40);
+        
+        [self.pageController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+        
+        
+        
+        [self addChildViewController:self.pageController];
+        
+        [[self view] addSubview:[self.pageController view]];
+        
+        [self.pageController didMoveToParentViewController:self];
+        
+        //
+        
         
 //        [funnlMailIntroView mas_makeConstraints:^(MASConstraintMaker *make) {
 //            make.top.equalTo(self.view.mas_top).with.offset(20);
@@ -93,10 +124,11 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
 //        }];
         
         UIImage *loginImage = [UIImage imageNamed:@"getStarted"];
-        UIButton *loginButton = [[UIButton alloc] init];
+        loginButton = [[UIButton alloc] init];
         [loginButton setImage:loginImage forState:UIControlStateNormal];
-        loginButton.frame = CGRectMake(0, HEIGHT-60, 320, 40);
+        loginButton.frame = CGRectMake(0, HEIGHT-70, 320, 40);
         [loginButton addTarget:self action:@selector(loginButtonSelected)forControlEvents:UIControlEventTouchUpInside];
+        loginButton.hidden = YES;
         [self.view addSubview:loginButton];
         
 //        [loginButton mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -400,4 +432,96 @@ NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
 }
 -(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
 }
+
+- (PageContentVC *)viewControllerAtIndex:(NSUInteger)index {
+    
+    PageContentVC *childViewController = [[PageContentVC alloc] initWithImage:[images objectAtIndex:index]];
+    childViewController.index = index;
+    
+    return childViewController;
+    
+}
+
+
+- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController {
+    
+    
+    
+    NSUInteger index = [(PageContentVC *)viewController index];
+    
+    
+    
+    if (index == 0) {
+        
+        return nil;
+        
+    }
+    
+    loginButton.hidden = YES;
+    
+    // Decrease the index by 1 to return
+    
+    index--;
+    
+    
+    
+    return [self viewControllerAtIndex:index];
+    
+    
+    
+}
+
+
+
+- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
+    
+    
+    
+    NSUInteger index = [(PageContentVC *)viewController index];
+    
+    
+    
+    index++;
+    
+    
+    
+    if (index == images.count) {
+        
+        loginButton.hidden = NO;
+        
+        return nil;
+        
+    }
+    
+    else loginButton.hidden = YES;
+    
+    
+    
+    return [self viewControllerAtIndex:index];
+    
+    
+    
+}
+
+
+
+- (NSInteger)presentationCountForPageViewController:(UIPageViewController *)pageViewController {
+    
+    // The number of items reflected in the page indicator.
+    
+    return images.count;
+    
+}
+
+
+
+- (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController {
+    
+    // The selected item reflected in the page indicator.
+    
+    return 0;
+    
+}
+
+
 @end

@@ -57,6 +57,11 @@
     self.window.rootViewController = nav;
     self.startDate = [NSDate date];
 
+    UIPageControl *pageControl = [UIPageControl appearance];
+    pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
+    pageControl.currentPageIndicatorTintColor = [UIColor blackColor];
+    pageControl.backgroundColor = [UIColor whiteColor];
+    
     // Override point for customization after application launch.
     return YES;
 }
