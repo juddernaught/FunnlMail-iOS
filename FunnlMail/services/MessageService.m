@@ -168,6 +168,28 @@ static MessageService *instance;
     return previewBody;
 }
 
+-(void) updateMessageMetaInfo:(MessageModel *)messageModel{
+    __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+    
+    __block BOOL success = NO;
+    
+    NSNumber *dateTimeInterval = [NSNumber numberWithDouble:[messageModel.date timeIntervalSince1970]];
+    paramDict[@"messageID"] = messageModel.messageID;
+    paramDict[@"messageJSON"] = messageModel.messageJSON;
+    paramDict[@"read"] = [NSNumber numberWithBool:messageModel.read];
+    paramDict[@"date"] = dateTimeInterval;
+    if (messageModel.funnelJson) {
+        paramDict[@"funnelJson"] = messageModel.funnelJson;
+    }
+    else
+        paramDict[@"funnelJson"] = @"";
+    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+        success = [db executeUpdate:@"UPDATE messages SET messageJSON=:messageJSON,read=:read,date=:date,funnelJson=:funnelJson WHERE messageID=:messageID" withParameterDictionary:paramDict];
+        
+    }];
+
+}
+    
 -(void) updateMessage:(MessageModel *)messageModel{
   __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
   
