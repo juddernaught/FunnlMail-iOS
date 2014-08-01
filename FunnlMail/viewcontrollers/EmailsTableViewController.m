@@ -369,38 +369,52 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 [cell setSwipeGestureWithView:archiveView color:yellowColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
                     [[Mixpanel sharedInstance] track:@"Email Archived"];
                     NSLog(@"Did swipe \"Archive\" cell");
+               
+                    NSIndexPath *deleteIndexPath = [tableView indexPathForCell:cell];
+                    [tableView beginUpdates];
+                    [[EmailService instance].filterMessagePreviews removeObjectForKey:uidKey];
+                    [[EmailService instance].filterMessages removeObjectAtIndex:deleteIndexPath.row];
+                    [[EmailService instance].messages removeObjectIdenticalTo:message];
+                    NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
+                    [[MessageService instance] deleteMessage:uidKey];
+                    [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:deleteIndexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
+                    [tableView endUpdates];
+                    
+                    [cell swipeToOriginWithCompletion:nil];
+                    
                     MCOIMAPOperation *msgOperation = [[EmailService instance].imapSession storeFlagsOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:message.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagDeleted];
                     [msgOperation start:^(NSError * error)
                      {
-                         [tableView beginUpdates];
-                         [[EmailService instance].filterMessagePreviews removeObjectForKey:uidKey];
-                         [[EmailService instance].filterMessages removeObjectAtIndex:indexPath.row];
-                         [[EmailService instance].messages removeObjectIdenticalTo:message];
-                         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
-                         [tableView endUpdates];
                          NSLog(@"selected message flags %u UID is %u",message.flags,message.uid );
                      }];
-                    [cell swipeToOriginWithCompletion:nil];
                 }];
                 
                 [cell setSwipeGestureWithView:trashView color:redColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState2 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
                     [[Mixpanel sharedInstance] track:@"Email Trashed"];
                     NSLog(@"Did swipe \"Trash\" cell");
+                    NSIndexPath *deleteIndexPath = [tableView indexPathForCell:cell];
+                    [tableView beginUpdates];
+                    [[EmailService instance].filterMessagePreviews removeObjectForKey:uidKey];
+                    [[EmailService instance].filterMessages removeObjectAtIndex:deleteIndexPath.row];
+                    [[EmailService instance].messages removeObjectIdenticalTo:message];
                     NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
-                    [[EmailService instance].imapSession copyMessagesOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:message.uid] destFolder:TRASH];
-
-                    MCOIMAPOperation *msgOperation = [[EmailService instance].imapSession storeFlagsOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:message.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagDeleted];
-                    [msgOperation start:^(NSError * error)
-                     {
-                         [tableView beginUpdates];
-                         [[EmailService instance].filterMessagePreviews removeObjectForKey:uidKey];
-                         [[EmailService instance].filterMessages removeObjectAtIndex:indexPath.row];
-                         [[EmailService instance].messages removeObjectIdenticalTo:message];
-                         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
-                         [tableView endUpdates];
-                         [[EmailService instance].imapSession expungeOperation:self.emailFolder];
-                         NSLog(@"selected message flags %u UID is %u",message.flags,message.uid );
-                     }];
+                    [[MessageService instance] deleteMessage:uidKey];
+                    [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:deleteIndexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
+                    [tableView endUpdates];
+                    
+//                    [[EmailService instance].imapSession copyMessagesOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:message.uid] destFolder:TRASH];
+                    MCOIMAPCopyMessagesOperation *opt = [[EmailService instance].imapSession copyMessagesOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:message.uid] destFolder:TRASH];
+                    [opt start:^(NSError *error, NSDictionary *uidMapping) {
+                        NSLog(@"copied to folder with UID %@", uidMapping);
+                    }];
+                    
+//                    MCOIMAPOperation *msgOperation = [[EmailService instance].imapSession storeFlagsOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:message.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagDeleted];
+//                    [msgOperation start:^(NSError * error)
+//                     {
+//                  
+//                         [[EmailService instance].imapSession expungeOperation:TRASH];
+//                         NSLog(@"selected message flags %u UID is %u",message.flags,message.uid );
+//                     }];
                     [cell swipeToOriginWithCompletion:nil];
                 }];
                 
