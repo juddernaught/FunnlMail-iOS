@@ -50,6 +50,7 @@ NSString *msgBody;
 	[tokenFieldView.tokenField addTarget:self action:@selector(tokenFieldFrameDidChange:) forControlEvents:TITokenFieldControlEventFrameDidChange];
 	[tokenFieldView.tokenField setTokenizingCharacters:[NSCharacterSet characterSetWithCharactersInString:@",;"]]; // Default is a comma
     
+    
     //	UIButton * addButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
     //	[addButton addTarget:self action:@selector(showContactsPicker:) forControlEvents:UIControlEventTouchUpInside];
     //	[tokenFieldView.tokenField setRightView:addButton];

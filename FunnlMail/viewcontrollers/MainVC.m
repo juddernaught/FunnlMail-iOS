@@ -118,7 +118,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     UIButton *menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [menuButton addTarget:self action:@selector(menuButtonSelected) forControlEvents:UIControlEventTouchUpInside];
     menuButton.frame = CGRectMake(0, 0, 33, 28);
-    [menuButton setBackgroundImage:[UIImage imageNamed:@"MenuIcon.png"] forState:UIControlStateNormal];
+    [menuButton setBackgroundImage:[UIImage imageNamed:@"menuIcon.png"] forState:UIControlStateNormal];
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
     self.navigationItem.leftBarButtonItem = leftItem;
     
@@ -133,17 +133,17 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
   
     /*[mailButton addTarget:self action:@selector(mailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
     mailButton.frame = CGRectMake(0, 0, 33, 28);
-    [mailButton setBackgroundImage:[UIImage imageNamed:@"Mail.png"] forState:UIControlStateNormal];
+    [mailButton setBackgroundImage:[UIImage imageNamed:@"mail.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:mailButton];*/
   
     [filterButton addTarget:self action:@selector(filterButtonSelected) forControlEvents:UIControlEventTouchUpInside];
     filterButton.frame = CGRectMake(15, 0, 32, 29);
-    [filterButton setImage:[UIImage imageNamed:@"FunnlIcon.png"] forState:UIControlStateNormal];
+    [filterButton setImage:[UIImage imageNamed:@"funnlIcon.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:filterButton];
     
     [composeEmailButton addTarget:self action:@selector(composeEmailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
     composeEmailButton.frame = CGRectMake(65, -5, 32, 32);
-    [composeEmailButton setImage:[UIImage imageNamed:@"ComposeIcon.png"] forState:UIControlStateNormal];
+    [composeEmailButton setImage:[UIImage imageNamed:@"composeIcon.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:composeEmailButton];
     
     if(emailsTableViewController==nil){
@@ -242,8 +242,11 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     mainView.hidden = YES;
     emailsTableViewController.filterModel = currentFilterModel;
     //fetching from database
-    if ([filterModel.funnelId isEqualToString:@"0"]) {
+    if ([filterModel.funnelName isEqualToString:ALL_FUNNL]) {
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
+    }
+    else if ([filterModel.funnelName isEqualToString:ALL_OTHER_FUNNL]) {
+        [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveOtherMessagesThanPrimary];
     }
     else
     {

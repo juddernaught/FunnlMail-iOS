@@ -28,5 +28,6 @@
 @property (nonatomic, strong) MainVC *mainViewController;
 // A flag indicating whether an access token refresh is on the way or not.
 @property (nonatomic) BOOL isRefreshing;
--(void)getPrimaryMessages:(NSString*)emailStr nextPageToken:(NSString*)nextPage;
+@property (strong, nonatomic) UIPageViewController *pageController;
+-(void)getPrimaryMessages:(NSString*)emailStr nextPageToken:(NSString*)nextPage numberOfMaxResult:(NSInteger)maxResult;
 @end
