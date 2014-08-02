@@ -179,41 +179,72 @@ NSMutableArray *emailArr,*searchArray;
 {
     if(tableView == autocompleteTableView){
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCell" forIndexPath:indexPath];
-        
         cell.textLabel.text = [searchArray objectAtIndex:indexPath.row];
         return cell;
     } else {
-//        if (indexPath.section == 4) {
-//            UITableViewCell *cell = [[UITableViewCell alloc] init];
-//            cell.textLabel.text = @"Enable Notifications";
-//            enableNotificationsSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(300-50, 8, 50, 0)];
-//            if (oldModel.skipFlag) {
-//                [enableNotificationsSwitch setOn:YES];
-//            }
-//            else {
-//                [enableNotificationsSwitch setOn:NO];
-//            }
-//            [enableNotificationsSwitch addTarget:self action:@selector(enableNotifications:) forControlEvents:UIControlEventValueChanged];
-//            [cell addSubview:enableNotificationsSwitch];
-//            return cell;
-//        }
-//        if (indexPath.section == 3) {
-//            UITableViewCell *cell = [[UITableViewCell alloc] init];
-//            cell.textLabel.text = [NSString stringWithFormat:@"Skip %@",ALL_FUNNL];
-//            skipAllSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(300-50, 8, 50, 0)];
-//            if (oldModel.skipFlag) {
-//                [skipAllSwitch setOn:YES];
-//            }
-//            else {
-//                [skipAllSwitch setOn:NO];
-//            }
-//            [skipAllSwitch addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
-//            [cell addSubview:skipAllSwitch];
-//            return cell;
-//        }
         TextFieldCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TextFieldCell" forIndexPath:indexPath];
-        
-        if(indexPath.section == 0)
+        [cell setIsSwitchVisibleMode:NO];
+        cell.textField.delegate = self;
+        cell.textField.tag = indexPath.section;
+        switch (indexPath.section) {
+            case 0:
+            {
+                [cell.addButton setHidden:YES];
+                cell.textField.placeholder = @"Enter name";
+            }
+                break;
+            case 1:
+            {
+                cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+                cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+                [cell.addButton addTarget:self action:@selector(addButtonPressedForConversation:) forControlEvents:UIControlEventTouchUpInside];
+                if(indexPath.row != dictionaryOfConversations.allKeys.count && dictionaryOfConversations.allKeys.count > 0){
+                    cell.textField.text = [dictionaryOfConversations objectForKey:indexPath];
+                    [cell.addButton setTransform:CGAffineTransformMakeRotation(3.142/4)];
+                    [cell.addButton setSelected:YES];
+                } else {
+                    cell.textField.placeholder = @"Enter Email ID";
+                    [cell.addButton setTransform:CGAffineTransformIdentity];
+                    [cell.addButton setSelected:NO];
+                }
+            }
+                break;
+            case 2:
+            {
+                cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+                cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+                [cell.addButton addTarget:self action:@selector(addButtonPressedForSubject:) forControlEvents:UIControlEventTouchUpInside];
+                if(indexPath.row != dictionaryOfSubjects.allKeys.count && dictionaryOfSubjects.allKeys.count > 0){
+                    cell.textField.text = [dictionaryOfSubjects objectForKey:indexPath];
+                    [cell.addButton setTransform:CGAffineTransformMakeRotation(3.142/2)];
+                    [cell.addButton setSelected:YES];
+                } else {
+                    cell.textField.placeholder = @"Enter Subject";
+                    [cell.addButton setTransform:CGAffineTransformIdentity];
+                    [cell.addButton setSelected:NO];
+                }
+            }
+                break;
+            case 3:
+            {
+                [cell setIsSwitchVisibleMode:YES];
+                cell.textLabel.text = [NSString stringWithFormat:@"Skip %@",ALL_FUNNL];
+                [cell.switchButton setOn:oldModel.skipFlag ? YES : NO];
+                [cell.switchButton addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
+            }
+                break;
+            case 4:
+            {
+                [cell setIsSwitchVisibleMode:YES];
+                cell.textLabel.text = [NSString stringWithFormat:@"Enable Notifications"];
+                [cell.switchButton setOn:oldModel.notificationsFlag ? YES : NO];
+            }
+                break;
+                
+            default:
+                break;
+        }
+/*        if(indexPath.section == 0)
         {
             cell.textField.frame = CGRectMake(10, 2,250, 40);
             cell.textField.placeholder = @"Enter name";
@@ -221,6 +252,7 @@ NSMutableArray *emailArr,*searchArray;
             cell.textField.delegate = self;
             cell.textField.tag = indexPath.section;
             cell.tag = cell.contentView.tag = indexPath.row;
+            cell.addButton.hidden = YES;
         }
         else if (indexPath.section == 1)
         {
@@ -293,7 +325,7 @@ NSMutableArray *emailArr,*searchArray;
             cell.textLabel.text = [NSString stringWithFormat:@"Enable Notifications"];
             [cell.switchButton setOn:oldModel.notificationsFlag ? YES : NO];
             [cell.switchButton addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
-        }
+        } */
         [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
         return cell;
     }
@@ -423,6 +455,7 @@ NSMutableArray *emailArr,*searchArray;
 }
 
 #pragma mark -  Add Subject/Conversation Button Methods
+
 
 -(void)addButtonPressedForConversation:(UIButton *)sender
 {
