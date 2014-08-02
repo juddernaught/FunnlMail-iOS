@@ -126,7 +126,7 @@ UIButton *loginButton;
         UIImage *loginImage = [UIImage imageNamed:@"getStarted"];
         loginButton = [[UIButton alloc] init];
         [loginButton setImage:loginImage forState:UIControlStateNormal];
-        loginButton.frame = CGRectMake(0, HEIGHT-70, 320, 40);
+        loginButton.frame = CGRectMake(0, HEIGHT-50, 320, 40);
         [loginButton addTarget:self action:@selector(loginButtonSelected)forControlEvents:UIControlEventTouchUpInside];
         loginButton.hidden = YES;
         [self.view addSubview:loginButton];
