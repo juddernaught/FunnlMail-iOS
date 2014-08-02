@@ -87,6 +87,8 @@
     [self.aolButton setImage:[UIImage imageNamed:@"button-provider-aol.png"] forState:UIControlStateNormal];
     [self.aolButton addTarget:self action:@selector(providerButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.aolButton];
+    
+    [self providerButtonPressed:self.gmailButton];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -141,7 +143,7 @@
         UIWebView *loginWebView = [[UIWebView alloc] initWithFrame:self.view.frame];
         loginWebView.delegate = self;
         [webViewController.view addSubview:loginWebView];
-        [self.navigationController pushViewController:webViewController animated:YES];
+        [self.navigationController pushViewController:webViewController animated:NO];
         
         [loginWebView loadRequest:[NSURLRequest requestWithURL:authRedirectURL]];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

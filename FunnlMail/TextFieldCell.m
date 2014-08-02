@@ -14,6 +14,8 @@
 -(void) setIsSwitchVisibleMode:(BOOL)isSwitchVisibleMode
 {
     textField.hidden = isSwitchVisibleMode;
+    addButton.hidden = isSwitchVisibleMode;
+    switchButton.hidden = !isSwitchVisibleMode;
     [self setAccessoryView:textField.hidden ? switchButton : addButton];
 }
 
@@ -30,7 +32,8 @@
         // Initialization code
         textField = [[UITextField alloc] init];
         switchButton = [[UISwitch alloc] init];
-        addButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
+        addButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        addButton.frame = CGRectMake(0, 0, 25.f, 25.f);
         [self addSubview:textField];
     }
     return self;

@@ -122,10 +122,13 @@
 {
     // Store the deviceToken in the current installation and save it to Parse.
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    if (![currentInstallation channels]) {
-        [currentInstallation setChannels:@[@"testers"]];
+    NSString *loggedInEmail = [EmailService instance].userEmailID;
+    if ([loggedInEmail length]) {
+        if (![currentInstallation channels]) {
+            [currentInstallation setChannels:@[loggedInEmail]];
+        }
+        [currentInstallation addUniqueObject:@"aUser" forKey:loggedInEmail];
     }
-    [currentInstallation addUniqueObject:@"aUser" forKey:@"testers"];
     [currentInstallation setDeviceTokenFromData:deviceToken];
     [currentInstallation saveInBackground];
 }

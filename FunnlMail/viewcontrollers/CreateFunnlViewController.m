@@ -101,6 +101,7 @@ NSMutableArray *emailArr,*searchArray;
     [self.view addSubview:tempAppDelegate.progressHUD];
     [self.view bringSubviewToFront:tempAppDelegate.progressHUD];
     isSkipAll = oldModel.skipFlag;
+    areNotificationsEnabled = oldModel.notificationsFlag;
     randomColors = GRADIENT_ARRAY;
     self.title = @"Create Funnl";
     [self.view setBackgroundColor:[UIColor whiteColor]];
@@ -139,10 +140,10 @@ NSMutableArray *emailArr,*searchArray;
             return 1;
         }
         else if(section == 1){
-            return dictionaryOfConversations.allKeys.count+1;
+            return dictionaryOfConversations.allKeys.count + 1;
         }
         else if(section == 2){
-            return dictionaryOfSubjects.allKeys.count+1;
+            return dictionaryOfSubjects.allKeys.count + 1;
         }
         else {
             return 1;
@@ -152,7 +153,8 @@ NSMutableArray *emailArr,*searchArray;
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if(tableView.tag == 1) return 1;
+    if(tableView.tag == 1)
+        return 1;
     return 5;
 }
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;  {
@@ -183,14 +185,26 @@ NSMutableArray *emailArr,*searchArray;
         return cell;
     } else {
         TextFieldCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TextFieldCell" forIndexPath:indexPath];
+        //Resetting the reused Cell first and then updating it with new data below that
         [cell setIsSwitchVisibleMode:NO];
         cell.textField.delegate = self;
         cell.textField.tag = indexPath.section;
+        cell.textField.text = @"";
+        cell.textField.placeholder = @"";
+        cell.textLabel.text = @"";
+        cell.switchButton.on = NO;
+        [cell.switchButton addTarget:nil action:nil forControlEvents:nil];
+        [cell.addButton setImage:[UIImage imageNamed:@"addIcon.png"]
+                        forState:UIControlStateNormal];
+        cell.addButton.tag = indexPath.row;
+        //resetting cell finshes, set new data from here
+        
         switch (indexPath.section) {
             case 0:
             {
                 [cell.addButton setHidden:YES];
                 cell.textField.placeholder = @"Enter name";
+                [cell.textField setText:funnlName];
             }
                 break;
             case 1:
@@ -198,14 +212,15 @@ NSMutableArray *emailArr,*searchArray;
                 cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
                 [cell.addButton addTarget:self action:@selector(addButtonPressedForConversation:) forControlEvents:UIControlEventTouchUpInside];
+                
+                cell.textField.placeholder = @"Enter Email ID";
+                
                 if(indexPath.row != dictionaryOfConversations.allKeys.count && dictionaryOfConversations.allKeys.count > 0){
                     cell.textField.text = [dictionaryOfConversations objectForKey:indexPath];
-                    [cell.addButton setTransform:CGAffineTransformMakeRotation(3.142/4)];
-                    [cell.addButton setSelected:YES];
-                } else {
-                    cell.textField.placeholder = @"Enter Email ID";
-                    [cell.addButton setTransform:CGAffineTransformIdentity];
-                    [cell.addButton setSelected:NO];
+                    [cell.addButton setImage:[UIImage imageNamed:@"close.png"]
+                                    forState:UIControlStateNormal];
+                    [cell.addButton addTarget:self
+                                       action:@selector(cancelButtonPressedForConversation:) forControlEvents:UIControlEventTouchUpInside];
                 }
             }
                 break;
@@ -214,14 +229,15 @@ NSMutableArray *emailArr,*searchArray;
                 cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
                 [cell.addButton addTarget:self action:@selector(addButtonPressedForSubject:) forControlEvents:UIControlEventTouchUpInside];
+                
+                cell.textField.placeholder = @"Enter Subject";
+                
                 if(indexPath.row != dictionaryOfSubjects.allKeys.count && dictionaryOfSubjects.allKeys.count > 0){
                     cell.textField.text = [dictionaryOfSubjects objectForKey:indexPath];
-                    [cell.addButton setTransform:CGAffineTransformMakeRotation(3.142/2)];
-                    [cell.addButton setSelected:YES];
-                } else {
-                    cell.textField.placeholder = @"Enter Subject";
-                    [cell.addButton setTransform:CGAffineTransformIdentity];
-                    [cell.addButton setSelected:NO];
+                    [cell.addButton setImage:[UIImage imageNamed:@"close.png"]
+                                    forState:UIControlStateNormal];
+                    [cell.addButton addTarget:self
+                                       action:@selector(cancelButtonPressedForSubject:) forControlEvents:UIControlEventTouchUpInside];
                 }
             }
                 break;
@@ -229,7 +245,7 @@ NSMutableArray *emailArr,*searchArray;
             {
                 [cell setIsSwitchVisibleMode:YES];
                 cell.textLabel.text = [NSString stringWithFormat:@"Skip %@",ALL_FUNNL];
-                [cell.switchButton setOn:oldModel.skipFlag ? YES : NO];
+                [cell.switchButton setOn:isSkipAll];
                 [cell.switchButton addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
             }
                 break;
@@ -237,7 +253,8 @@ NSMutableArray *emailArr,*searchArray;
             {
                 [cell setIsSwitchVisibleMode:YES];
                 cell.textLabel.text = [NSString stringWithFormat:@"Enable Notifications"];
-                [cell.switchButton setOn:oldModel.notificationsFlag ? YES : NO];
+                [cell.switchButton setOn:areNotificationsEnabled];
+                [cell.switchButton addTarget:self action:@selector(changeNotificationSwitch:) forControlEvents:UIControlEventValueChanged];
             }
                 break;
                 
@@ -428,6 +445,19 @@ NSMutableArray *emailArr,*searchArray;
 }
 
 
+-(void) changeNotificationSwitch:(UISwitch *)sender
+{
+    areNotificationsEnabled = sender.on;
+    if (areNotificationsEnabled) {
+        if (![[CIOExampleAPIClient sharedClient] isAuthorized]) {
+            CIOAuthViewController *authViewController = [[CIOAuthViewController alloc] initWithAPIClient:[CIOExampleAPIClient sharedClient] allowCancel:NO];
+            authViewController.delegate = self;
+            UINavigationController *authNavController = [[UINavigationController alloc] initWithRootViewController:authViewController];
+            [self presentViewController:authNavController animated:YES completion:nil];
+        }
+    }
+}
+
 - (void)changeSwitch:(UISwitch*)sender {
     if([sender isOn]){
         NSLog(@"Switch is ON");
@@ -484,7 +514,6 @@ NSMutableArray *emailArr,*searchArray;
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:b.tag inSection:1];
     
     [dictionaryOfConversations removeObjectForKey:indexPath];
-    [Tableview deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
     NSSortDescriptor *rowDescriptor = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
     NSArray *sortedRows = [dictionaryOfConversations.allKeys sortedArrayUsingDescriptors:@[rowDescriptor]];
     //NSLog(@"%@",sortedRows.description);
@@ -502,9 +531,7 @@ NSMutableArray *emailArr,*searchArray;
 -(void)cancelButtonPressedForSubject:(id)sender{
     UIButton *b = (UIButton*)sender;
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:b.tag inSection:2];
-    
     [dictionaryOfSubjects removeObjectForKey:indexPath];
-    [Tableview deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
     NSSortDescriptor *rowDescriptor = [[NSSortDescriptor alloc] initWithKey:@"row" ascending:YES];
     NSArray *sortedRows = [dictionaryOfSubjects.allKeys sortedArrayUsingDescriptors:@[rowDescriptor]];
     //NSLog(@"%@",sortedRows.description);
@@ -515,6 +542,7 @@ NSMutableArray *emailArr,*searchArray;
         count++;
     }
     dictionaryOfSubjects = [NSMutableDictionary dictionaryWithDictionary:tmpDictionary];
+    [Tableview reloadData];
     tmpDictionary = nil;
 }
 
@@ -595,28 +623,27 @@ NSMutableArray *emailArr,*searchArray;
 
 -(void)saveButtonPressed
 {
-    if (![[CIOExampleAPIClient sharedClient] isAuthorized]) {
-        
-        CIOAuthViewController *authViewController = [[CIOAuthViewController alloc] initWithAPIClient:[CIOExampleAPIClient sharedClient] allowCancel:NO];
-        authViewController.delegate = self;
-        UINavigationController *authNavController = [[UINavigationController alloc] initWithRootViewController:authViewController];
-        [self presentViewController:authNavController animated:YES completion:nil];
-        
-        return;
-    } else {
-        NSLog(@"CIOClient is Authorized");
-        [[CIOExampleAPIClient sharedClient] createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:@{@"filter_from": @"paragdulam@hotmail.com",@"sync_period":@"0"} success:^(NSDictionary *responseDict) {
-            NSLog(@"created WeHook responseDict %@",responseDict);
-            [[CIOExampleAPIClient sharedClient] getWebhooksWithParams:nil success:^(NSArray *responseArray) {
-                NSLog(@"Webhooks GET Req %@",responseArray);
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                NSLog(@"GET WEBHOOKS ERROR %@",error);
-            }];
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"CREATE WEBHOOKS ERROR %@",error);
-        }];
-        
-    }
+//    if (![[CIOExampleAPIClient sharedClient] isAuthorized]) {
+//        
+//        CIOAuthViewController *authViewController = [[CIOAuthViewController alloc] initWithAPIClient:[CIOExampleAPIClient sharedClient] allowCancel:NO];
+//        authViewController.delegate = self;
+//        UINavigationController *authNavController = [[UINavigationController alloc] initWithRootViewController:authViewController];
+//        [self presentViewController:authNavController animated:YES completion:nil];
+//        
+//        return;
+//    } else {
+//        NSLog(@"CIOClient is Authorized");
+//        [[CIOExampleAPIClient sharedClient] createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:@{@"filter_from": @"paragdulam@hotmail.com",@"sync_period":@"0"} success:^(NSDictionary *responseDict) {
+//            NSLog(@"created WeHook responseDict %@",responseDict);
+//            [[CIOExampleAPIClient sharedClient] getWebhooksWithParams:nil success:^(NSArray *responseArray) {
+//                NSLog(@"Webhooks GET Req %@",responseArray);
+//            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//                NSLog(@"GET WEBHOOKS ERROR %@",error);
+//            }];
+//        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//            NSLog(@"CREATE WEBHOOKS ERROR %@",error);
+//        }];
+//    }
     [tempAppDelegate.progressHUD setHidden:NO];
     [self performSelectorInBackground:@selector(tempFunction) withObject:nil];
     NSLog(@"Save Butoon pressed");
@@ -643,89 +670,104 @@ NSMutableArray *emailArr,*searchArray;
         }
 
         if(dictionaryOfConversations.allKeys.count){
+//            FunnelModel *modelForFunnl = [[FunnelModel alloc] init];
+//            modelForFunnl.funnelName = funnlName;
+//            NSArray *tempArrayForSender = [dictionaryOfConversations allValues];
+//            NSMutableString *senderEmailIds = [[NSMutableString alloc] init];
+//            for (NSString *tempString in tempArrayForSender) {
+//                [senderEmailIds appendString:tempString];
+//                [senderEmailIds appendString:@","];
+//            }
+//            if (senderEmailIds.length > 0) {
+//                senderEmailIds = (NSMutableString*)[senderEmailIds substringWithRange:NSMakeRange(0, senderEmailIds.length-1)];
+//                modelForFunnl.emailAddresses = senderEmailIds;
+//            }
+//            else
+//                modelForFunnl.emailAddresses = @"";
+//            senderEmailIds = nil;
+//            tempArrayForSender = nil;
+//            
+//            tempArrayForSender = [dictionaryOfSubjects allValues];
+//            senderEmailIds = [[NSMutableString alloc] init];
+//            for (NSString *tempString in tempArrayForSender) {
+//                [senderEmailIds appendString:tempString];
+//                [senderEmailIds appendString:@","];
+//            }
+//            if (senderEmailIds.length > 0) {
+//                senderEmailIds = (NSMutableString*)[senderEmailIds substringWithRange:NSMakeRange(0, senderEmailIds.length-1)];
+//                modelForFunnl.phrases = senderEmailIds;
+//            }
+//            else
+//                modelForFunnl.phrases = @"";
+//            senderEmailIds = nil;
+//            tempArrayForSender = nil;
             
-            NSInteger gradientInt = arc4random_uniform((uint32_t)randomColors.count);
-            UIColor *color = [UIColor colorWithHexString:[randomColors objectAtIndex:gradientInt]];
-            if(color == nil){
-                color = [UIColor colorWithHexString:@"#2EB82E"];
-            }
-            FunnelModel *model;
-            model = [[FunnelModel alloc]initWithBarColor:color filterTitle:funnlName newMessageCount:0 dateOfLastMessage:[NSDate new] sendersArray:(NSMutableArray*)[dictionaryOfConversations allValues] subjectsArray:(NSMutableArray*)[dictionaryOfSubjects allValues] skipAllFlag:isSkipAll funnelColor:[randomColors objectAtIndex:gradientInt]];
-            model.funnelId = oldModel.funnelId;
-            FunnelModel *modelForFunnl = [[FunnelModel alloc] init];
-            modelForFunnl.funnelName = model.filterTitle;
-            tempAppDelegate.currentFunnelString = model.funnelName.lowercaseString;
-            tempAppDelegate.currentFunnelDS = model;
-            NSArray *tempArrayForSender = [dictionaryOfConversations allValues];
-            NSMutableString *senderEmailIds = [[NSMutableString alloc] init];
-            for (NSString *tempString in tempArrayForSender) {
-                [senderEmailIds appendString:tempString];
-                [senderEmailIds appendString:@","];
-            }
-            if (senderEmailIds.length > 0) {
-                senderEmailIds = (NSMutableString*)[senderEmailIds substringWithRange:NSMakeRange(0, senderEmailIds.length-1)];
-                modelForFunnl.emailAddresses = senderEmailIds;
-            }
-            else
-                modelForFunnl.emailAddresses = @"";
-            senderEmailIds = nil;
-            tempArrayForSender = nil;
-            
-            tempArrayForSender = [dictionaryOfSubjects allValues];
-            senderEmailIds = [[NSMutableString alloc] init];
-            for (NSString *tempString in tempArrayForSender) {
-                [senderEmailIds appendString:tempString];
-                [senderEmailIds appendString:@","];
-            }
-            if (senderEmailIds.length > 0) {
-                senderEmailIds = (NSMutableString*)[senderEmailIds substringWithRange:NSMakeRange(0, senderEmailIds.length-1)];
-                modelForFunnl.phrases = senderEmailIds;
-            }
-            else
-                modelForFunnl.phrases = @"";
-            senderEmailIds = nil;
-            tempArrayForSender = nil;
-            model.skipFlag = isSkipAll;
-            if(isEdit){
-                //                [EmailService editFilter:model withOldFilter:oldModel];
-                // save to db
-
-                [[MessageFilterXRefService instance] deleteXRefWithFunnelId:model.funnelId];
-                [[FunnelService instance] updateFunnel:model];
-                [[EmailService instance] applyingFunnel:model toMessages:[[MessageService instance] messagesAllTopMessages]];
-
-                if (oldModel.skipFlag == isSkipAll) {
-                    NSLog(@"No changes had occured!!");
-                }
-                else {
-                    if (isSkipAll) {
-                        [self incrementCounterAgainstTheMessage];
+            NSArray *senders = [dictionaryOfConversations allValues];
+            NSMutableString *webhookIds = [[NSMutableString alloc] init];
+            for (NSString *sender in senders) {
+                [[CIOExampleAPIClient sharedClient] createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:@{@"filter-from": sender,@"sync_period":@"0"} success:^(NSDictionary *responseDict) {
+                    [webhookIds appendString:[responseDict objectForKey:@"webhook_id"]];
+                    if (![[senders lastObject] isEqualToString:sender]) {
+                        [webhookIds appendString:@","];
+                    } else {
+                        NSInteger gradientInt = arc4random_uniform((uint32_t)randomColors.count);
+                        UIColor *color = [UIColor colorWithHexString:[randomColors objectAtIndex:gradientInt]];
+                        if(color == nil){
+                            color = [UIColor colorWithHexString:@"#2EB82E"];
+                        }
+                        FunnelModel *model;
+                        model = [[FunnelModel alloc]initWithBarColor:color filterTitle:funnlName newMessageCount:0 dateOfLastMessage:[NSDate new] sendersArray:[NSMutableArray arrayWithArray:senders] subjectsArray:(NSMutableArray*)[dictionaryOfSubjects allValues] skipAllFlag:isSkipAll funnelColor:[randomColors objectAtIndex:gradientInt]];
+                        model.funnelId = oldModel.funnelId;
+                        model.notificationsFlag = areNotificationsEnabled;
+                        model.webhookIds = webhookIds;
+                        tempAppDelegate.currentFunnelString = model.funnelName.lowercaseString;
+                        tempAppDelegate.currentFunnelDS = model;
+                        model.skipFlag = isSkipAll;
+                        
+                        if(isEdit){
+                            //                [EmailService editFilter:model withOldFilter:oldModel];
+                            // save to db
+                            
+                            [[MessageFilterXRefService instance] deleteXRefWithFunnelId:model.funnelId];
+                            [[FunnelService instance] updateFunnel:model];
+                            [[EmailService instance] applyingFunnel:model toMessages:[[MessageService instance] messagesAllTopMessages]];
+                            
+                            if (oldModel.skipFlag == isSkipAll) {
+                                NSLog(@"No changes had occured!!");
+                            }
+                            else {
+                                if (isSkipAll) {
+                                    [self incrementCounterAgainstTheMessage];
+                                }
+                                else {
+                                    [self decrementCounterAgainstTheMessage];
+                                }
+                                NSLog(@"Changes had occured!!");
+                            }
+                            [[MessageService instance] insertFunnelJsonForMessages];
+                        }else{
+                            [[FunnelService instance] insertFunnel:model];
+                            [[EmailService instance] applyingFunnel:model toMessages:[[MessageService instance] messagesAllTopMessages]];
+                            if (isSkipAll) {
+                                //                    [self incrementCounterAgainstTheMessage];
+                            }
+                            else {
+                                
+                            }
+                            [EmailService setNewFilterModel:model];
+                            // save to db
+                            
+                        }
+                        [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:model.funnelId top:2000];
+                        [self.mainVCdelegate filterSelected:model];
+                        model = nil;
+                        [self.navigationController popViewControllerAnimated:YES];
                     }
-                    else {
-                        [self decrementCounterAgainstTheMessage];
-                    }
-                    NSLog(@"Changes had occured!!");
-                }
-                [[MessageService instance] insertFunnelJsonForMessages];
-            }else{
-                [[FunnelService instance] insertFunnel:model];
-                [[EmailService instance] applyingFunnel:model toMessages:[[MessageService instance] messagesAllTopMessages]];
-                if (isSkipAll) {
-//                    [self incrementCounterAgainstTheMessage];
-                }
-                else {
                     
-                }
-                [EmailService setNewFilterModel:model];
-                // save to db
-                
+                } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                    NSLog(@"err %@",error);
+                }];
             }
-//            [[MessageService instance] insertFunnelJsonForMessages];
-            [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:model.funnelId top:2000];
-            [self.mainVCdelegate filterSelected:model];
-            model = nil;
-            modelForFunnl = nil;
-            [self.navigationController popViewControllerAnimated:YES];
         }else{
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Please add at least one email" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert show];
