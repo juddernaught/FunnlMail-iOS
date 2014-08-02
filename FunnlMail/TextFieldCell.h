@@ -14,4 +14,6 @@
 @property(nonatomic,retain) UIButton *addButton;
 @property(nonatomic,retain) UIButton *cancelButton;
 @property(nonatomic,assign) BOOL isAddButton;
+@property(nonatomic,assign) BOOL isSwitchVisibleMode;
+@property(nonatomic,retain) UISwitch *switchButton;
 @end

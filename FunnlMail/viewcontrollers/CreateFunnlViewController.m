@@ -68,6 +68,8 @@ NSMutableArray *emailArr,*searchArray;
             dictionaryOfSubjects = [[NSMutableDictionary alloc] init];
         
         Tableview = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStyleGrouped];
+        [Tableview registerClass:[TextFieldCell class]
+          forCellReuseIdentifier:@"TextFieldCell"];
         Tableview.frame = CGRectMake(0, 66, WIDTH, HEIGHT - 66);
         [Tableview setDataSource:self];
         [Tableview setDelegate:self];
@@ -94,6 +96,7 @@ NSMutableArray *emailArr,*searchArray;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
     tempAppDelegate = APPDELEGATE;
     [self.view addSubview:tempAppDelegate.progressHUD];
     [self.view bringSubviewToFront:tempAppDelegate.progressHUD];
@@ -106,6 +109,8 @@ NSMutableArray *emailArr,*searchArray;
     [self emailContact];
     
     autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 300, self.view.bounds.size.width, 180)];
+    [autocompleteTableView registerClass:[UITableViewCell class]
+                  forCellReuseIdentifier:@"UITableViewCell"];
     autocompleteTableView.delegate = self;
     autocompleteTableView.dataSource = self;
     autocompleteTableView.scrollEnabled = YES;
@@ -172,47 +177,41 @@ NSMutableArray *emailArr,*searchArray;
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(tableView.tag == 1){
-        UITableViewCell *cell = nil;
-        static NSString *AutoCompleteRowIdentifier = @"AutoCompleteRowIdentifier";
-        cell = [tableView dequeueReusableCellWithIdentifier:AutoCompleteRowIdentifier];
-        if (cell == nil) {
-            cell = [[UITableViewCell alloc]
-                    initWithStyle:UITableViewCellStyleDefault reuseIdentifier:AutoCompleteRowIdentifier];
-        }
+    if(tableView == autocompleteTableView){
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCell" forIndexPath:indexPath];
         
         cell.textLabel.text = [searchArray objectAtIndex:indexPath.row];
         return cell;
     } else {
-        if (indexPath.section == 4) {
-            UITableViewCell *cell = [[UITableViewCell alloc] init];
-            cell.textLabel.text = @"Enable Notifications";
-            enableNotificationsSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(300-50, 8, 50, 0)];
-            if (oldModel.skipFlag) {
-                [enableNotificationsSwitch setOn:YES];
-            }
-            else {
-                [enableNotificationsSwitch setOn:NO];
-            }
-            [enableNotificationsSwitch addTarget:self action:@selector(enableNotifications:) forControlEvents:UIControlEventValueChanged];
-            [cell addSubview:enableNotificationsSwitch];
-            return cell;
-        }
-        if (indexPath.section == 3) {
-            UITableViewCell *cell = [[UITableViewCell alloc] init];
-            cell.textLabel.text = [NSString stringWithFormat:@"Skip %@",ALL_FUNNL];
-            skipAllSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(300-50, 8, 50, 0)];
-            if (oldModel.skipFlag) {
-                [skipAllSwitch setOn:YES];
-            }
-            else {
-                [skipAllSwitch setOn:NO];
-            }
-            [skipAllSwitch addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
-            [cell addSubview:skipAllSwitch];
-            return cell;
-        }
-        TextFieldCell *cell = [[TextFieldCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
+//        if (indexPath.section == 4) {
+//            UITableViewCell *cell = [[UITableViewCell alloc] init];
+//            cell.textLabel.text = @"Enable Notifications";
+//            enableNotificationsSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(300-50, 8, 50, 0)];
+//            if (oldModel.skipFlag) {
+//                [enableNotificationsSwitch setOn:YES];
+//            }
+//            else {
+//                [enableNotificationsSwitch setOn:NO];
+//            }
+//            [enableNotificationsSwitch addTarget:self action:@selector(enableNotifications:) forControlEvents:UIControlEventValueChanged];
+//            [cell addSubview:enableNotificationsSwitch];
+//            return cell;
+//        }
+//        if (indexPath.section == 3) {
+//            UITableViewCell *cell = [[UITableViewCell alloc] init];
+//            cell.textLabel.text = [NSString stringWithFormat:@"Skip %@",ALL_FUNNL];
+//            skipAllSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(300-50, 8, 50, 0)];
+//            if (oldModel.skipFlag) {
+//                [skipAllSwitch setOn:YES];
+//            }
+//            else {
+//                [skipAllSwitch setOn:NO];
+//            }
+//            [skipAllSwitch addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
+//            [cell addSubview:skipAllSwitch];
+//            return cell;
+//        }
+        TextFieldCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TextFieldCell" forIndexPath:indexPath];
         
         if(indexPath.section == 0)
         {
@@ -279,15 +278,21 @@ NSMutableArray *emailArr,*searchArray;
             cell.tag = cell.contentView.tag = indexPath.row;
         }
         else if (indexPath.section == 3) {
-            skipAllSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(130, 235, 0, 0)];
+            [cell setIsSwitchVisibleMode:YES];
+            cell.textLabel.text = [NSString stringWithFormat:@"Skip %@",ALL_FUNNL];
+//            skipAllSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(130, 235, 0, 0)];
             if (oldModel.skipFlag) {
-                [skipAllSwitch setOn:YES];
+                [cell.switchButton setOn:YES];
             }
             else {
-                [skipAllSwitch setOn:NO];
+                [cell.switchButton setOn:NO];
             }
-            [skipAllSwitch addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
-            [cell addSubview:skipAllSwitch];
+            [cell.switchButton addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
+        } else if (indexPath.section == 4) {
+            [cell setIsSwitchVisibleMode:YES];
+            cell.textLabel.text = [NSString stringWithFormat:@"Enable Notifications"];
+            [cell.switchButton setOn:oldModel.notificationsFlag ? YES : NO];
+            [cell.switchButton addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
         }
         [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
         return cell;

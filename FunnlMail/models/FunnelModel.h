@@ -12,6 +12,8 @@
 
 @property (strong) UIColor *barColor;
 @property (assign) BOOL skipFlag;
+@property (assign) BOOL notificationsFlag;
+@property (copy) NSString *webhookIds;
 //below parameter is replaced by "funnelName" in some case
 @property (copy) NSString *filterTitle;
 @property (assign) NSInteger newMessageCount;

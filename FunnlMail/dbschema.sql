@@ -21,6 +21,8 @@ funnelName TEXT,
 emailAddresses TEXT,
 phrases TEXT,
 skipFlag INTEGER,
+notificationsFlag INTEGER,
+webhookIds TEXT,
 funnelColor TEXT,
 PRIMARY KEY (funnelId)
 );
