@@ -283,8 +283,7 @@ static NSString *currentFolder;
     else if([folderName isEqualToString:TRASH]){
         FolderInfo = [self.imapSession folderInfoOperation:TRASH];
     }
-    else
-        FolderInfo = [self.imapSession folderInfoOperation:TRASH];
+    else FolderInfo = [self.imapSession folderInfoOperation:TRASH];
     
     [FolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
      {
@@ -293,7 +292,7 @@ static NSString *currentFolder;
          NSInteger oldestMessageID = 0;
          if(tempArray.count){
              oldestMessageID = [[tempArray objectAtIndex:0] integerValue];
-         }
+    }
          
          MCORange fetchRange;
          self.totalNumberOfMessages = info.uidNext;
@@ -316,8 +315,9 @@ static NSString *currentFolder;
              return;
          }
          MCOIndexSet *uids = [MCOIndexSet indexSetWithRange:fetchRange];
+         NSLog(@"what is fetchRange: %llu",fetchRange.length);
+         NSLog(@"what is uids: %@",uids);
          self.imapMessagesFetchOp = [self.imapSession fetchMessagesByUIDOperationWithFolder:folderName requestKind:requestKind uids:uids];
-
 //         uint64_t location = info.uidNext;
 //         uint64_t size = fetchRange.location;
 //         MCOIndexSet *numbers = [MCOIndexSet indexSetWithRange:MCORangeMake(location, size)];
@@ -332,8 +332,9 @@ static NSString *currentFolder;
          NSLog(@"--- start asyc fetch operation for mail download");
          dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
              [self.imapMessagesFetchOp start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
-              {
+             {
                   NSLog(@"-- received %lu message in fetch opreation",(unsigned long)messages.count);
+                  NSLog(@"what is messages: %@",messages);
                   AppDelegate *tempAppDelegate = APPDELEGATE;
                   [fv.tablecontroller.refreshControl endRefreshing];
                   
