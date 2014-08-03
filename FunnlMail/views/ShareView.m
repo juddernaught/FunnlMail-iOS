@@ -315,28 +315,24 @@ UITableView *autocompleteTableView;
 - (BOOL)textField:(UITextField *)textField
 shouldChangeCharactersInRange:(NSRange)range
 replacementString:(NSString *)string {
-    autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, toFieldView.contentView.bounds.size.height, self.bounds.size.width, 180)];
-    autocompleteTableView.delegate = self;
-    autocompleteTableView.dataSource = self;
-    autocompleteTableView.scrollEnabled = YES;
-    autocompleteTableView.hidden = YES;
-    [self addSubview:autocompleteTableView];
-    
-    if(string.length == 0){
-        autocompleteTableView.hidden = YES;
-        //        if ([@"Cc:"  isEqual: ((UILabel *)(TITokenField *)textField.leftView).text]){
-        //            [self.view setFrame:CGRectMake(0,0,self.view.bounds.size.width,self.view.bounds.size.height)];
-        //        }
-    }
+    NSLog(@"is thi shappengin");
     NSString *substring = [NSString stringWithString:textField.text];
     substring = [substring
                  stringByReplacingCharactersInRange:range withString:string];
     [self searchAutocompleteEntriesWithSubstring:substring];
-    if(searchArray.count != 0) autocompleteTableView.hidden = NO;
+    NSLog(@"what is count: %lu",(unsigned long)searchArray.count);
+    if(searchArray.count != 0){
+        CGFloat temp = toFieldView.tokenField.frame.size.height+121;
+        autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, temp, 320, 180)];
+        autocompleteTableView.delegate = self;
+        autocompleteTableView.dataSource = self;
+        autocompleteTableView.scrollEnabled = YES;
+        autocompleteTableView.hidden = NO;
+        [self addSubview:autocompleteTableView];
+    }
     else autocompleteTableView.hidden = YES;
     return YES;
 }
-
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
