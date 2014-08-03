@@ -20,9 +20,12 @@
 #import "MBProgressHUD.h"
 #import "AppDelegate.h"
 #import "TITokenField.h"
+#import <AddressBook/AddressBook.h>
 
 NSData * rfc822Data;
 NSString *msgBody;
+NSMutableArray *emailArr,*searchArray;
+UITableView *autocompleteTableView;
 
 @implementation ShareView
 
@@ -42,13 +45,14 @@ NSString *msgBody;
 
 
 -(TITokenFieldView*)createFieldViewWithFrame:(CGRect)frame{
+    NSLog(@"what is frame: %f",frame.origin.y);
     TITokenFieldView *tokenFieldView = [[TITokenFieldView alloc] initWithFrame:frame];
     //	[tokenFieldView setSourceArray:[Names listOfNames]];
 	[tokenFieldView.tokenField setDelegate:self];
 	[tokenFieldView setShouldSearchInBackground:NO];
 	[tokenFieldView setShouldSortResults:NO];
 	[tokenFieldView.tokenField addTarget:self action:@selector(tokenFieldFrameDidChange:) forControlEvents:TITokenFieldControlEventFrameDidChange];
-	[tokenFieldView.tokenField setTokenizingCharacters:[NSCharacterSet characterSetWithCharactersInString:@",;"]]; // Default is a comma
+	[tokenFieldView.tokenField setTokenizingCharacters:[NSCharacterSet characterSetWithCharactersInString:@",; ;"]]; // Default is a comma
     
     
     //	UIButton * addButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
@@ -129,6 +133,16 @@ NSString *msgBody;
     singleFingerTap.cancelsTouchesInView = NO;
     singleFingerTap.delaysTouchesEnded = NO;
 //    [self addGestureRecognizer:singleFingerTap];
+    
+    autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 121, self.bounds.size.width, 180)];
+    autocompleteTableView.delegate = self;
+    autocompleteTableView.dataSource = self;
+    autocompleteTableView.scrollEnabled = YES;
+    autocompleteTableView.hidden = YES;
+    
+    [self addSubview:autocompleteTableView];
+    
+    [self emailContact];
 
 }
 
@@ -296,6 +310,162 @@ NSString *msgBody;
 
 	
 }
+
+#pragma this is what initiates autocomplete
+- (BOOL)textField:(UITextField *)textField
+shouldChangeCharactersInRange:(NSRange)range
+replacementString:(NSString *)string {
+    autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, toFieldView.contentView.bounds.size.height, self.bounds.size.width, 180)];
+    autocompleteTableView.delegate = self;
+    autocompleteTableView.dataSource = self;
+    autocompleteTableView.scrollEnabled = YES;
+    autocompleteTableView.hidden = YES;
+    [self addSubview:autocompleteTableView];
+    
+    if(string.length == 0){
+        autocompleteTableView.hidden = YES;
+        //        if ([@"Cc:"  isEqual: ((UILabel *)(TITokenField *)textField.leftView).text]){
+        //            [self.view setFrame:CGRectMake(0,0,self.view.bounds.size.width,self.view.bounds.size.height)];
+        //        }
+    }
+    NSString *substring = [NSString stringWithString:textField.text];
+    substring = [substring
+                 stringByReplacingCharactersInRange:range withString:string];
+    [self searchAutocompleteEntriesWithSubstring:substring];
+    if(searchArray.count != 0) autocompleteTableView.hidden = NO;
+    else autocompleteTableView.hidden = YES;
+    return YES;
+}
+
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    NSLog(@"did press enter");
+    autocompleteTableView.hidden = YES;
+    //    else if (bccFieldView.tokenField.isEditing)[self.view setFrame:CGRectMake(0,75,self.view.bounds.size.width,self.view.bounds.size.height)];
+    return YES;
+}
+
+- (BOOL) validateEmail: (NSString *) candidate {
+    NSString *emailRegex = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}";
+    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
+    
+    return [emailTest evaluateWithObject:candidate];
+}
+
+
+- (void)searchAutocompleteEntriesWithSubstring:(NSString *)substring {
+    
+    // Put anything that starts with this substring into the searchArray
+    // The items in this array is what will show up in the table view
+    [searchArray removeAllObjects];
+    for(NSMutableString *curString in emailArr) {
+        
+        substring = [substring stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        
+        if ([curString rangeOfString:substring].location == 0) {
+            [searchArray addObject:curString];
+        }
+        
+    }
+    [autocompleteTableView reloadData];
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"didSelctRow");
+    UITableViewCell *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
+    if(toFieldView.tokenField.isEditing){
+        NSLog(@"to is editing");
+        toFieldView.tokenField.text = selectedCell.textLabel.text;
+        //[autocompleteTableView removeFromSuperview];
+    }
+    autocompleteTableView.hidden = YES;
+    
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger) section {
+    return searchArray.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    UITableViewCell *cell = nil;
+    static NSString *AutoCompleteRowIdentifier = @"AutoCompleteRowIdentifier";
+    cell = [tableView dequeueReusableCellWithIdentifier:AutoCompleteRowIdentifier];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc]
+                initWithStyle:UITableViewCellStyleDefault reuseIdentifier:AutoCompleteRowIdentifier];
+    }
+    
+    cell.textLabel.text = [searchArray objectAtIndex:indexPath.row];
+    return cell;
+}
+
+#pragma mark loadContacts
+//this will need to put somewhere so it happens only once
+//it will take longer to do the more contacts there are obviously
+-(void)emailContact
+
+{
+    
+    emailArr = [[NSMutableArray alloc]init];
+    searchArray = [[NSMutableArray alloc]init];
+    
+    ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
+    
+    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
+        ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
+            if (granted) {
+                // First time access has been granted, add the contact
+                
+                CFArrayRef people = ABAddressBookCopyArrayOfAllPeople(addressBook);
+                NSMutableArray *allEmails = [[NSMutableArray alloc] initWithCapacity:CFArrayGetCount(people)];
+                for (CFIndex i = 0; i < CFArrayGetCount(people); i++)
+                {
+                    ABRecordRef person = CFArrayGetValueAtIndex(people, i);
+                    ABMultiValueRef emails = ABRecordCopyValue(person, kABPersonEmailProperty);
+                    for (CFIndex j=0; j < ABMultiValueGetCount(emails); j++)
+                    {
+                        NSString* email = (__bridge NSString*)ABMultiValueCopyValueAtIndex(emails, j);
+                        [allEmails addObject:email];
+                        
+                    }
+                    CFRelease(emails);
+                }
+                emailArr = allEmails;
+                
+            } else {
+                // User denied access
+                // Display an alert telling user the contact could not be added
+            }
+        });
+    }
+    else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
+        // The user has previously given access, add the contact
+        CFArrayRef people = ABAddressBookCopyArrayOfAllPeople(addressBook);
+        NSMutableArray *allEmails = [[NSMutableArray alloc] initWithCapacity:CFArrayGetCount(people)];
+        for (CFIndex i = 0; i < CFArrayGetCount(people); i++)
+        {
+            ABRecordRef person = CFArrayGetValueAtIndex(people, i);
+            ABMultiValueRef emails = ABRecordCopyValue(person, kABPersonEmailProperty);
+            for (CFIndex j=0; j < ABMultiValueGetCount(emails); j++)
+            {
+                NSString* email = (__bridge NSString*)ABMultiValueCopyValueAtIndex(emails, j);
+                if([self validateEmail:email]) [allEmails addObject:email];
+                
+            }
+            CFRelease(emails);
+        }
+        emailArr = allEmails;
+    }
+    else {
+        // The user has previously denied access
+        // Send an alert telling user to change privacy setting in settings app
+    }
+    
+    
+}
+
 
 
 /*
