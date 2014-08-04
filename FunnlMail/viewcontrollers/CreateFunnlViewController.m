@@ -732,8 +732,8 @@ NSMutableArray *emailArr,*searchArray;
             }
             
             if ([oldModel.webhookIds length]) {
-                //Setting previously created Webhook to inactive and creating a new one because thats the only way suggested on Context.IO website
-                [[CIOExampleAPIClient sharedClient] updateWebhookWithID:[oldModel webhookIds] params:@{@"active": @"0"} success:^(NSDictionary *responseDict) {
+                //Setting previously created Webhook to inactive or deleting it and creating a new one because thats the only way suggested on Context.IO website
+                [[CIOExampleAPIClient sharedClient] deleteWebhookWithID:[oldModel webhookIds]success:^(NSDictionary *responseDict) {
                     if ([[responseDict objectForKey:@"success"] boolValue]) {
                         [self saveFunnlandCreateWebhookForParams:params];
                     }
