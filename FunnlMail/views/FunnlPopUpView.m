@@ -234,25 +234,29 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
         if (![emailAddress.mailbox.lowercaseString isEqual:listservEmailAdress.mailbox.lowercaseString]) {
             //for (MCOAddress *emailID in message.header.cc) {
               // if ([listservEmailAdress.mailbox.lowercaseString isEqual:emailID.mailbox.lowercaseString]) {
-                    [mailArray addObject:listservEmailAdress];
+                    [mailArray addObject:listservEmailAdress.mailbox];
               // }
             //}
         }
-                [mailArray addObject:emailAddress];
+                [mailArray addObject:emailAddress.mailbox];
     }
     
     for (MCOAddress *emailID in message.header.cc) {
-     if (![listservEmailAdress.mailbox.lowercaseString isEqual:emailID.mailbox.lowercaseString]) {
-    [mailArray addObjectsFromArray:message.header.cc];
+     if (![emailID.mailbox isEqualToString:message.header.sender.mailbox]) {
+         [mailArray addObject:emailID.mailbox];
      }
     }
     
     NSMutableDictionary *sendersDictionary = [[NSMutableDictionary alloc] init];
-    int count = 0;
-    for (MCOAddress *address in mailArray) {
-        NSString *email = [address.mailbox lowercaseString];
-        [sendersDictionary setObject:email forKey:[NSIndexPath indexPathForRow:count inSection:1]];
-        count ++;
+//    int count = 0;
+//    for (MCOAddress *address in mailArray) {
+//        NSString *email = [address.mailbox lowercaseString];
+//        [sendersDictionary setObject:email forKey:[NSIndexPath indexPathForRow:count inSection:1]];
+//        count ++;
+//    }
+    
+    for (int count = 0 ; count < mailArray.count ; count ++) {
+        [sendersDictionary setObject:[mailArray objectAtIndex:count] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
     }
     
     CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:nil filterModel:nil];

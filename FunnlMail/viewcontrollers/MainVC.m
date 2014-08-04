@@ -88,6 +88,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     // This is the All bar
     NSLog(@"viewDidLoad mainVC");
     AppDelegate *tempAppDelegate = APPDELEGATE;
+    tempAppDelegate.mainVCControllerInstance = self;
     if ([tempAppDelegate.currentFunnelString.lowercaseString isEqualToString:[ALL_FUNNL lowercaseString]]) {
         navigationBarTitleLabel.text = ALL_FUNNL;
         self.navigationItem.title = ALL_FUNNL;
@@ -161,6 +162,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
         [[EmailService instance] startLogin:emailsTableViewController];
 
     }
+    
 }
 
 

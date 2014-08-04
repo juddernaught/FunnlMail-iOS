@@ -989,18 +989,56 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         if(indexPath.section == 0){
+//            MCOIMAPMessage *message = [EmailService instance].filterMessages[indexPath.row];
+//            MCOAddress *emailAddress = message.header.from;
+//            NSMutableArray *mailArray = [[NSMutableArray alloc] init];
+//            [mailArray addObject:emailAddress];
+//            [mailArray addObjectsFromArray:message.header.cc];
+//            
+//            NSMutableDictionary *sendersDictionary = [[NSMutableDictionary alloc] init];
+//            int count = 0;
+//            for (MCOAddress *address in mailArray) {
+//                NSString *email = [address.mailbox lowercaseString];
+//                [sendersDictionary setObject:email forKey:[NSIndexPath indexPathForRow:count inSection:1]];
+//                count ++;
+//            }
+            
             MCOIMAPMessage *message = [EmailService instance].filterMessages[indexPath.row];
             MCOAddress *emailAddress = message.header.from;
+            MCOAddress *listservEmailAdress = message.header.sender; //Added by Chad
             NSMutableArray *mailArray = [[NSMutableArray alloc] init];
-            [mailArray addObject:emailAddress];
-            [mailArray addObjectsFromArray:message.header.cc];
+            
+            BOOL flag = TRUE;
+            for (MCOAddress *emailID in message.header.cc) {
+                if ([emailAddress.mailbox.lowercaseString isEqual:emailID.mailbox.lowercaseString]) {
+                    flag = FALSE;
+                }
+            }
+            
+            if (flag) {
+                
+                // Check if the 2 email addresses are equivalent and if the listserv email is already in the array
+                
+                if (![emailAddress.mailbox.lowercaseString isEqual:listservEmailAdress.mailbox.lowercaseString]) {
+                    //for (MCOAddress *emailID in message.header.cc) {
+                    // if ([listservEmailAdress.mailbox.lowercaseString isEqual:emailID.mailbox.lowercaseString]) {
+                    [mailArray addObject:listservEmailAdress.mailbox];
+                    // }
+                    //}
+                }
+                [mailArray addObject:emailAddress.mailbox];
+            }
+            
+            for (MCOAddress *emailID in message.header.cc) {
+                if (![emailID.mailbox isEqualToString:message.header.sender.mailbox]) {
+                    [mailArray addObject:emailID.mailbox];
+                }
+            }
             
             NSMutableDictionary *sendersDictionary = [[NSMutableDictionary alloc] init];
-            int count = 0;
-            for (MCOAddress *address in mailArray) {
-                NSString *email = [address.mailbox lowercaseString];
-                [sendersDictionary setObject:email forKey:[NSIndexPath indexPathForRow:count inSection:1]];
-                count ++;
+            
+            for (int count = 0 ; count < mailArray.count ; count ++) {
+                [sendersDictionary setObject:[mailArray objectAtIndex:count] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
             }
             
             CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:nil filterModel:nil];

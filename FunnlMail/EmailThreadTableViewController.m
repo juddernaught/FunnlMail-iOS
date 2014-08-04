@@ -10,6 +10,8 @@
 #import "UIColor+HexString.h"
 #import "NSDate+TimeAgo.h"
 #import "EmailService.h"
+#import <Mixpanel/Mixpanel.h>
+#import "FunnlPopUpView.h"
 
 static NSString *mailCellIdentifier = @"MailCell";
 
@@ -45,6 +47,7 @@ static NSString *mailCellIdentifier = @"MailCell";
 {
     [super viewDidLoad];
     AppDelegate *tempAppDelegate = APPDELEGATE;
+    self.mainVCdelegate = tempAppDelegate.mainVCControllerInstance;
     // Do any additional setup after loading the view.
     if ([[tempAppDelegate.currentFunnelString.lowercaseString lowercaseString] isEqualToString:[ALL_FUNNL lowercaseString]]) {
         self.navigationItem.title = ALL_FUNNL;
@@ -100,6 +103,7 @@ static NSString *mailCellIdentifier = @"MailCell";
         
 
     }
+    cell.delegate = self;
     [cell.detailDiscloser setHidden:NO];
     [cell.threadLabel setHidden:YES];
     NSTimeInterval interval = [message.header.date timeIntervalSinceNow];
@@ -149,6 +153,22 @@ static NSString *mailCellIdentifier = @"MailCell";
             }
         }];
     }
+    
+    UIView *fullFunnlView = [self viewWithImageName:@"swipeFunnl"];
+    UIColor *fullFunnlColor = [UIColor colorWithHexString:@"#92F190"];
+    
+    [cell setSwipeGestureWithView:fullFunnlView color:fullFunnlColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+        NSLog(@"Did swipe full cell, ");
+        [[Mixpanel sharedInstance] track:@"Add email to Funnl"];
+        [cell swipeToOriginWithCompletion:nil];
+        MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
+        FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:YES withMessageId:uidKey withMessage:message subViewOnViewController:self];
+        funnlPopUpView.mainVCdelegate = self.mainVCdelegate;
+        
+        [self.view addSubview:funnlPopUpView];
+        
+    }];
+    
     return cell;
 }
 
@@ -192,6 +212,24 @@ static NSString *mailCellIdentifier = @"MailCell";
 
 #pragma mark -
 #pragma mark Helper
+#pragma mark Helpers
+- (UIView *)viewWithImageName:(NSString *)imageName {
+    UIImage *image = [UIImage imageNamed:imageName];
+    UIImageView *imageView = [[UIImageView alloc] init];
+    if ([imageName isEqualToString:@"swipeArchive"]) {
+        imageView.frame = CGRectMake(-40, 0, 80, 80);
+    }
+    else if ([imageName isEqualToString:@"swipeTrash"]) {
+        imageView.frame = CGRectMake(-40, 0, 80, 80);
+    }
+    else
+        imageView.frame = CGRectMake(30, 0, 80, 80);
+    [imageView setImage:image];
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    [imageView setBackgroundColor:[UIColor clearColor]];
+    return imageView;
+}
+
 - (NSString*)removeAngularBracket:(NSString*)emailString {
     if (emailString.length > 0) {
         if ([[emailString substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"<"]) {

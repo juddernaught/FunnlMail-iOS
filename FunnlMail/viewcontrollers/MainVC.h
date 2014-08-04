@@ -11,11 +11,13 @@
 #import "MainVCDelegate.h"
 //#import "FilterModel.h"
 #import "FunnelModel.h"
+#import "EmailThreadTableViewController.h"
 
 @class MainView;
 @interface MainVC : UIViewController<MainVCDelegate>{
 //  MainView *mainView;
   EmailsTableViewController *emailsTableViewController;
+  EmailThreadTableViewController *threadViewController;
   FunnelModel *currentFilterModel;
   UILabel *filterLabel;
     UILabel *navigationBarTitleLabel;

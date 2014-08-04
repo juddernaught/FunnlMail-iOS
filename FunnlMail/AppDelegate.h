@@ -18,6 +18,7 @@
 {
     
 }
+@property (strong, nonatomic)id mainVCControllerInstance;
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) MenuViewController *menuController;
 @property (strong, nonatomic) MMDrawerController * drawerController;

@@ -13,8 +13,9 @@
 #import "MessageService.h"
 #import "EmailCell.h"
 #import "MsgViewController.h"
+#import "RDSwipeableTableViewCell.h"
 
-@interface EmailThreadTableViewController : UIViewController <UITableViewDataSource,UITableViewDelegate>
+@interface EmailThreadTableViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,RDSwipeableTableViewCellDelegate,MCSwipeTableViewCellDelegate>
 {
     NSString *gmailThreadId;
 }
