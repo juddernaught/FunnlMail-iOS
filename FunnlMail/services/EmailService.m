@@ -208,6 +208,9 @@ static NSString *currentFolder;
          }];
     });
     
+    
+    
+    
     /*
     MCOIMAPFetchMessagesOperation *trashSyncMessagesFetchOperation =  [[EmailService instance].imapSession syncMessagesByUIDWithFolder:TRASH requestKind:requestKind uids:mcoIndexSet modSeq:modSeqValue];
     [trashSyncMessagesFetchOperation setProgress:^(unsigned int progress) {
