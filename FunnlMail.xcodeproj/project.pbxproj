@@ -56,6 +56,11 @@
 		B751C88F1940FDFF0051DF0B /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B751C88E1940FDFF0051DF0B /* MessageUI.framework */; };
 		B75F56A6197F056F00518743 /* FunnlMail VIP logo.png in Resources */ = {isa = PBXBuildFile; fileRef = B75F56A5197F056F00518743 /* FunnlMail VIP logo.png */; };
 		B7701DC41985F58C001CA2DC /* mail2.png in Resources */ = {isa = PBXBuildFile; fileRef = B7701DC31985F58C001CA2DC /* mail2.png */; };
+		B7C940E0198D6F49008468E7 /* WHITEsliders1nobar.png in Resources */ = {isa = PBXBuildFile; fileRef = B7C940DB198D6F49008468E7 /* WHITEsliders1nobar.png */; };
+		B7C940E1198D6F49008468E7 /* WHITEsliders2.png in Resources */ = {isa = PBXBuildFile; fileRef = B7C940DC198D6F49008468E7 /* WHITEsliders2.png */; };
+		B7C940E2198D6F49008468E7 /* WHITEsliders3.png in Resources */ = {isa = PBXBuildFile; fileRef = B7C940DD198D6F49008468E7 /* WHITEsliders3.png */; };
+		B7C940E3198D6F49008468E7 /* WHITEsliders4.png in Resources */ = {isa = PBXBuildFile; fileRef = B7C940DE198D6F49008468E7 /* WHITEsliders4.png */; };
+		B7C940E4198D6F49008468E7 /* WHITEsliders5.png in Resources */ = {isa = PBXBuildFile; fileRef = B7C940DF198D6F49008468E7 /* WHITEsliders5.png */; };
 		B7F093C6198C50EB0083D59E /* PageContentVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B7F093C5198C50EB0083D59E /* PageContentVC.m */; };
 		CC39517218E6F9700093C787 /* MainFilterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CC39517118E6F9700093C787 /* MainFilterCell.m */; };
 		CC4263B01934B67A00F3C5EB /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = CC4263A61934B67A00F3C5EB /* FMDatabase.m */; };
@@ -354,6 +359,11 @@
 		B751C88E1940FDFF0051DF0B /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		B75F56A5197F056F00518743 /* FunnlMail VIP logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "FunnlMail VIP logo.png"; sourceTree = "<group>"; };
 		B7701DC31985F58C001CA2DC /* mail2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mail2.png; sourceTree = "<group>"; };
+		B7C940DB198D6F49008468E7 /* WHITEsliders1nobar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = WHITEsliders1nobar.png; sourceTree = "<group>"; };
+		B7C940DC198D6F49008468E7 /* WHITEsliders2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = WHITEsliders2.png; sourceTree = "<group>"; };
+		B7C940DD198D6F49008468E7 /* WHITEsliders3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = WHITEsliders3.png; sourceTree = "<group>"; };
+		B7C940DE198D6F49008468E7 /* WHITEsliders4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = WHITEsliders4.png; sourceTree = "<group>"; };
+		B7C940DF198D6F49008468E7 /* WHITEsliders5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = WHITEsliders5.png; sourceTree = "<group>"; };
 		B7F093C4198C50EB0083D59E /* PageContentVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageContentVC.h; sourceTree = "<group>"; };
 		B7F093C5198C50EB0083D59E /* PageContentVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageContentVC.m; sourceTree = "<group>"; };
 		CC1AD1DC18F54BE9000E356C /* MainVCDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainVCDelegate.h; path = viewcontrollers/MainVCDelegate.h; sourceTree = "<group>"; };
@@ -831,6 +841,18 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		B7C940D6198D6F36008468E7 /* DemoSlides */ = {
+			isa = PBXGroup;
+			children = (
+				B7C940DB198D6F49008468E7 /* WHITEsliders1nobar.png */,
+				B7C940DC198D6F49008468E7 /* WHITEsliders2.png */,
+				B7C940DD198D6F49008468E7 /* WHITEsliders3.png */,
+				B7C940DE198D6F49008468E7 /* WHITEsliders4.png */,
+				B7C940DF198D6F49008468E7 /* WHITEsliders5.png */,
+			);
+			name = DemoSlides;
+			sourceTree = "<group>";
+		};
 		CC39517318E710CC0093C787 /* models */ = {
 			isa = PBXGroup;
 			children = (
@@ -1203,6 +1225,7 @@
 		FABAF01F1976507E00AA7918 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				B7C940D6198D6F36008468E7 /* DemoSlides */,
 				FABAF0201976507E00AA7918 /* Dummy */,
 				FABAF02E1976507E00AA7918 /* Funnl */,
 				FABAF0401976507E00AA7918 /* ListIcons */,
@@ -1490,6 +1513,7 @@
 				FABAF08C1976507E00AA7918 /* manage_Button.png in Resources */,
 				FABAF0851976507E00AA7918 /* Done_Button@2x.png in Resources */,
 				FABAF0C81976573400AA7918 /* composeIcon.png in Resources */,
+				B7C940E0198D6F49008468E7 /* WHITEsliders1nobar.png in Resources */,
 				FABAF0C21976507E00AA7918 /* swipeFunnl.png in Resources */,
 				FABAF0CB1976573400AA7918 /* funnlIcon@2x.png in Resources */,
 				FABAF0A41976507E00AA7918 /* splashScreen.png in Resources */,
@@ -1499,6 +1523,7 @@
 				D1EFF4C519818B6F0031A1D1 /* button-provider-gmail.png in Resources */,
 				FABAF0961976507E00AA7918 /* archiveListIcon@2x.png in Resources */,
 				FA4A2E8D198A837500CB9FAD /* swipeTrash.png in Resources */,
+				B7C940E2198D6F49008468E7 /* WHITEsliders3.png in Resources */,
 				66F2C47418E3293E00CD593E /* InfoPlist.strings in Resources */,
 				FABAF0A11976507E00AA7918 /* getStarted@2x.png in Resources */,
 				FA4A2E8E198A837500CB9FAD /* swipeTrash@2x.png in Resources */,
@@ -1506,7 +1531,7 @@
 				FABAF0901976507E00AA7918 /* Settings@2x.png in Resources */,
 				FA9164CA1973D302006A4726 /* README.markdown in Resources */,
 				D1EFF4C119818B6F0031A1D1 /* button-provider-aol.png in Resources */,
-				FABAF0A71976507E00AA7918 /* Add@2x.png in Resources */,
+				FABAF0A71976507E00AA7918 /* addIcon@2x.png in Resources */,
 				FABAF0A71976507E00AA7918 /* addIcon@2x.png in Resources */,
 				FABAF07D1976507E00AA7918 /* News.png in Resources */,
 				FABAF09B1976507E00AA7918 /* settingListIcon.png in Resources */,
@@ -1516,8 +1541,10 @@
 				FABAF0801976507E00AA7918 /* Social.png in Resources */,
 				FABAF0B11976507E00AA7918 /* cross.png in Resources */,
 				FABAF0C01976507E00AA7918 /* swipeArchive.png in Resources */,
+				B7C940E3198D6F49008468E7 /* WHITEsliders4.png in Resources */,
 				FABAF0C31976507E00AA7918 /* swipeFunnl@2x.png in Resources */,
 				D1EFF4C319818B6F0031A1D1 /* button-provider-bg.png in Resources */,
+				B7C940E4198D6F49008468E7 /* WHITEsliders5.png in Resources */,
 				FABAF0A81976507E00AA7918 /* arrow.png in Resources */,
 				B7701DC41985F58C001CA2DC /* mail2.png in Resources */,
 				FABAF0BC1976507E00AA7918 /* reply.png in Resources */,
@@ -1530,7 +1557,7 @@
 				FABAF08F1976507E00AA7918 /* Settings.png in Resources */,
 				FABAF0B31976507E00AA7918 /* forward.png in Resources */,
 				D1EFF4C619818B6F0031A1D1 /* button-provider-gmail@2x.png in Resources */,
-				FABAF0D61976634C00AA7918 /* MenuIcon.png in Resources */,
+				FABAF0D61976634C00AA7918 /* menuIcon.png in Resources */,
 				FABAF0D61976634C00AA7918 /* menuIcon.png in Resources */,
 				FABAF08D1976507E00AA7918 /* manage_Button@2x.png in Resources */,
 				FABAF0B21976507E00AA7918 /* cross@2x.png in Resources */,
@@ -1539,13 +1566,14 @@
 				FABAF0811976507E00AA7918 /* Travel.png in Resources */,
 				FABAF09A1976507E00AA7918 /* sentListIcon@2x.png in Resources */,
 				FABAF0751976507E00AA7918 /* Email 1.png in Resources */,
-				FABAF0A61976507E00AA7918 /* Add.png in Resources */,
+				FABAF0A61976507E00AA7918 /* addIcon.png in Resources */,
 				D1EFF4C419818B6F0031A1D1 /* button-provider-bg@2x.png in Resources */,
 				FABAF0A61976507E00AA7918 /* addIcon.png in Resources */,
 				FABAF0881976507E00AA7918 /* Edit_Button.png in Resources */,
 				FABAF0761976507E00AA7918 /* Email 2.png in Resources */,
 				FABAF0A51976507E00AA7918 /* splashScreen@2x.png in Resources */,
 				FABAF0791976507E00AA7918 /* Email 5.png in Resources */,
+				B7C940E1198D6F49008468E7 /* WHITEsliders2.png in Resources */,
 				FABAF0A91976507E00AA7918 /* arrow@2x.png in Resources */,
 				FABAF07A1976507E00AA7918 /* Files.png in Resources */,
 				FABAF0841976507E00AA7918 /* Done_Button.png in Resources */,
