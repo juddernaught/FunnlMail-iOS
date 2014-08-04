@@ -54,8 +54,10 @@ static FunnelService *instance;
     
     paramDict[@"funnelName"] = funnelModel.funnelName;
     paramDict[@"emailAddresses"] = funnelModel.emailAddresses;
+    paramDict[@"webhookIds"] = funnelModel.webhookIds;
     paramDict[@"phrases"] = funnelModel.phrases;
     paramDict[@"skipFlag"] = [NSNumber numberWithBool:funnelModel.skipFlag];
+    paramDict[@"notificationsFlag"] = [NSNumber numberWithBool:funnelModel.notificationsFlag];
     if (funnelModel.funnelColor) {
         paramDict[@"funnelColor"] = funnelModel.funnelColor;
     }
@@ -64,7 +66,7 @@ static FunnelService *instance;
   
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    success = [db executeUpdate:@"INSERT INTO funnels (funnelId,funnelName,emailAddresses,phrases,skipFlag,funnelColor) VALUES (:funnelId,:funnelName,:emailAddresses,:phrases,:skipFlag,:funnelColor)" withParameterDictionary:paramDict];
+    success = [db executeUpdate:@"INSERT INTO funnels (funnelId,funnelName,emailAddresses,webhookIds,phrases,skipFlag,notificationsFlag,funnelColor) VALUES (:funnelId,:funnelName,:emailAddresses,:webhookIds,:phrases,:skipFlag,:notificationsFlag,:funnelColor)" withParameterDictionary:paramDict];
   }];
   
   if(success){
@@ -83,11 +85,14 @@ static FunnelService *instance;
   paramDict[@"funnelId"] = funnelModel.funnelId;
   paramDict[@"funnelName"] = funnelModel.funnelName;
   paramDict[@"emailAddresses"] = funnelModel.emailAddresses;
+  paramDict[@"webhookIds"] = funnelModel.webhookIds;
   paramDict[@"phrases"] = funnelModel.phrases;
   paramDict[@"skipFlag"] = [NSNumber numberWithBool:funnelModel.skipFlag];
+  paramDict[@"notificationsFlag"] = [NSNumber numberWithBool:funnelModel.notificationsFlag];
+
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    success = [db executeUpdate:@"UPDATE funnels SET funnelName=:funnelName,emailAddresses=:emailAddresses,phrases=:phrases,skipFlag=:skipFlag WHERE funnelId=:funnelId" withParameterDictionary:paramDict];
+    success = [db executeUpdate:@"UPDATE funnels SET funnelName=:funnelName,emailAddresses=:emailAddresses,webhookIds=:webhookIds,phrases=:phrases,notificationsFlag=:notificationsFlag,skipFlag=:skipFlag WHERE funnelId=:funnelId" withParameterDictionary:paramDict];
   }];
   
   return success;
@@ -101,7 +106,7 @@ static FunnelService *instance;
     [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
 //        FMResultSet *resultSet = [db executeQuery:@"SELECT funnelId,funnelName,emailAddresses,phrases,skipFlag,funnelColor FROM funnels WHERE funnelName !=:funnelName" withParameterDictionary:paramDict];
         
-        NSString *query = [NSString stringWithFormat:@"SELECT funnelId,funnelName,emailAddresses,phrases,skipFlag,funnelColor FROM funnels WHERE funnelName NOT IN ('%@','%@');",ALL_FUNNL,ALL_OTHER_FUNNL];
+        NSString *query = [NSString stringWithFormat:@"SELECT funnelId,funnelName,emailAddresses,webhookIds,phrases,skipFlag,notificationsFlag,funnelColor FROM funnels WHERE funnelName NOT IN ('%@','%@');",ALL_FUNNL,ALL_OTHER_FUNNL];
         FMResultSet *resultSet = [db executeQuery:query];
         
         
@@ -111,9 +116,11 @@ static FunnelService *instance;
             model = [[FunnelModel alloc]init];
             model.funnelId = [resultSet stringForColumn:@"funnelId"];
             model.skipFlag = [resultSet intForColumn:@"skipFlag"];
+            model.notificationsFlag = [resultSet intForColumn:@"notificationsFlag"];
             model.funnelName = [resultSet stringForColumn:@"funnelName"];
             model.filterTitle = [resultSet stringForColumn:@"funnelName"];
             model.emailAddresses = [resultSet stringForColumn:@"emailAddresses"];
+            model.webhookIds = [resultSet stringForColumn:@"webhookIds"];
             model.sendersArray = (NSMutableArray *)[[resultSet stringForColumn:@"emailAddresses"] componentsSeparatedByString:@","];
             model.phrases = [resultSet stringForColumn:@"phrases"];
             model.subjectsArray = (NSMutableArray *)[[resultSet stringForColumn:@"phrases"] componentsSeparatedByString:@","];
@@ -139,9 +146,9 @@ static FunnelService *instance;
     
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
       
-    NSString *query = [NSString stringWithFormat:@"SELECT funnels.funnelId as funnelId, funnels.funnelName as funnelName, funnels.emailAddresses as emailAddresses, funnels.phrases as phrases, funnels.skipFlag as skipFlag, funnels.funnelColor as funnelColor, (COUNT(read) - SUM (read )) as readCount FROM funnels INNER JOIN messageFilterXRef ON (messageFilterXRef.funnelId = funnels.funnelId) INNER JOIN messages ON (messageFilterXRef.messageId = messages.messageId) GROUP BY 1, 2, 3, 4, 5, 6\
-        UNION SELECT 0 as funnelId, '%@' asfunnelName, '' as emailAddresses, '', 0 as skipFlag, '#000000' as funnelColor, COUNT(read) as readCount FROM messages where messages.read = 0\
-        UNION SELECT 1 as funnelId, '%@' asfunnelName, '' as emailAddresses, '', 0 as skipFlag, '#000000' as funnelColor, COUNT(read) as readCount FROM messages where messages.read = 0 AND messages.categoryName <> '%@'\
+    NSString *query = [NSString stringWithFormat:@"SELECT funnels.funnelId as funnelId, funnels.funnelName as funnelName, funnels.emailAddresses as emailAddresses, funnels.webhookIds as webhookIds, funnels.phrases as phrases, funnels.skipFlag as skipFlag, funnels.notificationsFlag as notificationsFlag, funnels.funnelColor as funnelColor, (COUNT(read) - SUM (read )) as readCount FROM funnels INNER JOIN messageFilterXRef ON (messageFilterXRef.funnelId = funnels.funnelId) INNER JOIN messages ON (messageFilterXRef.messageId = messages.messageId) GROUP BY 1, 2, 3, 4, 5, 6\
+        UNION SELECT 0 as funnelId, '%@' asfunnelName, '' as emailAddresses, '' as webhookIds, '', 0 as skipFlag, 0 as notificationsFlag, '#000000' as funnelColor, COUNT(read) as readCount FROM messages where messages.read = 0\
+        UNION SELECT 1 as funnelId, '%@' asfunnelName, '' as emailAddresses, '' as webhookIds, '', 0 as skipFlag, 0 as notificationsFlag, '#000000' as funnelColor, COUNT(read) as readCount FROM messages where messages.read = 0 AND messages.categoryName <> '%@'\
                        ;",ALL_FUNNL,ALL_OTHER_FUNNL,PRIMARY_CATEGORY_NAME];
     FMResultSet *resultSet = [db executeQuery:query];
     FunnelModel *model;
@@ -156,10 +163,12 @@ static FunnelService *instance;
       model.funnelName = [resultSet stringForColumn:@"funnelName"];
       model.filterTitle = [resultSet stringForColumn:@"funnelName"];
       model.skipFlag = [resultSet intForColumn:@"skipFlag"];
+      model.notificationsFlag = [resultSet intForColumn:@"notificationsFlag"];
       model.newMessageCount = [resultSet intForColumn:@"readCount"];
 
 //        modelForFilter.filterTitle = [resultSet stringForColumn:@"funnelName"];
       model.emailAddresses = [resultSet stringForColumn:@"emailAddresses"];
+      model.webhookIds = [resultSet stringForColumn:@"webhookIds"];
       model.sendersArray = (NSMutableArray *)[[resultSet stringForColumn:@"emailAddresses"] componentsSeparatedByString:@","];
       model.phrases = [resultSet stringForColumn:@"phrases"];
       model.subjectsArray = (NSMutableArray *)[[resultSet stringForColumn:@"phrases"] componentsSeparatedByString:@","];
@@ -189,7 +198,7 @@ static FunnelService *instance;
   paramDict[@"funnelName"] = funnelName;
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    FMResultSet *resultSet = [db executeQuery:@"SELECT funnelId,funnelName,emailAddresses,phrases FROM funnels WHERE funnelName=:funnelName" withParameterDictionary:paramDict];
+    FMResultSet *resultSet = [db executeQuery:@"SELECT funnelId,funnelName,emailAddresses,webhookIds,phrases FROM funnels WHERE funnelName=:funnelName" withParameterDictionary:paramDict];
     
     while ([resultSet next]) {
       model = [[FunnelModel alloc]init];
@@ -197,6 +206,7 @@ static FunnelService *instance;
       model.funnelId = [resultSet stringForColumn:@"funnelId"];
       model.funnelName = [resultSet stringForColumn:@"funnelName"];
       model.emailAddresses = [resultSet stringForColumn:@"emailAddresses"];
+      model.webhookIds = [resultSet stringForColumn:@"webhookIds"];
       model.phrases = [resultSet stringForColumn:@"phrases"];
       
       //

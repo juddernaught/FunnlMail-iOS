@@ -9,20 +9,20 @@
 #import "TextFieldCell.h"
 
 @implementation TextFieldCell
-@synthesize textField,addButton,isAddButton,cancelButton,switchButton;
+@synthesize textField,addButton,isAddButton,switchButton;
 
 -(void) setIsSwitchVisibleMode:(BOOL)isSwitchVisibleMode
 {
-    addButton.hidden = isSwitchVisibleMode;
-    cancelButton.hidden = isSwitchVisibleMode;
     textField.hidden = isSwitchVisibleMode;
+    addButton.hidden = isSwitchVisibleMode;
     switchButton.hidden = !isSwitchVisibleMode;
+    [self setAccessoryView:textField.hidden ? switchButton : addButton];
 }
 
 
 -(BOOL) isSwitchVisibleMode
 {
-    return addButton.hidden;
+    return textField.hidden;
 }
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -30,19 +30,11 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         // Initialization code
-        
-        addButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
-        cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [cancelButton setImage:[UIImage imageNamed:@"close.png"] forState:UIControlStateNormal];
         textField = [[UITextField alloc] init];
         switchButton = [[UISwitch alloc] init];
-        [addButton setHidden:YES];
-        [cancelButton setHidden:YES];
-        [self addSubview:addButton];
-        [self addSubview:cancelButton];
+        addButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        addButton.frame = CGRectMake(0, 0, 25.f, 25.f);
         [self addSubview:textField];
-        [self setAccessoryView:switchButton];
-        [switchButton setHidden:YES];
     }
     return self;
 }
@@ -50,6 +42,7 @@
 -(void) layoutSubviews
 {
     [super layoutSubviews];
+    textField.frame = CGRectMake(10, 2,250, 40);
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
