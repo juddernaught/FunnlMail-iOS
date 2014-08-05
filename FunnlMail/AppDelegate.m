@@ -158,6 +158,7 @@
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
     // Store the deviceToken in the current installation and save it to Parse.
+    NSLog(@"didRegisterForRemoteNotificationsWithDeviceToken: %@",deviceToken);
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     NSString *loggedInEmail = [EmailService instance].userEmailID;
     if ([loggedInEmail length]) {
