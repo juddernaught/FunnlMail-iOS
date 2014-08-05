@@ -70,6 +70,13 @@ UIButton *loginButton;
     [self makeRequest:request];
 }
 
+-(void)callOffline{
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    if(appDelegate.internetAvailable == NO){
+        [self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
+    }
+}
+
 - (void) viewDidLoad {
     [super viewDidLoad];
     _receivedData = [[NSMutableData alloc] init];
@@ -83,7 +90,7 @@ UIButton *loginButton;
     if (!([allServers count] == 0 || [((EmailServerModel *)[allServers objectAtIndex:0]).refreshToken isEqualToString:@"nil"])) {
     
         [self refreshAccessToken];
-        [self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
+      
 
     }
     else {

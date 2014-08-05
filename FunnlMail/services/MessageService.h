@@ -24,7 +24,7 @@
 -(NSArray *) funnelsWithMessageID:(NSString *)messageID;
 -(NSArray *) messagesWithFunnelId:(NSString *)funnelId withSearchTerm:(NSString*)searchTerm;
 -(BOOL) deleteMessage:(NSString *)messageID;
-//newly added on 13th June 2014 by iauro001
+-(BOOL) deleteMessageWithGmailMessageID:(NSString *)gmailMessageID;
 -(NSArray *) retrieveAllMessages;
 -(NSArray *) retrieveOtherMessagesThanPrimary;
 -(NSArray *) retrieveLatestMessages;

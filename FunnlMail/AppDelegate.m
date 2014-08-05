@@ -23,6 +23,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    self.internetAvailable = YES;
     // MixPanel setup
     [Mixpanel sharedInstanceWithToken:@"08b1e55d72f1b22a8e5696c2b56a6777"];
     [[Mixpanel sharedInstance] track:@"App opened"];
@@ -66,7 +67,8 @@
     Reachability * reach = [Reachability reachabilityForInternetConnection];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
     [reach startNotifier];
-
+    [self reachabilityChanged:[NSNotification notificationWithName:kReachabilityChangedNotification object:reach]];
+    
     
     // Override point for customization after application launch.
     return YES;
@@ -83,11 +85,13 @@
         NSLog(@"------------- Internet is OFF ---------------");
         //[[[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Internet is not available." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
         self.internetAvailable = NO;
+        [self.loginViewController callOffline];
+
     }
     else
     {
         NSLog(@"------------- Internet is ON ---------------");
-        EmailServerModel *serverModel = [[[EmailServersService instance] allEmailServers] objectAtIndex:0];
+        //EmailServerModel *serverModel = [[[EmailServersService instance] allEmailServers] objectAtIndex:0];
         //if(serverModel.accessToken == nil || serverModel.accessToken.length == 0){
             NSLog(@"------------- refreshAccessToken ---------------");
             //[self.loginViewController refreshAccessToken];

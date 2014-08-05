@@ -52,6 +52,7 @@ static MessageService *instance;
         NSNumber *dateTimeInterval = [NSNumber numberWithDouble:[messageModel.date timeIntervalSince1970]];
         
         paramDict[@"messageID"] = messageModel.messageID;
+        paramDict[@"gmailMessageID"] = messageModel.gmailMessageID;
         paramDict[@"messageJSON"] = messageModel.messageJSON;
         paramDict[@"read"] = [NSNumber numberWithBool:messageModel.read];
         paramDict[@"date"] = dateTimeInterval;
@@ -63,7 +64,7 @@ static MessageService *instance;
         paramDict[@"skipFlag"] = [NSNumber numberWithBool:messageModel.skipFlag];
         
         [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-            success = [db executeUpdate:@"INSERT INTO messages (messageID,messageJSON,read,date,gmailthreadid,skipFlag,categoryName) VALUES (:messageID,:messageJSON,:read,:date,:gmailthreadid,:skipFlag,:categoryName)" withParameterDictionary:paramDict];
+            success = [db executeUpdate:@"INSERT INTO messages (messageID,messageJSON,read,date,gmailthreadid,skipFlag,categoryName,gmailMessageID) VALUES (:messageID,:messageJSON,:read,:date,:gmailthreadid,:skipFlag,:categoryName,:gmailMessageID)" withParameterDictionary:paramDict];
         }];
         
     }
@@ -77,7 +78,8 @@ static MessageService *instance;
   
   NSNumber *dateTimeInterval = [NSNumber numberWithDouble:[messageModel.date timeIntervalSince1970]];
   
-  paramDict[@"messageID"] = messageModel.messageID;
+    paramDict[@"messageID"] = messageModel.messageID;
+    paramDict[@"gmailMessageID"] = messageModel.gmailMessageID;
   paramDict[@"messageJSON"] = messageModel.messageJSON;
   paramDict[@"read"] = [NSNumber numberWithBool:messageModel.read];
   paramDict[@"date"] = dateTimeInterval;
@@ -86,7 +88,7 @@ static MessageService *instance;
   paramDict[@"categoryName"] = messageModel.categoryName;
 
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    success = [db executeUpdate:@"INSERT INTO messages (messageID,messageJSON,read,date,gmailthreadid,skipFlag,categoryName) VALUES (:messageID,:messageJSON,:read,:date,:gmailthreadid,:skipFlag,:categoryName)" withParameterDictionary:paramDict];
+    success = [db executeUpdate:@"INSERT INTO messages (messageID,messageJSON,read,date,gmailthreadid,skipFlag,categoryName,gmailMessageID) VALUES (:messageID,:messageJSON,:read,:date,:gmailthreadid,:skipFlag,:categoryName,:gmailMessageID)" withParameterDictionary:paramDict];
   }];
   
   return success;
@@ -578,6 +580,21 @@ static MessageService *instance;
   }];
   
   return success;
+}
+
+
+-(BOOL) deleteMessageWithGmailMessageID:(NSString *)gmailMessageID{
+    __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+    
+    __block BOOL success = NO;
+    
+    paramDict[@"gmailMessageID"] = gmailMessageID;
+    
+    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+        success = [db executeUpdate:@"DELETE FROM messages WHERE gmailMessageID=:gmailMessageID" withParameterDictionary:paramDict];
+    }];
+    
+    return success;
 }
 
 -(NSArray *) messagesWithFunnelId:(NSString *)funnelId top:(NSInteger)top{

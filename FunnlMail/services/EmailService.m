@@ -201,17 +201,14 @@ static NSString *currentFolder;
                  }
              }
              if(count){
-                 NSLog(@"added or modified messages: %@", messages);
-                 NSLog(@"deleted messages: %@", vanishedMessages);
+                 NSLog(@"INBOX --- added or modified messages: %@", messages);
+                 NSLog(@"INBOX --- deleted messages: %@", vanishedMessages);
                  [self refreshMessages];
              }
          }];
     });
     
     
-    
-    
-    /*
     MCOIMAPFetchMessagesOperation *trashSyncMessagesFetchOperation =  [[EmailService instance].imapSession syncMessagesByUIDWithFolder:TRASH requestKind:requestKind uids:mcoIndexSet modSeq:modSeqValue];
     [trashSyncMessagesFetchOperation setProgress:^(unsigned int progress) {
         NSLog(@"Progress: %u ", progress);
@@ -224,13 +221,8 @@ static NSString *currentFolder;
          {
              NSInteger count = 0;
              for (MCOIMAPMessage *m in messages) {
-                 MessageModel *tempMessageModel = [[MessageModel alloc] init];
-                 tempMessageModel.read = m.flags;
-                 tempMessageModel.date = m.header.date;
-                 tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
-                 tempMessageModel.messageJSON = [m serializable];
-                 tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
-                 [[MessageService instance] updateMessageMetaInfo:tempMessageModel];
+                 NSString *gmailMessageID = [NSString stringWithFormat:@"%llu",m.gmailMessageID];
+                 [[MessageService instance] deleteMessageWithGmailMessageID:gmailMessageID];
                  count++;
                  if(messages.count == count){
                      [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%llu",m.modSeqValue] forKey:@"MODSEQ"];
@@ -238,13 +230,40 @@ static NSString *currentFolder;
                  }
              }
              if(count){
-                 NSLog(@"added or modified messages: %@", messages);
-                 NSLog(@"deleted messages: %@", vanishedMessages);
+                 NSLog(@"TRASH ----- added or modified messages: %@", messages);
+                 NSLog(@"TRASH ----- deleted messages: %@", vanishedMessages);
+                 [self refreshMessages];
+             }
+         }];
+    });
+    
+    
+    /*MCOIMAPFetchMessagesOperation *archiveSyncMessagesFetchOperation =  [[EmailService instance].imapSession syncMessagesByUIDWithFolder:ARCHIVE requestKind:requestKind uids:mcoIndexSet modSeq:modSeqValue];
+    [archiveSyncMessagesFetchOperation setProgress:^(unsigned int progress) {
+        NSLog(@"Progress: %u ", progress);
+    }];
+    //         __weak EmailService *weakSelf = self;
+    NSLog(@"--- start Sync - ARCHIVE fetch operation for mail download");
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [archiveSyncMessagesFetchOperation start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
+         {
+             NSInteger count = 0;
+             for (MCOIMAPMessage *m in messages) {
+                 NSString *gmailMessageID = [NSString stringWithFormat:@"%llu",m.gmailMessageID];
+                 //[[MessageService instance] deleteMessageWithGmailMessageID:gmailMessageID];
+                 count++;
+//                 if(messages.count == count){
+//                     [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%llu",m.modSeqValue] forKey:@"MODSEQ"];
+//                     [[NSUserDefaults standardUserDefaults] synchronize];
+//                 }
+             }
+             if(count){
+                 NSLog(@"ARCHIVE----  added or modified messages: %@", messages);
+                 NSLog(@"ARCHIVE----  deleted messages: %@", vanishedMessages);
                  [self refreshMessages];
              }
          }];
     });*/
-    
 }
 
 -(void)refreshMessages{
@@ -350,6 +369,7 @@ static NSString *currentFolder;
                           tempMessageModel.date = m.header.date;
                           tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
                           tempMessageModel.messageJSON = [m serializable];
+                          tempMessageModel.gmailMessageID = [NSString stringWithFormat:@"%llu",m.gmailMessageID];
                           tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
                           tempMessageModel.skipFlag = 0;
                           tempMessageModel.categoryName = @"";
@@ -776,6 +796,7 @@ static NSString *currentFolder;
             tempMessageModel.read = m.flags;
             tempMessageModel.date = m.header.date;
             tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
+            tempMessageModel.gmailMessageID = [NSString stringWithFormat:@"%llu",m.gmailMessageID];
             tempMessageModel.messageJSON = [m serializable];
             tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
             tempMessageModel.skipFlag = 0;
@@ -783,8 +804,6 @@ static NSString *currentFolder;
             //        [[MessageService instance] insertMessage:tempMessageModel];
             tempMessageModel = nil;
         }
-        //    [[MessageService instance] performSelectorInBackground:@selector(insertBulkMessages:) withObject:messageModelArray];
-        //    [[MessageService instance] performSelector:@selector(insertBulkMessages:) withObject:nil afterDelay:0.1];
         [[MessageService instance] insertBulkMessages:messageModelArray];
     });
     

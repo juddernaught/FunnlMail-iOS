@@ -159,8 +159,15 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 //    [self.view bringSubviewToFront:tempAppDelegate.progressHUD];
 //    [tempAppDelegate.progressHUD show:YES];=
 //    [tempAppDelegate.progressHUD setHidden:NO];
-    [activityIndicator startAnimating];
-    [[EmailService instance] loadLatestMail:10 withTableController:self withFolder:INBOX];
+
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    if(appDelegate.internetAvailable){
+        [activityIndicator startAnimating];
+        [[EmailService instance] loadLatestMail:10 withTableController:self withFolder:INBOX];
+    }
+    else{
+        [tablecontroller.refreshControl endRefreshing];
+    }
 }
 
 -(void) setFilterModel:(FunnelModel *)filterModel{
@@ -851,12 +858,15 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
                 if (!self.isLoading && [EmailService instance].messages.count < [EmailService instance].totalNumberOfMessages)
                 {
-                    int totalNumberOfMessage = (int)[[MessageService instance] messagesAllTopMessages].count + NUMBER_OF_MESSAGES_TO_LOAD;
 //                    NSLog(@"[EmailsTableViewController didSelect] %d",totalNumberOfMessage);
                     NSLog(@"Call to loadLastNMessages from  didSelectRowAtIndexPath   function & isSearching = NO");
-                    [[EmailService instance] loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD withTableController:self withFolder:INBOX  withFetchRange:MCORangeEmpty];
-                    cell.accessoryView = self.loadMoreActivityView;
-                    [self.loadMoreActivityView startAnimating];
+                    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+                    if(appDelegate.internetAvailable){
+                        int totalNumberOfMessage = (int)[[MessageService instance] messagesAllTopMessages].count + NUMBER_OF_MESSAGES_TO_LOAD;
+                        [[EmailService instance] loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD withTableController:self withFolder:INBOX  withFetchRange:MCORangeEmpty];
+                        cell.accessoryView = self.loadMoreActivityView;
+                        [self.loadMoreActivityView startAnimating];
+                    }
                 }
                 [tableView deselectRowAtIndexPath:indexPath animated:YES];
                 break;
@@ -1178,6 +1188,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                         tempMessageModel.read = m.flags;
                         tempMessageModel.date = m.header.date;
                         tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
+                        tempMessageModel.gmailMessageID = [NSString stringWithFormat:@"%llu",m.gmailMessageID];
                         tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
                         tempMessageModel.messageJSON = [m serializable];
                         tempMessageModel.skipFlag = 0;
