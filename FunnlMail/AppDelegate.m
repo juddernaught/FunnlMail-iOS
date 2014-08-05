@@ -107,7 +107,7 @@
     NSTimeInterval time = [self.startDate timeIntervalSinceNow];
     //timeIntervalSinceNow returns negative value so this is required to convert to positive
     NSInteger ti = 0 - (NSInteger)time;
-    //I know some of these look stupid and could be dont faster, but when i tried ((ti % 60)/60) it would return 00.000
+    //I know some of these look stupid and could be done faster, but when i tried ((ti % 60)/60) it would return 00.000
     //which is mostly unuseable
     float secondsInDecimal = (ti % 60);
     float minutes = (ti / 60);

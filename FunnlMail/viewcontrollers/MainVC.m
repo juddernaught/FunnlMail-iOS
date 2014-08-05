@@ -44,6 +44,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [mainView reloadView];
     AppDelegate *app = APPDELEGATE;
     NSLog(@"viewWillAppear mainVC");
+    emailsTableViewController.emailFolder = INBOX;
     if([app.currentFunnelString.lowercaseString isEqualToString:[ALL_FUNNL lowercaseString]])
     {
          [self setTitle:ALL_FUNNL];
@@ -146,6 +147,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [composeEmailButton setImage:[UIImage imageNamed:@"composeIcon.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:composeEmailButton];
     
+    emailsTableViewController.emailFolder = INBOX;
     if(emailsTableViewController==nil){
         emailsTableViewController = [[EmailsTableViewController alloc]init];
         emailsTableViewController.mainVCdelegate = self;
