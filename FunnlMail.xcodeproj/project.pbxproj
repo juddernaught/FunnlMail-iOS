@@ -94,6 +94,8 @@
 		CCC9E42B193E8D180028DC84 /* MessageFilterXRefService.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC9E42A193E8D180028DC84 /* MessageFilterXRefService.m */; };
 		CCD00B5B18F54797007A675F /* MainView.m in Sources */ = {isa = PBXBuildFile; fileRef = CCD00B5A18F54797007A675F /* MainView.m */; };
 		D90CB1545C65478EAF879C60 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27D9CEE565FC46E3B3970F17 /* libPods.a */; };
+		FA2B426A1990AE320036EF0F /* Message@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FA2B42691990AE310036EF0F /* Message@2x.png */; };
+		FA2B42721990C7600036EF0F /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2B42711990C7600036EF0F /* Reachability.m */; };
 		FA2B9EA71977F5F800319391 /* ShareView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2B9EA61977F5F800319391 /* ShareView.m */; };
 		FA2C9BAB193DEF5200866BEE /* MCSwipeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2C9BAA193DEF5200866BEE /* MCSwipeTableViewCell.m */; };
 		FA2C9BD1193EDFCB00866BEE /* MMDrawerBarButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2C9BC9193EDFCB00866BEE /* MMDrawerBarButtonItem.m */; };
@@ -406,6 +408,9 @@
 		CCC9E42A193E8D180028DC84 /* MessageFilterXRefService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageFilterXRefService.m; path = services/MessageFilterXRefService.m; sourceTree = "<group>"; };
 		CCD00B5918F54797007A675F /* MainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainView.h; path = views/MainView.h; sourceTree = "<group>"; };
 		CCD00B5A18F54797007A675F /* MainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainView.m; path = views/MainView.m; sourceTree = "<group>"; };
+		FA2B42691990AE310036EF0F /* Message@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Message@2x.png"; sourceTree = "<group>"; };
+		FA2B42701990C7600036EF0F /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		FA2B42711990C7600036EF0F /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		FA2B9EA51977F5F800319391 /* ShareView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShareView.h; path = views/ShareView.h; sourceTree = "<group>"; };
 		FA2B9EA61977F5F800319391 /* ShareView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShareView.m; path = views/ShareView.m; sourceTree = "<group>"; };
 		FA2C9BA9193DEF5200866BEE /* MCSwipeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCSwipeTableViewCell.h; sourceTree = "<group>"; };
@@ -901,6 +906,8 @@
 		CC8C7EB018E6F34D00E76AE8 /* external */ = {
 			isa = PBXGroup;
 			children = (
+				FA2B42701990C7600036EF0F /* Reachability.h */,
+				FA2B42711990C7600036EF0F /* Reachability.m */,
 				FAAF16FB19863CDD00E877D4 /* SDWebImage */,
 				FA9164C31973D2FA006A4726 /* TITokenField */,
 				5ACEBEA0195DA0CA00D4EAAA /* RDSwipeableTableViewCell */,
@@ -1102,6 +1109,7 @@
 				FABAF0391976507E00AA7918 /* manage_Button.png */,
 				FABAF03A1976507E00AA7918 /* manage_Button@2x.png */,
 				FABAF03B1976507E00AA7918 /* Message.png */,
+				FA2B42691990AE310036EF0F /* Message@2x.png */,
 				FABAF03C1976507E00AA7918 /* Settings.png */,
 				FABAF03D1976507E00AA7918 /* Settings@2x.png */,
 				FABAF03E1976507E00AA7918 /* Share.png */,
@@ -1352,6 +1360,7 @@
 				66F2C48218E3293E00CD593E /* Images.xcassets in Resources */,
 				FA2C9BDE193EF92400866BEE /* Main.storyboard in Resources */,
 				FABAF0961976507E00AA7918 /* archiveListIcon@2x.png in Resources */,
+				FA2B426A1990AE320036EF0F /* Message@2x.png in Resources */,
 				FA4A2E8D198A837500CB9FAD /* swipeTrash.png in Resources */,
 				B7C940E2198D6F49008468E7 /* WHITEsliders3.png in Resources */,
 				66F2C47418E3293E00CD593E /* InfoPlist.strings in Resources */,
@@ -1534,6 +1543,7 @@
 				66AEEBA41936B1FC00B6DBE5 /* GTMOAuth2Authentication.m in Sources */,
 				6677881718EF83F800EF1962 /* MCOMessageView.mm in Sources */,
 				B7F093C6198C50EB0083D59E /* PageContentVC.m in Sources */,
+				FA2B42721990C7600036EF0F /* Reachability.m in Sources */,
 				CC39517218E6F9700093C787 /* MainFilterCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

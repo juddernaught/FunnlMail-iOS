@@ -223,7 +223,7 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
     BOOL flag = TRUE;
     for (MCOAddress *emailID in message.header.cc) {
         if ([emailAddress.mailbox.lowercaseString isEqual:emailID.mailbox.lowercaseString]) {
-            flag = FALSE;
+            //flag = FALSE;
         }
     }
     
@@ -238,7 +238,7 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
               // }
             //}
         }
-                [mailArray addObject:emailAddress.mailbox];
+        [mailArray addObject:emailAddress.mailbox];
     }
     
     for (MCOAddress *emailID in message.header.cc) {

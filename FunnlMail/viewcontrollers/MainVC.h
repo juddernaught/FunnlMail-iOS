@@ -16,13 +16,13 @@
 @class MainView;
 @interface MainVC : UIViewController<MainVCDelegate>{
 //  MainView *mainView;
-  EmailsTableViewController *emailsTableViewController;
   EmailThreadTableViewController *threadViewController;
   FunnelModel *currentFilterModel;
   UILabel *filterLabel;
     UILabel *navigationBarTitleLabel;
 }
 @property (nonatomic, retain) MainView *mainView;
+@property (nonatomic, retain) EmailsTableViewController *emailsTableViewController;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property (strong,nonatomic) FunnelModel *filterModel;
 @end

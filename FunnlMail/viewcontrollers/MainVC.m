@@ -30,7 +30,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 @end
 
 @implementation MainVC
-@synthesize mainView;
+@synthesize mainView,emailsTableViewController;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];

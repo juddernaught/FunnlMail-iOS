@@ -161,7 +161,7 @@ static NSString *mailCellIdentifier = @"MailCell";
         NSLog(@"Did swipe full cell, ");
         [[Mixpanel sharedInstance] track:@"Add email to Funnl"];
         [cell swipeToOriginWithCompletion:nil];
-        MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
+        MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)dataSourceArray[indexPath.row] messageJSON]];
         FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:YES withMessageId:uidKey withMessage:message subViewOnViewController:self];
         funnlPopUpView.mainVCdelegate = self.mainVCdelegate;
         

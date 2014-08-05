@@ -11,6 +11,7 @@
 #import "MMDrawerController.h"
 #import "FunnelModel.h"
 #import "MBProgressHUD.h"
+#import "Reachability.h"
 
 @class MenuViewController;
 @class LoginViewController;
@@ -28,5 +29,5 @@
 @property (strong, nonatomic) FunnelModel *currentFunnelDS;
 @property (strong, nonatomic) NSDate *startDate;
 @property (strong, nonatomic) LoginViewController *loginViewController;
-@property BOOL funnelUpDated;
+@property BOOL funnelUpDated,internetAvailable;
 @end

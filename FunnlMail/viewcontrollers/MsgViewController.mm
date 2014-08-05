@@ -66,7 +66,7 @@
     _messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 //    [self.view addSubview:_messageView];
     
-    
+//    NSLog(@"gmail Label: %@",[_message.gmailLabels description]);
     
     messageTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT-34)];
 //    [messageTableView setSeparatorColor:[UIColor clearColor]];

@@ -529,6 +529,49 @@ static NSString *currentFolder;
 }
 
 
+-(void)getNewMessages:(NSString*)emailStr nextPageToken:(NSString*)nextPage numberOfMaxResult:(NSInteger)maxResult withFolder:(NSString*)folderName withFetchRange:(MCORange)newFetchRange{
+    NSString *newAPIStr = @"";
+    
+    if(nextPage.length){
+        newAPIStr = [NSString stringWithFormat:@"https://www.googleapis.com/gmail/v1/users/%@/messages?pageToken=%@&labelIds=CATEGORY_PERSONAL&maxResults=%d",emailStr,nextPage,maxResult];
+    }
+    else{
+        newAPIStr = [NSString stringWithFormat:@"https://www.googleapis.com/gmail/v1/users/%@/messages?fields=messages(id,labelIds,threadId),nextPageToken&labelIds=CATEGORY_PERSONAL&maxResults=%d",emailStr,maxResult];
+    }
+    
+    NSURL *url = [NSURL URLWithString:newAPIStr];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPMethod:@"GET"];
+    
+    GTMOAuth2Authentication *currentAuth = [GTMOAuth2ViewControllerTouch authForGoogleFromKeychainForName:kKeychainItemName clientID:kMyClientID clientSecret:kMyClientSecret];
+    GTMHTTPFetcher* myFetcher = [GTMHTTPFetcher fetcherWithRequest:request];
+    [myFetcher setAuthorizer:currentAuth];
+    [myFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error) {
+        if (error != nil) {
+            // status code or network error
+            //NSLog(@"--Message info error %@: ", [error description]);
+        } else {
+            // succeeded
+            //            NSString* newStr = [[NSString alloc] initWithData:retrievedData encoding:NSUTF8StringEncoding];
+            //            NSLog(@"Message Info: %@",newStr);
+            NSDictionary* json = [NSJSONSerialization JSONObjectWithData:retrievedData options:kNilOptions error:&error];
+            NSArray* messageArray =[json objectForKey:@"messages"];
+            NSString *nextPageToken = [json objectForKey:@"nextPageToken"];
+            for (NSDictionary *dictionary in messageArray) {
+                [[EmailService instance].primaryMessages addObject:[dictionary objectForKey:@"id"]];
+            }
+            [self loadLastNMessages:-1 withTableController:self.emailsTableViewController withFolder:folderName withFetchRange:newFetchRange];
+
+            NSMutableArray *pArray = [[EmailService instance] primaryMessages];
+            [[NSUserDefaults standardUserDefaults] setObject:pArray forKey:@"PRIMARY"];
+//            [[NSUserDefaults standardUserDefaults] setObject:nextPageToken forKey:@"PRIMARY_PAGE_TOKEN"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            
+        }
+    }];
+}
+
 
 //loading latest mail
 #pragma mark -
@@ -562,8 +605,7 @@ static NSString *currentFolder;
              AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
              if(numberOfMessagesToLoad){
                  NSLog(@"checking new messages:  Range: %qu - %qu",fetchRange.location, fetchRange.length);
-                 [appDelegate.loginViewController getPrimaryMessages:[EmailService instance].userEmailID nextPageToken:0 numberOfMaxResult:numberOfMessagesToLoad + 10];
-                 [self loadLastNMessages:-1 withTableController:fv withFolder:inboxFolder withFetchRange:fetchRange];
+                 [self getNewMessages:[EmailService instance].userEmailID nextPageToken:0 numberOfMaxResult:numberOfMessagesToLoad + 10 withFolder:inboxFolder withFetchRange:fetchRange];
              }
              else{
                  NSLog(@"No New Message Found:  LastMessageIDSynced: %d",self.totalNumberOfMessages);

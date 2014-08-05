@@ -68,7 +68,7 @@
       
         [self addConstraint:constraint];
       
-         mailImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Mail"]];
+         mailImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Message.png"]];
         //mailImageView.frame = CGRectMake(0, 0, 30, 20);
         [self addSubview:mailImageView];
       
@@ -190,9 +190,10 @@
     }];
     settingsButton.hidden = YES;
   }else{
-        [mailImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+      mailImageView.image = [UIImage imageNamed:@"Message.png"];
+      [mailImageView mas_makeConstraints:^(MASConstraintMaker *make) {
           make.top.equalTo(filterTitleLabel.mas_bottom).with.offset(5);
-          make.left.equalTo(self.mas_centerX).with.offset(-(30/2));
+          make.left.equalTo(self.mas_centerX).with.offset(-(50/2));
         }];
     settingsButton.hidden = NO;
     notificationButton.hidden = NO;
