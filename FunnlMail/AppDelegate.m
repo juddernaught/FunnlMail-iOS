@@ -16,6 +16,7 @@
 #import "LoginViewController.h"
 #import "EmailService.h"
 #import "EmailServersService.h"
+#import <Crashlytics/Crashlytics.h>
 
 #define MIXPANEL_TOKEN @"08b1e55d72f1b22a8e5696c2b56a6777"
 
@@ -25,6 +26,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.internetAvailable = YES;
+    [Crashlytics startWithAPIKey:@"44e1f44afdbcda726d1a42fdbbd770dff98bca43"];
     // MixPanel setup
     //[[CIOExampleAPIClient sharedClient] clearCredentials];
     [Mixpanel sharedInstanceWithToken:@"08b1e55d72f1b22a8e5696c2b56a6777"];

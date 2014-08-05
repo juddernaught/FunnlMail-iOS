@@ -93,6 +93,7 @@
 		CCC9E428193E47980028DC84 /* ServiceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC9E427193E47980028DC84 /* ServiceTests.m */; };
 		CCC9E42B193E8D180028DC84 /* MessageFilterXRefService.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC9E42A193E8D180028DC84 /* MessageFilterXRefService.m */; };
 		CCD00B5B18F54797007A675F /* MainView.m in Sources */ = {isa = PBXBuildFile; fileRef = CCD00B5A18F54797007A675F /* MainView.m */; };
+		D152BB73199145B100058903 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D152BB72199145B100058903 /* Crashlytics.framework */; };
 		D1EFF48519817BBF0031A1D1 /* CIOAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = D1EFF47519817BBF0031A1D1 /* CIOAPIClient.m */; };
 		D1EFF48619817BBF0031A1D1 /* Base64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = D1EFF47819817BBF0031A1D1 /* Base64Transcoder.c */; };
 		D1EFF48719817BBF0031A1D1 /* hmac.c in Sources */ = {isa = PBXBuildFile; fileRef = D1EFF47A19817BBF0031A1D1 /* hmac.c */; };
@@ -434,6 +435,7 @@
 		CCC9E42A193E8D180028DC84 /* MessageFilterXRefService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageFilterXRefService.m; path = services/MessageFilterXRefService.m; sourceTree = "<group>"; };
 		CCD00B5918F54797007A675F /* MainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainView.h; path = views/MainView.h; sourceTree = "<group>"; };
 		CCD00B5A18F54797007A675F /* MainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainView.m; path = views/MainView.m; sourceTree = "<group>"; };
+		D152BB72199145B100058903 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		D1EFF47419817BBF0031A1D1 /* CIOAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CIOAPIClient.h; sourceTree = "<group>"; };
 		D1EFF47519817BBF0031A1D1 /* CIOAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CIOAPIClient.m; sourceTree = "<group>"; };
 		D1EFF47819817BBF0031A1D1 /* Base64Transcoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Base64Transcoder.c; sourceTree = "<group>"; };
@@ -657,6 +659,7 @@
 				6644FB2D197385ED004B4587 /* Parse.framework in Frameworks */,
 				667787F818EF6E4500EF1962 /* libMailCore-ios.a in Frameworks */,
 				66F2C46C18E3293E00CD593E /* CoreGraphics.framework in Frameworks */,
+				D152BB73199145B100058903 /* Crashlytics.framework in Frameworks */,
 				66F2C46E18E3293E00CD593E /* UIKit.framework in Frameworks */,
 				66F2C46A18E3293E00CD593E /* Foundation.framework in Frameworks */,
 				D90CB1545C65478EAF879C60 /* libPods.a in Frameworks */,
@@ -765,6 +768,7 @@
 		66F2C46818E3293E00CD593E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D152BB72199145B100058903 /* Crashlytics.framework */,
 				FAD311B0198262E500565A90 /* CoreText.framework */,
 				B703C50319760E27003037FC /* AddressBook.framework */,
 				6644FB451974D6BA004B4587 /* Accounts.framework */,
@@ -1374,6 +1378,7 @@
 				66F2C46318E3293E00CD593E /* Frameworks */,
 				66F2C46418E3293E00CD593E /* Resources */,
 				E90E35A521B447D19C589DEB /* Copy Pods Resources */,
+				D152BB6C1991454700058903 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1617,6 +1622,19 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
+		};
+		D152BB6C1991454700058903 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Crashlytics.framework/run 44e1f44afdbcda726d1a42fdbbd770dff98bca43 18a23b6cf9f71652078f61f4882f069f5260c2fd639aafcda561fb68a4495dd5";
 		};
 		E90E35A521B447D19C589DEB /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
