@@ -15,14 +15,16 @@
 #import "MainVC.h"
 #import "LoginViewController.h"
 #import "EmailService.h"
+#import "EmailServersService.h"
 
 #define MIXPANEL_TOKEN @"08b1e55d72f1b22a8e5696c2b56a6777"
 
 @implementation AppDelegate
-@synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController;
+@synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    self.internetAvailable = YES;
     // MixPanel setup
     //[[CIOExampleAPIClient sharedClient] clearCredentials];
     [Mixpanel sharedInstanceWithToken:@"08b1e55d72f1b22a8e5696c2b56a6777"];
@@ -64,8 +66,41 @@
     pageControl.currentPageIndicatorTintColor = [UIColor blackColor];
     pageControl.backgroundColor = [UIColor whiteColor];
     
+    Reachability * reach = [Reachability reachabilityForInternetConnection];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
+    [reach startNotifier];
+    [self reachabilityChanged:[NSNotification notificationWithName:kReachabilityChangedNotification object:reach]];
+    
+    
     // Override point for customization after application launch.
     return YES;
+}
+
+-(void)reachabilityChanged:(NSNotification*)note
+{
+    Reachability * reach = [note object];
+    NSLog(@"%@ %d %@", reach.currentReachabilityFlags,reach.currentReachabilityStatus,reach.currentReachabilityString);
+    
+    //if(reach.currentReachabilityStatus == NotReachable)
+    if([reach.currentReachabilityString isEqualToString:@"No Connection"])
+    {
+        NSLog(@"------------- Internet is OFF ---------------");
+        //[[[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Internet is not available." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
+        self.internetAvailable = NO;
+        [self.loginViewController callOffline];
+
+    }
+    else
+    {
+        NSLog(@"------------- Internet is ON ---------------");
+        //EmailServerModel *serverModel = [[[EmailServersService instance] allEmailServers] objectAtIndex:0];
+        //if(serverModel.accessToken == nil || serverModel.accessToken.length == 0){
+            NSLog(@"------------- refreshAccessToken ---------------");
+            //[self.loginViewController refreshAccessToken];
+            
+        //}
+        self.internetAvailable = YES;
+    }
 }
 							
 - (void)applicationWillResignActive:(UIApplication *)application

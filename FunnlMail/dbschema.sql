@@ -4,6 +4,7 @@ insert into dbVersion (version) values ('1.0');
 create table messages(
 messageID TEXT,
 messageJSON TEXT,
+gmailMessageID TEXT,
 read INTEGER,
 date REAL,
 gmailthreadid TEXT,

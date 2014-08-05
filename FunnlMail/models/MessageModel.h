@@ -10,7 +10,7 @@
 
 @interface MessageModel : NSObject
 
-@property (copy) NSString *messageID;
+@property (copy) NSString *messageID,*gmailMessageID;
 @property (copy) NSString *messageJSON;
 @property (assign) BOOL read;
 @property (assign) int skipFlag;

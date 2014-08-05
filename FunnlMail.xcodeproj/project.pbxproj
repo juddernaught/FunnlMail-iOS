@@ -120,6 +120,8 @@
 		D1EFF4C719818B6F0031A1D1 /* button-provider-yahoo.png in Resources */ = {isa = PBXBuildFile; fileRef = D1EFF4BB19818B6F0031A1D1 /* button-provider-yahoo.png */; };
 		D1EFF4C819818B6F0031A1D1 /* button-provider-yahoo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D1EFF4BC19818B6F0031A1D1 /* button-provider-yahoo@2x.png */; };
 		D90CB1545C65478EAF879C60 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27D9CEE565FC46E3B3970F17 /* libPods.a */; };
+		FA2B426A1990AE320036EF0F /* Message@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FA2B42691990AE310036EF0F /* Message@2x.png */; };
+		FA2B42721990C7600036EF0F /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2B42711990C7600036EF0F /* Reachability.m */; };
 		FA2B9EA71977F5F800319391 /* ShareView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2B9EA61977F5F800319391 /* ShareView.m */; };
 		FA2C9BAB193DEF5200866BEE /* MCSwipeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2C9BAA193DEF5200866BEE /* MCSwipeTableViewCell.m */; };
 		FA2C9BD1193EDFCB00866BEE /* MMDrawerBarButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2C9BC9193EDFCB00866BEE /* MMDrawerBarButtonItem.m */; };
@@ -478,6 +480,9 @@
 		D1EFF4BA19818B6F0031A1D1 /* button-provider-gmail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-gmail@2x.png"; sourceTree = "<group>"; };
 		D1EFF4BB19818B6F0031A1D1 /* button-provider-yahoo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-yahoo.png"; sourceTree = "<group>"; };
 		D1EFF4BC19818B6F0031A1D1 /* button-provider-yahoo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-yahoo@2x.png"; sourceTree = "<group>"; };
+		FA2B42691990AE310036EF0F /* Message@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Message@2x.png"; sourceTree = "<group>"; };
+		FA2B42701990C7600036EF0F /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		FA2B42711990C7600036EF0F /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		FA2B9EA51977F5F800319391 /* ShareView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShareView.h; path = views/ShareView.h; sourceTree = "<group>"; };
 		FA2B9EA61977F5F800319391 /* ShareView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShareView.m; path = views/ShareView.m; sourceTree = "<group>"; };
 		FA2C9BA9193DEF5200866BEE /* MCSwipeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCSwipeTableViewCell.h; sourceTree = "<group>"; };
@@ -974,6 +979,8 @@
 			isa = PBXGroup;
 			children = (
 				D1EFF47219817BBF0031A1D1 /* ContextIO */,
+				FA2B42701990C7600036EF0F /* Reachability.h */,
+				FA2B42711990C7600036EF0F /* Reachability.m */,
 				FAAF16FB19863CDD00E877D4 /* SDWebImage */,
 				FA9164C31973D2FA006A4726 /* TITokenField */,
 				5ACEBEA0195DA0CA00D4EAAA /* RDSwipeableTableViewCell */,
@@ -1268,6 +1275,7 @@
 				FABAF0391976507E00AA7918 /* manage_Button.png */,
 				FABAF03A1976507E00AA7918 /* manage_Button@2x.png */,
 				FABAF03B1976507E00AA7918 /* Message.png */,
+				FA2B42691990AE310036EF0F /* Message@2x.png */,
 				FABAF03C1976507E00AA7918 /* Settings.png */,
 				FABAF03D1976507E00AA7918 /* Settings@2x.png */,
 				FABAF03E1976507E00AA7918 /* Share.png */,
@@ -1522,6 +1530,7 @@
 				FA2C9BDE193EF92400866BEE /* Main.storyboard in Resources */,
 				D1EFF4C519818B6F0031A1D1 /* button-provider-gmail.png in Resources */,
 				FABAF0961976507E00AA7918 /* archiveListIcon@2x.png in Resources */,
+				FA2B426A1990AE320036EF0F /* Message@2x.png in Resources */,
 				FA4A2E8D198A837500CB9FAD /* swipeTrash.png in Resources */,
 				B7C940E2198D6F49008468E7 /* WHITEsliders3.png in Resources */,
 				66F2C47418E3293E00CD593E /* InfoPlist.strings in Resources */,
@@ -1727,6 +1736,7 @@
 				66AEEBA41936B1FC00B6DBE5 /* GTMOAuth2Authentication.m in Sources */,
 				6677881718EF83F800EF1962 /* MCOMessageView.mm in Sources */,
 				B7F093C6198C50EB0083D59E /* PageContentVC.m in Sources */,
+				FA2B42721990C7600036EF0F /* Reachability.m in Sources */,
 				CC39517218E6F9700093C787 /* MainFilterCell.m in Sources */,
 				D1EFF4A9198184C60031A1D1 /* AFHTTPClient.m in Sources */,
 				D1EFF4AA198184C60031A1D1 /* AFHTTPRequestOperation.m in Sources */,
@@ -1897,7 +1907,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0E3C9948-8D7E-4801-9CC4-D2BCCD76452B";
+				PROVISIONING_PROFILE = "F3962F6B-FF15-404A-B229-F27BF4827590";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1935,7 +1945,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "BC2AA396-60F3-4CAA-ADD7-2D55F7B3AB72";
+				PROVISIONING_PROFILE = "B09BCEE0-8ECB-4ABD-AA6A-89D815E0E57D";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

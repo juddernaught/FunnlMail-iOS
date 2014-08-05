@@ -30,4 +30,6 @@
 @property (nonatomic) BOOL isRefreshing;
 @property (strong, nonatomic) UIPageViewController *pageController;
 -(void)getPrimaryMessages:(NSString*)emailStr nextPageToken:(NSString*)nextPage numberOfMaxResult:(NSInteger)maxResult;
+-(void)refreshAccessToken;
+-(void)callOffline;
 @end

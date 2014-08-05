@@ -37,7 +37,7 @@
     listView.delegate = self;
     listView.dataSource = self;
     listView.backgroundColor = [UIColor clearColor];
-    listView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    listView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     [self.view addSubview:listView];
     
     UIView *headerLine = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];

@@ -201,17 +201,14 @@ static NSString *currentFolder;
                  }
              }
              if(count){
-                 NSLog(@"added or modified messages: %@", messages);
-                 NSLog(@"deleted messages: %@", vanishedMessages);
+                 NSLog(@"INBOX --- added or modified messages: %@", messages);
+                 NSLog(@"INBOX --- deleted messages: %@", vanishedMessages);
                  [self refreshMessages];
              }
          }];
     });
     
     
-    
-    
-    /*
     MCOIMAPFetchMessagesOperation *trashSyncMessagesFetchOperation =  [[EmailService instance].imapSession syncMessagesByUIDWithFolder:TRASH requestKind:requestKind uids:mcoIndexSet modSeq:modSeqValue];
     [trashSyncMessagesFetchOperation setProgress:^(unsigned int progress) {
         NSLog(@"Progress: %u ", progress);
@@ -224,13 +221,8 @@ static NSString *currentFolder;
          {
              NSInteger count = 0;
              for (MCOIMAPMessage *m in messages) {
-                 MessageModel *tempMessageModel = [[MessageModel alloc] init];
-                 tempMessageModel.read = m.flags;
-                 tempMessageModel.date = m.header.date;
-                 tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
-                 tempMessageModel.messageJSON = [m serializable];
-                 tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
-                 [[MessageService instance] updateMessageMetaInfo:tempMessageModel];
+                 NSString *gmailMessageID = [NSString stringWithFormat:@"%llu",m.gmailMessageID];
+                 [[MessageService instance] deleteMessageWithGmailMessageID:gmailMessageID];
                  count++;
                  if(messages.count == count){
                      [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%llu",m.modSeqValue] forKey:@"MODSEQ"];
@@ -238,13 +230,40 @@ static NSString *currentFolder;
                  }
              }
              if(count){
-                 NSLog(@"added or modified messages: %@", messages);
-                 NSLog(@"deleted messages: %@", vanishedMessages);
+                 NSLog(@"TRASH ----- added or modified messages: %@", messages);
+                 NSLog(@"TRASH ----- deleted messages: %@", vanishedMessages);
+                 [self refreshMessages];
+             }
+         }];
+    });
+    
+    
+    /*MCOIMAPFetchMessagesOperation *archiveSyncMessagesFetchOperation =  [[EmailService instance].imapSession syncMessagesByUIDWithFolder:ARCHIVE requestKind:requestKind uids:mcoIndexSet modSeq:modSeqValue];
+    [archiveSyncMessagesFetchOperation setProgress:^(unsigned int progress) {
+        NSLog(@"Progress: %u ", progress);
+    }];
+    //         __weak EmailService *weakSelf = self;
+    NSLog(@"--- start Sync - ARCHIVE fetch operation for mail download");
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [archiveSyncMessagesFetchOperation start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
+         {
+             NSInteger count = 0;
+             for (MCOIMAPMessage *m in messages) {
+                 NSString *gmailMessageID = [NSString stringWithFormat:@"%llu",m.gmailMessageID];
+                 //[[MessageService instance] deleteMessageWithGmailMessageID:gmailMessageID];
+                 count++;
+//                 if(messages.count == count){
+//                     [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%llu",m.modSeqValue] forKey:@"MODSEQ"];
+//                     [[NSUserDefaults standardUserDefaults] synchronize];
+//                 }
+             }
+             if(count){
+                 NSLog(@"ARCHIVE----  added or modified messages: %@", messages);
+                 NSLog(@"ARCHIVE----  deleted messages: %@", vanishedMessages);
                  [self refreshMessages];
              }
          }];
     });*/
-    
 }
 
 -(void)refreshMessages{
@@ -350,6 +369,7 @@ static NSString *currentFolder;
                           tempMessageModel.date = m.header.date;
                           tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
                           tempMessageModel.messageJSON = [m serializable];
+                          tempMessageModel.gmailMessageID = [NSString stringWithFormat:@"%llu",m.gmailMessageID];
                           tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
                           tempMessageModel.skipFlag = 0;
                           tempMessageModel.categoryName = @"";
@@ -529,6 +549,49 @@ static NSString *currentFolder;
 }
 
 
+-(void)getNewMessages:(NSString*)emailStr nextPageToken:(NSString*)nextPage numberOfMaxResult:(NSInteger)maxResult withFolder:(NSString*)folderName withFetchRange:(MCORange)newFetchRange{
+    NSString *newAPIStr = @"";
+    
+    if(nextPage.length){
+        newAPIStr = [NSString stringWithFormat:@"https://www.googleapis.com/gmail/v1/users/%@/messages?pageToken=%@&labelIds=CATEGORY_PERSONAL&maxResults=%d",emailStr,nextPage,maxResult];
+    }
+    else{
+        newAPIStr = [NSString stringWithFormat:@"https://www.googleapis.com/gmail/v1/users/%@/messages?fields=messages(id,labelIds,threadId),nextPageToken&labelIds=CATEGORY_PERSONAL&maxResults=%d",emailStr,maxResult];
+    }
+    
+    NSURL *url = [NSURL URLWithString:newAPIStr];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPMethod:@"GET"];
+    
+    GTMOAuth2Authentication *currentAuth = [GTMOAuth2ViewControllerTouch authForGoogleFromKeychainForName:kKeychainItemName clientID:kMyClientID clientSecret:kMyClientSecret];
+    GTMHTTPFetcher* myFetcher = [GTMHTTPFetcher fetcherWithRequest:request];
+    [myFetcher setAuthorizer:currentAuth];
+    [myFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error) {
+        if (error != nil) {
+            // status code or network error
+            //NSLog(@"--Message info error %@: ", [error description]);
+        } else {
+            // succeeded
+            //            NSString* newStr = [[NSString alloc] initWithData:retrievedData encoding:NSUTF8StringEncoding];
+            //            NSLog(@"Message Info: %@",newStr);
+            NSDictionary* json = [NSJSONSerialization JSONObjectWithData:retrievedData options:kNilOptions error:&error];
+            NSArray* messageArray =[json objectForKey:@"messages"];
+            NSString *nextPageToken = [json objectForKey:@"nextPageToken"];
+            for (NSDictionary *dictionary in messageArray) {
+                [[EmailService instance].primaryMessages addObject:[dictionary objectForKey:@"id"]];
+            }
+            [self loadLastNMessages:-1 withTableController:self.emailsTableViewController withFolder:folderName withFetchRange:newFetchRange];
+
+            NSMutableArray *pArray = [[EmailService instance] primaryMessages];
+            [[NSUserDefaults standardUserDefaults] setObject:pArray forKey:@"PRIMARY"];
+//            [[NSUserDefaults standardUserDefaults] setObject:nextPageToken forKey:@"PRIMARY_PAGE_TOKEN"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            
+        }
+    }];
+}
+
 
 //loading latest mail
 #pragma mark -
@@ -562,8 +625,7 @@ static NSString *currentFolder;
              AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
              if(numberOfMessagesToLoad){
                  NSLog(@"checking new messages:  Range: %qu - %qu",fetchRange.location, fetchRange.length);
-                 [appDelegate.loginViewController getPrimaryMessages:[EmailService instance].userEmailID nextPageToken:0 numberOfMaxResult:numberOfMessagesToLoad + 10];
-                 [self loadLastNMessages:-1 withTableController:fv withFolder:inboxFolder withFetchRange:fetchRange];
+                 [self getNewMessages:[EmailService instance].userEmailID nextPageToken:0 numberOfMaxResult:numberOfMessagesToLoad + 10 withFolder:inboxFolder withFetchRange:fetchRange];
              }
              else{
                  NSLog(@"No New Message Found:  LastMessageIDSynced: %d",self.totalNumberOfMessages);
@@ -734,6 +796,7 @@ static NSString *currentFolder;
             tempMessageModel.read = m.flags;
             tempMessageModel.date = m.header.date;
             tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
+            tempMessageModel.gmailMessageID = [NSString stringWithFormat:@"%llu",m.gmailMessageID];
             tempMessageModel.messageJSON = [m serializable];
             tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
             tempMessageModel.skipFlag = 0;
@@ -741,8 +804,6 @@ static NSString *currentFolder;
             //        [[MessageService instance] insertMessage:tempMessageModel];
             tempMessageModel = nil;
         }
-        //    [[MessageService instance] performSelectorInBackground:@selector(insertBulkMessages:) withObject:messageModelArray];
-        //    [[MessageService instance] performSelector:@selector(insertBulkMessages:) withObject:nil afterDelay:0.1];
         [[MessageService instance] insertBulkMessages:messageModelArray];
     });
     

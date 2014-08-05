@@ -30,9 +30,9 @@
 
 @implementation LoginViewController
 
-static NSString *const kKeychainItemName = @"OAuth2 Sample: Gmail";
-NSString *kMyClientID = @"655269106649-rkom4nvj3m9ofdpg6sk53pi65mpivv7d.apps.googleusercontent.com";     // pre-assigned by service
-NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
+//static NSString *const kKeychainItemName = @"OAuth2 Sample: Gmail";
+//NSString *kMyClientID = @"655269106649-rkom4nvj3m9ofdpg6sk53pi65mpivv7d.apps.googleusercontent.com";     // pre-assigned by service
+//NSString *kMyClientSecret = @"1ggvIxWh-rV_Eb9OX9so7aCt";
 NSArray *images;
 UIButton *loginButton;
 //NSString *kMyClientID = @"994627364215-ctjmrhiul95ts0qrkc38sap3mo3go3ko.apps.googleusercontent.com";     // pre-assigned by service
@@ -48,6 +48,37 @@ UIButton *loginButton;
     return self;
 }
 
+-(void)refreshAccessToken{
+    // right now there is only 1 email address allowed
+    self.emailServerModel = [[[EmailServersService instance] allEmailServers] objectAtIndex:0];
+    
+    // Set the HTTP POST parameters required for refreshing the access token.
+    NSString *refreshPostParams = [NSString stringWithFormat:@"refresh_token=%@&client_id=%@&client_secret=%@&grant_type=refresh_token",
+                                   self.emailServerModel.refreshToken,
+                                   kMyClientID,
+                                   kMyClientSecret
+                                   ];
+    
+    // Indicate that an access token refresh process is on the way.
+    self.isRefreshing = YES;
+    
+    // Create the request object and set its properties.
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:accessTokenEndpoint]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[refreshPostParams dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    
+    // Make the request.
+    [self makeRequest:request];
+}
+
+-(void)callOffline{
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    if(appDelegate.internetAvailable == NO){
+        [self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
+    }
+}
+
 - (void) viewDidLoad {
     [super viewDidLoad];
     _receivedData = [[NSMutableData alloc] init];
@@ -60,27 +91,9 @@ UIButton *loginButton;
     NSArray *allServers = [[EmailServersService instance] allEmailServers];
     if (!([allServers count] == 0 || [((EmailServerModel *)[allServers objectAtIndex:0]).refreshToken isEqualToString:@"nil"])) {
     
-        // right now there is only 1 email address allowed
-        self.emailServerModel = [[[EmailServersService instance] allEmailServers] objectAtIndex:0];
-        
-        // Set the HTTP POST parameters required for refreshing the access token.
-        NSString *refreshPostParams = [NSString stringWithFormat:@"refresh_token=%@&client_id=%@&client_secret=%@&grant_type=refresh_token",
-                                       self.emailServerModel.refreshToken,
-                                       kMyClientID,
-                                       kMyClientSecret
-                                       ];
-        
-        // Indicate that an access token refresh process is on the way.
-        self.isRefreshing = YES;
-        
-        // Create the request object and set its properties.
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:accessTokenEndpoint]];
-        [request setHTTPMethod:@"POST"];
-        [request setHTTPBody:[refreshPostParams dataUsingEncoding:NSUTF8StringEncoding]];
-        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-        
-        // Make the request.
-        [self makeRequest:request];
+        [self refreshAccessToken];
+      
+
     }
     else {
         self.view.backgroundColor = [UIColor colorWithHexString:@"F6F6F6"];
@@ -88,8 +101,6 @@ UIButton *loginButton;
         //adding demo page
         
         self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
-        
-        
         
         self.pageController.dataSource = self;
         
@@ -408,6 +419,7 @@ UIButton *loginButton;
         
         // update database with new access token
         [[EmailServersService instance] updateEmailServer:self.emailServerModel];
+//        [[EmailService instance] startLogin:self.mainViewController.emailsTableViewController];
         
         if (self.isRefreshing) {
             self.isRefreshing = NO;
