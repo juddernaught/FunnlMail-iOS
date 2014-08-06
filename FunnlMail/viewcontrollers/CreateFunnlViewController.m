@@ -193,10 +193,10 @@ NSMutableArray *emailArr,*searchArray;
         cell.textField.placeholder = @"";
         cell.textLabel.text = @"";
         cell.switchButton.on = NO;
-        [cell.switchButton addTarget:nil action:nil forControlEvents:nil];
         [cell.addButton setImage:[UIImage imageNamed:@"addIcon.png"]
                         forState:UIControlStateNormal];
         cell.addButton.tag = indexPath.row;
+        cell.switchButton.tag = indexPath.section;
         //resetting cell finshes, set new data from here
         
         switch (indexPath.section) {
@@ -254,7 +254,7 @@ NSMutableArray *emailArr,*searchArray;
                 [cell setIsSwitchVisibleMode:YES];
                 cell.textLabel.text = [NSString stringWithFormat:@"Enable Notifications"];
                 [cell.switchButton setOn:areNotificationsEnabled];
-                [cell.switchButton addTarget:self action:@selector(changeNotificationSwitch:) forControlEvents:UIControlEventValueChanged];
+                [cell.switchButton addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
             }
                 break;
                 
@@ -459,12 +459,15 @@ NSMutableArray *emailArr,*searchArray;
 }
 
 - (void)changeSwitch:(UISwitch*)sender {
-    if([sender isOn]){
-        NSLog(@"Switch is ON");
-        isSkipAll = TRUE;
-    } else{
-        NSLog(@"Switch is OFF");
-        isSkipAll = FALSE;
+    switch (sender.tag) {
+        case 3:
+            isSkipAll = sender.on;
+            break;
+        case 4:
+            [self changeNotificationSwitch:sender];
+            break;
+        default:
+            break;
     }
 }
 
@@ -676,15 +679,75 @@ NSMutableArray *emailArr,*searchArray;
     [self.navigationController popViewControllerAnimated:YES];
 }
 
--(void) saveFunnlandCreateWebhookForParams:(NSDictionary *) params
+
+
+-(void) showAlertForError:(NSError *) error
 {
-    [[CIOExampleAPIClient sharedClient] createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
-        [self saveFunnlWithWebhookId:[responseDict objectForKey:@"webhook_id"]];
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:[error description] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-        [alert show];
-    }];
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+    [alertView show];
+}
+
+
+-(void) createWebhooksAndSaveFunnl
+{
+    NSArray *senders = [dictionaryOfConversations allValues];
+    NSArray *subjects = [dictionaryOfSubjects allValues];
+    __block int reqCnt = [senders count];
+    if ([subjects count]) {
+        reqCnt *= [subjects count];
+    }
+    NSMutableDictionary *webhooks = [[NSMutableDictionary alloc] init];
+    //creation of webhooks
+    for (NSString *sender in senders) {
+        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+        [params setObject:sender forKey:@"filter-from"];
+        [params setObject:@"0" forKey:@"sync_period"];
+        if ([subjects count]) {
+            for (NSString *subject in subjects) {
+                [params setObject:subject forKey:@"filter_subject"];
+                [[CIOExampleAPIClient sharedClient] createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
+                    [webhooks setObject:responseDict forKey:sender];
+                    reqCnt--;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if (reqCnt == 0) {
+                            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:webhooks options:NSJSONWritingPrettyPrinted error:nil];
+                            NSString *webhookIds = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+                            [self saveFunnlWithWebhookId:webhookIds];
+                        }
+                    });
+                } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                    reqCnt--;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self showAlertForError:error];
+                        if (reqCnt == 0) {
+                            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                        }
+                    });
+                }];
+                continue;
+            }
+        } else {
+            [[CIOExampleAPIClient sharedClient] createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
+                [webhooks setObject:responseDict forKey:sender];
+                reqCnt--;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (reqCnt == 0) {
+                        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:webhooks options:NSJSONWritingPrettyPrinted error:nil];
+                        NSString *webhookIds = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+                        [self saveFunnlWithWebhookId:webhookIds];
+                    }
+                });
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                reqCnt--;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self showAlertForError:error];
+                    if (reqCnt == 0) {
+                        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                    }
+                });
+            }];
+        }
+    }
 }
 
 -(void)saveButtonPressed
@@ -714,46 +777,41 @@ NSMutableArray *emailArr,*searchArray;
         }
 
         if(dictionaryOfConversations.allKeys.count){
-            NSArray *senders = [dictionaryOfConversations allValues];
-            NSMutableString *filterFromString = [[NSMutableString alloc] init];
-            for (NSString *sender in senders) {
-                [filterFromString appendString:sender];
-                if (![[senders lastObject] isEqualToString:sender]) {
-                    [filterFromString appendString:@","];
-                }
-            } //creating comma separated email ID strings to pass to Context.IO API
-            
-            NSArray *subjects = [dictionaryOfSubjects allValues];
-            NSMutableString *subjectsString = [[NSMutableString alloc] init];
-            for (NSString *subject in subjects) {
-                [subjectsString appendString:subject];
-                if (![[subjects lastObject] isEqualToString:subject]) {
-                    [subjectsString appendString:@","];
-                }
-            } //creating comma separated Subject strings to pass to Context.IO API
-            
-            NSDictionary *params = @{@"filter-from": filterFromString,@"sync_period":@"0"};
-            if ([subjectsString length]) {
-                params = @{@"filter-from": filterFromString,@"sync_period":@"0",@"filter_subject":subjectsString};
-            }
-            
-            if (areNotificationsEnabled) {
-                if ([oldModel.webhookIds length]) {
-                    //Setting previously created Webhook to inactive or deleting it and creating a new one because thats the only way suggested on Context.IO website
-                    [[CIOExampleAPIClient sharedClient] deleteWebhookWithID:[oldModel webhookIds]success:^(NSDictionary *responseDict) {
-                        if ([[responseDict objectForKey:@"success"] boolValue]) {
-                            [self saveFunnlandCreateWebhookForParams:params];
-                        }
-                    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:[error description] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-                        [alert show];
-                    }];
-                } else {
-                    [self saveFunnlandCreateWebhookForParams:params];
-                }
-            } else {
+            if (!areNotificationsEnabled) {
                 [self saveFunnlWithWebhookId:nil];
+            } else {
+                [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                if ([oldModel.webhookIds length]) {
+                    NSString *webhookJSONString = [oldModel webhookIds];
+                    NSData *jsonData = [webhookJSONString dataUsingEncoding:NSUTF8StringEncoding];
+                    NSMutableDictionary *webhooks = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:nil]];
+                    NSArray *senders = [[webhooks allKeys] copy];
+                    __block int reqCnt = [senders count];
+                    for (NSString *sender in senders) {
+                        NSString *webhook_id = [webhooks objectForKey:sender];
+                        [[CIOExampleAPIClient sharedClient] deleteWebhookWithID:webhook_id success:^(NSDictionary *responseDict) {
+                            NSLog(@"responseDict deletion %@",responseDict);
+                            [webhooks removeObjectForKey:webhook_id];
+                            reqCnt--;
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                if (reqCnt == 0) {
+                                    [self createWebhooksAndSaveFunnl];
+                                }
+                            });
+                        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                            reqCnt--;
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [self showAlertForError:error];
+                                if (reqCnt == 0) {
+                                    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                                }
+                            });
+                        }];
+                    }
+                } else {
+                    [self createWebhooksAndSaveFunnl];
+                }
+                
             }
         }else{
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Please add at least one email" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];

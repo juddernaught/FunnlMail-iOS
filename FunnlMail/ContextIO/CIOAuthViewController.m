@@ -88,7 +88,6 @@
     [self.aolButton addTarget:self action:@selector(providerButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.aolButton];
     
-    [self providerButtonPressed:self.gmailButton];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
