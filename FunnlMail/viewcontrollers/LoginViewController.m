@@ -19,6 +19,8 @@
 #import "EmailServersService.h"
 #import <Mixpanel/Mixpanel.h>
 #import "PageContentVC.h"
+#import "CIOExampleAPIClient.h"
+#import "CIOAuthViewController.h"
 
 #define accessTokenEndpoint @"https://accounts.google.com/o/oauth2/token"
 
@@ -213,6 +215,16 @@ UIButton *loginButton;
         self.emailServerModel.emailAddress = email;
         self.emailServerModel.accessToken = accessToken;
         self.emailServerModel.refreshToken = refreshToken;
+        
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge|
+         UIRemoteNotificationTypeAlert|
+         UIRemoteNotificationTypeSound];
+        
+//        [[CIOExampleAPIClient sharedClient] finishLoginWithConnectToken:self.emailServerModel.accessToken saveCredentials:YES success:^(id responseObject) {
+//            NSLog(@"responseObject %@",responseObject);
+//        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//            NSLog(@"erro %@",error);
+//        }];
 
         [[EmailServersService instance] insertEmailServer:self.emailServerModel];
         MCOIMAPSession * imapSession = [[MCOIMAPSession alloc] init];
@@ -271,7 +283,7 @@ UIButton *loginButton;
 
             [EmailService instance].userEmailID = currentEmail;
             [EmailService instance].userImageURL = currentUserImageURL;
-
+            
             [[NSUserDefaults standardUserDefaults] synchronize];
             [EmailService instance].primaryMessages = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"PRIMARY"]];
             NSString *nextPageToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"PRIMARY_PAGE_TOKEN"];

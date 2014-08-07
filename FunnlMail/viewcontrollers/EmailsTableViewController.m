@@ -1103,12 +1103,27 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 }
 
 #pragma mark - SearchBar delegates
-- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar;{
+- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar{
+    CGRect searchBarFrame = searchBar.frame;
+    searchBarFrame.size.height = 80.f;
+    searchBar.frame = searchBarFrame;
     searchBar.showsCancelButton = YES;
+    searchBar.showsScopeBar = YES;
+    NSArray *scopeButtonTitles = @[@"All Mail",@"Current Funnl"];
+    [searchBar setScopeButtonTitles:scopeButtonTitles];
+    self.tableView.tableHeaderView = searchBar;
     return YES;
 }
 
-- (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar;{
+- (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar{
+    CGRect searchBarFrame = searchBar.frame;
+    searchBarFrame.size.height = 40.f;
+    searchBar.frame = searchBarFrame;
+    searchBar.showsCancelButton = NO;
+    searchBar.showsScopeBar = NO;
+    NSArray *scopeButtonTitles = nil;
+    [searchBar setScopeButtonTitles:scopeButtonTitles];
+    self.tableView.tableHeaderView = searchBar;
     return YES;
 }
 
@@ -1116,12 +1131,11 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     return YES;
 }
 
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar;{
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
     
 }
 
-- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar;{
-    
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar{
 }
 
 #pragma mark SearchFunction
@@ -1130,6 +1144,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     NSString *searchText = searchBar.text;
     isSearching = YES;
     if(self.filterModel == nil || [self.filterModel.funnelId isEqualToString:@"0"] || [self.filterModel.funnelId isEqualToString:@"1"]){
+//    if([searchBar selectedScopeButtonIndex] == 0){
         //All mailbox
         [self searchInMemory:searchText];
     }

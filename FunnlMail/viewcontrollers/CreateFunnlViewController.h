@@ -23,6 +23,8 @@
     NSArray *randomColors;
     FunnelModel *oldModel;
     UISwitch *skipAllSwitch;
+    UISwitch *enableNotificationsSwitch;
+    BOOL areNotificationsEnabled;
     BOOL isSkipAll;
 }
 @property (weak) id<MainVCDelegate> mainVCdelegate;

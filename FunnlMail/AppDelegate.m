@@ -11,10 +11,12 @@
 #import "ServiceTests.h"
 #import <Mixpanel/Mixpanel.h>
 #import <Parse/Parse.h>
+#import "CIOExampleAPIClient.h"
 #import "MainVC.h"
 #import "LoginViewController.h"
 #import "EmailService.h"
 #import "EmailServersService.h"
+#import <Crashlytics/Crashlytics.h>
 
 #define MIXPANEL_TOKEN @"08b1e55d72f1b22a8e5696c2b56a6777"
 
@@ -24,7 +26,9 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.internetAvailable = YES;
+    [Crashlytics startWithAPIKey:@"44e1f44afdbcda726d1a42fdbbd770dff98bca43"];
     // MixPanel setup
+    //[[CIOExampleAPIClient sharedClient] clearCredentials];
     [Mixpanel sharedInstanceWithToken:@"08b1e55d72f1b22a8e5696c2b56a6777"];
     [[Mixpanel sharedInstance] track:@"App opened"];
     // Parse setup
@@ -154,13 +158,22 @@
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
     // Store the deviceToken in the current installation and save it to Parse.
+    NSLog(@"didRegisterForRemoteNotificationsWithDeviceToken: %@",deviceToken);
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    NSString *loggedInEmail = [EmailService instance].userEmailID;
+    if ([loggedInEmail length]) {
+        if (![currentInstallation channels]) {
+            [currentInstallation setChannels:@[loggedInEmail]];
+        }
+        [currentInstallation addUniqueObject:@"aUser" forKey:loggedInEmail];
+    }
     [currentInstallation setDeviceTokenFromData:deviceToken];
     [currentInstallation saveInBackground];
 }
 
 - (void)application:(UIApplication *)application
 didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    NSLog(@"didReceiveRemoteNotification: %@",userInfo);
     [PFPush handlePush:userInfo];
 }
 
