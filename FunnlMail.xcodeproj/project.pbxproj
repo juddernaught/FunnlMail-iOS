@@ -121,6 +121,8 @@
 		D1EFF4C719818B6F0031A1D1 /* button-provider-yahoo.png in Resources */ = {isa = PBXBuildFile; fileRef = D1EFF4BB19818B6F0031A1D1 /* button-provider-yahoo.png */; };
 		D1EFF4C819818B6F0031A1D1 /* button-provider-yahoo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D1EFF4BC19818B6F0031A1D1 /* button-provider-yahoo@2x.png */; };
 		D90CB1545C65478EAF879C60 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27D9CEE565FC46E3B3970F17 /* libPods.a */; };
+		FA029C391993BAC50021C6B1 /* ContactModel.m in Sources */ = {isa = PBXBuildFile; fileRef = FA029C381993BAC50021C6B1 /* ContactModel.m */; };
+		FA029C401993BB890021C6B1 /* ContactService.m in Sources */ = {isa = PBXBuildFile; fileRef = FA029C3F1993BB890021C6B1 /* ContactService.m */; };
 		FA2B426A1990AE320036EF0F /* Message@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FA2B42691990AE310036EF0F /* Message@2x.png */; };
 		FA2B42721990C7600036EF0F /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2B42711990C7600036EF0F /* Reachability.m */; };
 		FA2B9EA71977F5F800319391 /* ShareView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2B9EA61977F5F800319391 /* ShareView.m */; };
@@ -482,6 +484,10 @@
 		D1EFF4BA19818B6F0031A1D1 /* button-provider-gmail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-gmail@2x.png"; sourceTree = "<group>"; };
 		D1EFF4BB19818B6F0031A1D1 /* button-provider-yahoo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-yahoo.png"; sourceTree = "<group>"; };
 		D1EFF4BC19818B6F0031A1D1 /* button-provider-yahoo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-provider-yahoo@2x.png"; sourceTree = "<group>"; };
+		FA029C371993BAC50021C6B1 /* ContactModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactModel.h; path = models/ContactModel.h; sourceTree = "<group>"; };
+		FA029C381993BAC50021C6B1 /* ContactModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactModel.m; path = models/ContactModel.m; sourceTree = "<group>"; };
+		FA029C3E1993BB890021C6B1 /* ContactService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactService.h; path = services/ContactService.h; sourceTree = "<group>"; };
+		FA029C3F1993BB890021C6B1 /* ContactService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactService.m; path = services/ContactService.m; sourceTree = "<group>"; };
 		FA2B42691990AE310036EF0F /* Message@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Message@2x.png"; sourceTree = "<group>"; };
 		FA2B42701990C7600036EF0F /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		FA2B42711990C7600036EF0F /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
@@ -871,6 +877,8 @@
 				CCC9E415193D5CDF0028DC84 /* EmailServerModel.m */,
 				CCC9E41D193DF91D0028DC84 /* MessageModel.h */,
 				CCC9E41E193DF91D0028DC84 /* MessageModel.m */,
+				FA029C371993BAC50021C6B1 /* ContactModel.h */,
+				FA029C381993BAC50021C6B1 /* ContactModel.m */,
 			);
 			name = models;
 			sourceTree = "<group>";
@@ -913,6 +921,8 @@
 				CCC9E41B193DF5E80028DC84 /* FunnelService.m */,
 				CCC9E420193DF9B10028DC84 /* MessageService.h */,
 				CCC9E421193DF9B10028DC84 /* MessageService.m */,
+				FA029C3E1993BB890021C6B1 /* ContactService.h */,
+				FA029C3F1993BB890021C6B1 /* ContactService.m */,
 				CCC9E423193E414F0028DC84 /* ServiceUtils.h */,
 				CCC9E424193E414F0028DC84 /* ServiceUtils.m */,
 				CCC9E429193E8D180028DC84 /* MessageFilterXRefService.h */,
@@ -1658,6 +1668,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA029C401993BB890021C6B1 /* ContactService.m in Sources */,
 				FAAF171E19863CDD00E877D4 /* SDWebImageDownloader.m in Sources */,
 				FAAF172519863CDD00E877D4 /* UIImage+WebP.m in Sources */,
 				CC8C7ECE18E6F38100E76AE8 /* NSArray+MASAdditions.m in Sources */,
@@ -1675,6 +1686,7 @@
 				FAAF172419863CDD00E877D4 /* UIImage+MultiFormat.m in Sources */,
 				CC8C7ECA18E6F38100E76AE8 /* MASConstraintMaker.m in Sources */,
 				FAAF172119863CDD00E877D4 /* SDWebImagePrefetcher.m in Sources */,
+				FA029C391993BAC50021C6B1 /* ContactModel.m in Sources */,
 				FAABF1801952FA750072FFE8 /* FunnlPopUpView.m in Sources */,
 				CC8C7ED018E6F38100E76AE8 /* View+MASAdditions.m in Sources */,
 				66AEEBAF1936B5D100B6DBE5 /* GTMHTTPFetcher.m in Sources */,

@@ -32,4 +32,5 @@
 -(void)getPrimaryMessages:(NSString*)emailStr nextPageToken:(NSString*)nextPage numberOfMaxResult:(NSInteger)maxResult;
 -(void)refreshAccessToken;
 -(void)callOffline;
+-(void)fetchContacts;
 @end

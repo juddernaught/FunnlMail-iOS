@@ -83,6 +83,9 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     if (!self) {
         return nil;
     }
+    _accountID = accountID;
+    _OAuthToken = token;
+    _OAuthTokenSecret = tokenSecret;
     
     if (_accountID && _OAuthToken && _OAuthTokenSecret) {
         
@@ -234,7 +237,23 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
             _isAuthorized = YES;
         }
     }
+     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"IS_NEW_INSTALL"];
+     [[NSUserDefaults standardUserDefaults] synchronize];
 }
+
+-(void)checkSSKeychainDataForNewInstall{
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    BOOL isNewInstall = [[NSUserDefaults standardUserDefaults] boolForKey:@"IS_NEW_INSTALL"];
+    if(isNewInstall == NO){
+        NSLog(@"CIOAPIClient: New Install detected, clearing credentials for SSKeychains");
+        [self clearCredentials];
+    }
+    else{
+        [self loadCredentials];
+        NSLog(@"CIOAPIClient: App already Installed, loading credentials for SSKeychains:  AccountID: %@",_accountID);
+    }
+}
+
 
 - (void)clearCredentials {
     

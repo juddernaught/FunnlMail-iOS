@@ -45,6 +45,10 @@ typedef enum {
  The timeout interval for all requests made. Defaults to 60 seconds.
  */
 @property (nonatomic, assign) NSTimeInterval timeoutInterval;
+- (void)loadCredentials;
+- (void)saveCredentials;
+- (void)checkSSKeychainDataForNewInstall;
+
 
 ///---------------------------------------------
 /// @name Creating and Initializing API Clients

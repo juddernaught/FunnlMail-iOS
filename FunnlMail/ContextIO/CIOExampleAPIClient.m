@@ -9,8 +9,7 @@
 #import "CIOExampleAPIClient.h"
 
 //#error Please enter your Context.IO API credentials below and comment out this line.
-static NSString * const kContextIOConsumerKey = @"npe4azak";
-static NSString * const kContextIOConsumerSecret = @"OcBGyTDYEdSat6fz";
+
 
 @implementation CIOExampleAPIClient
 

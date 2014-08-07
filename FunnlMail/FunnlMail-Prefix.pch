@@ -19,6 +19,8 @@
 #define kMyClientID @"655269106649-rkom4nvj3m9ofdpg6sk53pi65mpivv7d.apps.googleusercontent.com"
 #define kMyClientSecret @"1ggvIxWh-rV_Eb9OX9so7aCt"
 
+#define  kContextIOConsumerKey  @"npe4azak"
+#define kContextIOConsumerSecret  @"OcBGyTDYEdSat6fz"
 
 #define FUNNEL_NAME_REPEATED @"Funnl name is being repeated."
 #define FUNNEL_NAME_BLANK @"Funnl name is empty."
@@ -28,7 +30,7 @@
 #define EMPTY_DELIMITER @"#NOT#"
 #define HEIGHT [[UIScreen mainScreen] bounds].size.height
 #define WIDTH [[UIScreen mainScreen] bounds].size.width
-#define NUMBER_OF_MESSAGES_TO_LOAD 100
+#define NUMBER_OF_MESSAGES_TO_LOAD 500
 #define NUMBER_OF_MESSAGES_TO_LOAD_ON_SEARCH NUMBER_OF_MESSAGES_TO_LOAD
 
 #define SHOW_PRIMARY_INBOX 1

@@ -21,11 +21,14 @@
 #define MIXPANEL_TOKEN @"08b1e55d72f1b22a8e5696c2b56a6777"
 
 @implementation AppDelegate
-@synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable;
+@synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable,contextIOAPIClient;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.internetAvailable = YES;
+    
+    
+    
     [Crashlytics startWithAPIKey:@"44e1f44afdbcda726d1a42fdbbd770dff98bca43"];
     // MixPanel setup
     //[[CIOExampleAPIClient sharedClient] clearCredentials];
@@ -73,6 +76,13 @@
     [reach startNotifier];
     [self reachabilityChanged:[NSNotification notificationWithName:kReachabilityChangedNotification object:reach]];
     
+    contextIOAPIClient = [[CIOAPIClient alloc] initWithConsumerKey:kContextIOConsumerKey consumerSecret:kContextIOConsumerSecret];
+    [contextIOAPIClient checkSSKeychainDataForNewInstall];
+    if(contextIOAPIClient.isAuthorized){
+        NSLog(@"---- ContextIO is Already authorized ----- accessToken: %@",contextIOAPIClient.description);
+//        [self.loginViewController performSelector:@selector(fetchContacts) withObject:nil afterDelay:0.1];
+//        [self.loginViewController performSelectorInBackground:@selector(fetchContacts) withObject:nil];
+    }
     
     // Override point for customization after application launch.
     return YES;

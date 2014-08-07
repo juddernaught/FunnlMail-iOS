@@ -21,10 +21,14 @@
 #import "PageContentVC.h"
 #import "CIOExampleAPIClient.h"
 #import "CIOAuthViewController.h"
+#import "CIOAPIClient.h"
+#import "ContactService.h"
 
 #define accessTokenEndpoint @"https://accounts.google.com/o/oauth2/token"
 
-@interface LoginViewController ()
+@interface LoginViewController (){
+    
+}
 
 @end
 
@@ -219,12 +223,6 @@ UIButton *loginButton;
         [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge|
          UIRemoteNotificationTypeAlert|
          UIRemoteNotificationTypeSound];
-        
-//        [[CIOExampleAPIClient sharedClient] finishLoginWithConnectToken:self.emailServerModel.accessToken saveCredentials:YES success:^(id responseObject) {
-//            NSLog(@"responseObject %@",responseObject);
-//        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-//            NSLog(@"erro %@",error);
-//        }];
 
         [[EmailServersService instance] insertEmailServer:self.emailServerModel];
         MCOIMAPSession * imapSession = [[MCOIMAPSession alloc] init];
@@ -255,10 +253,90 @@ UIButton *loginButton;
     }
 }
 
+-(void)getContextIOWithEmail:(NSString*)email withFirstName:(NSString*)firstName withLastName:(NSString*)lastName{
+//
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    if(![appDelegate.contextIOAPIClient isAuthorized]){
+        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+        [params setObject:email forKey:@"email"];
+        [params setObject:firstName forKey:@"first_name"];
+        [params setObject:lastName forKey:@"last_name"];
+        
+        [appDelegate.contextIOAPIClient postPath:@"accounts" params:params success:^(NSDictionary *responseDict) {
+            NSLog(@"----- %@",responseDict.description);
+            NSString *contextIO_access_token = [responseDict objectForKey:@"access_token"];
+            NSString *contextIO_access_token_secret = [responseDict objectForKey:@"access_token_secret"];
+            NSString *contextIO_account_id = [responseDict objectForKey:@"id"];
+            appDelegate.contextIOAPIClient = [[CIOAPIClient alloc] initWithConsumerKey:kContextIOConsumerKey consumerSecret:kContextIOConsumerSecret token:contextIO_access_token tokenSecret:contextIO_access_token_secret accountID:contextIO_account_id];
+            [appDelegate.contextIOAPIClient  saveCredentials];
+            
+            [self addToSourceWithAccountID:contextIO_account_id];
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"error getting contacts: %@", error);
+        }];
+    }
+}
 
+-(void)addToSourceWithAccountID:(NSString*)accID{
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+    [params setObject:self.emailServerModel.emailAddress forKey:@"email"];
+    [params setObject:self.emailServerModel.emailAddress forKey:@"username"];
+    [params setObject:@"993" forKey:@"port"];
+    [params setObject:@"IMAP" forKey:@"type"];
+    [params setObject:@"1" forKey:@"use_ssl"];
+    [params setObject:@"imap.googlemail.com" forKey:@"server"];
+    [params setObject:self.emailServerModel.accessToken forKey:@"provider_token"];
+    [params setObject:kMyClientID forKey:@"provider_consumer_key"];
+    [params setObject:kMyClientSecret forKey:@"provider_token_secret"];
+    NSString *path = [NSString stringWithFormat:@"https://api.context.io/2.0/accounts/%@/sources",accID];
+    [appDelegate.contextIOAPIClient postPath:path params:params success:^(NSDictionary *responseDict) {
+        NSLog(@"-----> %@",responseDict.description);
+        [self performSelector:@selector(fetchContacts) withObject:nil afterDelay:20];
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"error getting contacts: %@", error);
+    }];
+}
+
+-(void)fetchContacts{
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    //    [appDelegate.contextIOAPIClient getContactsWithParams:nil success:^(NSDictionary *responseDict) {
+        [appDelegate.contextIOAPIClient getContactsWithParams:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"0",@"10000",nil] forKeys:[NSArray arrayWithObjects:@"offset",@"limit",nil]] success:^(NSDictionary *responseDict) {
+            NSArray *dataArray = [responseDict objectForKey:@"matches"];
+            NSMutableArray *contactModelArray = [NSMutableArray new];
+            if(dataArray){
+                for (NSDictionary *dictionary in dataArray) {
+                    ContactModel *cModel = [[ContactModel alloc] init];
+                    cModel.name = [dictionary objectForKey:@"name"];
+                    cModel.email = [dictionary objectForKey:@"email"];
+                    cModel.thumbnail = [dictionary objectForKey:@"thumbnail"];
+                    cModel.count = [[dictionary objectForKey:@"count"] integerValue];
+                    cModel.received_count = [[dictionary objectForKey:@"received_count"] integerValue];
+                    cModel.sent_from_account_count = [[dictionary objectForKey:@"sent_from_account_count"] integerValue];
+                    cModel.sent_count = [[dictionary objectForKey:@"sent_count"] integerValue];
+                    
+                    if(cModel.name == nil)
+                        cModel.name = @"";
+                    if(cModel.email == nil)
+                        cModel.email = @"";
+                    if(cModel.thumbnail == nil)
+                        cModel.thumbnail = @"";
+                    
+                    [contactModelArray addObject:cModel];
+                }
+                [[ContactService instance] insertBulkContacts:contactModelArray];
+            }
+            NSLog(@"----- %@",responseDict.description);
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"error getting contacts: %@", error);
+        }];
+    });
+}
 
 -(void)getUserInfo{
-    //    NSURL *url = [NSURL URLWithString:@"https://www.googleapis.com/gmail/v1/users/krunal.chaudhari@iauro.com/labels"];
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     NSURL *url = [NSURL URLWithString:@"https://www.googleapis.com/oauth2/v1/userinfo?alt=json"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
@@ -283,7 +361,10 @@ UIButton *loginButton;
 
             [EmailService instance].userEmailID = currentEmail;
             [EmailService instance].userImageURL = currentUserImageURL;
-            
+            if(![appDelegate.contextIOAPIClient isAuthorized]){
+                [self getContextIOWithEmail:currentEmail withFirstName:currentName withLastName:currentName];
+            }
+
             [[NSUserDefaults standardUserDefaults] synchronize];
             [EmailService instance].primaryMessages = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"PRIMARY"]];
             NSString *nextPageToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"PRIMARY_PAGE_TOKEN"];
@@ -291,7 +372,7 @@ UIButton *loginButton;
                 nextPageToken = @"";
             }
             
-            AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+            
             [appDelegate.menuController.listArray replaceObjectAtIndex:0 withObject:currentName];
             [appDelegate.menuController.imageArray replaceObjectAtIndex:0 withObject:[EmailService instance].userImageURL];
             [appDelegate.menuController.listView reloadData];

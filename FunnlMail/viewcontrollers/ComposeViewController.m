@@ -18,6 +18,8 @@
 #import <Mixpanel/Mixpanel.h>
 #import <AddressBook/AddressBook.h>
 #import <CoreText/CoreText.h>
+#import "ContactService.h"
+#import "ContactModel.h"
 
 static NSString * mainJavascript = @"\
 var imageElements = function() {\
@@ -164,19 +166,28 @@ replacementString:(NSString *)string {
 
 - (void)searchAutocompleteEntriesWithSubstring:(NSString *)substring {
     
-    // Put anything that starts with this substring into the searchArray
-    // The items in this array is what will show up in the table view
-    [searchArray removeAllObjects];
-    for(NSMutableString *curString in emailArr) {
-        
-        substring = [substring stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-
-        if ([curString rangeOfString:substring].location == 0) {
-            [searchArray addObject:curString];
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [searchArray removeAllObjects];
+        if(substring.length){
+            searchArray = [[NSMutableArray alloc] initWithArray:[[ContactService instance] searchContactsWithString:substring]];
+            //    for(NSMutableString *curString in emailArr) {
+            //
+            //        substring = [substring stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            //
+            //        if ([curString rangeOfString:substring].location == 0) {
+            //            [searchArray addObject:curString];
+            //        }
+            //
+            //    }
+        }
+        else{
+            [searchArray removeAllObjects];
         }
 
-    }
-    [autocompleteTableView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [autocompleteTableView reloadData];
+        });
+    });
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
