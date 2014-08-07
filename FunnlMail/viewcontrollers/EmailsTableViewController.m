@@ -76,6 +76,8 @@ UIView *greyView;
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    NSLog(@"how often does this happen");
+    NSLog(@"what is emailFolder: %@",self.emailFolder);
     if ([EmailService instance].filterMessages.count > 0) {
         [self.tableView reloadData];
     }

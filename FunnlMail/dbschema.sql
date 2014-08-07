@@ -12,7 +12,7 @@ messageHTMLBody TEXT,
 skipFlag INTEGER,
 funnelJson TEXT,
 categoryName TEXT,
-PRIMARY KEY (messageID)
+PRIMARY KEY (messageID,categoryName)
 );
 
 create table funnels(
