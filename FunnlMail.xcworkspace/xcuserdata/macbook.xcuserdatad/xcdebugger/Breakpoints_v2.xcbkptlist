@@ -83,12 +83,12 @@
                   symbolName = "-[CreateFunnlViewController saveButtonPressed]"
                   moduleName = "FunnlMail"
                   urlString = "file:///Users/macbook/Desktop/FunnlMail/git-FunnlMail-iOS/FunnlMail/viewcontrollers/CreateFunnlViewController.m"
-                  timestampString = "429117552.934956"
+                  timestampString = "429170245.263872"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "798"
                   endingLineNumber = "798"
-                  offsetFromSymbolStart = "2522">
+                  offsetFromSymbolStart = "2337">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -97,12 +97,12 @@
                   symbolName = "__46-[CreateFunnlViewController saveButtonPressed]_block_invoke"
                   moduleName = "FunnlMail"
                   urlString = "file:///Users/macbook/Desktop/FunnlMail/git-FunnlMail-iOS/FunnlMail/viewcontrollers/CreateFunnlViewController.m"
-                  timestampString = "429117552.935306"
+                  timestampString = "429170245.264176"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "798"
                   endingLineNumber = "798"
-                  offsetFromSymbolStart = "61">
+                  offsetFromSymbolStart = "44">
                </Location>
             </Locations>
          </BreakpointContent>
