@@ -11,18 +11,29 @@
 #import "ServiceTests.h"
 #import <Mixpanel/Mixpanel.h>
 #import <Parse/Parse.h>
+#import "CIOExampleAPIClient.h"
 #import "MainVC.h"
 #import "LoginViewController.h"
 #import "EmailService.h"
+#import "EmailServersService.h"
+#import <Crashlytics/Crashlytics.h>
 
 #define MIXPANEL_TOKEN @"08b1e55d72f1b22a8e5696c2b56a6777"
 
 @implementation AppDelegate
-@synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController;
+@synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable,contextIOAPIClient;
 
+
+#pragma mark - didFinishLaunching
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    self.internetAvailable = YES;
+    
+    
+    
+    [Crashlytics startWithAPIKey:@"44e1f44afdbcda726d1a42fdbbd770dff98bca43"];
     // MixPanel setup
+    //[[CIOExampleAPIClient sharedClient] clearCredentials];
     [Mixpanel sharedInstanceWithToken:@"08b1e55d72f1b22a8e5696c2b56a6777"];
     [[Mixpanel sharedInstance] track:@"App opened"];
     // Parse setup
@@ -62,10 +73,71 @@
     pageControl.currentPageIndicatorTintColor = [UIColor blackColor];
     pageControl.backgroundColor = [UIColor whiteColor];
     
+    Reachability * reach = [Reachability reachabilityForInternetConnection];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
+    [reach startNotifier];
+    [self reachabilityChanged:[NSNotification notificationWithName:kReachabilityChangedNotification object:reach]];
+    
+    contextIOAPIClient = [[CIOAPIClient alloc] initWithConsumerKey:kContextIOConsumerKey consumerSecret:kContextIOConsumerSecret];
+    [contextIOAPIClient checkSSKeychainDataForNewInstall];
+    if(contextIOAPIClient.isAuthorized){
+        NSLog(@"---- ContextIO is Already authorized ----- accessToken: %@",contextIOAPIClient.description);
+//        [self.loginViewController performSelector:@selector(fetchContacts) withObject:nil afterDelay:0.1];
+//        [self.loginViewController performSelectorInBackground:@selector(fetchContacts) withObject:nil];
+    }
+    
     // Override point for customization after application launch.
     return YES;
 }
-							
+
+#pragma mark - Rechability
+-(void)reachabilityChanged:(NSNotification*)note
+{
+    Reachability * reach = [note object];
+    NSLog(@"%@ %d %@", reach.currentReachabilityFlags,reach.currentReachabilityStatus,reach.currentReachabilityString);
+    
+    //if(reach.currentReachabilityStatus == NotReachable)
+    if([reach.currentReachabilityString isEqualToString:@"No Connection"])
+    {
+        NSLog(@"------------- Internet is OFF ---------------");
+        //[[[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Internet is not available." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
+        self.internetAvailable = NO;
+        [self.loginViewController callOffline];
+
+    }
+    else
+    {
+        NSLog(@"------------- Internet is ON ---------------");
+        //EmailServerModel *serverModel = [[[EmailServersService instance] allEmailServers] objectAtIndex:0];
+        //if(serverModel.accessToken == nil || serverModel.accessToken.length == 0){
+            NSLog(@"------------- refreshAccessToken ---------------");
+            //[self.loginViewController refreshAccessToken];
+            
+        //}
+        self.internetAvailable = YES;
+    }
+}
+
+#pragma mark - Welcome Overlay
+
+-(void)showWelcomeOverlay{
+    showWelcomeOverlay = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+    showWelcomeOverlay.opaque = NO;
+    showWelcomeOverlay.backgroundColor = CLEAR_COLOR;
+    showWelcomeOverlay.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+    NSString *htmlPath = [[NSBundle mainBundle] pathForResource:@"index" ofType:@"html"];
+
+    [showWelcomeOverlay  loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:htmlPath]]];
+    [self.window addSubview:showWelcomeOverlay];
+    [self.window bringSubviewToFront:showWelcomeOverlay];
+}
+                          
+-(void)hideWelcomeOverlay{
+    [showWelcomeOverlay removeFromSuperview];
+}
+
+#pragma mark - applicationWillResignActive
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -90,7 +162,9 @@
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     self.startDate = [NSDate date];
-    if([EmailService instance].emailsTableViewController){        
+    
+    if([EmailService instance].emailsTableViewController){
+        NSLog(@"-----applicationDidBecomeActive-----");
         [[EmailService instance] performSelector:@selector(checkMailsAtStart:) withObject:[EmailService instance].emailsTableViewController afterDelay:0.1];
     }
 }
@@ -119,13 +193,22 @@
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
     // Store the deviceToken in the current installation and save it to Parse.
+    NSLog(@"didRegisterForRemoteNotificationsWithDeviceToken: %@",deviceToken);
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    NSString *loggedInEmail = [EmailService instance].userEmailID;
+    if ([loggedInEmail length]) {
+        if (![currentInstallation channels]) {
+            [currentInstallation setChannels:@[loggedInEmail]];
+        }
+        [currentInstallation addUniqueObject:@"aUser" forKey:loggedInEmail];
+    }
     [currentInstallation setDeviceTokenFromData:deviceToken];
     [currentInstallation saveInBackground];
 }
 
 - (void)application:(UIApplication *)application
 didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    NSLog(@"didReceiveRemoteNotification: %@",userInfo);
     [PFPush handlePush:userInfo];
 }
 

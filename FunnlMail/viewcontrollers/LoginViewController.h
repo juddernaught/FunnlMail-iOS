@@ -14,7 +14,9 @@
 #import "GTMOAuth2ViewControllerTouch.h"
 @class MainVC;
 @interface LoginViewController : UIViewController <NSURLConnectionDataDelegate,GTMFetcherAuthorizationProtocol,GTMHTTPFetcherServiceProtocol>
-
+{
+    
+}
 @property (nonatomic, retain) UITextField *username;
 @property (nonatomic, retain) UITextField *password;
 @property (nonatomic, retain) UIView *blockerView;
@@ -30,4 +32,7 @@
 @property (nonatomic) BOOL isRefreshing;
 @property (strong, nonatomic) UIPageViewController *pageController;
 -(void)getPrimaryMessages:(NSString*)emailStr nextPageToken:(NSString*)nextPage numberOfMaxResult:(NSInteger)maxResult;
+-(void)refreshAccessToken;
+-(void)callOffline;
+-(void)fetchContacts;
 @end

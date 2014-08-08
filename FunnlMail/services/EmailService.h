@@ -22,7 +22,7 @@
 @property (nonatomic, strong) MCOIMAPSession *imapSession;
 @property (nonatomic, strong) MCOSMTPSession *smtpSession;
 @property (nonatomic, strong) MCOIMAPFetchMessagesOperation *imapMessagesFetchOp;
-@property (nonatomic) NSInteger totalNumberOfMessages;
+@property (nonatomic) u_int64_t totalNumberOfMessages;
 @property (nonatomic, strong) NSMutableDictionary *threadIdDictionary;
 @property (nonatomic, strong) NSMutableArray *messages;
 @property (nonatomic, strong) NSMutableDictionary *messagePreviews;
@@ -31,7 +31,7 @@
 @property (nonatomic, strong) NSMutableArray *sentMessages;
 @property (nonatomic, strong) NSMutableDictionary *sentMessagePreviews;
 @property (nonatomic, strong) NSMutableArray *primaryMessages;
-@property (nonatomic, strong) NSString *userEmailID,*userImageURL;
+@property (nonatomic, strong) NSString *userEmailID,*userImageURL,*userName;
 @property (nonatomic, strong) EmailsTableViewController *emailsTableViewController;
 +(EmailService *)instance;
 +(NSArray *) getCurrentFilters;
