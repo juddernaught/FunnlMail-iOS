@@ -52,6 +52,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     else
     {
          NSLog(@"do we get here tho: %@", self.parentViewController);
+         NSLog(@"what is emailFolder in mainvc: %@",emailsTableViewController.emailFolder);
          [self setTitle: app.currentFunnelString];
     }
 }
