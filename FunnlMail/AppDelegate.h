@@ -18,7 +18,8 @@
 @class LoginViewController;
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 {
-    
+    UIWebView *showWelcomeOverlay;
+
 }
 @property (strong, nonatomic)id mainVCControllerInstance;
 @property (strong, nonatomic) UIWindow *window;
@@ -32,4 +33,6 @@
 @property (strong, nonatomic) LoginViewController *loginViewController;
 @property (strong, nonatomic) CIOAPIClient *contextIOAPIClient;
 @property BOOL funnelUpDated,internetAvailable;
+-(void)showWelcomeOverlay;
+-(void)hideWelcomeOverlay;
 @end

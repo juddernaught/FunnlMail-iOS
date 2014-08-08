@@ -23,6 +23,8 @@
 @implementation AppDelegate
 @synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable,contextIOAPIClient;
 
+
+#pragma mark - didFinishLaunching
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.internetAvailable = YES;
@@ -88,6 +90,7 @@
     return YES;
 }
 
+#pragma mark - Rechability
 -(void)reachabilityChanged:(NSNotification*)note
 {
     Reachability * reach = [note object];
@@ -114,7 +117,27 @@
         self.internetAvailable = YES;
     }
 }
-							
+
+#pragma mark - Welcome Overlay
+
+-(void)showWelcomeOverlay{
+    showWelcomeOverlay = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+    showWelcomeOverlay.opaque = NO;
+    showWelcomeOverlay.backgroundColor = CLEAR_COLOR;
+    showWelcomeOverlay.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+    NSString *htmlPath = [[NSBundle mainBundle] pathForResource:@"index" ofType:@"html"];
+
+    [showWelcomeOverlay  loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:htmlPath]]];
+    [self.window addSubview:showWelcomeOverlay];
+    [self.window bringSubviewToFront:showWelcomeOverlay];
+}
+                          
+-(void)hideWelcomeOverlay{
+    [showWelcomeOverlay removeFromSuperview];
+}
+
+#pragma mark - applicationWillResignActive
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -139,7 +162,9 @@
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     self.startDate = [NSDate date];
-    if([EmailService instance].emailsTableViewController){        
+    
+    if([EmailService instance].emailsTableViewController){
+        NSLog(@"-----applicationDidBecomeActive-----");
         [[EmailService instance] performSelector:@selector(checkMailsAtStart:) withObject:[EmailService instance].emailsTableViewController afterDelay:0.1];
     }
 }

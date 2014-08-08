@@ -1,0 +1,149 @@
+<html>
+	<head>
+		<title>FunnelMail :: Webview</title>
+		
+		<style>
+			.baseStyle
+			{
+				position: relative;
+				display: block;
+				clear: both;
+			}
+
+			#mainPageHolder
+			{
+				width: 300px;
+				margin: 100px auto 0 auto;
+				background-color: transparent;
+				font-family: Helvetica;
+				font-size: 20px;
+				padding: 0px 10px 0px 5px;
+                color: #fff;
+			}
+
+			#topHeader
+			{
+				width: 100%;
+				float: left;
+			}
+
+			#labelsHolder
+			{
+				width: 100%;
+				float: left;
+				margin: 10px 0px;
+			}
+
+			.labelDiv
+			{
+				position: relative;
+				display: inline-block;
+				float: left;
+				border: 1px solid #fff;
+				width: 31%;
+				margin: 0.75%;
+				border-radius: 5px;
+                font-size: 16px;
+			}
+			
+			.labelTextDiv span
+			{
+				width: 100%;
+				text-align: center;
+				position: relative;
+				display: block;
+			}
+
+			#featuresHolder
+			{
+				margin: 40px 0px;
+			}
+
+			.featuresHolderSubDiv
+			{
+				margin: 20px 0px;
+			}
+
+			.featuresHolderSubDiv span
+			{
+				width: 100%;
+				text-align: left;
+				position: relative;
+				display: block;
+			}
+			
+			.featuresHolderSubDiv span img
+			{
+				width: 15px;
+				margin-right: 5px;
+				vertical-align: middle;
+			}
+			
+			.cornerImage
+			{
+				position: absolute;
+				right: -5;
+				top: -5;
+				width: 12px;
+			}
+			
+			.checkedLabel
+			{
+				color: #67dc10;
+			}
+			
+			.uncheckedLabel
+			{
+				color: #fd3d3c;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="baseStyle" id="mainPageHolder">
+			<div class="baseStyle" id="topHeader">
+				<span>Welcome to your customized primary inbox!</span>
+			</div>
+			<div class="baseStyle" id="labelsHolder">
+				<div class="labelDiv checkedLabel">
+					<img src="check_web.png" class="cornerImage"/>
+					<div class="labelTextDiv">
+						<span>Personal</span>
+					</div>
+				</div>
+				
+				<div class="labelDiv uncheckedLabel">
+					<img src="cross_web.png" class="cornerImage"/>
+					<div class="labelTextDiv">
+						<span>Updates</span>
+					</div>
+				</div>
+				<div class="labelDiv uncheckedLabel">
+					<img src="cross_web.png" class="cornerImage"/>
+					<div class="labelTextDiv">
+						<span>Forums</span>
+					</div>
+				</div>
+				<div class="labelDiv uncheckedLabel">
+					<img src="cross_web.png" class="cornerImage"/>
+					<div class="labelTextDiv">
+						<span>Promotions</span>
+					</div>
+				</div>
+				<div class="labelDiv uncheckedLabel">
+					<img src="cross_web.png" class="cornerImage"/>
+					<div class="labelTextDiv">
+						<span>Social</span>
+					</div>
+				</div>
+			</div>
+			<div class="baseStyle" id="featuresHolder">
+				<div class="baseStyle featuresHolderSubDiv">
+					<span>You can review and modify category setting anytime from <img src='menuIcon_web.png'  style='margin-left:15px' width='15'>MENU</span>
+				</div>
+				<div class="baseStyle featuresHolderSubDiv">
+					<span>You can also access your non-primary E-mails from <img src='menuIcon_web.png' width='15'>MENU</span>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

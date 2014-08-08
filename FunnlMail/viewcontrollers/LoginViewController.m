@@ -52,6 +52,7 @@ UIButton *loginButton;
     return self;
 }
 
+#pragma mark - refresh token
 -(void)refreshAccessToken{
     // right now there is only 1 email address allowed
     self.emailServerModel = [[[EmailServersService instance] allEmailServers] objectAtIndex:0];
@@ -76,6 +77,8 @@ UIButton *loginButton;
     [self makeRequest:request];
 }
 
+#pragma mark - Offline mode load home screen directly
+
 -(void)callOffline{
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     if(appDelegate.internetAvailable == NO){
@@ -83,6 +86,9 @@ UIButton *loginButton;
     }
 }
 
+
+
+#pragma mark - viewDidLoad
 - (void) viewDidLoad {
     [super viewDidLoad];
     _receivedData = [[NSMutableData alloc] init];
@@ -96,10 +102,10 @@ UIButton *loginButton;
     if (!([allServers count] == 0 || [((EmailServerModel *)[allServers objectAtIndex:0]).refreshToken isEqualToString:@"nil"])) {
     
         [self refreshAccessToken];
-      
 
     }
     else {
+        
         self.view.backgroundColor = [UIColor colorWithHexString:@"F6F6F6"];
         
         //adding demo page
@@ -210,6 +216,10 @@ UIButton *loginButton;
         // Authentication failed
     } else {
         [[Mixpanel sharedInstance] track:@"User Succesfully logged in"];
+        
+        AppDelegate *appDeleage = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        [appDeleage showWelcomeOverlay];
+        
         NSString * email = [auth userEmail];
         NSString * accessToken = [auth accessToken];
         NSString * refreshToken = [auth refreshToken];
@@ -226,6 +236,7 @@ UIButton *loginButton;
 
         [[EmailServersService instance] insertEmailServer:self.emailServerModel];
         MCOIMAPSession * imapSession = [[MCOIMAPSession alloc] init];
+        imapSession.timeout = 100000;
         [EmailService instance].imapSession = imapSession;
         [imapSession setAuthType:MCOAuthTypeXOAuth2];
         [imapSession setOAuth2Token:accessToken];
@@ -334,6 +345,8 @@ UIButton *loginButton;
         }];
     });
 }
+
+
 
 -(void)getUserInfo{
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];

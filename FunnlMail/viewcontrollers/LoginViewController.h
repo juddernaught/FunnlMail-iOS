@@ -14,7 +14,9 @@
 #import "GTMOAuth2ViewControllerTouch.h"
 @class MainVC;
 @interface LoginViewController : UIViewController <NSURLConnectionDataDelegate,GTMFetcherAuthorizationProtocol,GTMHTTPFetcherServiceProtocol>
-
+{
+    
+}
 @property (nonatomic, retain) UITextField *username;
 @property (nonatomic, retain) UITextField *password;
 @property (nonatomic, retain) UIView *blockerView;
