@@ -41,5 +41,17 @@ funnelId TEXT,
 primary key (messageID, funnelId)
 );
 
+create table contacts(
+name TEXT,
+email TEXT,
+thumbnail TEXT,
+count INTEGER,
+received_count INTEGER,
+sent_count INTEGER,
+sent_from_account_count INTEGER,
+resource_url TEXT,
+PRIMARY KEY (email)
+);
+
 CREATE INDEX messageIDIndex ON messageFilterXRef (messageID);
 CREATE INDEX funnelIdIndex ON messageFilterXRef (funnelId);

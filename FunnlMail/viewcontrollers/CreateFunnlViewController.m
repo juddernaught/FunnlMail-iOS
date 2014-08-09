@@ -18,6 +18,8 @@
 #import "CIOExampleAPIClient.h"
 #import "CIOAuthViewController.h"
 #import <AddressBook/AddressBook.h>
+#import <Parse/Parse.h>
+
 
 @interface CreateFunnlViewController ()<CIOAuthViewController>
 {
@@ -449,7 +451,8 @@ NSMutableArray *emailArr,*searchArray;
 {
     areNotificationsEnabled = sender.on;
     if (areNotificationsEnabled) {
-        if (![[CIOExampleAPIClient sharedClient] isAuthorized]) {
+        AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        if (![appDelegate.contextIOAPIClient isAuthorized]) {
             CIOAuthViewController *authViewController = [[CIOAuthViewController alloc] initWithAPIClient:[CIOExampleAPIClient sharedClient] allowCancel:YES];
             authViewController.delegate = self;
             UINavigationController *authNavController = [[UINavigationController alloc] initWithRootViewController:authViewController];
@@ -553,7 +556,8 @@ NSMutableArray *emailArr,*searchArray;
 
 -(void)deleteButtonClicked:(id)sender{
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [[CIOExampleAPIClient sharedClient] deleteWebhookWithID:[oldModel webhookIds] success:^(NSDictionary *responseDict) {
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.contextIOAPIClient deleteWebhookWithID:[oldModel webhookIds] success:^(NSDictionary *responseDict) {
         if ([[responseDict objectForKey:@"success"] boolValue]) {
             dispatch_async(dispatch_get_global_queue(0, 0), ^{
                 if (oldModel.skipFlag) {
@@ -624,6 +628,12 @@ NSMutableArray *emailArr,*searchArray;
 
 -(void) saveFunnlWithWebhookId:(NSString *) webhookId
 {
+    if (webhookId) {
+        PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+        [currentInstallation addUniqueObject:([NSString stringWithFormat:@"webhook_id_%@", webhookId]) forKey:@"channels"];
+        [currentInstallation saveInBackground];
+    }
+
     NSInteger gradientInt = arc4random_uniform((uint32_t)randomColors.count);
     UIColor *color = [UIColor colorWithHexString:[randomColors objectAtIndex:gradientInt]];
     if(color == nil){
@@ -691,6 +701,8 @@ NSMutableArray *emailArr,*searchArray;
 
 -(void) createWebhooksAndSaveFunnl
 {
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
     NSArray *senders = [dictionaryOfConversations allValues];
     NSArray *subjects = [dictionaryOfSubjects allValues];
     __block int reqCnt = [senders count];
@@ -706,7 +718,7 @@ NSMutableArray *emailArr,*searchArray;
         if ([subjects count]) {
             for (NSString *subject in subjects) {
                 [params setObject:subject forKey:@"filter_subject"];
-                [[CIOExampleAPIClient sharedClient] createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
+                [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
                     [webhooks setObject:responseDict forKey:sender];
                     reqCnt--;
                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -728,7 +740,7 @@ NSMutableArray *emailArr,*searchArray;
                 continue;
             }
         } else {
-            [[CIOExampleAPIClient sharedClient] createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
+            [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
                 [webhooks setObject:responseDict forKey:sender];
                 reqCnt--;
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -753,6 +765,7 @@ NSMutableArray *emailArr,*searchArray;
 
 -(void)saveButtonPressed
 {
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     NSLog(@"Save Butoon pressed");
     [[Mixpanel sharedInstance] track:@"Funnl Save Button pressed"];
@@ -789,8 +802,9 @@ NSMutableArray *emailArr,*searchArray;
                     NSArray *senders = [[webhooks allKeys] copy];
                     __block int reqCnt = [senders count];
                     for (NSString *sender in senders) {
-                        NSString *webhook_id = [webhooks objectForKey:sender];
-                        [[CIOExampleAPIClient sharedClient] deleteWebhookWithID:webhook_id success:^(NSDictionary *responseDict) {
+                        NSDictionary *webhook_id_Dictionary = [webhooks objectForKey:sender];
+                        NSString *webhook_id = [webhook_id_Dictionary objectForKey:@"webhook_id"];
+                        [appDelegate.contextIOAPIClient deleteWebhookWithID:webhook_id success:^(NSDictionary *responseDict) {
                             NSLog(@"responseDict deletion %@",responseDict);
                             [webhooks removeObjectForKey:webhook_id];
                             reqCnt--;
@@ -802,7 +816,7 @@ NSMutableArray *emailArr,*searchArray;
                         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                             reqCnt--;
                             dispatch_async(dispatch_get_main_queue(), ^{
-                                [self showAlertForError:error];
+                                //[self showAlertForError:error];
                                 if (reqCnt == 0) {
                                     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                                 }

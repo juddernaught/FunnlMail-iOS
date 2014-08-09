@@ -148,6 +148,7 @@ static NSString *currentFolder;
 //function to be called in background
 - (void)checkMailsAtStart:(EmailsTableViewController*)fv
 {
+    NSLog(@"-----checkMailsAtStart-----");
     [[EmailService instance] loadLatestMail:NUMBER_OF_NEW_MESSAGES_TO_CHECK withTableController:fv withFolder:INBOX];
 }
 
@@ -537,6 +538,8 @@ static NSString *currentFolder;
                       });
                       
                       dispatch_async(dispatch_get_main_queue(), ^(void){
+                          AppDelegate *appDeleage = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+                          [appDeleage hideWelcomeOverlay];
                           [fv.tableView reloadData];
                           [tempAppDelegate.progressHUD setHidden:YES];
                           [tempAppDelegate.progressHUD show:NO];
@@ -599,12 +602,22 @@ static NSString *currentFolder;
 - (void)loadLatestMail:(NSUInteger)nMessages withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName
 {
     //	self.isLoading = YES;
-		
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
     NSString *inboxFolder = folderName;
-	MCOIMAPFolderInfoOperation *inboxFolderInfo = [self.imapSession folderInfoOperation:inboxFolder];
+    if(self.imapSession == nil){
+        NSLog(@"********** session expired ********** ");
+    }
+    MCOIMAPFolderInfoOperation *inboxFolderInfo = [self.imapSession folderInfoOperation:inboxFolder];
+    if(inboxFolderInfo == nil ){
+        NSLog(@"********** inboxFolderInfo not found ********** ");
+        [appDelegate.loginViewController refreshAccessToken];
+    }
+    
 	[inboxFolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
      {
          self.totalNumberOfMessages = info.uidNext-1;
+         NSLog(@"---- Last Info: %llu",self.totalNumberOfMessages);
          NSArray *tempArray = [[MessageService instance] retrieveLatestMessages];
          if(tempArray.count <=0)
          {
@@ -613,22 +626,21 @@ static NSString *currentFolder;
          }
          else{
              [self syncMessages];
-             NSInteger inDatabaseMessageID = [[tempArray objectAtIndex:0] integerValue];
+             u_int64_t inDatabaseMessageID = [[tempArray objectAtIndex:0] integerValue];
              if(inDatabaseMessageID){
                  inDatabaseMessageID = inDatabaseMessageID ;
              }
              
-             NSInteger numberOfMessagesToLoad = (self.totalNumberOfMessages) - inDatabaseMessageID;
+             NSInteger numberOfMessagesToLoad = (NSInteger)((self.totalNumberOfMessages) - inDatabaseMessageID);
              
              MCORange fetchRange;
              fetchRange = MCORangeMake(inDatabaseMessageID,self.totalNumberOfMessages);
-             AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
              if(numberOfMessagesToLoad){
                  NSLog(@"checking new messages:  Range: %qu - %qu",fetchRange.location, fetchRange.length);
                  [self getNewMessages:[EmailService instance].userEmailID nextPageToken:0 numberOfMaxResult:numberOfMessagesToLoad + 10 withFolder:inboxFolder withFetchRange:fetchRange];
              }
              else{
-                 NSLog(@"No New Message Found:  LastMessageIDSynced: %d",self.totalNumberOfMessages);
+                 NSLog(@"No New Message Found:  LastMessageIDSynced: %llu",self.totalNumberOfMessages);
                  AppDelegate *tempAppDelegate = APPDELEGATE;
                  [tempAppDelegate.progressHUD show:NO];
                  [tempAppDelegate.progressHUD setHidden:YES];
@@ -646,7 +658,6 @@ static NSString *currentFolder;
 }
 
 -(void)startAutoRefresh{
-//    [[EmailService instance] loadLatestMail:NUMBER_OF_NEW_MESSAGES_TO_CHECK withTableController:fv withFolder:INBOX];
     [self loadLatestMail:NUMBER_OF_NEW_MESSAGES_TO_CHECK withTableController:self.emailsTableViewController withFolder:INBOX];
 }
 
