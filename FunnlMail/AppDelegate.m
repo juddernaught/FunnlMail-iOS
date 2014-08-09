@@ -17,6 +17,7 @@
 #import "EmailService.h"
 #import "EmailServersService.h"
 #import <Crashlytics/Crashlytics.h>
+#import "GTMOAuth2ViewControllerTouch.h"
 
 #define MIXPANEL_TOKEN @"08b1e55d72f1b22a8e5696c2b56a6777"
 
@@ -110,7 +111,7 @@
         NSLog(@"------------- Internet is ON ---------------");
         //EmailServerModel *serverModel = [[[EmailServersService instance] allEmailServers] objectAtIndex:0];
         //if(serverModel.accessToken == nil || serverModel.accessToken.length == 0){
-            NSLog(@"------------- refreshAccessToken ---------------");
+            NSLog(@"------------- refresh Access Token ---------------");
             //[self.loginViewController refreshAccessToken];
             
         //}
@@ -165,7 +166,9 @@
     
     if([EmailService instance].emailsTableViewController){
         NSLog(@"-----applicationDidBecomeActive-----");
-        [[EmailService instance] performSelector:@selector(checkMailsAtStart:) withObject:[EmailService instance].emailsTableViewController afterDelay:0.1];
+//        iF(self.loginViewController.emailServerModel.accessToken )
+        [self.loginViewController refreshAccessToken];
+//        [[EmailService instance] performSelector:@selector(checkMailsAtStart:) withObject:[EmailService instance].emailsTableViewController afterDelay:0.1];
     }
 }
 

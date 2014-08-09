@@ -96,7 +96,7 @@ static NSString *currentFolder;
 	self.imapSession.connectionLogger = ^(void * connectionID, MCOConnectionLogType type, NSData * data) {
         @synchronized(weakSelf) {
             if (type != MCOConnectionLogTypeSentPrivate) {
-                //                NSLog(@"event logged:%p %i withData: %@", connectionID, type, [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+//                NSLog(@"event logged:%p %i withData: %@", connectionID, type, [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
             }
         }
     };
@@ -137,12 +137,6 @@ static NSString *currentFolder;
 		
 		strongSelf.imapCheckOp = nil;
 	}];
-    MCOIMAPFetchFoldersOperation *op = [self.imapSession fetchAllFoldersOperation];
-    [op start:^(NSError * error, NSArray *folders) {
-        //        for (MCOIMAPFolder *folder in folders) {
-        //            NSLog(folder.path);
-        //        }
-    }];
 }
 
 //function to be called in background
@@ -287,6 +281,7 @@ static NSString *currentFolder;
 - (void)loadLastNMessages:(NSUInteger)nMessages withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName withFetchRange:(MCORange)newFetchRange
 {
     __block EmailsTableViewController *emailTableViewController = fv;
+    AppDelegate *tempAppDelegate = APPDELEGATE;
 	self.isLoading = YES;
     
 	MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)
@@ -311,31 +306,64 @@ static NSString *currentFolder;
     
     [FolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
      {
-         BOOL totalNumberOfMessagesDidChange = self.totalNumberOfMessages != info.uidNext;
-         NSArray *tempArray = [[MessageService instance] retrieveOldestMessages];
-         NSInteger oldestMessageID = 0;
-         if(tempArray.count){
-             oldestMessageID = [[tempArray objectAtIndex:0] integerValue];
-         }
+//         BOOL totalNumberOfMessagesDidChange = self.totalNumberOfMessages != info.uidNext;        
          
          MCORange fetchRange;
-         self.totalNumberOfMessages = info.uidNext;
-         if(oldestMessageID){
-             fetchRange = MCORangeMake(oldestMessageID-nMessages,oldestMessageID);
-         }
-         else{
-             fetchRange = MCORangeMake(self.totalNumberOfMessages-nMessages,self.totalNumberOfMessages);
-         }
-         
+         int64_t startRange, endRange;
+         int64_t numberOfMessagesToLoad;
          if(nMessages == -1){
              fetchRange = newFetchRange;
+             numberOfMessagesToLoad = fetchRange.length - fetchRange.location ;
+             if(numberOfMessagesToLoad < 0){
+                 numberOfMessagesToLoad = -numberOfMessagesToLoad;
+             }
+             NSLog(@"New Messages to fetch: %qu - %qu = %qu",fetchRange.location, fetchRange.length, numberOfMessagesToLoad);
+         }
+         else{
+             NSArray *tempArray = [[MessageService instance] retrieveOldestMessages];
+             NSInteger oldestMessageID = 0;
+             if(tempArray.count){
+                 oldestMessageID = [[tempArray objectAtIndex:0] integerValue];
+             }
+             
+             self.totalNumberOfMessages = info.uidNext;
+             if(oldestMessageID){
+                 if(oldestMessageID < nMessages){
+                     startRange = 1;
+                     endRange = oldestMessageID;
+                 }
+                 else{
+                     startRange = oldestMessageID-nMessages;
+                     endRange = oldestMessageID;
+                 }
+             }
+             else{
+                 if(self.totalNumberOfMessages < nMessages){
+                     startRange = 1;
+                     endRange = self.totalNumberOfMessages;
+                 }
+                 else{
+                     startRange = self.totalNumberOfMessages - nMessages;
+                     endRange = self.totalNumberOfMessages;
+                 }
+             }
+             fetchRange = MCORangeMake(startRange,endRange);
+             numberOfMessagesToLoad = fetchRange.length - fetchRange.location ;
+             if(numberOfMessagesToLoad < 0){
+                 numberOfMessagesToLoad = -numberOfMessagesToLoad;
+             }
+             NSLog(@"Old messages to fetch: %qu - %qu = %qu",fetchRange.location, fetchRange.length, numberOfMessagesToLoad);
          }
          
-         u_int64_t numberOfMessagesToLoad = fetchRange.length - fetchRange.location ;
-         NSLog(@"fetchRange: %qu - %qu = %qu",fetchRange.location, fetchRange.length, numberOfMessagesToLoad);
          if (numberOfMessagesToLoad == 0)
          {
              self.isLoading = NO;
+             if(nMessages == -1){
+                 NSLog(@"------ Failed loading NEW messages (numberOfMessagesToLoad == 0) ------ ");
+             }
+             else{
+                 NSLog(@"------ Failed loading OLD messages (numberOfMessagesToLoad == 0) ------ ");
+             }
              return;
          }
          MCOIndexSet *uids = [MCOIndexSet indexSetWithRange:fetchRange];
@@ -345,7 +373,6 @@ static NSString *currentFolder;
 //         uint64_t size = fetchRange.location;
 //         MCOIndexSet *numbers = [MCOIndexSet indexSetWithRange:MCORangeMake(location, size)];
 //         self.imapMessagesFetchOp = [self.imapSession fetchMessagesByNumberOperationWithFolder:folderName requestKind:requestKind numbers:numbers];
-
          
          [self.imapMessagesFetchOp setProgress:^(unsigned int progress) {
              NSLog(@"Progress: %u of %lu", progress, (unsigned long)numberOfMessagesToLoad);
@@ -357,7 +384,7 @@ static NSString *currentFolder;
              [self.imapMessagesFetchOp start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
               {
                   NSLog(@"-- received %lu message in fetch opreation",(unsigned long)messages.count);
-                  AppDelegate *tempAppDelegate = APPDELEGATE;
+                  
                   [fv.tablecontroller.refreshControl endRefreshing];
                   
                   dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -603,7 +630,7 @@ static NSString *currentFolder;
 {
     //	self.isLoading = YES;
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
+    [self.imapSession cancelAllOperations];
     NSString *inboxFolder = folderName;
     if(self.imapSession == nil){
         NSLog(@"********** session expired ********** ");
@@ -611,12 +638,27 @@ static NSString *currentFolder;
     MCOIMAPFolderInfoOperation *inboxFolderInfo = [self.imapSession folderInfoOperation:inboxFolder];
     if(inboxFolderInfo == nil ){
         NSLog(@"********** inboxFolderInfo not found ********** ");
-        [appDelegate.loginViewController refreshAccessToken];
     }
     
 	[inboxFolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
      {
+         
+         if(error != nil){
+             
+             NSLog(@"******* ERROR: %@ for folderinfo: %@ ********",error.description,inboxFolder);
+         }
          self.totalNumberOfMessages = info.uidNext-1;
+         if(self.totalNumberOfMessages == 4294967295){
+                NSLog(@"..........Here its freezing for new messages.......");
+             self.totalNumberOfMessages = 1;
+             MCOIMAPFetchFoldersOperation *op = [self.imapSession fetchAllFoldersOperation];
+//             [op start:^(NSError * error, NSArray *folders) {
+//                    for (MCOIMAPFolder *folder in folders) {
+//                        NSLog(@"----> %@",folder.path);
+//                    }
+//             }];
+                //[appDelegate.loginViewController refreshAccessToken];
+         }
          NSLog(@"---- Last Info: %llu",self.totalNumberOfMessages);
          NSArray *tempArray = [[MessageService instance] retrieveLatestMessages];
          if(tempArray.count <=0)

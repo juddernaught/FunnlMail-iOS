@@ -102,6 +102,8 @@ UIButton *loginButton;
     if (!([allServers count] == 0 || [((EmailServerModel *)[allServers objectAtIndex:0]).refreshToken isEqualToString:@"nil"])) {
     
         [self refreshAccessToken];
+        [self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
+
 
     }
     else {
@@ -525,12 +527,17 @@ UIButton *loginButton;
     }
     
     MCOIMAPSession * imapSession = [[MCOIMAPSession alloc] init];
+    [[EmailService instance].imapSession cancelAllOperations];
+    [[EmailService instance].imapSession disconnectOperation];
     [EmailService instance].imapSession = imapSession;
+    [EmailService instance].imapSession.hostname = @"imap.google.com";
+    [EmailService instance].imapSession.port = 993;
     
     [imapSession setAuthType:MCOAuthTypeXOAuth2];
     [imapSession setOAuth2Token:self.emailServerModel.accessToken];
     [imapSession setUsername:self.emailServerModel.emailAddress];
-    
+    imapSession.connectionType = MCOConnectionTypeTLS;
+
     MCOSMTPSession * smtpSession = [[MCOSMTPSession alloc] init];
     [smtpSession setAuthType:MCOAuthTypeXOAuth2];
     [smtpSession setOAuth2Token:self.emailServerModel.accessToken];
@@ -540,8 +547,11 @@ UIButton *loginButton;
     smtpSession.authType = MCOAuthTypeXOAuth2;
     smtpSession.connectionType = MCOConnectionTypeTLS;
     [EmailService instance].smtpSession = smtpSession;
+    
+    [[EmailService instance] startLogin:self.mainViewController.emailsTableViewController];
 
-    [self loadHomeScreen];
+
+//    [[EmailService instance] checkMailsAtStart:self.mainViewController.emailsTableViewController]
     //[self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
 
 }
