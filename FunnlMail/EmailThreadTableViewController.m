@@ -164,7 +164,6 @@ static NSString *mailCellIdentifier = @"MailCell";
         MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)dataSourceArray[indexPath.row] messageJSON]];
         FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:YES withMessageId:uidKey withMessage:message subViewOnViewController:self];
         funnlPopUpView.mainVCdelegate = self.mainVCdelegate;
-        
         [self.view addSubview:funnlPopUpView];
         
     }];

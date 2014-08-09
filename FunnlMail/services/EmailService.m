@@ -558,7 +558,6 @@ static NSString *currentFolder;
                       [tempAppDelegate.progressHUD setHidden:YES];
                       [tempAppDelegate.progressHUD show:NO];
                       [fv.tablecontroller.refreshControl endRefreshing];
-                      
                       dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
                           if (tempArray.count < kNUMBER_OF_MESSAGES_TO_DOWNLOAD_IN_BACKGROUND) {
                               

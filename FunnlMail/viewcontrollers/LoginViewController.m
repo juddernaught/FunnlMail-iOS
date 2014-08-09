@@ -118,8 +118,6 @@ UIButton *loginButton;
         
         PageContentVC *initialViewController = [self viewControllerAtIndex:0];
         
-        
-        
         NSArray *viewControllers = [NSArray arrayWithObject:initialViewController];
         
         

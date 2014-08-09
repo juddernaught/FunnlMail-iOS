@@ -121,13 +121,14 @@
 #pragma mark - Welcome Overlay
 
 -(void)showWelcomeOverlay{
-    showWelcomeOverlay = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+    showWelcomeOverlay = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
     showWelcomeOverlay.opaque = NO;
+    UILabel *text;
+    text.frame = CGRectMake(0, 0, WIDTH, 40);
+    text.text = @"Welcome to your Primary Inbox";
+    [showWelcomeOverlay addSubview: text];
     showWelcomeOverlay.backgroundColor = CLEAR_COLOR;
     showWelcomeOverlay.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-    NSString *htmlPath = [[NSBundle mainBundle] pathForResource:@"index" ofType:@"html"];
-
-    [showWelcomeOverlay  loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:htmlPath]]];
     [self.window addSubview:showWelcomeOverlay];
     [self.window bringSubviewToFront:showWelcomeOverlay];
 }
@@ -140,6 +141,7 @@
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
+
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
 }
