@@ -18,6 +18,8 @@
 #import "CIOExampleAPIClient.h"
 #import "CIOAuthViewController.h"
 #import <AddressBook/AddressBook.h>
+#import <Parse/Parse.h>
+
 
 @interface CreateFunnlViewController ()<CIOAuthViewController>
 {
@@ -626,6 +628,12 @@ NSMutableArray *emailArr,*searchArray;
 
 -(void) saveFunnlWithWebhookId:(NSString *) webhookId
 {
+    if (webhookId) {
+        PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+        [currentInstallation addUniqueObject:([NSString stringWithFormat:@"webhook_id_%@", webhookId]) forKey:@"channels"];
+        [currentInstallation saveInBackground];
+    }
+
     NSInteger gradientInt = arc4random_uniform((uint32_t)randomColors.count);
     UIColor *color = [UIColor colorWithHexString:[randomColors objectAtIndex:gradientInt]];
     if(color == nil){
