@@ -54,27 +54,31 @@ UIButton *loginButton;
 
 #pragma mark - refresh token
 -(void)refreshAccessToken{
-    // right now there is only 1 email address allowed
-    self.emailServerModel = [[[EmailServersService instance] allEmailServers] objectAtIndex:0];
-    
-    // Set the HTTP POST parameters required for refreshing the access token.
-    NSString *refreshPostParams = [NSString stringWithFormat:@"refresh_token=%@&client_id=%@&client_secret=%@&grant_type=refresh_token",
-                                   self.emailServerModel.refreshToken,
-                                   kMyClientID,
-                                   kMyClientSecret
-                                   ];
-    
-    // Indicate that an access token refresh process is on the way.
-    self.isRefreshing = YES;
-    
-    // Create the request object and set its properties.
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:accessTokenEndpoint]];
-    [request setHTTPMethod:@"POST"];
-    [request setHTTPBody:[refreshPostParams dataUsingEncoding:NSUTF8StringEncoding]];
-    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-    
-    // Make the request.
-    [self makeRequest:request];
+    NSArray *allServers = [[EmailServersService instance] allEmailServers];
+    if (!([allServers count] == 0 || [((EmailServerModel *)[allServers objectAtIndex:0]).refreshToken isEqualToString:@"nil"])) {
+
+        // right now there is only 1 email address allowed
+        self.emailServerModel = [[[EmailServersService instance] allEmailServers] objectAtIndex:0];
+        
+        // Set the HTTP POST parameters required for refreshing the access token.
+        NSString *refreshPostParams = [NSString stringWithFormat:@"refresh_token=%@&client_id=%@&client_secret=%@&grant_type=refresh_token",
+                                       self.emailServerModel.refreshToken,
+                                       kMyClientID,
+                                       kMyClientSecret
+                                       ];
+        
+        // Indicate that an access token refresh process is on the way.
+        self.isRefreshing = YES;
+        
+        // Create the request object and set its properties.
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:accessTokenEndpoint]];
+        [request setHTTPMethod:@"POST"];
+        [request setHTTPBody:[refreshPostParams dataUsingEncoding:NSUTF8StringEncoding]];
+        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        
+        // Make the request.
+        [self makeRequest:request];
+    }
 }
 
 #pragma mark - Offline mode load home screen directly
@@ -511,10 +515,16 @@ UIButton *loginButton;
             NSLog(@"%@", error);
         }
         NSDictionary *accessTokenInfoDictionary = [NSJSONSerialization JSONObjectWithData:_receivedData options:NSJSONReadingMutableContainers error:&error];
-        self.emailServerModel.accessToken = [accessTokenInfoDictionary objectForKey:@"access_token"];
+        NSString *accessToken = [accessTokenInfoDictionary objectForKey:@"access_token"];
+        if(accessToken == nil) {
+            NSLog(@"Invalid access Token");
+        }
+        else{
+            self.emailServerModel.accessToken = [NSString stringWithFormat:@"%@",accessToken];
+            [[EmailServersService instance] updateEmailServer:self.emailServerModel];
+        }
         
         // update database with new access token
-        [[EmailServersService instance] updateEmailServer:self.emailServerModel];
 //        [[EmailService instance] startLogin:self.mainViewController.emailsTableViewController];
         
         if (self.isRefreshing) {

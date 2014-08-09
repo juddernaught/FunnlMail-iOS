@@ -30,8 +30,6 @@
 {
     self.internetAvailable = YES;
     
-    
-    
     [Crashlytics startWithAPIKey:@"44e1f44afdbcda726d1a42fdbbd770dff98bca43"];
     // MixPanel setup
     //[[CIOExampleAPIClient sharedClient] clearCredentials];
@@ -104,7 +102,9 @@
         //[[[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Internet is not available." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
         self.internetAvailable = NO;
         [self.loginViewController callOffline];
-
+        if(self.loginViewController && self.loginViewController.mainViewController && self.loginViewController.mainViewController.emailsTableViewController){
+            [self.loginViewController.mainViewController.emailsTableViewController.tablecontroller.refreshControl endRefreshing];
+        }
     }
     else
     {
@@ -112,7 +112,10 @@
         //EmailServerModel *serverModel = [[[EmailServersService instance] allEmailServers] objectAtIndex:0];
         //if(serverModel.accessToken == nil || serverModel.accessToken.length == 0){
             NSLog(@"------------- refresh Access Token ---------------");
-            //[self.loginViewController refreshAccessToken];
+            if(self.loginViewController && self.loginViewController.mainViewController && self.loginViewController.mainViewController.emailsTableViewController){
+                [self.loginViewController.mainViewController.emailsTableViewController.tablecontroller.refreshControl endRefreshing];
+            }
+            [self.loginViewController refreshAccessToken];
             
         //}
         self.internetAvailable = YES;
@@ -166,9 +169,7 @@
     
     if([EmailService instance].emailsTableViewController){
         NSLog(@"-----applicationDidBecomeActive-----");
-//        iF(self.loginViewController.emailServerModel.accessToken )
         [self.loginViewController refreshAccessToken];
-//        [[EmailService instance] performSelector:@selector(checkMailsAtStart:) withObject:[EmailService instance].emailsTableViewController afterDelay:0.1];
     }
 }
 

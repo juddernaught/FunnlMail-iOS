@@ -147,7 +147,6 @@ static NSString *currentFolder;
 }
 
 -(void)syncMessages{
-    
     u_int64_t modSeqValue = UINT64_MAX;
 
     NSString *modSeqString = [[NSUserDefaults standardUserDefaults] objectForKey:@"MODSEQ"];
@@ -172,7 +171,7 @@ static NSString *currentFolder;
 
     MCOIMAPFetchMessagesOperation *syncMessagesFetchOperation =  [[EmailService instance].imapSession syncMessagesByUIDWithFolder:INBOX requestKind:requestKind uids:mcoIndexSet modSeq:modSeqValue];
     [syncMessagesFetchOperation setProgress:^(unsigned int progress) {
-        NSLog(@"Progress: %u ", progress);
+        NSLog(@"Sync INBOX ---- Progress: %u ", progress);
     }];
     
     //         __weak EmailService *weakSelf = self;
@@ -188,11 +187,11 @@ static NSString *currentFolder;
                  tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
                  tempMessageModel.messageJSON = [m serializable];
                  tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
-                 [[MessageService instance] updateMessageMetaInfo:tempMessageModel];
-                 count++;
+                  BOOL success = [[MessageService instance] updateMessageMetaInfo:tempMessageModel];
                  if(messages.count == count){
                      [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%llu",m.modSeqValue] forKey:@"MODSEQ"];
                      [[NSUserDefaults standardUserDefaults] synchronize];
+                     count++;
                  }
              }
              if(count){
@@ -206,7 +205,7 @@ static NSString *currentFolder;
     
     MCOIMAPFetchMessagesOperation *trashSyncMessagesFetchOperation =  [[EmailService instance].imapSession syncMessagesByUIDWithFolder:TRASH requestKind:requestKind uids:mcoIndexSet modSeq:modSeqValue];
     [trashSyncMessagesFetchOperation setProgress:^(unsigned int progress) {
-        NSLog(@"Progress: %u ", progress);
+        NSLog(@"Sync Trash --- Progress: %u ", progress);
     }];
     
     //         __weak EmailService *weakSelf = self;
@@ -217,11 +216,11 @@ static NSString *currentFolder;
              NSInteger count = 0;
              for (MCOIMAPMessage *m in messages) {
                  NSString *gmailMessageID = [NSString stringWithFormat:@"%llu",m.gmailMessageID];
-                 [[MessageService instance] deleteMessageWithGmailMessageID:gmailMessageID];
-                 count++;
+                 BOOL success = [[MessageService instance] deleteMessageWithGmailMessageID:gmailMessageID];
                  if(messages.count == count){
                      [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%llu",m.modSeqValue] forKey:@"MODSEQ"];
                      [[NSUserDefaults standardUserDefaults] synchronize];
+                     count++;
                  }
              }
              if(count){
@@ -262,6 +261,7 @@ static NSString *currentFolder;
 }
 
 -(void)refreshMessages{
+    
     NSArray *tempArray;
     AppDelegate *tempAppDelegate = APPDELEGATE;
     if ([[tempAppDelegate.currentFunnelString.lowercaseString lowercaseString] isEqualToString:[ALL_FUNNL lowercaseString]]) {
@@ -274,7 +274,9 @@ static NSString *currentFolder;
         tempArray = [[MessageService instance] retrieveAllMessages];
     }
     self.filterMessages = (NSMutableArray*)tempArray;
-    [self.emailsTableViewController.tableView reloadData];
+//    dispatch_async(dispatch_get_main_queue(), ^(void){
+        [self.emailsTableViewController.tableView reloadData];
+//    });
 }
 
 
@@ -375,7 +377,7 @@ static NSString *currentFolder;
 //         self.imapMessagesFetchOp = [self.imapSession fetchMessagesByNumberOperationWithFolder:folderName requestKind:requestKind numbers:numbers];
          
          [self.imapMessagesFetchOp setProgress:^(unsigned int progress) {
-             NSLog(@"Progress: %u of %lu", progress, (unsigned long)numberOfMessagesToLoad);
+             NSLog(@"Main -- Progress: %u of %lu", progress, (unsigned long)numberOfMessagesToLoad);
          }];
          
          //         __weak EmailService *weakSelf = self;
@@ -385,7 +387,6 @@ static NSString *currentFolder;
               {
                   NSLog(@"-- received %lu message in fetch opreation",(unsigned long)messages.count);
                   
-                  [fv.tablecontroller.refreshControl endRefreshing];
                   
                   dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
                       
@@ -568,6 +569,7 @@ static NSString *currentFolder;
                           AppDelegate *appDeleage = (AppDelegate*)[[UIApplication sharedApplication] delegate];
                           [appDeleage hideWelcomeOverlay];
                           [fv.tableView reloadData];
+                          [self.emailsTableViewController.tablecontroller.refreshControl endRefreshing];
                           [tempAppDelegate.progressHUD setHidden:YES];
                           [tempAppDelegate.progressHUD show:NO];
                           [fv.activityIndicator stopAnimating];
@@ -667,7 +669,6 @@ static NSString *currentFolder;
              [self loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD withTableController:fv withFolder:inboxFolder  withFetchRange:MCORangeEmpty];
          }
          else{
-             [self syncMessages];
              u_int64_t inDatabaseMessageID = [[tempArray objectAtIndex:0] integerValue];
              if(inDatabaseMessageID){
                  inDatabaseMessageID = inDatabaseMessageID ;
@@ -675,11 +676,17 @@ static NSString *currentFolder;
              
              NSInteger numberOfMessagesToLoad = (NSInteger)((self.totalNumberOfMessages) - inDatabaseMessageID);
              
+             if(numberOfMessagesToLoad <= 0){
+                 [self syncMessages];
+             }
+             
              MCORange fetchRange;
              fetchRange = MCORangeMake(inDatabaseMessageID,self.totalNumberOfMessages);
              if(numberOfMessagesToLoad){
                  NSLog(@"checking new messages:  Range: %qu - %qu",fetchRange.location, fetchRange.length);
                  [self getNewMessages:[EmailService instance].userEmailID nextPageToken:0 numberOfMaxResult:numberOfMessagesToLoad + 10 withFolder:inboxFolder withFetchRange:fetchRange];
+                 [self syncMessages];
+
              }
              else{
                  NSLog(@"No New Message Found:  LastMessageIDSynced: %llu",self.totalNumberOfMessages);
