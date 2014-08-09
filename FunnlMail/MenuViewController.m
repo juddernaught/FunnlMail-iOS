@@ -12,6 +12,8 @@
 #import "MainVC.h"
 #import "SDWebImageDownloader.h"
 #import "UIImageView+WebCache.h"
+#import "LoginViewController.h"
+#import "EmailServersService.h"
 
 @interface MenuViewController ()
 
@@ -45,8 +47,8 @@
     [self.view addSubview:headerLine];
     
 //    [listView setBackgroundView:[[UIView alloc] init]];
-    listArray =[[NSMutableArray alloc] initWithObjects:@"Email Account",@"Edit Funnl Settings",@"Funnl Alerts", @"Share Funnls", @"Sent Mail", @"Archive", @"Trash", @"Help",nil];
-    imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"settingListIcon",@"alertListIcon",@"shareListIcon",@"sentListIcon", @"archiveListIcon", @"trashListIcon",@"helpListIcon", nil];
+    listArray =[[NSMutableArray alloc] initWithObjects:@"Email Account",@"Edit Funnl Settings",@"Funnl Alerts", @"Share Funnls", @"Sent Mail", @"Archive", @"Trash", @"Help",@"Logout",nil];
+    imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"settingListIcon",@"alertListIcon",@"shareListIcon",@"sentListIcon", @"archiveListIcon", @"trashListIcon",@"helpListIcon",@"helpListIcon", nil];
     
 }
 
@@ -129,6 +131,13 @@
         NSLog(@"trash mail requested");
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Trash";
         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:TRASH withFetchRange:MCORangeEmpty];
+    } else if (indexPath.row == 8){
+        [[EmailServersService instance] deleteEmailServer:[EmailService instance].userEmailID];
+        LoginViewController *loginViewController = [[LoginViewController alloc]init];
+        loginViewController.view.backgroundColor = [UIColor clearColor];
+        appDelegate.window.backgroundColor = [UIColor whiteColor];
+        UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:loginViewController];
+        [appDelegate.window setRootViewController:nav];
     }
 
     [appDelegate.drawerController closeDrawerAnimated:YES completion:nil];

@@ -166,8 +166,9 @@
             }
         }
         
-        if ([self.APIClient isAuthorized] == YES) {            
+        if ([self.APIClient isAuthorized] == YES) {
             [self.delegate userCompletedLogin];
+            
         } else {
             
             [self.APIClient finishLoginWithConnectToken:connectToken saveCredentials:YES success:^(id responseObject) {

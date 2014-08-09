@@ -87,13 +87,35 @@ UIButton *loginButton;
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     blockerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
     blockerView.backgroundColor = [UIColor redColor];
-    
+
+    [self checkCredentialsandShowLoginScreen];
+}
+
+- (void) viewWillAppear:(BOOL)animated {
+    [[self navigationController] setNavigationBarHidden:YES animated:NO];
+}
+
+
+- (void) viewWillDisappear:(BOOL)animated {
+    [[self navigationController] setNavigationBarHidden:YES animated:NO];
+}
+
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+-(void) checkCredentialsandShowLoginScreen
+{
     NSArray *allServers = [[EmailServersService instance] allEmailServers];
     if (!([allServers count] == 0 || [((EmailServerModel *)[allServers objectAtIndex:0]).refreshToken isEqualToString:@"nil"])) {
-    
+        
         [self refreshAccessToken];
-      
-
+        
+        
     }
     else {
         self.view.backgroundColor = [UIColor colorWithHexString:@"F6F6F6"];
@@ -129,12 +151,12 @@ UIButton *loginButton;
         //
         
         
-//        [funnlMailIntroView mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.top.equalTo(self.view.mas_top).with.offset(20);
-//            make.left.equalTo(self.view.mas_left).with.offset(0);
-//            make.right.equalTo(self.view.mas_right).with.offset(0);
-//            make.bottom.equalTo(self.view.mas_bottom).with.offset(-150);
-//        }];
+        //        [funnlMailIntroView mas_makeConstraints:^(MASConstraintMaker *make) {
+        //            make.top.equalTo(self.view.mas_top).with.offset(20);
+        //            make.left.equalTo(self.view.mas_left).with.offset(0);
+        //            make.right.equalTo(self.view.mas_right).with.offset(0);
+        //            make.bottom.equalTo(self.view.mas_bottom).with.offset(-150);
+        //        }];
         
         UIImage *loginImage = [UIImage imageNamed:@"getStarted"];
         loginButton = [[UIButton alloc] init];
@@ -144,29 +166,12 @@ UIButton *loginButton;
         loginButton.hidden = YES;
         [self.view addSubview:loginButton];
         
-//        [loginButton mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.top.equalTo(funnlMailIntroView.mas_bottom).with.offset(40);
-//            make.left.equalTo(self.view.mas_left).with.offset(7);
-//        }];
+        //        [loginButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        //            make.top.equalTo(funnlMailIntroView.mas_bottom).with.offset(40);
+        //            make.left.equalTo(self.view.mas_left).with.offset(7);
+        //        }];
     }
 }
-
-- (void) viewWillAppear:(BOOL)animated {
-    [[self navigationController] setNavigationBarHidden:YES animated:NO];
-}
-
-
-- (void) viewWillDisappear:(BOOL)animated {
-    [[self navigationController] setNavigationBarHidden:YES animated:NO];
-}
-
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 
 - (void) loginButtonSelected {
     [self oauthLogin];

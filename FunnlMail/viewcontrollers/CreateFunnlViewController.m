@@ -676,7 +676,7 @@ NSMutableArray *emailArr,*searchArray;
     [self.mainVCdelegate filterSelected:model];
     model = nil;
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    [[CIOExampleAPIClient sharedClient] clearCredentials];
+    //[[CIOExampleAPIClient sharedClient] clearCredentials];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
