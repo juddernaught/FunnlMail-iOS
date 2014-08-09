@@ -11,6 +11,10 @@
 //#error Please enter your Context.IO API credentials below and comment out this line.
 
 
+//static NSString * const kContextIOConsumerKey = @"1s6pz3qn";
+//static NSString * const kContextIOConsumerSecret = @"cU6yYRoRKRdd6ybp";
+
+
 @implementation CIOExampleAPIClient
 
 + (CIOExampleAPIClient *)sharedClient {
