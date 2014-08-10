@@ -383,6 +383,7 @@ static GTMOAuth2Keychain* gGTMOAuth2DefaultKeychain = nil;
 
 - (void)viewDidLoad {
   [self setUpNavigation];
+    [self.navigationItem setHidesBackButton:YES];
 }
 
 - (void)setUpNavigation {

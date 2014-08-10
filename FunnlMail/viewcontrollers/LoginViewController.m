@@ -122,6 +122,28 @@ UIButton *loginButton;
 }
 
 
+-(void) createDemoPageViewController
+{
+    self.view.backgroundColor = [UIColor colorWithHexString:@"F6F6F6"];
+    self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
+    self.pageController.dataSource = self;
+    images = @[@"WHITEsliders1nobar.png", @"WHITEsliders2.png", @"WHITEsliders3.png", @"WHITEsliders4.png",@"WHITEsliders5.png"];
+    PageContentVC *initialViewController = [self viewControllerAtIndex:0];
+    NSArray *viewControllers = [NSArray arrayWithObject:initialViewController];
+//    self.pageController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 40);
+    [self.pageController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+    [self addChildViewController:self.pageController];
+    [[self view] addSubview:[self.pageController view]];
+    [self.pageController didMoveToParentViewController:self];
+    UIImage *loginImage = [UIImage imageNamed:@"getStarted"];
+    loginButton = [[UIButton alloc] init];
+    [loginButton setImage:loginImage forState:UIControlStateNormal];
+    loginButton.frame = CGRectMake(0, HEIGHT-50, 320, 40);
+    [loginButton addTarget:self action:@selector(loginButtonSelected)forControlEvents:UIControlEventTouchUpInside];
+    loginButton.hidden = YES;
+    [self.pageController.view addSubview:loginButton];
+}
+
 -(void) checkCredentialsandShowLoginScreen
 {
     NSArray *allServers = [[EmailServersService instance] allEmailServers];
@@ -131,64 +153,23 @@ UIButton *loginButton;
         [self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
     }
     else {
-        
-        self.view.backgroundColor = [UIColor colorWithHexString:@"F6F6F6"];
-        
-        //adding demo page
-        
-        self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
-        
-        self.pageController.dataSource = self;
-        
-        images = @[@"WHITEsliders1nobar.png", @"WHITEsliders2.png", @"WHITEsliders3.png", @"WHITEsliders4.png",@"WHITEsliders5.png"];
-        
-        PageContentVC *initialViewController = [self viewControllerAtIndex:0];
-        
-        
-        
-        NSArray *viewControllers = [NSArray arrayWithObject:initialViewController];
-        
-        
-        
-        self.pageController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 40);
-        
-        [self.pageController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-        
-        
-        
-        [self addChildViewController:self.pageController];
-        
-        [[self view] addSubview:[self.pageController view]];
-        
-        [self.pageController didMoveToParentViewController:self];
-        
-        //
-        
-        
-        //        [funnlMailIntroView mas_makeConstraints:^(MASConstraintMaker *make) {
-        //            make.top.equalTo(self.view.mas_top).with.offset(20);
-        //            make.left.equalTo(self.view.mas_left).with.offset(0);
-        //            make.right.equalTo(self.view.mas_right).with.offset(0);
-        //            make.bottom.equalTo(self.view.mas_bottom).with.offset(-150);
-        //        }];
-        
-        UIImage *loginImage = [UIImage imageNamed:@"getStarted"];
-        loginButton = [[UIButton alloc] init];
-        [loginButton setImage:loginImage forState:UIControlStateNormal];
-        loginButton.frame = CGRectMake(0, HEIGHT-50, 320, 40);
-        [loginButton addTarget:self action:@selector(loginButtonSelected)forControlEvents:UIControlEventTouchUpInside];
-        loginButton.hidden = YES;
-        [self.view addSubview:loginButton];
-        
-        //        [loginButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        //            make.top.equalTo(funnlMailIntroView.mas_bottom).with.offset(40);
-        //            make.left.equalTo(self.view.mas_left).with.offset(7);
-        //        }];
+        NSString *scope = @"https://mail.google.com/"; // scope for Gmail
+        GTMOAuth2ViewControllerTouch *viewController;
+        viewController = [[GTMOAuth2ViewControllerTouch alloc] initWithScope:scope
+                                                                    clientID:kMyClientID
+                                                                clientSecret:kMyClientSecret
+                                                            keychainItemName:kKeychainItemName
+                                                                    delegate:self
+                                                            finishedSelector:@selector(viewController:finishedWithAuth:error:)];
+        [self addChildViewController:viewController];
+        [self.view addSubview:viewController.view];
     }
 }
 
 - (void) loginButtonSelected {
-    [self oauthLogin];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate.window setRootViewController:appDelegate.drawerController];
+//    [self oauthLogin];
 }
 
 
@@ -261,14 +242,14 @@ UIButton *loginButton;
         smtpSession.connectionType = MCOConnectionTypeTLS;
         [EmailService instance].smtpSession = smtpSession;
 
-        AppDelegate *tempAppDelegate = APPDELEGATE;
-        [tempAppDelegate.progressHUD show:YES];
-        [tempAppDelegate.window addSubview:tempAppDelegate.progressHUD];
-        [tempAppDelegate.window bringSubviewToFront:tempAppDelegate.progressHUD];
-        [tempAppDelegate.progressHUD setHidden:NO];
+//        AppDelegate *tempAppDelegate = APPDELEGATE;
+//        [tempAppDelegate.progressHUD show:YES];
+//        [tempAppDelegate.window addSubview:tempAppDelegate.progressHUD];
+//        [tempAppDelegate.window bringSubviewToFront:tempAppDelegate.progressHUD];
+//        [tempAppDelegate.progressHUD setHidden:NO];
 
         // Authentication succeeded
-        
+        [self createDemoPageViewController];
         [self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
     }
 }
@@ -465,12 +446,13 @@ UIButton *loginButton;
     [appDelegate.drawerController setMaximumLeftDrawerWidth:250.0];
     [appDelegate.drawerController setOpenDrawerGestureModeMask:MMOpenDrawerGestureModeAll];
     [appDelegate.drawerController setCloseDrawerGestureModeMask:MMCloseDrawerGestureModeAll];
+    [mainViewController view];
     
-    [self.navigationController presentViewController:appDelegate.drawerController animated:NO completion:nil];
-    AppDelegate *tempAppDelegate = APPDELEGATE;
-    [tempAppDelegate.progressHUD show:NO];
-    [tempAppDelegate.progressHUD setHidden:YES];
-
+//    [self.navigationController presentViewController:appDelegate.drawerController animated:NO completion:nil];
+//    AppDelegate *tempAppDelegate = APPDELEGATE;
+//    [tempAppDelegate.progressHUD show:NO];
+//    [tempAppDelegate.progressHUD setHidden:YES];
+    
 
 }
 

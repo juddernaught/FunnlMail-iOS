@@ -160,9 +160,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
             make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
         }];
         [[EmailService instance] startLogin:emailsTableViewController];
-
     }
-    
 }
 
 
