@@ -32,6 +32,7 @@
 @property (strong, nonatomic) NSDate *startDate;
 @property (strong, nonatomic) LoginViewController *loginViewController;
 @property (strong, nonatomic) CIOAPIClient *contextIOAPIClient;
+@property (assign, nonatomic) BOOL isAlreadyRequestedRefreshToken;
 @property BOOL funnelUpDated,internetAvailable;
 -(void)showWelcomeOverlay;
 -(void)hideWelcomeOverlay;

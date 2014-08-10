@@ -18,6 +18,6 @@ void IMAPCheckAccountOperation::main()
     ErrorCode error;
     session()->session()->connectIfNeeded(&error);
     if (error == ErrorNone)
-        session()->session()->login(&error);
+        return;
     setError(error);
 }

@@ -54,30 +54,40 @@ UIButton *loginButton;
 
 #pragma mark - refresh token
 -(void)refreshAccessToken{
-    NSArray *allServers = [[EmailServersService instance] allEmailServers];
-    if (!([allServers count] == 0 || [((EmailServerModel *)[allServers objectAtIndex:0]).refreshToken isEqualToString:@"nil"])) {
-
-        // right now there is only 1 email address allowed
-        self.emailServerModel = [[[EmailServersService instance] allEmailServers] objectAtIndex:0];
-        
-        // Set the HTTP POST parameters required for refreshing the access token.
-        NSString *refreshPostParams = [NSString stringWithFormat:@"refresh_token=%@&client_id=%@&client_secret=%@&grant_type=refresh_token",
-                                       self.emailServerModel.refreshToken,
-                                       kMyClientID,
-                                       kMyClientSecret
-                                       ];
-        
-        // Indicate that an access token refresh process is on the way.
-        self.isRefreshing = YES;
-        
-        // Create the request object and set its properties.
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:accessTokenEndpoint]];
-        [request setHTTPMethod:@"POST"];
-        [request setHTTPBody:[refreshPostParams dataUsingEncoding:NSUTF8StringEncoding]];
-        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-        
-        // Make the request.
-        [self makeRequest:request];
+    
+    AppDelegate *appDelegate = APPDELEGATE;
+    if(appDelegate.isAlreadyRequestedRefreshToken == NO){
+        NSArray *allServers = [[EmailServersService instance] allEmailServers];
+        if (!([allServers count] == 0 || [((EmailServerModel *)[allServers objectAtIndex:0]).refreshToken isEqualToString:@"nil"])) {
+            NSLog(@"==== refreshAccessToken === Started");
+            appDelegate.isAlreadyRequestedRefreshToken  = YES;
+            
+            // right now there is only 1 email address allowed
+            self.emailServerModel = [[[EmailServersService instance] allEmailServers] objectAtIndex:0];
+            
+            // Set the HTTP POST parameters required for refreshing the access token.
+            NSString *refreshPostParams = [NSString stringWithFormat:@"refresh_token=%@&client_id=%@&client_secret=%@&grant_type=refresh_token",
+                                           self.emailServerModel.refreshToken,
+                                           kMyClientID,
+                                           kMyClientSecret
+                                           ];
+            
+            // Indicate that an access token refresh process is on the way.
+            self.isRefreshing = YES;
+            
+            // Create the request object and set its properties.
+            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:accessTokenEndpoint]];
+            [request setHTTPMethod:@"POST"];
+            [request setHTTPBody:[refreshPostParams dataUsingEncoding:NSUTF8StringEncoding]];
+            [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+            
+            // Make the request.
+            [self makeRequest:request];
+        }
+    }
+    else{
+        NSLog(@"  === Refused another refreshAccessToken request ===  ");
+        return;
     }
 }
 
@@ -98,17 +108,14 @@ UIButton *loginButton;
     _receivedData = [[NSMutableData alloc] init];
     _isRefreshing = NO;
     
-    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    //AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     blockerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
     blockerView.backgroundColor = [UIColor redColor];
     
     NSArray *allServers = [[EmailServersService instance] allEmailServers];
     if (!([allServers count] == 0 || [((EmailServerModel *)[allServers objectAtIndex:0]).refreshToken isEqualToString:@"nil"])) {
-    
         [self refreshAccessToken];
         [self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
-
-
     }
     else {
         
@@ -123,35 +130,13 @@ UIButton *loginButton;
         images = @[@"WHITEsliders1nobar.png", @"WHITEsliders2.png", @"WHITEsliders3.png", @"WHITEsliders4.png",@"WHITEsliders5.png"];
         
         PageContentVC *initialViewController = [self viewControllerAtIndex:0];
-        
-        
-        
         NSArray *viewControllers = [NSArray arrayWithObject:initialViewController];
-        
-        
-        
         self.pageController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 40);
-        
         [self.pageController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-        
-        
-        
         [self addChildViewController:self.pageController];
-        
         [[self view] addSubview:[self.pageController view]];
-        
         [self.pageController didMoveToParentViewController:self];
-        
-        //
-        
-        
-//        [funnlMailIntroView mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.top.equalTo(self.view.mas_top).with.offset(20);
-//            make.left.equalTo(self.view.mas_left).with.offset(0);
-//            make.right.equalTo(self.view.mas_right).with.offset(0);
-//            make.bottom.equalTo(self.view.mas_bottom).with.offset(-150);
-//        }];
-        
+
         UIImage *loginImage = [UIImage imageNamed:@"getStarted"];
         loginButton = [[UIButton alloc] init];
         [loginButton setImage:loginImage forState:UIControlStateNormal];
@@ -159,11 +144,7 @@ UIButton *loginButton;
         [loginButton addTarget:self action:@selector(loginButtonSelected)forControlEvents:UIControlEventTouchUpInside];
         loginButton.hidden = YES;
         [self.view addSubview:loginButton];
-        
-//        [loginButton mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.top.equalTo(funnlMailIntroView.mas_bottom).with.offset(40);
-//            make.left.equalTo(self.view.mas_left).with.offset(7);
-//        }];
+
     }
 }
 
@@ -265,7 +246,7 @@ UIButton *loginButton;
         [tempAppDelegate.progressHUD setHidden:NO];
 
         // Authentication succeeded
-        
+
         [self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
     }
 }
@@ -456,6 +437,10 @@ UIButton *loginButton;
     UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:mainViewController];
     
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    if(appDelegate.internetAvailable){
+        [[EmailService instance] startLogin:self.mainViewController.emailsTableViewController];
+    }
+    
     appDelegate.menuController = [[MenuViewController alloc] init];
     appDelegate.drawerController = [[MMDrawerController alloc] initWithCenterViewController:nav leftDrawerViewController:appDelegate.menuController];
     [appDelegate.drawerController setRestorationIdentifier:@"MMDrawer"];
@@ -497,6 +482,7 @@ UIButton *loginButton;
     [_receivedData appendData:data];
 }
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    AppDelegate *appDelegate = APPDELEGATE;
     // This object will be used to store the converted received JSON data to string.
     NSString *responseJSON;
     
@@ -520,14 +506,13 @@ UIButton *loginButton;
             NSLog(@"Invalid access Token");
         }
         else{
+            appDelegate.isAlreadyRequestedRefreshToken  = NO;
             self.emailServerModel.accessToken = [NSString stringWithFormat:@"%@",accessToken];
             [[EmailServersService instance] updateEmailServer:self.emailServerModel];
             [self performSelectorInBackground:@selector(getUserInfo) withObject:nil];
 
         }
         
-        // update database with new access token
-//        [[EmailService instance] startLogin:self.mainViewController.emailsTableViewController];
         
         if (self.isRefreshing) {
             self.isRefreshing = NO;
@@ -564,7 +549,7 @@ UIButton *loginButton;
 
 
 //    [[EmailService instance] checkMailsAtStart:self.mainViewController.emailsTableViewController]
-    //[self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
+//    //[self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
 
 }
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {

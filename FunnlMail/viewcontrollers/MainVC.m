@@ -18,7 +18,7 @@
 #import "UIColor+HexString.h"
 #import "ComposeViewController.h"
 #import "MainView.h"
-
+#import "EmailServersService.h"
 
 #import <MessageUI/MessageUI.h>
 
@@ -39,6 +39,20 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     }
     return self;
 }
+
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        // Custom initialization
+        self.emailsTableViewController = [[EmailsTableViewController alloc]init];
+
+    }
+    return self;
+}
+
+
+
 
 -(void)viewWillAppear:(BOOL)animated{
     [mainView reloadView];
@@ -147,23 +161,27 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [composeEmailButton setImage:[UIImage imageNamed:@"composeIcon.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:composeEmailButton];
     
-    if(emailsTableViewController==nil){
-        emailsTableViewController = [[EmailsTableViewController alloc]init];
-        emailsTableViewController.mainVCdelegate = self;
-        [self addChildViewController:emailsTableViewController];
-        [self.view insertSubview:emailsTableViewController.view atIndex:0];
+    if(self.emailsTableViewController==nil){
+        self.emailsTableViewController = [[EmailsTableViewController alloc]init];
         
-        [emailsTableViewController.view mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.view.mas_top).with.offset(0);
-            make.left.equalTo(self.view.mas_left).with.offset(0);
-            make.right.equalTo(self.view.mas_right).with.offset(0);
-            make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
-        }];
-        [[EmailService instance] startLogin:emailsTableViewController];
-
     }
     
+    self.emailsTableViewController.mainVCdelegate = self;
+    [self addChildViewController:emailsTableViewController];
+    [self.view insertSubview:emailsTableViewController.view atIndex:0];
+    
+    [emailsTableViewController.view mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.view.mas_top).with.offset(0);
+        make.left.equalTo(self.view.mas_left).with.offset(0);
+        make.right.equalTo(self.view.mas_right).with.offset(0);
+        make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
+    }];
+    [[EmailService instance] startLogin:self.emailsTableViewController];
+    
+    
+    
 }
+
 
 
 #pragma mark -

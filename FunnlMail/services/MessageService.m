@@ -185,15 +185,17 @@ static MessageService *instance;
     paramDict[@"messageJSON"] = messageModel.messageJSON;
     paramDict[@"read"] = [NSNumber numberWithBool:messageModel.read];
     paramDict[@"date"] = dateTimeInterval;
-    if (messageModel.funnelJson) {
-        paramDict[@"funnelJson"] = messageModel.funnelJson;
+    if (messageModel.funnelJson.length) {
+        [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+            success = [db executeUpdate:@"UPDATE messages SET messageJSON=:messageJSON,read=:read,date=:date,funnelJson=:funnelJson WHERE messageID=:messageID" withParameterDictionary:paramDict];
+            
+        }];
     }
     else
-        paramDict[@"funnelJson"] = @"";
-    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-        success = [db executeUpdate:@"UPDATE messages SET messageJSON=:messageJSON,read=:read,date=:date,funnelJson=:funnelJson WHERE messageID=:messageID" withParameterDictionary:paramDict];
-        
-    }];
+        [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+            success = [db executeUpdate:@"UPDATE messages SET messageJSON=:messageJSON,read=:read,date=:date WHERE messageID=:messageID" withParameterDictionary:paramDict];
+            
+        }];
     return success;
 
 }

@@ -22,7 +22,7 @@
     UILabel *navigationBarTitleLabel;
 }
 @property (nonatomic, retain) MainView *mainView;
-@property (nonatomic, retain) EmailsTableViewController *emailsTableViewController;
+@property (nonatomic, strong) EmailsTableViewController *emailsTableViewController;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property (strong,nonatomic) FunnelModel *filterModel;
 @end

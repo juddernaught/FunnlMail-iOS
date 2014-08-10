@@ -57,13 +57,23 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     return self;
 }
 
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        // Custom initialization
+        [self setupView];
+    }
+    return self;
+}
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     tempCellForDisplay = nil;
     currentIndexPath = nil;
     tempAppDelegate = APPDELEGATE;
-//    [[EmailService instance] startLogin: self];
     [self setupView];
     // MUSTFIX: code doesn't work without below line, but it doesn't seem like it really belongs
     self.emailFolder = INBOX;
