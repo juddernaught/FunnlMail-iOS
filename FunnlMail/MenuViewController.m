@@ -132,6 +132,7 @@
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Trash";
         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:TRASH withFetchRange:MCORangeEmpty];
     } else if (indexPath.row == 8){
+        [[MessageService instance] deleteMessageWithGmailMessageID:[EmailService instance].userEmailID];
         [[EmailServersService instance] deleteEmailServer:[EmailService instance].userEmailID];
         LoginViewController *loginViewController = [[LoginViewController alloc]init];
         loginViewController.view.backgroundColor = [UIColor clearColor];

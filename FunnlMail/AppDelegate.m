@@ -121,19 +121,19 @@
 #pragma mark - Welcome Overlay
 
 -(void)showWelcomeOverlay{
-    showWelcomeOverlay = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
-    showWelcomeOverlay.opaque = NO;
-    showWelcomeOverlay.backgroundColor = CLEAR_COLOR;
-    showWelcomeOverlay.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-    NSString *htmlPath = [[NSBundle mainBundle] pathForResource:@"index" ofType:@"html"];
-
-    [showWelcomeOverlay  loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:htmlPath]]];
-    [self.window addSubview:showWelcomeOverlay];
-    [self.window bringSubviewToFront:showWelcomeOverlay];
+//    showWelcomeOverlay = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+//    showWelcomeOverlay.opaque = NO;
+//    showWelcomeOverlay.backgroundColor = CLEAR_COLOR;
+//    showWelcomeOverlay.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+//    NSString *htmlPath = [[NSBundle mainBundle] pathForResource:@"index" ofType:@"html"];
+//
+//    [showWelcomeOverlay  loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:htmlPath]]];
+//    [self.window addSubview:showWelcomeOverlay];
+//    [self.window bringSubviewToFront:showWelcomeOverlay];
 }
                           
 -(void)hideWelcomeOverlay{
-    [showWelcomeOverlay removeFromSuperview];
+//    [showWelcomeOverlay removeFromSuperview];
 }
 
 #pragma mark - applicationWillResignActive
