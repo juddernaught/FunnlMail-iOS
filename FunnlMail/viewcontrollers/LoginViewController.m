@@ -150,7 +150,6 @@ UIButton *loginButton;
     if (!([allServers count] == 0 || [((EmailServerModel *)[allServers objectAtIndex:0]).refreshToken isEqualToString:@"nil"])) {
         
         [self refreshAccessToken];
-        [self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
     }
     else {
         NSString *scope = @"https://mail.google.com/"; // scope for Gmail
@@ -166,9 +165,14 @@ UIButton *loginButton;
     }
 }
 
-- (void) loginButtonSelected {
+-(void) setDrawerControllerOnWindow
+{
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [appDelegate.window setRootViewController:appDelegate.drawerController];
+}
+
+- (void) loginButtonSelected {
+    [self setDrawerControllerOnWindow];
 //    [self oauthLogin];
 }
 
@@ -446,7 +450,11 @@ UIButton *loginButton;
     [appDelegate.drawerController setMaximumLeftDrawerWidth:250.0];
     [appDelegate.drawerController setOpenDrawerGestureModeMask:MMOpenDrawerGestureModeAll];
     [appDelegate.drawerController setCloseDrawerGestureModeMask:MMCloseDrawerGestureModeAll];
+    
+    //expilictly calling the view to start the background loading emails
+    [appDelegate.drawerController view];
     [mainViewController view];
+    [appDelegate.menuController view];
     
 //    [self.navigationController presentViewController:appDelegate.drawerController animated:NO completion:nil];
 //    AppDelegate *tempAppDelegate = APPDELEGATE;
@@ -547,7 +555,9 @@ UIButton *loginButton;
 
 
 //    [[EmailService instance] checkMailsAtStart:self.mainViewController.emailsTableViewController]
-    //[self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
+//    [self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
+    [self loadHomeScreen];
+    [self setDrawerControllerOnWindow];
 
 }
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
