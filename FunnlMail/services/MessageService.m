@@ -170,7 +170,7 @@ static MessageService *instance;
     return previewBody;
 }
 
--(void) updateMessageMetaInfo:(MessageModel *)messageModel{
+-(BOOL) updateMessageMetaInfo:(MessageModel *)messageModel{
     __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
     
     __block BOOL success = NO;
@@ -189,6 +189,7 @@ static MessageService *instance;
         success = [db executeUpdate:@"UPDATE messages SET messageJSON=:messageJSON,read=:read,date=:date,funnelJson=:funnelJson WHERE messageID=:messageID" withParameterDictionary:paramDict];
         
     }];
+    return success;
 
 }
     
