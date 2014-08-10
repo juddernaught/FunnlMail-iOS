@@ -24,6 +24,17 @@
 #import "FunnlPopUpView.h"
 #import <Mixpanel/Mixpanel.h>
 
+@implementation UILabel (Additions)
+
+- (void)sizeToFitWithAlignmentRight {
+    CGRect beforeFrame = self.frame;
+    [self sizeToFit];
+    CGRect afterFrame = self.frame;
+    self.frame = CGRectMake(beforeFrame.origin.x + beforeFrame.size.width - afterFrame.size.width-3, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
+}
+
+@end
+
 static NSString *FILTER_VIEW_CELL = @"FilterViewCell";
 static NSString *mailCellIdentifier = @"MailCell";
 static NSString *inboxInfoIdentifier = @"InboxStatusCell";
@@ -181,7 +192,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
         filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : ALL_FUNNL);
         if([EmailService instance].filterMessages.count == 0){
             NSLog(@"Call to loadLastNMessages from setFilterModel function");
-            [[EmailService instance] loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD withTableController:self withFolder:self.emailFolder  withFetchRange:MCORangeEmpty];
+            [[EmailService instance] loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD_AT_START withTableController:self withFolder:self.emailFolder  withFetchRange:MCORangeEmpty];
         }
     }
 }
@@ -243,24 +254,31 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 cell.funnlLabel1.text = @"";
                 cell.funnlLabel2.text = @"";
                 cell.funnlLabel3.text = @"";
-
+                cell.funnlLabel1.backgroundColor = CLEAR_COLOR;
+                cell.funnlLabel2.backgroundColor = CLEAR_COLOR;
+                cell.funnlLabel3.backgroundColor = CLEAR_COLOR;
+                
                 NSMutableDictionary *funnlLabelDictionary= [self getFunnlsDictionary:(MessageModel*)[EmailService instance].filterMessages[indexPath.row]];
                 int funnlLabelCount = 0;
                 for (NSString *key in funnlLabelDictionary.allKeys) {
                     if(funnlLabelCount == 0){
                         cell.funnlLabel1.text = key;
-                        cell.funnlLabel1.textColor = [UIColor colorWithHexString:[funnlLabelDictionary objectForKey:key]];
+                        cell.funnlLabel1.backgroundColor = [UIColor colorWithHexString:[funnlLabelDictionary objectForKey:key]];
+                        cell.funnlLabel1.textColor = [UIColor whiteColor];
                     }
                     else if(funnlLabelCount == 1){
                         cell.funnlLabel2.text = key;
                         if(funnlLabelDictionary.allKeys.count > 1){
                             cell.funnlLabel2.text = [NSString stringWithFormat:@"%@ + %d ",key,funnlLabelDictionary.allKeys.count-1];
-                            cell.funnlLabel2.textColor = [UIColor colorWithHexString:[funnlLabelDictionary objectForKey:key]];
+                            cell.funnlLabel2.backgroundColor = [UIColor colorWithHexString:[funnlLabelDictionary objectForKey:key]];
+                            cell.funnlLabel2.textColor = [UIColor whiteColor];
                         }
                     }
-                    
+                    [cell.funnlLabel1 sizeThatFits:CGSizeMake(60, 20)];
+                    [cell.funnlLabel2 sizeThatFits:CGSizeMake(60, 20)];
                     funnlLabelCount++;
                 }
+                
                 
                 //[cell.labelNameText setAttributedText:[self returnFunnelString:(MessageModel*)[EmailService instance].filterMessages[indexPath.row]]];
                 cell.tag = indexPath.row;

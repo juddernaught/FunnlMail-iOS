@@ -63,9 +63,14 @@ static MessageService *instance;
             paramDict[@"gmailthreadid"] = @"0";
         paramDict[@"skipFlag"] = [NSNumber numberWithBool:messageModel.skipFlag];
         
-        [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+//        [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+//            success = [db executeUpdate:@"INSERT INTO messages (messageID,messageJSON,read,date,gmailthreadid,skipFlag,categoryName,gmailMessageID) VALUES (:messageID,:messageJSON,:read,:date,:gmailthreadid,:skipFlag,:categoryName,:gmailMessageID)" withParameterDictionary:paramDict];
+//        }];
+
+        [[SQLiteDatabase sharedInstance].databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
             success = [db executeUpdate:@"INSERT INTO messages (messageID,messageJSON,read,date,gmailthreadid,skipFlag,categoryName,gmailMessageID) VALUES (:messageID,:messageJSON,:read,:date,:gmailthreadid,:skipFlag,:categoryName,:gmailMessageID)" withParameterDictionary:paramDict];
         }];
+
         
     }
     return success;

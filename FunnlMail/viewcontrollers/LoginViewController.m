@@ -242,7 +242,7 @@ UIButton *loginButton;
 
         [[EmailServersService instance] insertEmailServer:self.emailServerModel];
         MCOIMAPSession * imapSession = [[MCOIMAPSession alloc] init];
-        imapSession.timeout = 100000;
+        imapSession.timeout = 60;
         [EmailService instance].imapSession = imapSession;
         [imapSession setAuthType:MCOAuthTypeXOAuth2];
         [imapSession setOAuth2Token:accessToken];
@@ -441,7 +441,7 @@ UIButton *loginButton;
             [[NSUserDefaults standardUserDefaults] setObject:nextPageToken forKey:@"PRIMARY_PAGE_TOKEN"];
             [[NSUserDefaults standardUserDefaults] synchronize];
             
-            if([EmailService instance].primaryMessages.count < 1000)
+            if([EmailService instance].primaryMessages.count < 5000)
                 [self getPrimaryMessages:emailStr nextPageToken:nextPageToken numberOfMaxResult:100];
             else
                 NSLog(@"----- Primary messages count > %d",pArray.count);
@@ -451,7 +451,7 @@ UIButton *loginButton;
 
 -(void)loadHomeScreen {
     [self getUserInfo];
-
+    
     mainViewController = [[MainVC alloc] init];
     UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:mainViewController];
     
@@ -522,6 +522,8 @@ UIButton *loginButton;
         else{
             self.emailServerModel.accessToken = [NSString stringWithFormat:@"%@",accessToken];
             [[EmailServersService instance] updateEmailServer:self.emailServerModel];
+            [self performSelectorInBackground:@selector(getUserInfo) withObject:nil];
+
         }
         
         // update database with new access token
