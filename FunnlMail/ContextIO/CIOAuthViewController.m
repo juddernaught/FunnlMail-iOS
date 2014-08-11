@@ -142,6 +142,7 @@
         UIWebView *loginWebView = [[UIWebView alloc] initWithFrame:self.view.frame];
         loginWebView.delegate = self;
         [webViewController.view addSubview:loginWebView];
+        UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:self];
         [self.navigationController pushViewController:webViewController animated:NO];
         
         [loginWebView loadRequest:[NSURLRequest requestWithURL:authRedirectURL]];
