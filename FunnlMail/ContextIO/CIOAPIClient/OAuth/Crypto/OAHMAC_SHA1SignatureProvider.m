@@ -31,6 +31,7 @@
 #include "Base64Transcoder.h"
 #import <CommonCrypto/CommonHMAC.h>
 
+
 @implementation OAHMAC_SHA1SignatureProvider
 
 - (NSString *)name {
