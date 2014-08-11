@@ -12,5 +12,5 @@
 @interface WEPopoverContentViewController : UITableViewController {
 
 }
-
+@property(strong, nonatomic)NSString *emailAddress;
 @end

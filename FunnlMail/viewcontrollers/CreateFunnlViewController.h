@@ -14,9 +14,10 @@
 #import "ContactService.h"
 #import "GTMOAuth2ViewControllerTouch.h"
 #import "WEPopoverController.h"
+#import "UIPopoverController+iPhone.h"
 
 @class FilterModel;
-@interface CreateFunnlViewController : UIViewController<UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,NSURLConnectionDataDelegate,GTMFetcherAuthorizationProtocol,GTMHTTPFetcherServiceProtocol,WEPopoverControllerDelegate, UIPopoverControllerDelegate>
+@interface CreateFunnlViewController : UIViewController<UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,NSURLConnectionDataDelegate,GTMFetcherAuthorizationProtocol,GTMHTTPFetcherServiceProtocol,WEPopoverControllerDelegate, UIPopoverControllerDelegate,UIScrollViewDelegate>
 {
     WEPopoverController *popoverController;
     AppDelegate *tempAppDelegate;
@@ -34,6 +35,7 @@
     NSInteger currentPopoverCellIndex;
     Class popoverClass;
 }
+@property (nonatomic, retain) IBOutlet UIPopoverController *poc;
 @property (nonatomic, retain) WEPopoverController *popoverController;
 @property (weak) id<MainVCDelegate> mainVCdelegate;
 @property (assign) BOOL isEdit;

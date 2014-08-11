@@ -64,9 +64,8 @@ static ContactService *instance;
     
     [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
         FMResultSet *resultSet ;
-
-        
-        NSString *query = [NSString stringWithFormat:@"SELECT email FROM contacts WHERE name LIKE  '%@%%'  OR  email  LIKE  '%@%%'  ORDER BY count DESC LIMIT 5;",searchTerm,searchTerm];
+//        NSString *query = [NSString stringWithFormat:@"SELECT email FROM contacts WHERE email  LIKE  '%@%%' ;",searchTerm];
+        NSString *query = @"SELECT email FROM contacts;";
         resultSet = [db executeQuery:query];
 //        resultSet = [db executeQuery:@"SELECT email FROM contacts WHERE name LIKE  '%' || ? || '%'  OR email LIKE '%' || ? || '%' ORDER BY count DESC LIMIT 5;",searchTerm,searchTerm];
 
@@ -79,18 +78,6 @@ static ContactService *instance;
     return array;
 }
 
-
-//create table contacts(
-//                      name TEXT,
-//                      email TEXT,
-//                      thumbnail TEXT,
-//                      count INTEGER,
-//                      received_count INTEGER,
-//                      sent_count INTEGER,
-//                      sent_from_account_count INTEGER,
-//                      resource_url TEXT,
-//                      PRIMARY KEY (email)
-//                      );
 
 -(NSMutableArray*)retrieveContactWithEmail:(NSString*)emailID {
     __block NSMutableArray *tempContactModel = [[NSMutableArray alloc] init];

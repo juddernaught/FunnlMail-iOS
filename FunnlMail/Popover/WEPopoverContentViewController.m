@@ -10,7 +10,7 @@
 
 
 @implementation WEPopoverContentViewController
-
+@synthesize emailAddress;
 
 #pragma mark -
 #pragma mark Initialization
@@ -95,8 +95,12 @@
     }
     
     // Configure the cell...
-	cell.textLabel.text = [NSString stringWithFormat:@"Item %d", [indexPath row]]; 
-	cell.textLabel.textColor = [UIColor whiteColor];
+	cell.textLabel.text = [NSString stringWithFormat:@"Item %d", [indexPath row]];
+    if (emailAddress && ![emailAddress isEqual:[NSNull null]]) {
+        cell.textLabel.text = emailAddress;
+    }
+    [cell.textLabel setTextAlignment:NSTextAlignmentCenter];
+	cell.textLabel.textColor = [UIColor blackColor];
     return cell;
 }
 

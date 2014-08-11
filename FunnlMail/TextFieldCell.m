@@ -37,6 +37,8 @@
         tapButton = [[UIButton alloc] initWithFrame:CGRectMake(55, 0, 250 - 55, 44)];
 //        [tapButton setBackgroundColor:[UIColor redColor]];
         thumbnailImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 2, 40, 40)];
+        thumbnailImageView.clipsToBounds = YES;
+        thumbnailImageView.layer.cornerRadius = 20;
         [self addSubview:textField];
         [self addSubview:thumbnailImageView];
         [self addSubview:tapButton];

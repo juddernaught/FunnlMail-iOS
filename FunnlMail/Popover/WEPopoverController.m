@@ -258,7 +258,8 @@ static BOOL OSVersionIsAtLeast(float version) {
     
     
     WEPopoverContainerViewProperties *props = self.containerViewProperties ? self.containerViewProperties : [[self class] defaultContainerViewProperties];
-	WEPopoverContainerView *containerView = [[[WEPopoverContainerView alloc] initWithSize:self.effectivePopoverContentSize anchorRect:rect displayArea:displayArea permittedArrowDirections:arrowDirections properties:props] autorelease];
+//	WEPopoverContainerView *containerView = [[[WEPopoverContainerView alloc] initWithSize:self.effectivePopoverContentSize anchorRect:rect displayArea:displayArea permittedArrowDirections:arrowDirections properties:props] autorelease];
+    WEPopoverContainerView *containerView = [[[WEPopoverContainerView alloc] initWithSize:CGSizeMake(320, self.effectivePopoverContentSize.height) anchorRect:rect displayArea:displayArea permittedArrowDirections:arrowDirections properties:props] autorelease];
 	popoverArrowDirection = containerView.arrowDirection;
 	
 	containerView.frame = [theView convertRect:containerView.calculatedFrame toView:backgroundView];

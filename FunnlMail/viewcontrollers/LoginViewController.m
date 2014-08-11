@@ -23,7 +23,6 @@
 #import "CIOAuthViewController.h"
 #import "CIOAPIClient.h"
 #import "ContactService.h"
-#import "ContactModel.h"
 
 #define accessTokenEndpoint @"https://accounts.google.com/o/oauth2/token"
 
@@ -294,7 +293,7 @@ UIButton *loginButton;
     NSString *path = [NSString stringWithFormat:@"https://api.context.io/2.0/accounts/%@/sources",accID];
     [appDelegate.contextIOAPIClient postPath:path params:params success:^(NSDictionary *responseDict) {
         NSLog(@"-----> %@",responseDict.description);
-        [self performSelector:@selector(fetchContacts) withObject:nil afterDelay:20];
+        //[self performSelector:@selector(fetchContacts) withObject:nil afterDelay:20];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"error getting contacts: %@", error);
     }];
@@ -340,10 +339,8 @@ UIButton *loginButton;
 #pragma mark Retrieving Contact (NEW)
 #pragma mark getUserContact
 -(void)getUserContact{
-//    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://www.google.com/m8/feeds/contacts/%@/full?alt=json&max-results=%d",[EmailService instance].userEmailID,INT32_MAX]];
-    
+
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
     [request setHTTPMethod:@"GET"];
@@ -355,13 +352,13 @@ UIButton *loginButton;
         if (error != nil) {
             // status code or network error
             NSLog(@"--user info error %@: ", [error description]);
-            NSString* newStr = [[NSString alloc] initWithData:retrievedData encoding:NSUTF8StringEncoding];
-            //NSLog(@"user Info: %@",newStr);
+//            NSString* newStr = [[NSString alloc] initWithData:retrievedData encoding:NSUTF8StringEncoding];
+//            NSLog(@"user Info: %@",newStr);
         } else {
             // succeeded
             NSMutableArray *contactArray = [[NSMutableArray alloc] init];
-            NSString* newStr = [[NSString alloc] initWithData:retrievedData encoding:NSUTF8StringEncoding];
-            //NSLog(@"user Info: %@",newStr);
+//            NSString* newStr = [[NSString alloc] initWithData:retrievedData encoding:NSUTF8StringEncoding];
+//            NSLog(@"user Info: %@",newStr);
             NSDictionary* json = [NSJSONSerialization JSONObjectWithData:retrievedData options:kNilOptions error:&error];
             NSDictionary *feedDict = [json objectForKey:@"feed"];
             NSDictionary *contacts = [feedDict objectForKey:@"entry"];
@@ -402,7 +399,7 @@ UIButton *loginButton;
                     [contactArray addObject:tempContact];
                 }
                 else {
-                    NSLog(@"Can't inset the record");
+                    NSLog(@"----rec---");
                 }
             }
             
