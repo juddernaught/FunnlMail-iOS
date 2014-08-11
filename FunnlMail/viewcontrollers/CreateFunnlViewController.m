@@ -713,7 +713,7 @@ NSMutableArray *emailArr,*searchArray;
     //creation of webhooks
     for (NSString *sender in senders) {
         NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-        [params setObject:sender forKey:@"filter-from"];
+        [params setObject:sender forKey:@"filter_from"];
         [params setObject:@"0" forKey:@"sync_period"];
         if ([subjects count]) {
             for (NSString *subject in subjects) {

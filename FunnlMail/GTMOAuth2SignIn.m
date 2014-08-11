@@ -26,6 +26,7 @@ static const NSTimeInterval kDefaultNetworkLossTimeoutInterval = 30.0;
 // http://code.google.com/apis/accounts/docs/OAuth2.html#IA
 //
 NSString *const kOOBString = @"urn:ietf:wg:oauth:2.0:oob";
+//NSString *const kOOBString = @"https://api.context.io/connect/oauth2callback";
 
 
 @interface GTMOAuth2SignIn ()
