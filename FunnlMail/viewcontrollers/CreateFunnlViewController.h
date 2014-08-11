@@ -10,10 +10,15 @@
 #import "View+MASAdditions.h"
 #import "MainVC.h"
 #import "AppDelegate.h"
+#import "ContactModel.h"
+#import "ContactService.h"
+#import "GTMOAuth2ViewControllerTouch.h"
+#import "WEPopoverController.h"
 
 @class FilterModel;
-@interface CreateFunnlViewController : UIViewController<UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate>
+@interface CreateFunnlViewController : UIViewController<UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,NSURLConnectionDataDelegate,GTMFetcherAuthorizationProtocol,GTMHTTPFetcherServiceProtocol,WEPopoverControllerDelegate, UIPopoverControllerDelegate>
 {
+    WEPopoverController *popoverController;
     AppDelegate *tempAppDelegate;
     UITableView *Tableview;
     UITextField *nameTextField,*conversattionTextField,*subjectTextField;
@@ -26,10 +31,12 @@
     UISwitch *enableNotificationsSwitch;
     BOOL areNotificationsEnabled;
     BOOL isSkipAll;
+    NSInteger currentPopoverCellIndex;
+    Class popoverClass;
 }
+@property (nonatomic, retain) WEPopoverController *popoverController;
 @property (weak) id<MainVCDelegate> mainVCdelegate;
 @property (assign) BOOL isEdit;
-
 -(id)initTableViewWithSenders:(NSMutableDictionary*)sendersDictionary subjects:(NSMutableDictionary*)subjectsDictionary filterModel:(FunnelModel*)model;
 @end
 

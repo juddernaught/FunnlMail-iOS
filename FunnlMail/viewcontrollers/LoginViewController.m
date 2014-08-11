@@ -23,6 +23,7 @@
 #import "CIOAuthViewController.h"
 #import "CIOAPIClient.h"
 #import "ContactService.h"
+#import "ContactModel.h"
 
 #define accessTokenEndpoint @"https://accounts.google.com/o/oauth2/token"
 
@@ -182,7 +183,7 @@ UIButton *loginButton;
     
     // pre-assigned by service
     
-    NSString *scope = @"https://mail.google.com/"; // scope for Gmail
+   NSString *scope = @"https://mail.google.com/ https://www.googleapis.com/auth/userinfo.profile https://www.google.com/m8/feeds"; // scope for Gmail
     
     GTMOAuth2ViewControllerTouch *viewController;
     viewController = [[GTMOAuth2ViewControllerTouch alloc] initWithScope:scope
@@ -268,7 +269,9 @@ UIButton *loginButton;
             appDelegate.contextIOAPIClient = [[CIOAPIClient alloc] initWithConsumerKey:kContextIOConsumerKey consumerSecret:kContextIOConsumerSecret token:contextIO_access_token tokenSecret:contextIO_access_token_secret accountID:contextIO_account_id];
             [appDelegate.contextIOAPIClient  saveCredentials];
             
-            [self addToSourceWithAccountID:contextIO_account_id];
+            //fetching contacts
+            [self getUserContact];
+//            [self addToSourceWithAccountID:contextIO_account_id];
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"error getting contacts: %@", error);
@@ -333,6 +336,80 @@ UIButton *loginButton;
     });
 }
 
+#pragma mark -
+#pragma mark Retrieving Contact (NEW)
+#pragma mark getUserContact
+-(void)getUserContact{
+//    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://www.google.com/m8/feeds/contacts/%@/full?alt=json&max-results=%d",[EmailService instance].userEmailID,INT32_MAX]];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPMethod:@"GET"];
+    
+    GTMOAuth2Authentication *currentAuth = [GTMOAuth2ViewControllerTouch authForGoogleFromKeychainForName:kKeychainItemName clientID:kMyClientID clientSecret:kMyClientSecret];
+    GTMHTTPFetcher* myFetcher = [GTMHTTPFetcher fetcherWithRequest:request];
+    [myFetcher setAuthorizer:currentAuth];
+    [myFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error) {
+        if (error != nil) {
+            // status code or network error
+            NSLog(@"--user info error %@: ", [error description]);
+            NSString* newStr = [[NSString alloc] initWithData:retrievedData encoding:NSUTF8StringEncoding];
+            //NSLog(@"user Info: %@",newStr);
+        } else {
+            // succeeded
+            NSMutableArray *contactArray = [[NSMutableArray alloc] init];
+            NSString* newStr = [[NSString alloc] initWithData:retrievedData encoding:NSUTF8StringEncoding];
+            //NSLog(@"user Info: %@",newStr);
+            NSDictionary* json = [NSJSONSerialization JSONObjectWithData:retrievedData options:kNilOptions error:&error];
+            NSDictionary *feedDict = [json objectForKey:@"feed"];
+            NSDictionary *contacts = [feedDict objectForKey:@"entry"];
+            for (NSDictionary *contactDict in contacts) {
+                ContactModel *tempContact = [[ContactModel alloc] init];
+                tempContact.name = [[contactDict objectForKey:@"title"] objectForKey:@"$t"];
+                NSArray *emailArray = [contactDict objectForKey:@"gd$email"];
+                
+                if (emailArray.count > 0) {
+                    if ([[emailArray objectAtIndex:0] objectForKey:@"address"]) {
+                        tempContact.email = [[emailArray objectAtIndex:0] objectForKey:@"address"];
+                    }
+                }
+                else {
+                    //when we don't have email id we put string @"nil"
+                    tempContact.email = @"nil";
+                }
+                emailArray = nil;
+                
+                NSArray *linkArray = [contactDict objectForKey:@"link"];
+                if (linkArray.count > 0) {
+                    for (NSDictionary *tempLinkDict in linkArray) {
+                        if ([[tempLinkDict objectForKey:@"type"] isEqualToString:@"image/*"]) {
+                            tempContact.thumbnail = [tempLinkDict objectForKey:@"href"];
+                            break;
+                        }
+                    }
+                }
+                linkArray = nil;
+                
+                //set default value for rest of contact parameters
+                tempContact.count = 0;
+                tempContact.sent_count = 0;
+                tempContact.sent_from_account_count = 0;
+                tempContact.received_count = 0;
+                tempContact.resource_url = @"nil";
+                if (![tempContact.email isEqualToString:@"nil"]) {
+                    [contactArray addObject:tempContact];
+                }
+                else {
+                    NSLog(@"Can't inset the record");
+                }
+            }
+            
+            [[ContactService instance] insertBulkContacts:contactArray];
+        }
+    }];
+}
 
 
 -(void)getUserInfo{
@@ -365,6 +442,8 @@ UIButton *loginButton;
                 [self getContextIOWithEmail:currentEmail withFirstName:currentName withLastName:currentName];
             }
 
+            [self getUserContact];
+            
             [[NSUserDefaults standardUserDefaults] synchronize];
             [EmailService instance].primaryMessages = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"PRIMARY"]];
             NSString *nextPageToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"PRIMARY_PAGE_TOKEN"];

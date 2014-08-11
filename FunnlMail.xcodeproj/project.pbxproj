@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2522AC141998DBEC002B1207 /* UIBarButtonItem+WEPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 2522AC0C1998DBEC002B1207 /* UIBarButtonItem+WEPopover.m */; };
+		2522AC151998DBEC002B1207 /* WEPopoverContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2522AC0E1998DBEC002B1207 /* WEPopoverContainerView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		2522AC161998DBEC002B1207 /* WEPopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2522AC101998DBEC002B1207 /* WEPopoverController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		2522AC171998DBEC002B1207 /* WETouchableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2522AC131998DBEC002B1207 /* WETouchableView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		2522AC1E1998DCD5002B1207 /* WEPopoverContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2522AC1D1998DCD5002B1207 /* WEPopoverContentViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		5A1FF53D1948263B0056750F /* FunnelModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1FF53C1948263B0056750F /* FunnelModel.m */; };
 		5A59DC6E1957FF9D0094B00D /* ConfirmFunnelPopUp.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A59DC6D1957FF9D0094B00D /* ConfirmFunnelPopUp.m */; };
 		5A59DC7519582A260094B00D /* FunnelPopUpForExtraRules.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A59DC7419582A260094B00D /* FunnelPopUpForExtraRules.m */; };
@@ -296,6 +301,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2522AC0B1998DBEC002B1207 /* UIBarButtonItem+WEPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBarButtonItem+WEPopover.h"; sourceTree = "<group>"; };
+		2522AC0C1998DBEC002B1207 /* UIBarButtonItem+WEPopover.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBarButtonItem+WEPopover.m"; sourceTree = "<group>"; };
+		2522AC0D1998DBEC002B1207 /* WEPopoverContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WEPopoverContainerView.h; sourceTree = "<group>"; };
+		2522AC0E1998DBEC002B1207 /* WEPopoverContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WEPopoverContainerView.m; sourceTree = "<group>"; };
+		2522AC0F1998DBEC002B1207 /* WEPopoverController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WEPopoverController.h; sourceTree = "<group>"; };
+		2522AC101998DBEC002B1207 /* WEPopoverController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WEPopoverController.m; sourceTree = "<group>"; };
+		2522AC111998DBEC002B1207 /* WEPopoverParentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WEPopoverParentView.h; sourceTree = "<group>"; };
+		2522AC121998DBEC002B1207 /* WETouchableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WETouchableView.h; sourceTree = "<group>"; };
+		2522AC131998DBEC002B1207 /* WETouchableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WETouchableView.m; sourceTree = "<group>"; };
+		2522AC1C1998DCD5002B1207 /* WEPopoverContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WEPopoverContentViewController.h; sourceTree = "<group>"; };
+		2522AC1D1998DCD5002B1207 /* WEPopoverContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WEPopoverContentViewController.m; sourceTree = "<group>"; };
 		27D9CEE565FC46E3B3970F17 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B928198F5034A5AB4B3F004 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		5A1FF53B1948263B0056750F /* FunnelModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FunnelModel.h; path = models/FunnelModel.h; sourceTree = "<group>"; };
@@ -693,6 +709,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2522AC0A1998DBEC002B1207 /* Popover */ = {
+			isa = PBXGroup;
+			children = (
+				2522AC1C1998DCD5002B1207 /* WEPopoverContentViewController.h */,
+				2522AC1D1998DCD5002B1207 /* WEPopoverContentViewController.m */,
+				2522AC0B1998DBEC002B1207 /* UIBarButtonItem+WEPopover.h */,
+				2522AC0C1998DBEC002B1207 /* UIBarButtonItem+WEPopover.m */,
+				2522AC0D1998DBEC002B1207 /* WEPopoverContainerView.h */,
+				2522AC0E1998DBEC002B1207 /* WEPopoverContainerView.m */,
+				2522AC0F1998DBEC002B1207 /* WEPopoverController.h */,
+				2522AC101998DBEC002B1207 /* WEPopoverController.m */,
+				2522AC111998DBEC002B1207 /* WEPopoverParentView.h */,
+				2522AC121998DBEC002B1207 /* WETouchableView.h */,
+				2522AC131998DBEC002B1207 /* WETouchableView.m */,
+			);
+			path = Popover;
+			sourceTree = "<group>";
+		};
 		5ACEBEA0195DA0CA00D4EAAA /* RDSwipeableTableViewCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -1001,6 +1035,7 @@
 		CC8C7EB018E6F34D00E76AE8 /* external */ = {
 			isa = PBXGroup;
 			children = (
+				2522AC0A1998DBEC002B1207 /* Popover */,
 				D1EFF47219817BBF0031A1D1 /* ContextIO */,
 				FA2B42701990C7600036EF0F /* Reachability.h */,
 				FA2B42711990C7600036EF0F /* Reachability.m */,
@@ -1769,10 +1804,13 @@
 				CC8C7ECB18E6F38100E76AE8 /* MASLayoutConstraint.m in Sources */,
 				CCC9E416193D5CDF0028DC84 /* EmailServerModel.m in Sources */,
 				CC4263B11934B67A00F3C5EB /* FMDatabaseAdditions.m in Sources */,
+				2522AC151998DBEC002B1207 /* WEPopoverContainerView.m in Sources */,
 				D1EFF48B19817BBF0031A1D1 /* OAuth.m in Sources */,
 				66AEEB811933002D00B6DBE5 /* EmailsTableViewController.m in Sources */,
+				2522AC141998DBEC002B1207 /* UIBarButtonItem+WEPopover.m in Sources */,
 				D1EFF4B0198184C60031A1D1 /* AFXMLRequestOperation.m in Sources */,
 				CCC9E41C193DF5E80028DC84 /* FunnelService.m in Sources */,
+				2522AC171998DBEC002B1207 /* WETouchableView.m in Sources */,
 				D1EFF4AF198184C60031A1D1 /* AFURLConnectionOperation.m in Sources */,
 				D1EFF48819817BBF0031A1D1 /* OAHMAC_SHA1SignatureProvider.m in Sources */,
 				D1EFF48A19817BBF0031A1D1 /* NSString+URLEncoding.m in Sources */,
@@ -1783,10 +1821,12 @@
 				639B69D4195254D1004217DB /* EmailThreadTableViewController.m in Sources */,
 				CC7F72F818E83925008962C3 /* EmailService.m in Sources */,
 				66F2C47A18E3293E00CD593E /* AppDelegate.m in Sources */,
+				2522AC161998DBEC002B1207 /* WEPopoverController.m in Sources */,
 				D1EFF48919817BBF0031A1D1 /* sha1.c in Sources */,
 				CCC9E422193DF9B10028DC84 /* MessageService.m in Sources */,
 				CC8A455C18E832B8009FDBDB /* UIColor+HexString.m in Sources */,
 				CC4263B31934B67A00F3C5EB /* FMDatabaseQueue.m in Sources */,
+				2522AC1E1998DCD5002B1207 /* WEPopoverContentViewController.m in Sources */,
 				FAAF172219863CDD00E877D4 /* UIButton+WebCache.m in Sources */,
 				6677882718F0AEED00EF1962 /* main.mm in Sources */,
 				FA8A4ADB193D902B004890E3 /* NSDate+TimeAgo.m in Sources */,
