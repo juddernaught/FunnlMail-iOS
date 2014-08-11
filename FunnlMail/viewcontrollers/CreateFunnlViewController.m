@@ -19,7 +19,9 @@
 #import "CIOAuthViewController.h"
 #import <AddressBook/AddressBook.h>
 #import <Parse/Parse.h>
-
+#import "WEPopoverContentViewController.h"
+#import "UIImageView+WebCache.h"
+#import "SDWebImageDownloader.h"
 
 @interface CreateFunnlViewController ()<CIOAuthViewController>
 {
@@ -29,7 +31,7 @@
 @implementation CreateFunnlViewController
 UITableView *autocompleteTableView;
 NSMutableArray *emailArr,*searchArray;
-@synthesize mainVCdelegate,isEdit;
+@synthesize mainVCdelegate,isEdit,popoverController,poc;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -98,7 +100,7 @@ NSMutableArray *emailArr,*searchArray;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    currentPopoverCellIndex = -1;
     tempAppDelegate = APPDELEGATE;
     [self.view addSubview:tempAppDelegate.progressHUD];
     [self.view bringSubviewToFront:tempAppDelegate.progressHUD];
@@ -188,6 +190,8 @@ NSMutableArray *emailArr,*searchArray;
     } else {
         TextFieldCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TextFieldCell" forIndexPath:indexPath];
         //Resetting the reused Cell first and then updating it with new data below that
+        [cell.thumbnailImageView setImage:[UIImage imageNamed:@"userimage-placeholder.png"]];
+        
         [cell setIsSwitchVisibleMode:NO];
         cell.textField.delegate = self;
         cell.textField.tag = indexPath.section;
@@ -195,8 +199,7 @@ NSMutableArray *emailArr,*searchArray;
         cell.textField.placeholder = @"";
         cell.textLabel.text = @"";
         cell.switchButton.on = NO;
-        [cell.addButton setImage:[UIImage imageNamed:@"addIcon.png"]
-                        forState:UIControlStateNormal];
+        [cell.addButton setImage:[UIImage imageNamed:@"addIcon.png"] forState:UIControlStateNormal];
         cell.addButton.tag = indexPath.row;
         cell.switchButton.tag = indexPath.section;
         //resetting cell finshes, set new data from here
@@ -204,13 +207,21 @@ NSMutableArray *emailArr,*searchArray;
         switch (indexPath.section) {
             case 0:
             {
+                [cell.tapButton setHidden:YES];
+                cell.textField.frame = CGRectMake(10, 2, 250, 40);
                 [cell.addButton setHidden:YES];
                 cell.textField.placeholder = @"Enter name";
                 [cell.textField setText:funnlName];
+                //newly added on 11th Aug
+                [cell.thumbnailImageView setHidden:YES];
             }
                 break;
             case 1:
             {
+                [cell.tapButton setHidden:NO];
+                cell.tapButton.tag = indexPath.row;
+                [cell.tapButton addTarget:self action:@selector(emailPopUpClicked:) forControlEvents:UIControlEventTouchUpInside];
+                [cell.textField setFrame:CGRectMake(155, 2,250 - 45, 40)];
                 cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
                 [cell.addButton addTarget:self action:@selector(addButtonPressedForConversation:) forControlEvents:UIControlEventTouchUpInside];
@@ -218,16 +229,57 @@ NSMutableArray *emailArr,*searchArray;
                 cell.textField.placeholder = @"Enter Email ID";
                 
                 if(indexPath.row != dictionaryOfConversations.allKeys.count && dictionaryOfConversations.allKeys.count > 0){
-                    cell.textField.text = [dictionaryOfConversations objectForKey:indexPath];
+                    NSMutableArray *array = [[ContactService instance] retrieveContactWithEmail:[dictionaryOfConversations objectForKey:indexPath]];
+                    
+                    if (array.count > 0) {
+                        if (![[(ContactModel*)[array objectAtIndex:0] name] isEqualToString:@"nil"] && ![[(ContactModel*)[array objectAtIndex:0] name] isEqualToString:@""]) {
+
+                            cell.textField.text = [(ContactModel*)[array objectAtIndex:0] name];
+                        }
+                        else {
+                            cell.textField.text = [dictionaryOfConversations objectForKey:indexPath];
+                            [cell.tapButton setHidden:YES];
+                        }
+                    }
+                    else {
+                        cell.textField.text = [dictionaryOfConversations objectForKey:indexPath];
+                        [cell.tapButton setHidden:YES];
+                    }
+                    if (array.count > 0) {
+                        if (![[(ContactModel*)[array objectAtIndex:0] thumbnail] isEqualToString:@"nil"]) {
+                            NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[(ContactModel*)[array objectAtIndex:0] thumbnail]]];
+                            [request setValue:@"image/*" forHTTPHeaderField:@"Accept"];
+                            
+                            GTMHTTPFetcher *fetcher = [GTMHTTPFetcher fetcherWithRequest:request];
+                            fetcher.comment = [NSString stringWithFormat:@"%d",indexPath.row];
+                            GTMOAuth2Authentication *currentAuth = [GTMOAuth2ViewControllerTouch authForGoogleFromKeychainForName:kKeychainItemName clientID:kMyClientID clientSecret:kMyClientSecret];
+                            [fetcher setAuthorizer:currentAuth];
+                            [fetcher beginFetchWithDelegate:self didFinishSelector:@selector(imageFetcher:finishedWithData:error:)];
+                        }
+                    }
+                    
+                    array = nil;
+                    
                     [cell.addButton setImage:[UIImage imageNamed:@"close.png"]
                                     forState:UIControlStateNormal];
                     [cell.addButton addTarget:self
                                        action:@selector(cancelButtonPressedForConversation:) forControlEvents:UIControlEventTouchUpInside];
+                    [cell.thumbnailImageView setHidden:NO];
+                    [cell.textField setUserInteractionEnabled:NO];
                 }
+                else {
+                    [cell.tapButton setHidden:YES];
+                    [cell.thumbnailImageView setHidden:YES];
+                    [cell.textField setUserInteractionEnabled:YES];
+                }
+                cell.textField.frame = CGRectMake(55, 2,250 - 45, 40);
             }
                 break;
             case 2:
             {
+                [cell.tapButton setHidden:YES];
+                cell.textField.frame = CGRectMake(10, 2, 250, 40);
+                [cell.thumbnailImageView setHidden:YES];
                 cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
                 [cell.addButton addTarget:self action:@selector(addButtonPressedForSubject:) forControlEvents:UIControlEventTouchUpInside];
@@ -245,6 +297,8 @@ NSMutableArray *emailArr,*searchArray;
                 break;
             case 3:
             {
+                [cell.tapButton setHidden:YES];
+                [cell.thumbnailImageView setHidden:YES];
                 [cell setIsSwitchVisibleMode:YES];
                 cell.textLabel.text = [NSString stringWithFormat:@"Skip %@",ALL_FUNNL];
                 [cell.switchButton setOn:isSkipAll];
@@ -253,6 +307,8 @@ NSMutableArray *emailArr,*searchArray;
                 break;
             case 4:
             {
+                [cell.tapButton setHidden:YES];
+                [cell.thumbnailImageView setHidden:YES];
                 [cell setIsSwitchVisibleMode:YES];
                 cell.textLabel.text = [NSString stringWithFormat:@"Enable Notifications"];
                 [cell.switchButton setOn:areNotificationsEnabled];
@@ -357,6 +413,7 @@ NSMutableArray *emailArr,*searchArray;
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [self dismissPopUp];
     if(tableView.tag == 1){
 //        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
 //        NSString *temp = cell.textLabel.text;
@@ -433,8 +490,129 @@ NSMutableArray *emailArr,*searchArray;
     return NO;
 }
 
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    NSLog(@"scrollViewWillBeginDragging");
+    [self dismissPopUp];
+}
+
+#pragma mark -
+#pragma mark GTMFetcherAuthorizationProtocol
+- (void)imageFetcher:(GTMHTTPFetcher *)imageFetcher finishedWithData:(NSData *)imageData error:(NSError *)error {
+    if (error) {
+        
+    }
+    else {
+        NSLog(@"--------> %@",imageFetcher.comment);
+        TextFieldCell *tempCell = (TextFieldCell*)[Tableview cellForRowAtIndexPath:[NSIndexPath indexPathForRow:[imageFetcher.comment integerValue] inSection:1]];
+        [tempCell.thumbnailImageView setImage:[UIImage imageWithData:imageData]];
+    }
+}
+
+#pragma mark -
+#pragma mark WEPopoverControllerDelegate implementation
+
+- (void)popoverControllerDidDismissPopover:(WEPopoverController *)thePopoverController {
+	//Safe to release the popover here
+	self.popoverController = nil;
+}
+
+- (BOOL)popoverControllerShouldDismissPopover:(WEPopoverController *)thePopoverController {
+	//The popover is automatically dismissed if you click outside it, unless you return NO here
+	return YES;
+}
+
 #pragma mark -
 #pragma mark Helper
+
+- (void)dismissPopUp {
+    if (self.popoverController) {
+		[self.popoverController dismissPopoverAnimated:YES];
+		self.popoverController = nil;
+		currentPopoverCellIndex = -1;
+	}
+}
+
+- (void)emailPopUpClicked:(UIButton*)sender {
+//    UIViewController *detailsViewController = [[CreateFunnlViewController alloc] initWithNibName:@"CreateFunnlViewController" bundle:nil];
+//    self.poc = [[UIPopoverController alloc] initWithContentViewController:detailsViewController];
+//    [self.poc setDelegate:self];
+//    [self.poc presentPopoverFromRect:[Tableview cellForRowAtIndexPath:[NSIndexPath indexPathForRow:sender.tag inSection:1]].frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
+    
+    BOOL shouldShowNewPopover = sender.tag != currentPopoverCellIndex;
+    
+    if (self.popoverController) {
+		[self.popoverController dismissPopoverAnimated:YES];
+		self.popoverController = nil;
+		currentPopoverCellIndex = -1;
+	}
+    
+    if (shouldShowNewPopover) {
+		WEPopoverContentViewController *contentViewController = [[WEPopoverContentViewController alloc] initWithStyle:UITableViewStylePlain];
+        NSMutableArray *array = [[ContactService instance] retrieveContactWithEmail:[dictionaryOfConversations objectForKey:[NSIndexPath indexPathForRow:sender.tag inSection:1]]];
+        if (array.copy > 0) {
+//            contentViewController.emailAddress = @"shrini@iauro.com";
+            contentViewController.emailAddress = [(ContactModel*)[array objectAtIndex:0] email];
+        }
+		CGRect frame = [Tableview cellForRowAtIndexPath:[NSIndexPath indexPathForRow:sender.tag inSection:1]].frame;
+		CGRect rect = frame;
+		self.popoverController = [[WEPopoverController alloc] initWithContentViewController:contentViewController];
+		
+		if ([self.popoverController respondsToSelector:@selector(setContainerViewProperties:)]) {
+			[self.popoverController setContainerViewProperties:[self improvedContainerViewProperties]];
+		}
+		
+		self.popoverController.delegate = self;
+		self.popoverController.passthroughViews = [NSArray arrayWithObject:Tableview];
+		
+		[self.popoverController presentPopoverFromRect:rect
+												inView:Tableview
+							  permittedArrowDirections:(UIPopoverArrowDirectionUp|UIPopoverArrowDirectionDown|
+														UIPopoverArrowDirectionLeft|UIPopoverArrowDirectionRight)
+											  animated:YES];
+		currentPopoverCellIndex = sender.tag;
+		
+		contentViewController = nil;
+	}
+    
+//    TextFieldCell *tempCell = (TextFieldCell*)[Tableview cellForRowAtIndexPath:[NSIndexPath indexPathForRow:sender.tag inSection:1]];
+    NSLog(@"-----> button on %d row on section 1 clicked",sender.tag);
+    
+}
+
+- (WEPopoverContainerViewProperties *)improvedContainerViewProperties {
+	
+	WEPopoverContainerViewProperties *props = [WEPopoverContainerViewProperties alloc];
+	NSString *bgImageName = nil;
+	CGFloat bgMargin = 0.0;
+	CGFloat bgCapSize = 0.0;
+	CGFloat contentMargin = 4.0;
+	
+	bgImageName = @"popoverBg.png";
+	
+	// These constants are determined by the popoverBg.png image file and are image dependent
+	bgMargin = 13; // margin width of 13 pixels on all sides popoverBg.png (62 pixels wide - 36 pixel background) / 2 == 26 / 2 == 13
+	bgCapSize = 31; // ImageSize/2  == 62 / 2 == 31 pixels
+	
+	props.leftBgMargin = bgMargin;
+	props.rightBgMargin = bgMargin;
+	props.topBgMargin = bgMargin;
+	props.bottomBgMargin = bgMargin;
+	props.leftBgCapSize = bgCapSize;
+	props.topBgCapSize = bgCapSize;
+	props.bgImageName = bgImageName;
+	props.leftContentMargin = contentMargin;
+	props.rightContentMargin = contentMargin - 1; // Need to shift one pixel for border to look correct
+	props.topContentMargin = contentMargin;
+	props.bottomContentMargin = contentMargin;
+	
+	props.arrowMargin = 4.0;
+	
+	props.upArrowImageName = @"popoverArrowUp.png";
+	props.downArrowImageName = @"popoverArrowDown.png";
+	props.leftArrowImageName = @"popoverArrowLeft.png";
+	props.rightArrowImageName = @"popoverArrowRight.png";
+	return props;
+}
 
 - (void)enableNotifications:(UISwitch*)sender {
     if([sender isOn]){
@@ -462,6 +640,7 @@ NSMutableArray *emailArr,*searchArray;
 }
 
 - (void)changeSwitch:(UISwitch*)sender {
+    [self dismissPopUp];
     switch (sender.tag) {
         case 3:
             isSkipAll = sender.on;
@@ -859,6 +1038,7 @@ NSMutableArray *emailArr,*searchArray;
     // Put anything that starts with this substring into the searchArray
     // The items in this array is what will show up in the table view
     [searchArray removeAllObjects];
+    emailArr = [[NSMutableArray alloc] initWithArray:[[ContactService instance] searchContactsWithString:substring]];
     for(NSMutableString *curString in emailArr) {
         
         substring = [substring stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -882,8 +1062,7 @@ replacementString:(NSString *)string {
     if (textField.tag != 1) return YES;
     [self.view bringSubviewToFront:autocompleteTableView];
     NSString *substring = [NSString stringWithString:textField.text];
-    substring = [substring
-                 stringByReplacingCharactersInRange:range withString:string];
+    substring = [substring stringByReplacingCharactersInRange:range withString:string];
     [self searchAutocompleteEntriesWithSubstring:substring];
     if(searchArray.count != 0) autocompleteTableView.hidden = NO;
     else autocompleteTableView.hidden = YES;
@@ -893,6 +1072,7 @@ replacementString:(NSString *)string {
 
 CGRect temp;//this is necessary to reset view
 -(BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
+    [self dismissPopUp];
     activeField = textField;
     if (textField.tag == 1) {
         NSLog(@"Entered Email ID");

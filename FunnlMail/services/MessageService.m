@@ -63,9 +63,14 @@ static MessageService *instance;
             paramDict[@"gmailthreadid"] = @"0";
         paramDict[@"skipFlag"] = [NSNumber numberWithBool:messageModel.skipFlag];
         
-        [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+//        [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+//            success = [db executeUpdate:@"INSERT INTO messages (messageID,messageJSON,read,date,gmailthreadid,skipFlag,categoryName,gmailMessageID) VALUES (:messageID,:messageJSON,:read,:date,:gmailthreadid,:skipFlag,:categoryName,:gmailMessageID)" withParameterDictionary:paramDict];
+//        }];
+
+        [[SQLiteDatabase sharedInstance].databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
             success = [db executeUpdate:@"INSERT INTO messages (messageID,messageJSON,read,date,gmailthreadid,skipFlag,categoryName,gmailMessageID) VALUES (:messageID,:messageJSON,:read,:date,:gmailthreadid,:skipFlag,:categoryName,:gmailMessageID)" withParameterDictionary:paramDict];
         }];
+
         
     }
     return success;
@@ -170,7 +175,7 @@ static MessageService *instance;
     return previewBody;
 }
 
--(void) updateMessageMetaInfo:(MessageModel *)messageModel{
+-(BOOL) updateMessageMetaInfo:(MessageModel *)messageModel{
     __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
     
     __block BOOL success = NO;
@@ -180,15 +185,18 @@ static MessageService *instance;
     paramDict[@"messageJSON"] = messageModel.messageJSON;
     paramDict[@"read"] = [NSNumber numberWithBool:messageModel.read];
     paramDict[@"date"] = dateTimeInterval;
-    if (messageModel.funnelJson) {
-        paramDict[@"funnelJson"] = messageModel.funnelJson;
+    if (messageModel.funnelJson.length) {
+        [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+            success = [db executeUpdate:@"UPDATE messages SET messageJSON=:messageJSON,read=:read,date=:date,funnelJson=:funnelJson WHERE messageID=:messageID" withParameterDictionary:paramDict];
+            
+        }];
     }
     else
-        paramDict[@"funnelJson"] = @"";
-    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-        success = [db executeUpdate:@"UPDATE messages SET messageJSON=:messageJSON,read=:read,date=:date,funnelJson=:funnelJson WHERE messageID=:messageID" withParameterDictionary:paramDict];
-        
-    }];
+        [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+            success = [db executeUpdate:@"UPDATE messages SET messageJSON=:messageJSON,read=:read,date=:date WHERE messageID=:messageID" withParameterDictionary:paramDict];
+            
+        }];
+    return success;
 
 }
     

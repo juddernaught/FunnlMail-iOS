@@ -17,20 +17,19 @@
 #import "EmailService.h"
 #import "EmailServersService.h"
 #import <Crashlytics/Crashlytics.h>
+#import "GTMOAuth2ViewControllerTouch.h"
 
 #define MIXPANEL_TOKEN @"08b1e55d72f1b22a8e5696c2b56a6777"
 
 @implementation AppDelegate
-@synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable,contextIOAPIClient;
+@synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable,contextIOAPIClient,isAlreadyRequestedRefreshToken;
 
 
 #pragma mark - didFinishLaunching
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.internetAvailable = YES;
-    
-    
-    
+    isAlreadyRequestedRefreshToken = NO;
     [Crashlytics startWithAPIKey:@"44e1f44afdbcda726d1a42fdbbd770dff98bca43"];
     // MixPanel setup
     //[[CIOExampleAPIClient sharedClient] clearCredentials];
@@ -102,16 +101,22 @@
         NSLog(@"------------- Internet is OFF ---------------");
         //[[[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Internet is not available." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
         self.internetAvailable = NO;
+        self.isAlreadyRequestedRefreshToken = NO;
         [self.loginViewController callOffline];
-
+        if(self.loginViewController && self.loginViewController.mainViewController && self.loginViewController.mainViewController.emailsTableViewController){
+            [self.loginViewController.mainViewController.emailsTableViewController.tablecontroller.refreshControl endRefreshing];
+        }
     }
     else
     {
-        NSLog(@"------------- Internet is ON ---------------");
-        //EmailServerModel *serverModel = [[[EmailServersService instance] allEmailServers] objectAtIndex:0];
-        //if(serverModel.accessToken == nil || serverModel.accessToken.length == 0){
-            NSLog(@"------------- refreshAccessToken ---------------");
-            //[self.loginViewController refreshAccessToken];
+            self.isAlreadyRequestedRefreshToken = NO;
+            //EmailServerModel *serverModel = [[[EmailServersService instance] allEmailServers] objectAtIndex:0];
+            //if(serverModel.accessToken == nil || serverModel.accessToken.length == 0){
+            NSLog(@"------------- Internet ON - Call Refresh Access Token ---------------");
+            if(self.loginViewController && self.loginViewController.mainViewController && self.loginViewController.mainViewController.emailsTableViewController){
+                [self.loginViewController.mainViewController.emailsTableViewController.tablecontroller.refreshControl endRefreshing];
+            }
+            [self.loginViewController refreshAccessToken];
             
         //}
         self.internetAvailable = YES;
@@ -227,9 +232,10 @@
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     self.startDate = [NSDate date];
     
-    if([EmailService instance].emailsTableViewController){
-        NSLog(@"-----applicationDidBecomeActive-----");
-        [[EmailService instance] performSelector:@selector(checkMailsAtStart:) withObject:[EmailService instance].emailsTableViewController afterDelay:0.1];
+    NSLog(@"-----applicationDidBecomeActive-----");
+    if(self.loginViewController){
+        NSLog(@"-----Call Refresh Token -----");
+        [self.loginViewController refreshAccessToken];
     }
 }
 

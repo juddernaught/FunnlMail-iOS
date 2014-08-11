@@ -13,4 +13,5 @@
 +(ContactService *)instance;
 -(BOOL) insertBulkContacts:(NSArray *)ContactModelArray;
 -(NSArray *) searchContactsWithString:(NSString*)searchTerm;
+-(NSMutableArray*)retrieveContactWithEmail:(NSString*)emailID;
 @end

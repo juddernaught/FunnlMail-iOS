@@ -17,7 +17,7 @@
 -(BOOL) insertMessage:(MessageModel *)messageModel;
 -(BOOL) insertBulkMessages:(NSArray *)messageModelArray;
 -(void) updateMessage:(MessageModel *)messageModel;
--(void) updateMessageMetaInfo:(MessageModel *)messageModel;
+-(BOOL) updateMessageMetaInfo:(MessageModel *)messageModel;
 -(NSArray *) messagesWithTop:(NSInteger)top;
 -(NSArray *) messagesWithStart:(NSInteger)start count:(NSInteger)count;
 -(NSArray *) messagesWithFunnelId:(NSString *)funnelId top:(NSInteger)top;

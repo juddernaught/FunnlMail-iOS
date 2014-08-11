@@ -123,8 +123,7 @@ replacementString:(NSString *)string {
 //        }
     }
     NSString *substring = [NSString stringWithString:textField.text];
-    substring = [substring
-                 stringByReplacingCharactersInRange:range withString:string];
+    substring = [substring stringByReplacingCharactersInRange:range withString:string];
     [self searchAutocompleteEntriesWithSubstring:substring];
     if(searchArray.count != 0) autocompleteTableView.hidden = NO;
     else autocompleteTableView.hidden = YES;
@@ -166,28 +165,27 @@ replacementString:(NSString *)string {
 
 - (void)searchAutocompleteEntriesWithSubstring:(NSString *)substring {
     
-    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    //dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [searchArray removeAllObjects];
         if(substring.length){
-            searchArray = [[NSMutableArray alloc] initWithArray:[[ContactService instance] searchContactsWithString:substring]];
-            //    for(NSMutableString *curString in emailArr) {
-            //
-            //        substring = [substring stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-            //
-            //        if ([curString rangeOfString:substring].location == 0) {
-            //            [searchArray addObject:curString];
-            //        }
-            //
-            //    }
+            emailArr = [[NSMutableArray alloc] initWithArray:[[ContactService instance] searchContactsWithString:substring]];
+            for(NSMutableString *curString in emailArr) {
+
+                substring = [substring stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+
+                if ([curString rangeOfString:substring].location == 0) {
+                    [searchArray addObject:curString];
+                }
+            }
         }
         else{
             [searchArray removeAllObjects];
         }
 
-        dispatch_async(dispatch_get_main_queue(), ^{
+//        dispatch_async(dispatch_get_main_queue(), ^{
             [autocompleteTableView reloadData];
-        });
-    });
+//        });
+    //});
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

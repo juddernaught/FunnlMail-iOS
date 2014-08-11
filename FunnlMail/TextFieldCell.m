@@ -9,7 +9,7 @@
 #import "TextFieldCell.h"
 
 @implementation TextFieldCell
-@synthesize textField,addButton,isAddButton,switchButton;
+@synthesize textField,addButton,isAddButton,switchButton,thumbnailImageView,tapButton;
 
 -(void) setIsSwitchVisibleMode:(BOOL)isSwitchVisibleMode
 {
@@ -34,7 +34,14 @@
         switchButton = [[UISwitch alloc] init];
         addButton = [UIButton buttonWithType:UIButtonTypeCustom];
         addButton.frame = CGRectMake(0, 0, 25.f, 25.f);
+        tapButton = [[UIButton alloc] initWithFrame:CGRectMake(55, 0, 250 - 55, 44)];
+//        [tapButton setBackgroundColor:[UIColor redColor]];
+        thumbnailImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 2, 40, 40)];
+        thumbnailImageView.clipsToBounds = YES;
+        thumbnailImageView.layer.cornerRadius = 20;
         [self addSubview:textField];
+        [self addSubview:thumbnailImageView];
+        [self addSubview:tapButton];
     }
     return self;
 }
@@ -42,7 +49,8 @@
 -(void) layoutSubviews
 {
     [super layoutSubviews];
-    textField.frame = CGRectMake(10, 2,250, 40);
+//    textField.frame = CGRectMake(55, 2,250 - 45, 40);
+//    textField.frame = CGRectMake(10, 2, 250, 40);
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated

@@ -49,7 +49,7 @@ static MessageFilterXRefService *instance;
   paramDict[@"funnelId"] = funnelId;
   
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
-    success = [db executeUpdate:@"INSERT INTO messageFilterXRef (messageID,funnelId) VALUES (:messageID,:funnelId)" withParameterDictionary:paramDict];
+    success = [db executeUpdate:@"INSERT OR REPLACE INTO messageFilterXRef (messageID,funnelId) VALUES (:messageID,:funnelId)" withParameterDictionary:paramDict];
   }];
   
   return success;
