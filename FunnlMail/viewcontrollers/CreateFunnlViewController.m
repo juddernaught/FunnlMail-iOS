@@ -9,6 +9,7 @@
 #import "CreateFunnlViewController.h"
 #import "TextFieldCell.h"
 #import "EmailService.h"
+#import "FunnelService.h"
 //#import "FilterModel.h"
 //newly added by iauro001 on 10th June 2014
 #import "FunnelModel.h"
@@ -812,14 +813,14 @@ NSMutableArray *emailArr,*searchArray;
         [currentInstallation addUniqueObject:([NSString stringWithFormat:@"webhook_id_%@", webhookId]) forKey:@"channels"];
         [currentInstallation saveInBackground];
     }
-
-    NSInteger gradientInt = arc4random_uniform((uint32_t)randomColors.count);
-    UIColor *color = [UIColor colorWithHexString:[randomColors objectAtIndex:gradientInt]];
+    unsigned long temp = [[FunnelService instance] allFunnels].count%8;
+    //NSInteger gradientInt = arc4random_uniform((uint32_t)randomColors.count);
+    UIColor *color = [UIColor colorWithHexString:[randomColors objectAtIndex:temp]];
     if(color == nil){
         color = [UIColor colorWithHexString:@"#2EB82E"];
     }
     FunnelModel *model;
-    model = [[FunnelModel alloc]initWithBarColor:color filterTitle:funnlName newMessageCount:0 dateOfLastMessage:[NSDate new] sendersArray:[NSMutableArray arrayWithArray:[dictionaryOfConversations allValues]] subjectsArray:(NSMutableArray*)[dictionaryOfSubjects allValues] skipAllFlag:isSkipAll funnelColor:[randomColors objectAtIndex:gradientInt]];
+    model = [[FunnelModel alloc]initWithBarColor:color filterTitle:funnlName newMessageCount:0 dateOfLastMessage:[NSDate new] sendersArray:[NSMutableArray arrayWithArray:[dictionaryOfConversations allValues]] subjectsArray:(NSMutableArray*)[dictionaryOfSubjects allValues] skipAllFlag:isSkipAll funnelColor:[randomColors objectAtIndex:temp]];
     model.funnelId = oldModel.funnelId;
     model.notificationsFlag = areNotificationsEnabled;
     model.webhookIds = webhookId ? webhookId : @"";
