@@ -18,7 +18,7 @@
 @class LoginViewController;
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 {
-    UIWebView *showWelcomeOverlay;
+    UIView *showWelcomeOverlay;
 
 }
 @property (strong, nonatomic)id mainVCControllerInstance;

@@ -279,6 +279,15 @@ static NSString *currentFolder;
 //    });
 }
 
+-(void)getDatabaseMessages:(NSString*)folderName withTableController:(EmailsTableViewController *)emailsTableViewController{
+    __block EmailsTableViewController *emailTableViewController = emailsTableViewController;
+    emailTableViewController->searchMessages = (NSMutableArray*)[[MessageService instance] retrieveMessages:folderName];
+    emailTableViewController.emailFolder = folderName;
+    emailTableViewController.isSearching = YES;
+    if(emailTableViewController->searchMessages.count)[emailsTableViewController.tableView reloadData];
+    
+}
+
 
 - (void)loadLastNMessages:(NSUInteger)nMessages withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName withFetchRange:(MCORange)newFetchRange
 {
@@ -297,21 +306,30 @@ static NSString *currentFolder;
 	 MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject | MCOIMAPMessagesRequestKindGmailThreadID | MCOIMAPMessagesRequestKindGmailMessageID |	 MCOIMAPMessagesRequestKindFlags);
 	
     MCOIMAPFolderInfoOperation *FolderInfo;
+    NSArray *dbBoolArray = [[NSArray alloc]initWithObjects:@"-1",nil];
     if([folderName isEqualToString:INBOX]){
         FolderInfo = [self.imapSession folderInfoOperation:INBOX];
         emailsTableViewController.navigationItem.title = ALL_FUNNL;
     }
     else if([folderName isEqualToString:SENT]){
-        NSLog(@"making sure this is happenging");
         FolderInfo = [self.imapSession folderInfoOperation:SENT];
-        emailsTableViewController.navigationItem.title = @"Sent";
+        dbBoolArray = [[MessageService instance] retrieveNewestMessage:SENT];
     }
     else if([folderName isEqualToString:TRASH]){
         FolderInfo = [self.imapSession folderInfoOperation:TRASH];
+        dbBoolArray = [[MessageService instance] retrieveNewestMessage:TRASH];
     }
-    else
-        FolderInfo = [self.imapSession folderInfoOperation:TRASH];
-    
+    else if ([folderName isEqualToString:DRAFTS]){
+        FolderInfo = [self.imapSession folderInfoOperation:DRAFTS];
+        dbBoolArray = [[MessageService instance] retrieveNewestMessage:DRAFTS];
+    }
+    else{
+        FolderInfo = [self.imapSession folderInfoOperation:ARCHIVE];
+        dbBoolArray = [[MessageService instance] retrieveNewestMessage:ARCHIVE];
+    }
+    NSInteger newestID;
+    if(dbBoolArray.count) newestID = [[dbBoolArray objectAtIndex:0] integerValue];
+    else newestID = 0;
     [FolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
      {
 //         BOOL totalNumberOfMessagesDidChange = self.totalNumberOfMessages != info.uidNext;        
@@ -366,6 +384,11 @@ static NSString *currentFolder;
              NSLog(@"Old messages to fetch: %qu - %qu = %qu",fetchRange.location, fetchRange.length, numberOfMessagesToLoad);
          }
          
+         if(nMessages == -1){
+             fetchRange = newFetchRange;
+         }
+         
+         //u_int64_t numberOfMessagesToLoad = fetchRange.length - fetchRange.location ;
          if (numberOfMessagesToLoad == 0)
          {
              self.isLoading = NO;
@@ -375,16 +398,32 @@ static NSString *currentFolder;
              else{
                  NSLog(@"------ Failed loading OLD messages (numberOfMessagesToLoad == 0) ------ ");
              }
-             return;
+             //return;
          }
          MCOIndexSet *uids = [MCOIndexSet indexSetWithRange:fetchRange];
-         self.imapMessagesFetchOp = [self.imapSession fetchMessagesByUIDOperationWithFolder:folderName requestKind:requestKind uids:uids];
 
+         
+         
+         int numberOfMessages = 40;
+         MCOIndexSet *numbers = [MCOIndexSet indexSetWithRange:MCORangeMake(1, info.uidNext)];
+         //if(![folderName isEqualToString:INBOX]) self.imapMessagesFetchOp = [self.imapSession fetchMessagesByNumberOperationWithFolder:folderName requestKind:requestKind numbers:numbers];
+         
+         if(![folderName isEqualToString:INBOX] && ![folderName isEqualToString:ARCHIVE]){
+             self.imapMessagesFetchOp = [self.imapSession fetchMessagesByUIDOperationWithFolder:folderName requestKind:requestKind uids:numbers];
+             NSLog(@"detected other mailbox");
+         }
+         else if([folderName isEqualToString:ARCHIVE]) self.imapMessagesFetchOp = [self.imapSession fetchMessagesByNumberOperationWithFolder:folderName requestKind:requestKind numbers:[MCOIndexSet indexSetWithRange:MCORangeMake(1,40)]];
+         else{
+             self.imapMessagesFetchOp = [self.imapSession fetchMessagesByUIDOperationWithFolder:folderName requestKind:requestKind uids:uids];
+             NSLog(@"inbox detected");
+         }
+         
 //         uint64_t location = info.uidNext;
 //         uint64_t size = fetchRange.location;
 //         MCOIndexSet *numbers = [MCOIndexSet indexSetWithRange:MCORangeMake(location, size)];
 //         self.imapMessagesFetchOp = [self.imapSession fetchMessagesByNumberOperationWithFolder:folderName requestKind:requestKind numbers:numbers];
          
+
          [self.imapMessagesFetchOp setProgress:^(unsigned int progress) {
              NSLog(@"Main -- Progress: %u of %lu", progress, (unsigned long)numberOfMessagesToLoad);
          }];
@@ -393,7 +432,7 @@ static NSString *currentFolder;
          NSLog(@"--- start asyc fetch operation for mail download");
          //dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
              [self.imapMessagesFetchOp start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
-              {
+             {
                   NSLog(@"-- received %lu message in fetch opreation",(unsigned long)messages.count);
                   
                   
@@ -410,8 +449,13 @@ static NSString *currentFolder;
                           tempMessageModel.gmailMessageID = [NSString stringWithFormat:@"%llu",m.gmailMessageID];
                           tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
                           tempMessageModel.skipFlag = 0;
-                          tempMessageModel.categoryName = @"";
+                          if([folderName isEqualToString:SENT]) tempMessageModel.categoryName = SENT;
+                          else if([folderName isEqualToString:TRASH]) tempMessageModel.categoryName = TRASH;
+                          else if([folderName isEqualToString:DRAFTS]) tempMessageModel.categoryName = DRAFTS;
+                          else tempMessageModel.categoryName = @"";
                           //NSLog(@"uid: %u modseqValue: %llu ",m.uid,m.modSeqValue);
+                          
+                          
                           
                           for (FunnelModel *tempFunnelModel in funnels)
                           {
@@ -476,9 +520,11 @@ static NSString *currentFolder;
                               if(b.count){
                                   tempMessageModel.categoryName = PRIMARY_CATEGORY_NAME;
                               }
-                              else{
-                                  tempMessageModel.categoryName = @"";
-                              }
+                              else if([folderName isEqualToString:SENT])tempMessageModel.categoryName = SENT;
+                              else if([folderName isEqualToString:TRASH]) tempMessageModel.categoryName = TRASH;
+                              else if([folderName isEqualToString:DRAFTS]) tempMessageModel.categoryName = DRAFTS;
+                              else tempMessageModel.categoryName = @"";
+
                           }
                           
                           if(oldestMessageID == 0){
@@ -503,6 +549,9 @@ static NSString *currentFolder;
 
                       NSLog(@"***** insert %lu message to db",(unsigned long)messages.count);
         
+                      
+
+                      
                       //retrieving the message from database
                       NSArray *tempArray;
                       AppDelegate *tempAppDelegate = APPDELEGATE;
@@ -513,7 +562,7 @@ static NSString *currentFolder;
                           tempArray = [[MessageService instance] retrieveOtherMessagesThanPrimary];
                       }
                       else{
-                          tempArray = [[MessageService instance] retrieveAllMessages];
+                          //tempArray = [[MessageService instance] retrieveAllMessages];
                       }
 
                       
@@ -524,25 +573,20 @@ static NSString *currentFolder;
                           emailsTableViewController.navigationItem.title = ALL_FUNNL;
                       if ([folderName isEqualToString:SENT])
                       {
-                          //this is neccessary in order to pull sent messages
-                          //table view doesnt require messageModel but enough other methods require
-                          //for this to be the way to display messages properly
-                          emailsTableViewController->searchMessages = [[NSMutableArray alloc]init];
-                          for (MCOIMAPMessage *m in messages) {
-                              
-                              MessageModel *tempMessageModel = [[MessageModel alloc] init];
-                              tempMessageModel.read = m.flags;
-                              tempMessageModel.date = m.header.date;
-                              tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
-                              tempMessageModel.messageJSON = [m serializable];
-                              tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
-                              [emailsTableViewController->searchMessages addObject:tempMessageModel];
-                              tempMessageModel = nil;
+                          
+                          if (tempArray.count) {
+                              emailsTableViewController -> searchMessages = (NSMutableArray*)tempArray;
                           }
-                          //not sure if this my (Pranav) email alone but sent messages were intially backwards
-                          //my inbox still shows up out of order with no pattern noticeable
-                          //might be just me
-                          emailsTableViewController->searchMessages = [NSMutableArray arrayWithArray:[[emailsTableViewController->searchMessages reverseObjectEnumerator] allObjects]];
+                          else{
+                              [self setMessages:messages withTableController:emailsTableViewController];
+                          
+                              //not sure if this my (Pranav) email alone but sent messages were intially backwards
+                              //my inbox still shows up out of order with no pattern noticeable
+                              //might be just me
+                              emailsTableViewController->searchMessages = [NSMutableArray arrayWithArray:[[emailsTableViewController->searchMessages reverseObjectEnumerator] allObjects]];
+                          }
+                          
+                          
                           emailsTableViewController.emailFolder = SENT;
                           emailsTableViewController.isSearching = YES;
                           NSLog(@"does it crash here?");
@@ -550,41 +594,33 @@ static NSString *currentFolder;
                       }
                       else if ([folderName isEqualToString:TRASH])
                       {
-                          emailsTableViewController->searchMessages = [[NSMutableArray alloc]init];
-                          for (MCOIMAPMessage *m in messages) {
-                              MessageModel *tempMessageModel = [[MessageModel alloc] init];
-                              tempMessageModel.read = m.flags;
-                              tempMessageModel.date = m.header.date;
-                              tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
-                              tempMessageModel.messageJSON = [m serializable];
-                              tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
-                              [emailsTableViewController->searchMessages addObject:tempMessageModel];
-                              tempMessageModel = nil;
-                          }
+                          [self setMessages:messages withTableController:emailsTableViewController];
                           //not sure if this my (Pranav) email alone but sent messages were intially backwards
                           //my inbox still shows up out of order with no pattern noticeable
                           //might be just me
-                          emailsTableViewController->searchMessages = [NSMutableArray arrayWithArray:[[emailsTableViewController->searchMessages reverseObjectEnumerator] allObjects]];
+                         emailsTableViewController->searchMessages = [NSMutableArray arrayWithArray:[[emailsTableViewController->searchMessages reverseObjectEnumerator] allObjects]];
                           emailsTableViewController.emailFolder = TRASH;
                           emailsTableViewController.isSearching = YES;
                           NSLog(@"does it crash here?");
                           emailsTableViewController.navigationItem.title = @"Trash";
                           
                       }
+                      else if ([folderName isEqualToString:DRAFTS])
+                      {
+                          [self setMessages:messages withTableController:emailsTableViewController];
+                          //not sure if this my (Pranav) email alone but sent messages were intially backwards
+                          //my inbox still shows up out of order with no pattern noticeable
+                          //might be just me
+                          emailsTableViewController->searchMessages = [NSMutableArray arrayWithArray:[[emailsTableViewController->searchMessages reverseObjectEnumerator] allObjects]];
+                          emailsTableViewController.emailFolder = DRAFTS;
+                          emailsTableViewController.isSearching = YES;
+                          NSLog(@"does it crash here?");
+                          emailsTableViewController.navigationItem.title = @"DRAFTS";
+                          
+                      }
                       else if ([folderName isEqualToString:ARCHIVE])
                       {
-                          emailsTableViewController->searchMessages = [[NSMutableArray alloc]init];
-                          for (MCOIMAPMessage *m in messages) {
-                              
-                              MessageModel *tempMessageModel = [[MessageModel alloc] init];
-                              tempMessageModel.read = m.flags;
-                              tempMessageModel.date = m.header.date;
-                              tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
-                              tempMessageModel.messageJSON = [m serializable];
-                              tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
-                              [emailsTableViewController->searchMessages addObject:tempMessageModel];
-                              tempMessageModel = nil;
-                          }
+                          [self setMessages:messages withTableController:emailsTableViewController];
                           //not sure if this my (Pranav) email alone but sent messages were intially backwards
                           //my inbox still shows up out of order with no pattern noticeable
                           //might be just me
@@ -601,6 +637,14 @@ static NSString *currentFolder;
                       else {
                           self.filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:tempAppDelegate.currentFunnelDS.funnelId top:2000];
                       }
+                      [tempAppDelegate.progressHUD setHidden:YES];
+                      [tempAppDelegate.progressHUD show:NO];
+                      [fv.tablecontroller.refreshControl endRefreshing];
+                      dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+                          if (tempArray.count < kNUMBER_OF_MESSAGES_TO_DOWNLOAD_IN_BACKGROUND) {
+                              
+                          }
+                      });
                       
                       dispatch_async(dispatch_get_main_queue(), ^(void){
                           AppDelegate *appDeleage = (AppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -617,6 +661,19 @@ static NSString *currentFolder;
      }];
 }
 
+-(void) setMessages:(NSArray *)messages withTableController:(EmailsTableViewController *)fv{
+    fv->searchMessages = [[NSMutableArray alloc]init];
+    for (MCOIMAPMessage *m in messages) {
+        MessageModel *tempMessageModel = [[MessageModel alloc] init];
+        tempMessageModel.read = m.flags;
+        tempMessageModel.date = m.header.date;
+        tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
+        tempMessageModel.messageJSON = [m serializable];
+        tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
+        [fv->searchMessages addObject:tempMessageModel];
+        tempMessageModel = nil;
+    }
+}
 
 -(void)getNewMessages:(NSString*)emailStr nextPageToken:(NSString*)nextPage numberOfMaxResult:(NSInteger)maxResult withFolder:(NSString*)folderName withFetchRange:(MCORange)newFetchRange{
     NSString *newAPIStr = @"";

@@ -131,6 +131,7 @@ UIButton *loginButton;
         images = @[@"WHITEsliders1nobar.png", @"WHITEsliders2.png", @"WHITEsliders3.png", @"WHITEsliders4.png",@"WHITEsliders5.png"];
         
         PageContentVC *initialViewController = [self viewControllerAtIndex:0];
+        
         NSArray *viewControllers = [NSArray arrayWithObject:initialViewController];
         self.pageController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 40);
         [self.pageController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];

@@ -61,6 +61,7 @@
 		B751C88F1940FDFF0051DF0B /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B751C88E1940FDFF0051DF0B /* MessageUI.framework */; };
 		B75F56A6197F056F00518743 /* FunnlMail VIP logo.png in Resources */ = {isa = PBXBuildFile; fileRef = B75F56A5197F056F00518743 /* FunnlMail VIP logo.png */; };
 		B7701DC41985F58C001CA2DC /* mail2.png in Resources */ = {isa = PBXBuildFile; fileRef = B7701DC31985F58C001CA2DC /* mail2.png */; };
+		B79F9FCC1998860E00AEF9B2 /* FunnlAlertsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B79F9FCB1998860E00AEF9B2 /* FunnlAlertsVC.m */; };
 		B7C940E0198D6F49008468E7 /* WHITEsliders1nobar.png in Resources */ = {isa = PBXBuildFile; fileRef = B7C940DB198D6F49008468E7 /* WHITEsliders1nobar.png */; };
 		B7C940E1198D6F49008468E7 /* WHITEsliders2.png in Resources */ = {isa = PBXBuildFile; fileRef = B7C940DC198D6F49008468E7 /* WHITEsliders2.png */; };
 		B7C940E2198D6F49008468E7 /* WHITEsliders3.png in Resources */ = {isa = PBXBuildFile; fileRef = B7C940DD198D6F49008468E7 /* WHITEsliders3.png */; };
@@ -407,6 +408,8 @@
 		B751C88E1940FDFF0051DF0B /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		B75F56A5197F056F00518743 /* FunnlMail VIP logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "FunnlMail VIP logo.png"; sourceTree = "<group>"; };
 		B7701DC31985F58C001CA2DC /* mail2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mail2.png; sourceTree = "<group>"; };
+		B79F9FCA1998860E00AEF9B2 /* FunnlAlertsVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FunnlAlertsVC.h; sourceTree = "<group>"; };
+		B79F9FCB1998860E00AEF9B2 /* FunnlAlertsVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FunnlAlertsVC.m; sourceTree = "<group>"; };
 		B7C940DB198D6F49008468E7 /* WHITEsliders1nobar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = WHITEsliders1nobar.png; sourceTree = "<group>"; };
 		B7C940DC198D6F49008468E7 /* WHITEsliders2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = WHITEsliders2.png; sourceTree = "<group>"; };
 		B7C940DD198D6F49008468E7 /* WHITEsliders3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = WHITEsliders3.png; sourceTree = "<group>"; };
@@ -1044,6 +1047,8 @@
 				FA2F433E193318BE00C1F119 /* CreateFunnlViewController.m */,
 				FA2C9BD9193EE66400866BEE /* MenuViewController.h */,
 				FA2C9BDA193EE66400866BEE /* MenuViewController.m */,
+				B79F9FCA1998860E00AEF9B2 /* FunnlAlertsVC.h */,
+				B79F9FCB1998860E00AEF9B2 /* FunnlAlertsVC.m */,
 				B7F093C4198C50EB0083D59E /* PageContentVC.h */,
 				B7F093C5198C50EB0083D59E /* PageContentVC.m */,
 				FA9164BC1973D162006A4726 /* ComposeViewController.h */,
@@ -1862,6 +1867,7 @@
 				660BA98E1902CDEA00CDF86E /* LoginViewController.m in Sources */,
 				CC4263B21934B67A00F3C5EB /* FMDatabasePool.m in Sources */,
 				FA2C9BD4193EDFCB00866BEE /* UIViewController+MMDrawerController.m in Sources */,
+				B79F9FCC1998860E00AEF9B2 /* FunnlAlertsVC.m in Sources */,
 				FA9164CB1973D302006A4726 /* TITokenField.m in Sources */,
 				FAAF171C19863CDD00E877D4 /* SDWebImageCompat.m in Sources */,
 				6677881A18EF84FB00EF1962 /* MCOCIDURLProtocol.mm in Sources */,

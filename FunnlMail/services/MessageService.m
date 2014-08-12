@@ -429,6 +429,51 @@ static MessageService *instance;
     return array;
 }
 
+-(NSArray *) retrieveMessages:(NSString*)folderName{
+    __block NSMutableArray *array = [[NSMutableArray alloc] init];
+    __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+    paramDict[@"categoryName"] = folderName;
+    
+    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *resultSet ;
+        if(SHOW_PRIMARY_INBOX)
+            resultSet = [db executeQuery:@"select * from messages where categoryName = :categoryName order by CAST(messageID as integer) DESC;"withParameterDictionary:paramDict];
+        
+        MessageModel *model;
+        while ([resultSet next]) {
+            model = [[MessageModel alloc]init];
+            
+            model.messageID = [resultSet stringForColumn:@"messageID"];
+            model.messageJSON = [resultSet stringForColumn:@"messageJSON"];
+            model.read = [resultSet intForColumn:@"read"];
+            
+            double dateTimeInterval = [resultSet doubleForColumn:@"date"];
+            model.date = [NSDate dateWithTimeIntervalSince1970:dateTimeInterval];
+            if ([resultSet stringForColumn:@"messageBodyToBeRendered"]) {
+                model.messageBodyToBeRendered = [resultSet stringForColumn:@"messageBodyToBeRendered"];
+            }
+            else
+                model.messageBodyToBeRendered = EMPTY_DELIMITER;
+            if ([resultSet stringForColumn:@"funnelJson"]) {
+                model.funnelJson = [resultSet stringForColumn:@"funnelJson"];
+            }
+            else
+                model.funnelJson = @"";
+            //            if ([resultSet stringForColumn:@"messageHTMLBody"]) {
+            //                model.messageHTMLBody = [resultSet stringForColumn:@"messageHTMLBody"];
+            //            }
+            //            else
+            //                model.messageHTMLBody = EMPTY_DELIMITER;
+            
+            //updated on 17th June 2014
+            [array addObject:model];
+            //            [array addObject:[MCOIMAPMessage importSerializable:model.messageJSON]];
+        }
+    }];
+    
+    return array;
+}
+
 
 -(NSArray *) retrieveAllMessagesWithSameGmailID:(NSString*)gmailID{
     __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
@@ -485,6 +530,22 @@ static MessageService *instance;
     return array;
 }
 
+-(NSArray *) retrieveNewestMessage:(NSString*)folderName{
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+    NSMutableDictionary *paramDict = [[NSMutableDictionary alloc] init];
+    paramDict[@"categoryName"] = folderName;
+    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *resultSet = [db executeQuery:@"SELECT messageID as minID FROM messages where categoryName = :categoryName order by CAST(messageID as integer) desc LIMIT 1;" withParameterDictionary:paramDict];
+        while ([resultSet next]) {
+            NSString *tempString = [resultSet stringForColumn:@"minID"];
+            if (tempString) {
+                [array addObject:tempString];
+            }
+            tempString = nil;
+        }
+    }];
+    return array;
+}
 
 - (NSArray *) retrieveOldestMessages{
     __block NSMutableArray *array = [[NSMutableArray alloc] init];

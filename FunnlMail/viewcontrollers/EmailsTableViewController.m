@@ -44,6 +44,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
 @implementation EmailsTableViewController
 @synthesize tablecontroller,activityIndicator,isSearching;
+UIView *greyView;
 
 #pragma mark -
 #pragma mark Lifecycle
@@ -82,6 +83,10 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     self.ClearTable = 0;
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
+    greyView = [[UIView alloc] initWithFrame:CGRectMake(0, 104, self.view.bounds.size.width, self.view.bounds.size.height)];
+    greyView.hidden = YES;
+    [greyView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.78]];
+    [self.view addSubview:greyView];
 
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
@@ -92,6 +97,8 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    NSLog(@"how often does this happen");
+    NSLog(@"what is emailFolder: %@",self.emailFolder);
     if ([EmailService instance].filterMessages.count > 0) {
         [self.tableView reloadData];
     }
@@ -1159,11 +1166,12 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     return YES;
 }
 
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
-    
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar;{
+    greyView.hidden = NO;
 }
 
-- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar{
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar;{
+    greyView.hidden = YES;
 }
 
 #pragma mark SearchFunction
@@ -1171,6 +1179,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     [searchBar resignFirstResponder];
     NSString *searchText = searchBar.text;
     isSearching = YES;
+    greyView.hidden = YES;
     if(self.filterModel == nil || [self.filterModel.funnelId isEqualToString:@"0"] || [self.filterModel.funnelId isEqualToString:@"1"]){
 //    if([searchBar selectedScopeButtonIndex] == 0){
         //All mailbox

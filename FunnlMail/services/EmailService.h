@@ -47,4 +47,5 @@
 - (void)loadLatestMail:(NSUInteger)nMessages  withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName;
 - (void)checkMailsAtStart:(EmailsTableViewController*)fv;
 -(void)syncMessages;
+-(void)getDatabaseMessages:(NSString*)folderName withTableController:(EmailsTableViewController *)emailsTableViewController;
 @end

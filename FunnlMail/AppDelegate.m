@@ -123,16 +123,79 @@
     }
 }
 
+-(void)createLabel:(UILabel*)label{
+    
+    label.backgroundColor = [UIColor grayColor];
+    label.textColor = [UIColor redColor];
+    [showWelcomeOverlay addSubview:label];
+}
+
 #pragma mark - Welcome Overlay
 
 -(void)showWelcomeOverlay{
-    showWelcomeOverlay = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+    showWelcomeOverlay = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
     showWelcomeOverlay.opaque = NO;
-    showWelcomeOverlay.backgroundColor = CLEAR_COLOR;
-    showWelcomeOverlay.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-    NSString *htmlPath = [[NSBundle mainBundle] pathForResource:@"index" ofType:@"html"];
+    UITextView *thing = [[UITextView alloc]initWithFrame:CGRectMake(10, 20, WIDTH, 70)];
+    thing.text = @"Welcome to your customized primary inbox!";
+    thing.backgroundColor = [UIColor clearColor];
+    [thing setTextColor:[UIColor whiteColor]];
+    thing.font = [UIFont boldSystemFontOfSize:24];
+    thing.userInteractionEnabled = NO;
+    
+    UILabel *personal = [[UILabel alloc]initWithFrame:CGRectMake(15, 150, 75, 30)];
+    personal.text = @" Personal ";
+    [personal sizeToFit];
+    personal.textColor = [UIColor greenColor];
+    personal.backgroundColor = [UIColor grayColor];
+    [showWelcomeOverlay addSubview:personal];
+    
+    UILabel *work = [[UILabel alloc]initWithFrame:CGRectMake(95, 150, 75, 30)];
+    work.text = @" Work ";
+    [work sizeToFit];
+    work.textColor = [UIColor greenColor];
+    work.backgroundColor = [UIColor grayColor];
+    //[showWelcomeOverlay addSubview:work];
+    
+    UILabel *updates = [[UILabel alloc]initWithFrame:CGRectMake(15, 180, 75, 30)];
+    updates.text = @" Updates ";
+    [updates sizeToFit];
+    [self createLabel:updates];
 
-    [showWelcomeOverlay  loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:htmlPath]]];
+    UILabel *Social = [[UILabel alloc]initWithFrame:CGRectMake(95, 180, 57, 30)];
+    Social.text = @" Social ";
+    [Social sizeToFit];
+    [self createLabel:Social];
+    
+    UILabel *Promotions = [[UILabel alloc]initWithFrame:CGRectMake(15, 210, 95, 30)];
+    Promotions.text = @" Promotions ";
+    [Promotions sizeToFit];
+    [self createLabel:Promotions];
+    
+    UILabel *forums =  [[UILabel alloc]initWithFrame:CGRectMake(157, 180, 95, 30)];
+    forums.text = @" Forums ";
+    [forums sizeToFit];
+    [self createLabel:forums];
+    
+    UITextView *text = [[UITextView alloc]initWithFrame:CGRectMake(10, 240, WIDTH, 75)];
+    text.text = @"You can review and modify category setting anytime from the left menu";
+    text.backgroundColor = [UIColor clearColor];
+    [text setTextColor:[UIColor whiteColor]];
+    text.font = [UIFont boldSystemFontOfSize:20];
+    text.userInteractionEnabled = NO;
+    [showWelcomeOverlay addSubview: text];
+
+    UITextView *text2 = [[UITextView alloc]initWithFrame:CGRectMake(10, 330, WIDTH, 70)];
+    text2.text = @"You can also access your non-primary emails in the left menu";
+    text2.backgroundColor = [UIColor clearColor];
+    [text2 setTextColor:[UIColor whiteColor]];
+    text2.font = [UIFont boldSystemFontOfSize:20];
+    text2.userInteractionEnabled = NO;
+    [showWelcomeOverlay addSubview: text2];
+    
+    [showWelcomeOverlay addSubview: thing];
+    [showWelcomeOverlay bringSubviewToFront:thing];
+    showWelcomeOverlay.backgroundColor = CLEAR_COLOR;
+    showWelcomeOverlay.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.78];
     [self.window addSubview:showWelcomeOverlay];
     [self.window bringSubviewToFront:showWelcomeOverlay];
 }
@@ -145,6 +208,7 @@
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
+
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
 }
@@ -187,7 +251,7 @@
     NSTimeInterval time = [self.startDate timeIntervalSinceNow];
     //timeIntervalSinceNow returns negative value so this is required to convert to positive
     NSInteger ti = 0 - (NSInteger)time;
-    //I know some of these look stupid and could be dont faster, but when i tried ((ti % 60)/60) it would return 00.000
+    //I know some of these look stupid and could be done faster, but when i tried ((ti % 60)/60) it would return 00.000
     //which is mostly unuseable
     float secondsInDecimal = (ti % 60);
     float minutes = (ti / 60);
