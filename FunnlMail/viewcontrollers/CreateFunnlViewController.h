@@ -25,7 +25,7 @@
     UITextField *nameTextField,*conversattionTextField,*subjectTextField;
     NSMutableDictionary *dictionaryOfConversations,*dictionaryOfSubjects;
     NSString *funnlName;
-    id activeField;
+    UITextField *activeField;
     NSArray *randomColors;
     FunnelModel *oldModel;
     UISwitch *skipAllSwitch;
@@ -34,6 +34,7 @@
     BOOL isSkipAll;
     NSInteger currentPopoverCellIndex;
     Class popoverClass;
+    CGFloat _keyboardHeight;
 }
 @property (nonatomic, retain) IBOutlet UIPopoverController *poc;
 @property (nonatomic, retain) WEPopoverController *popoverController;

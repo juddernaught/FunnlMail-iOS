@@ -125,7 +125,7 @@ NSMutableArray *emailArr,*searchArray;
     autocompleteTableView.scrollEnabled = YES;
     autocompleteTableView.hidden = YES;
     autocompleteTableView.tag = 1;
-   // [self.view addSubview:autocompleteTableView];
+    [self.view addSubview:autocompleteTableView];
     
     
     
@@ -189,7 +189,10 @@ NSMutableArray *emailArr,*searchArray;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 40;
+    if(tableView == Tableview){
+        return 40;
+    }
+    return  0;
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -222,7 +225,9 @@ NSMutableArray *emailArr,*searchArray;
 {
     if(tableView == autocompleteTableView){
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCell" forIndexPath:indexPath];
-        cell.textLabel.text = [searchArray objectAtIndex:indexPath.row];
+        if(indexPath.row <= searchArray.count){
+            cell.textLabel.text = [searchArray objectAtIndex:indexPath.row];
+        }
         return cell;
     } else {
         TextFieldCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TextFieldCell" forIndexPath:indexPath];
@@ -446,7 +451,8 @@ NSMutableArray *emailArr,*searchArray;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if(tableView.tag == 1) return 60;
+    if(tableView.tag == 1)
+        return 40;
     return 44;
 }
 
@@ -454,15 +460,24 @@ NSMutableArray *emailArr,*searchArray;
 {
     [self dismissPopUp];
     if(tableView.tag == 1){
-//        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-//        NSString *temp = cell.textLabel.text;
-//        NSLog(@"description: %ld",(long)cell.textLabel.text);
-//        cell = [Tableview cellForRowAtIndexPath: [NSIndexPath indexPathForRow:0 inSection:1]];
-//        cell.textLabel.text = temp;
-//        NSLog(@"description2: %@",cell);
-//        temp = nil;
-//        [tableView deselectRowAtIndexPath:indexPath animated:NO];
-//        autocompleteTableView.hidden = YES;
+        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        NSString *temp = cell.textLabel.text;
+        NSLog(@"description: %ld",(long)cell.textLabel.text);
+        cell = [Tableview cellForRowAtIndexPath: [NSIndexPath indexPathForRow:0 inSection:1]];
+        cell.textLabel.text = temp;
+        if(activeField){
+            activeField.text  = temp;
+            [activeField resignFirstResponder];
+            CGPoint textFieldOrigin = [Tableview convertPoint:activeField.bounds.origin fromView:activeField];
+            NSIndexPath *indexPath = [Tableview indexPathForRowAtPoint:textFieldOrigin];
+            if(activeField.text.length)
+                [dictionaryOfConversations setObject:[activeField.text lowercaseString] forKey:indexPath];
+            [Tableview reloadData];
+        }
+        NSLog(@"description2: %@",cell);
+        temp = nil;
+        [tableView deselectRowAtIndexPath:indexPath animated:NO];
+        autocompleteTableView.hidden = YES;
         
     }
     else{
@@ -1071,33 +1086,39 @@ NSMutableArray *emailArr,*searchArray;
     [self.presentedViewController dismissViewControllerAnimated:YES completion:NULL];
 }
 
-
 - (void)searchAutocompleteEntriesWithSubstring:(NSString *)substring {
-    
     // Put anything that starts with this substring into the searchArray
     // The items in this array is what will show up in the table view
     [searchArray removeAllObjects];
-    emailArr = [[NSMutableArray alloc] initWithArray:[[ContactService instance] searchContactsWithString:substring]];
-    for(NSMutableString *curString in emailArr) {
-        
-        substring = [substring stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        
-        if ([curString rangeOfString:substring].location == 0) {
-            [searchArray addObject:curString];
+    if(substring.length){
+        emailArr = [[NSMutableArray alloc] initWithArray:[[ContactService instance] searchContactsWithString:substring]];
+        for(NSMutableString *curString in emailArr) {
+            substring = [substring stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            if ([curString rangeOfString:substring].location == 0) {
+                [searchArray addObject:curString];
+            }
         }
-        
     }
-    [autocompleteTableView reloadData];
+    if(searchArray.count <= 0){
+        autocompleteTableView.hidden = YES;
+    }
+    else{
+        autocompleteTableView.hidden = NO;
+        //dispatch_async(dispatch_get_main_queue(), ^{
+            [autocompleteTableView reloadData];
+        //});
+    }
 }
 
 #pragma mark - TextField delegate
+
+
+
 - (BOOL)textFieldShouldClear:(UITextField *)textField{
     return YES;
 }
 
-- (BOOL)textField:(UITextField *)textField
-shouldChangeCharactersInRange:(NSRange)range
-replacementString:(NSString *)string {
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     if (textField.tag != 1) return YES;
     [self.view bringSubviewToFront:autocompleteTableView];
     NSString *substring = [NSString stringWithString:textField.text];
@@ -1119,6 +1140,14 @@ CGRect temp;//this is necessary to reset view
         NSLog(@"this is the height: %f",height);
         //temp = self.view.frame;
         //self.view.frame = CGRectMake(0, -height, 480, self.view.bounds.size.height+height);
+        TextFieldCell *cell = [(TextFieldCell*)[textField superview] superview];
+        NSIndexPath *indexPath = [Tableview indexPathForCell:cell];
+        CGRect myRect = [Tableview rectForRowAtIndexPath:indexPath];
+        //myRect = [Tableview convertRect:cell.frame toView:self.view];
+        [Tableview scrollRectToVisible:CGRectMake(Tableview.frame.origin.x, myRect.origin.y-120, 1, 1) animated:YES];
+    
+
+        Tableview.scrollEnabled = NO;
     }
     return YES;
 }
@@ -1129,6 +1158,7 @@ CGRect temp;//this is necessary to reset view
         funnlName = textField.text;
     }
     else if(textField.tag == 1){
+        Tableview.scrollEnabled = YES;
         NSLog(@"is ending");
         autocompleteTableView.hidden = YES;
         CGPoint textFieldOrigin = [Tableview convertPoint:textField.bounds.origin fromView:textField];
@@ -1164,6 +1194,10 @@ CGRect temp;//this is necessary to reset view
         [Tableview setContentInset:edgeInsets];
         [Tableview setScrollIndicatorInsets:edgeInsets];
     }];
+    CGRect keyboardRect = [[[sender userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+	_keyboardHeight = keyboardRect.size.height > keyboardRect.size.width ? keyboardRect.size.width : keyboardRect.size.height;
+    autocompleteTableView.frame = CGRectMake(autocompleteTableView.frame.origin.x,_keyboardHeight-150,autocompleteTableView.frame.size.width,155.0);
+
 }
 
 - (void)keyboardWillHide:(NSNotification *)sender
@@ -1174,6 +1208,7 @@ CGRect temp;//this is necessary to reset view
         [Tableview setContentInset:edgeInsets];
         [Tableview setScrollIndicatorInsets:edgeInsets];
     }];
+    _keyboardHeight = 0;
 }
 
 #pragma mark - didReceiveMemoryWarning
