@@ -23,6 +23,7 @@
 #import "CIOAuthViewController.h"
 #import "CIOAPIClient.h"
 #import "ContactService.h"
+#import <Parse/parse.h>
 
 #define accessTokenEndpoint @"https://accounts.google.com/o/oauth2/token"
 
@@ -266,6 +267,12 @@ UIButton *loginButton;
             NSString *contextIO_access_token = [responseDict objectForKey:@"access_token"];
             NSString *contextIO_access_token_secret = [responseDict objectForKey:@"access_token_secret"];
             NSString *contextIO_account_id = [responseDict objectForKey:@"id"];
+            PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+            if (![currentInstallation channels]) {
+                [currentInstallation setChannels:@[]];
+            }
+            [currentInstallation addUniqueObject:[NSString stringWithFormat:@"account_id_%@", contextIO_account_id] forKey:@"channels"];
+            [currentInstallation saveInBackground];
             appDelegate.contextIOAPIClient = [[CIOAPIClient alloc] initWithConsumerKey:kContextIOConsumerKey consumerSecret:kContextIOConsumerSecret token:contextIO_access_token tokenSecret:contextIO_access_token_secret accountID:contextIO_account_id];
             [appDelegate.contextIOAPIClient  saveCredentials];
             
