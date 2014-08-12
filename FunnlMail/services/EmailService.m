@@ -332,14 +332,10 @@ static NSString *currentFolder;
     else newestID = 0;
     [FolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
      {
-         //if ((uint32_t)newestID == info.uidNext-1) return;
-         BOOL totalNumberOfMessagesDidChange = self.totalNumberOfMessages != info.uidNext;
-         NSArray *tempArray = [[MessageService instance] retrieveOldestMessages];
-         NSInteger oldestMessageID = 0;
-         if(tempArray.count){
-             oldestMessageID = [[tempArray objectAtIndex:0] integerValue];
-         }
-
+//         BOOL totalNumberOfMessagesDidChange = self.totalNumberOfMessages != info.uidNext;        
+         
+         BOOL isNewMessage = NO;
+         __block u_int64_t oldestMessageID = 0;
          MCORange fetchRange;
          int64_t startRange, endRange;
          int64_t numberOfMessagesToLoad;
@@ -388,7 +384,11 @@ static NSString *currentFolder;
              NSLog(@"Old messages to fetch: %qu - %qu = %qu",fetchRange.location, fetchRange.length, numberOfMessagesToLoad);
          }
          
-         u_int64_t numberOfMessagesToLoad = fetchRange.length - fetchRange.location ;
+         if(nMessages == -1){
+             fetchRange = newFetchRange;
+         }
+         
+         //u_int64_t numberOfMessagesToLoad = fetchRange.length - fetchRange.location ;
          if (numberOfMessagesToLoad == 0)
          {
              self.isLoading = NO;
@@ -398,7 +398,7 @@ static NSString *currentFolder;
              else{
                  NSLog(@"------ Failed loading OLD messages (numberOfMessagesToLoad == 0) ------ ");
              }
-             return;
+             //return;
          }
          MCOIndexSet *uids = [MCOIndexSet indexSetWithRange:fetchRange];
 
@@ -422,6 +422,7 @@ static NSString *currentFolder;
 //         uint64_t size = fetchRange.location;
 //         MCOIndexSet *numbers = [MCOIndexSet indexSetWithRange:MCORangeMake(location, size)];
 //         self.imapMessagesFetchOp = [self.imapSession fetchMessagesByNumberOperationWithFolder:folderName requestKind:requestKind numbers:numbers];
+         
 
          [self.imapMessagesFetchOp setProgress:^(unsigned int progress) {
              NSLog(@"Main -- Progress: %u of %lu", progress, (unsigned long)numberOfMessagesToLoad);
@@ -547,6 +548,7 @@ static NSString *currentFolder;
                       [[MessageService instance] insertBulkMessages:messageModelArray];
 
                       NSLog(@"***** insert %lu message to db",(unsigned long)messages.count);
+        
                       
 
                       
@@ -573,30 +575,30 @@ static NSString *currentFolder;
                       {
                           
                           if (tempArray.count) {
-                              emailTableViewController -> searchMessages = (NSMutableArray*)tempArray;
+                              emailsTableViewController -> searchMessages = (NSMutableArray*)tempArray;
                           }
                           else{
-                              [self setMessages:messages withTableController:emailTableViewController];
+                              [self setMessages:messages withTableController:emailsTableViewController];
                           
                               //not sure if this my (Pranav) email alone but sent messages were intially backwards
                               //my inbox still shows up out of order with no pattern noticeable
                               //might be just me
-                              emailTableViewController->searchMessages = [NSMutableArray arrayWithArray:[[emailTableViewController->searchMessages reverseObjectEnumerator] allObjects]];
+                              emailsTableViewController->searchMessages = [NSMutableArray arrayWithArray:[[emailsTableViewController->searchMessages reverseObjectEnumerator] allObjects]];
                           }
                           
                           
-                          emailTableViewController.emailFolder = SENT;
-                          emailTableViewController.isSearching = YES;
+                          emailsTableViewController.emailFolder = SENT;
+                          emailsTableViewController.isSearching = YES;
                           NSLog(@"does it crash here?");
                           emailsTableViewController.navigationItem.title = @"Sent";
                       }
                       else if ([folderName isEqualToString:TRASH])
                       {
-                          [self setMessages:messages withTableController:emailTableViewController];
+                          [self setMessages:messages withTableController:emailsTableViewController];
                           //not sure if this my (Pranav) email alone but sent messages were intially backwards
                           //my inbox still shows up out of order with no pattern noticeable
                           //might be just me
-                          emailsTableViewController->searchMessages = [NSMutableArray arrayWithArray:[[emailsTableViewController->searchMessages reverseObjectEnumerator] allObjects]];
+                         emailsTableViewController->searchMessages = [NSMutableArray arrayWithArray:[[emailsTableViewController->searchMessages reverseObjectEnumerator] allObjects]];
                           emailsTableViewController.emailFolder = TRASH;
                           emailsTableViewController.isSearching = YES;
                           NSLog(@"does it crash here?");
@@ -605,20 +607,20 @@ static NSString *currentFolder;
                       }
                       else if ([folderName isEqualToString:DRAFTS])
                       {
-                          [self setMessages:messages withTableController:emailTableViewController];
+                          [self setMessages:messages withTableController:emailsTableViewController];
                           //not sure if this my (Pranav) email alone but sent messages were intially backwards
                           //my inbox still shows up out of order with no pattern noticeable
                           //might be just me
-                          emailTableViewController->searchMessages = [NSMutableArray arrayWithArray:[[emailTableViewController->searchMessages reverseObjectEnumerator] allObjects]];
-                          emailTableViewController.emailFolder = DRAFTS;
-                          emailTableViewController.isSearching = YES;
+                          emailsTableViewController->searchMessages = [NSMutableArray arrayWithArray:[[emailsTableViewController->searchMessages reverseObjectEnumerator] allObjects]];
+                          emailsTableViewController.emailFolder = DRAFTS;
+                          emailsTableViewController.isSearching = YES;
                           NSLog(@"does it crash here?");
-                          emailTableViewController.navigationItem.title = @"DRAFTS";
+                          emailsTableViewController.navigationItem.title = @"DRAFTS";
                           
                       }
                       else if ([folderName isEqualToString:ARCHIVE])
                       {
-                          [self setMessages:messages withTableController:emailTableViewController];
+                          [self setMessages:messages withTableController:emailsTableViewController];
                           //not sure if this my (Pranav) email alone but sent messages were intially backwards
                           //my inbox still shows up out of order with no pattern noticeable
                           //might be just me
@@ -646,7 +648,7 @@ static NSString *currentFolder;
                       
                       dispatch_async(dispatch_get_main_queue(), ^(void){
                           AppDelegate *appDeleage = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-                          //[appDeleage hideWelcomeOverlay];
+                          [appDeleage hideWelcomeOverlay];
                           [fv.tableView reloadData];
                           [fv.tablecontroller.refreshControl endRefreshing];
                           [tempAppDelegate.progressHUD setHidden:YES];
