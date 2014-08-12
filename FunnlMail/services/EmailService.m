@@ -303,7 +303,7 @@ static NSString *currentFolder;
     
 	MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)
 	(MCOIMAPMessagesRequestKindUid | MCOIMAPMessagesRequestKindHeaders | MCOIMAPMessagesRequestKindStructure |
-	 MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject | MCOIMAPMessagesRequestKindGmailThreadID | MCOIMAPMessagesRequestKindGmailMessageID |	 MCOIMAPMessagesRequestKindFlags);
+	 MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject | MCOIMAPMessagesRequestKindGmailThreadID | MCOIMAPMessagesRequestKindGmailMessageID |	 MCOIMAPMessagesRequestKindFlags | MCOIMAPMessagesRequestKindGmailLabels);
 	
     MCOIMAPFolderInfoOperation *FolderInfo;
     NSArray *dbBoolArray = [[NSArray alloc]initWithObjects:@"-1",nil];
@@ -454,7 +454,7 @@ static NSString *currentFolder;
                           else if([folderName isEqualToString:DRAFTS]) tempMessageModel.categoryName = DRAFTS;
                           else tempMessageModel.categoryName = @"";
                           //NSLog(@"uid: %u modseqValue: %llu ",m.uid,m.modSeqValue);
-                          
+                          //NSLog(@"gmailLabels: %@",m.gmailLabels.description);
                           
                           
                           for (FunnelModel *tempFunnelModel in funnels)

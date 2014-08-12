@@ -11,18 +11,11 @@
 #define MAILCORE_MCOABSTRACTMESSAGE_H
 
 #import <Foundation/Foundation.h>
-#include "MCAbstractMessage.h"
-
 
 @class MCOMessageHeader;
 @class MCOAbstractPart;
 
 @interface MCOAbstractMessage : NSObject <NSCopying>
-
-
-#ifdef __cplusplus
-- (mailcore::Object *) mco_mcObject;
-#endif
 
 /** Header of the message. */
 @property (nonatomic, strong) MCOMessageHeader * header;
