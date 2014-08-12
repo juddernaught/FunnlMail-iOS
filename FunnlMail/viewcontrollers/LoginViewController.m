@@ -277,7 +277,7 @@ UIButton *loginButton;
         [params setObject:firstName forKey:@"first_name"];
         [params setObject:lastName forKey:@"last_name"];
         
-        [appDelegate.contextIOAPIClient postPath:@"accounts" params:params success:^(NSDictionary *responseDict) {
+        [appDelegate.contextIOAPIClient postPath:@"lite/users" params:params success:^(NSDictionary *responseDict) {
             NSLog(@"----- %@",responseDict.description);
             NSString *contextIO_access_token = [responseDict objectForKey:@"access_token"];
             NSString *contextIO_access_token_secret = [responseDict objectForKey:@"access_token_secret"];
@@ -293,7 +293,7 @@ UIButton *loginButton;
             
             //fetching contacts
             [self getUserContact];
-//            [self addToSourceWithAccountID:contextIO_account_id];
+            [self addToSourceWithAccountID:contextIO_account_id];
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"error getting contacts: %@", error);
@@ -313,7 +313,7 @@ UIButton *loginButton;
     [params setObject:self.emailServerModel.accessToken forKey:@"provider_token"];
     [params setObject:kMyClientID forKey:@"provider_consumer_key"];
     [params setObject:kMyClientSecret forKey:@"provider_token_secret"];
-    NSString *path = [NSString stringWithFormat:@"https://api.context.io/2.0/accounts/%@/sources",accID];
+    NSString *path = [NSString stringWithFormat:@"https://api.context.io/lite/users/%@/email_accounts",accID];
     [appDelegate.contextIOAPIClient postPath:path params:params success:^(NSDictionary *responseDict) {
         NSLog(@"-----> %@",responseDict.description);
         //[self performSelector:@selector(fetchContacts) withObject:nil afterDelay:20];

@@ -947,7 +947,7 @@ NSMutableArray *emailArr,*searchArray;
     for (NSString *sender in senders) {
         NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
         [params setObject:sender forKey:@"filter_from"];
-        [params setObject:@"0" forKey:@"sync_period"];
+        //[params setObject:@"0" forKey:@"sync_period"];
         if ([subjects count]) {
             for (NSString *subject in subjects) {
                 [params setObject:subject forKey:@"filter_subject"];
