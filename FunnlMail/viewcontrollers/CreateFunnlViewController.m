@@ -23,6 +23,7 @@
 #import "UIImageView+WebCache.h"
 #import "SDWebImageDownloader.h"
 
+
 @interface CreateFunnlViewController ()<CIOAuthViewController>
 {
 }
@@ -78,6 +79,7 @@ NSMutableArray *emailArr,*searchArray;
         [Tableview setDataSource:self];
         [Tableview setDelegate:self];
         [self.view addSubview:Tableview];
+        [Tableview setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.5]];
         
         if(isEdit){
             UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(10, 0, 300, 60)];
@@ -108,14 +110,15 @@ NSMutableArray *emailArr,*searchArray;
     areNotificationsEnabled = oldModel.notificationsFlag;
     randomColors = GRADIENT_ARRAY;
     self.title = @"Create Funnl";
-    [self.view setBackgroundColor:[UIColor whiteColor]];
+//    [self.view setBackgroundColor:[UIColor whiteColor]];
+    [self.view setBackgroundColor:[UIColor colorWithWhite:0.6 alpha:0.4]];
+
     [self initBarbuttonItem];
     
     [self emailContact];
     
     autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 300, self.view.bounds.size.width, 180)];
-    [autocompleteTableView registerClass:[UITableViewCell class]
-                  forCellReuseIdentifier:@"UITableViewCell"];
+    [autocompleteTableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"UITableViewCell"];
     autocompleteTableView.delegate = self;
     autocompleteTableView.dataSource = self;
     autocompleteTableView.scrollEnabled = YES;
@@ -155,31 +158,64 @@ NSMutableArray *emailArr,*searchArray;
     }
 }
 
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    UILabel *sectionHeader = [[UILabel alloc] initWithFrame:CGRectZero];
+    sectionHeader.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    sectionHeader.textAlignment = NSTextAlignmentLeft;
+    NSString *sectionTitle = @"";
+    if(tableView.tag == 1){
+        sectionTitle = @"";
+    }
+    if(section==0){
+        sectionTitle =  @"Name:";
+    }
+    else if(section == 1){
+        sectionTitle =  @"Conversation With:";
+    }
+    else if(section == 2){
+        sectionTitle =  @"Subject (Optional):";
+    }
+    else if(section == 3){
+        sectionTitle =  [NSString stringWithFormat:@"Skip %@:",ALL_FUNNL];
+    } else {
+        sectionTitle = @"Enable Notifications:";
+    }
+    sectionHeader.font = [UIFont boldSystemFontOfSize:20];
+    sectionHeader.textColor = [UIColor whiteColor];
+    sectionHeader.backgroundColor = CLEAR_COLOR;
+    sectionHeader.text = [NSString stringWithFormat:@"  %@",sectionTitle];
+    return sectionHeader;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 40;
+}
+
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     if(tableView.tag == 1)
         return 1;
     return 5;
 }
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;  {
-    if(tableView.tag == 1){
-        return nil;
-    }
-    if(section==0){
-        return @"Name:";
-    }
-    else if(section == 1){
-        return @"Conversation With:";
-    }
-    else if(section == 2){
-        return @"Subject (Optional):";
-    }
-    else if(section == 3){
-        return [NSString stringWithFormat:@"Skip %@:",ALL_FUNNL];
-    } else {
-        return @"Enable Notifications:";
-    }
-}
+//- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;  {
+//    if(tableView.tag == 1){
+//        return nil;
+//    }
+//    if(section==0){
+//        return @"Name:";
+//    }
+//    else if(section == 1){
+//        return @"Conversation With:";
+//    }
+//    else if(section == 2){
+//        return @"Subject (Optional):";
+//    }
+//    else if(section == 3){
+//        return [NSString stringWithFormat:@"Skip %@:",ALL_FUNNL];
+//    } else {
+//        return @"Enable Notifications:";
+//    }
+//}
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -191,7 +227,7 @@ NSMutableArray *emailArr,*searchArray;
         TextFieldCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TextFieldCell" forIndexPath:indexPath];
         //Resetting the reused Cell first and then updating it with new data below that
         [cell.thumbnailImageView setImage:[UIImage imageNamed:@"userimage-placeholder.png"]];
-        
+        cell.backgroundColor = CLEAR_COLOR;
         [cell setIsSwitchVisibleMode:NO];
         cell.textField.delegate = self;
         cell.textField.tag = indexPath.section;
@@ -199,11 +235,12 @@ NSMutableArray *emailArr,*searchArray;
         cell.textField.placeholder = @"";
         cell.textLabel.text = @"";
         cell.switchButton.on = NO;
-        [cell.addButton setImage:[UIImage imageNamed:@"addIcon.png"] forState:UIControlStateNormal];
+        [cell.addButton setImage:[UIImage imageNamed:@"addIcon_white.png"] forState:UIControlStateNormal];
         cell.addButton.tag = indexPath.row;
         cell.switchButton.tag = indexPath.section;
         //resetting cell finshes, set new data from here
-        
+        UIColor *color = [UIColor lightGrayColor];
+
         switch (indexPath.section) {
             case 0:
             {
@@ -211,6 +248,7 @@ NSMutableArray *emailArr,*searchArray;
                 cell.textField.frame = CGRectMake(10, 2, 250, 40);
                 [cell.addButton setHidden:YES];
                 cell.textField.placeholder = @"Enter name";
+                cell.textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Enter name" attributes:@{NSForegroundColorAttributeName: color}];
                 [cell.textField setText:funnlName];
                 //newly added on 11th Aug
                 [cell.thumbnailImageView setHidden:YES];
@@ -227,7 +265,8 @@ NSMutableArray *emailArr,*searchArray;
                 [cell.addButton addTarget:self action:@selector(addButtonPressedForConversation:) forControlEvents:UIControlEventTouchUpInside];
                 
                 cell.textField.placeholder = @"Enter Email ID";
-                
+                cell.textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Enter Email ID" attributes:@{NSForegroundColorAttributeName: color}];
+
                 if(indexPath.row != dictionaryOfConversations.allKeys.count && dictionaryOfConversations.allKeys.count > 0){
                     NSMutableArray *array = [[ContactService instance] retrieveContactWithEmail:[dictionaryOfConversations objectForKey:indexPath]];
                     
@@ -260,10 +299,8 @@ NSMutableArray *emailArr,*searchArray;
                     
                     array = nil;
                     
-                    [cell.addButton setImage:[UIImage imageNamed:@"close.png"]
-                                    forState:UIControlStateNormal];
-                    [cell.addButton addTarget:self
-                                       action:@selector(cancelButtonPressedForConversation:) forControlEvents:UIControlEventTouchUpInside];
+                    [cell.addButton setImage:[UIImage imageNamed:@"close.png"] forState:UIControlStateNormal];
+                    [cell.addButton addTarget:self action:@selector(cancelButtonPressedForConversation:) forControlEvents:UIControlEventTouchUpInside];
                     [cell.thumbnailImageView setHidden:NO];
                     [cell.textField setUserInteractionEnabled:NO];
                 }
@@ -285,13 +322,12 @@ NSMutableArray *emailArr,*searchArray;
                 [cell.addButton addTarget:self action:@selector(addButtonPressedForSubject:) forControlEvents:UIControlEventTouchUpInside];
                 
                 cell.textField.placeholder = @"Enter Subject";
-                
+                cell.textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Enter Subject" attributes:@{NSForegroundColorAttributeName: color}];
+
                 if(indexPath.row != dictionaryOfSubjects.allKeys.count && dictionaryOfSubjects.allKeys.count > 0){
                     cell.textField.text = [dictionaryOfSubjects objectForKey:indexPath];
-                    [cell.addButton setImage:[UIImage imageNamed:@"close.png"]
-                                    forState:UIControlStateNormal];
-                    [cell.addButton addTarget:self
-                                       action:@selector(cancelButtonPressedForSubject:) forControlEvents:UIControlEventTouchUpInside];
+                    [cell.addButton setImage:[UIImage imageNamed:@"close.png"] forState:UIControlStateNormal];
+                    [cell.addButton addTarget:self action:@selector(cancelButtonPressedForSubject:) forControlEvents:UIControlEventTouchUpInside];
                 }
             }
                 break;
@@ -301,6 +337,7 @@ NSMutableArray *emailArr,*searchArray;
                 [cell.thumbnailImageView setHidden:YES];
                 [cell setIsSwitchVisibleMode:YES];
                 cell.textLabel.text = [NSString stringWithFormat:@"Skip %@",ALL_FUNNL];
+                cell.textLabel.textColor = WHITE_CLR;
                 [cell.switchButton setOn:isSkipAll];
                 [cell.switchButton addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
             }
@@ -311,6 +348,7 @@ NSMutableArray *emailArr,*searchArray;
                 [cell.thumbnailImageView setHidden:YES];
                 [cell setIsSwitchVisibleMode:YES];
                 cell.textLabel.text = [NSString stringWithFormat:@"Enable Notifications"];
+                cell.textLabel.textColor = WHITE_CLR;
                 [cell.switchButton setOn:areNotificationsEnabled];
                 [cell.switchButton addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
             }
