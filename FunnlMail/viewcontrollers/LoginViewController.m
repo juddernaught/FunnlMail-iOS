@@ -23,6 +23,7 @@
 #import "CIOAuthViewController.h"
 #import "CIOAPIClient.h"
 #import "ContactService.h"
+#import <Parse/parse.h>
 
 #define accessTokenEndpoint @"https://accounts.google.com/o/oauth2/token"
 
@@ -54,30 +55,40 @@ UIButton *loginButton;
 
 #pragma mark - refresh token
 -(void)refreshAccessToken{
-    NSArray *allServers = [[EmailServersService instance] allEmailServers];
-    if (!([allServers count] == 0 || [((EmailServerModel *)[allServers objectAtIndex:0]).refreshToken isEqualToString:@"nil"])) {
-
-        // right now there is only 1 email address allowed
-        self.emailServerModel = [[[EmailServersService instance] allEmailServers] objectAtIndex:0];
-        
-        // Set the HTTP POST parameters required for refreshing the access token.
-        NSString *refreshPostParams = [NSString stringWithFormat:@"refresh_token=%@&client_id=%@&client_secret=%@&grant_type=refresh_token",
-                                       self.emailServerModel.refreshToken,
-                                       kMyClientID,
-                                       kMyClientSecret
-                                       ];
-        
-        // Indicate that an access token refresh process is on the way.
-        self.isRefreshing = YES;
-        
-        // Create the request object and set its properties.
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:accessTokenEndpoint]];
-        [request setHTTPMethod:@"POST"];
-        [request setHTTPBody:[refreshPostParams dataUsingEncoding:NSUTF8StringEncoding]];
-        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-        
-        // Make the request.
-        [self makeRequest:request];
+    
+    AppDelegate *appDelegate = APPDELEGATE;
+    if(appDelegate.isAlreadyRequestedRefreshToken == NO){
+        NSArray *allServers = [[EmailServersService instance] allEmailServers];
+        if (!([allServers count] == 0 || [((EmailServerModel *)[allServers objectAtIndex:0]).refreshToken isEqualToString:@"nil"])) {
+            NSLog(@"==== refreshAccessToken === Started");
+            appDelegate.isAlreadyRequestedRefreshToken  = YES;
+            
+            // right now there is only 1 email address allowed
+            self.emailServerModel = [[[EmailServersService instance] allEmailServers] objectAtIndex:0];
+            
+            // Set the HTTP POST parameters required for refreshing the access token.
+            NSString *refreshPostParams = [NSString stringWithFormat:@"refresh_token=%@&client_id=%@&client_secret=%@&grant_type=refresh_token",
+                                           self.emailServerModel.refreshToken,
+                                           kMyClientID,
+                                           kMyClientSecret
+                                           ];
+            
+            // Indicate that an access token refresh process is on the way.
+            self.isRefreshing = YES;
+            
+            // Create the request object and set its properties.
+            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:accessTokenEndpoint]];
+            [request setHTTPMethod:@"POST"];
+            [request setHTTPBody:[refreshPostParams dataUsingEncoding:NSUTF8StringEncoding]];
+            [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+            
+            // Make the request.
+            [self makeRequest:request];
+        }
+    }
+    else{
+        NSLog(@"  === Refused another refreshAccessToken request ===  ");
+        return;
     }
 }
 
@@ -98,10 +109,9 @@ UIButton *loginButton;
     _receivedData = [[NSMutableData alloc] init];
     _isRefreshing = NO;
     
-    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    //AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     blockerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
     blockerView.backgroundColor = [UIColor redColor];
-
     [self checkCredentialsandShowLoginScreen];
 }
 
@@ -189,7 +199,7 @@ UIButton *loginButton;
     
     // pre-assigned by service
     
-    NSString *scope = @"https://mail.google.com/"; // scope for Gmail
+   NSString *scope = @"https://mail.google.com/ https://www.googleapis.com/auth/userinfo.profile https://www.google.com/m8/feeds"; // scope for Gmail
     
     GTMOAuth2ViewControllerTouch *viewController;
     viewController = [[GTMOAuth2ViewControllerTouch alloc] initWithScope:scope
@@ -230,7 +240,7 @@ UIButton *loginButton;
 
         [[EmailServersService instance] insertEmailServer:self.emailServerModel];
         MCOIMAPSession * imapSession = [[MCOIMAPSession alloc] init];
-        imapSession.timeout = 100000;
+        imapSession.timeout = 60;
         [EmailService instance].imapSession = imapSession;
         [imapSession setAuthType:MCOAuthTypeXOAuth2];
         [imapSession setOAuth2Token:accessToken];
@@ -272,10 +282,18 @@ UIButton *loginButton;
             NSString *contextIO_access_token = [responseDict objectForKey:@"access_token"];
             NSString *contextIO_access_token_secret = [responseDict objectForKey:@"access_token_secret"];
             NSString *contextIO_account_id = [responseDict objectForKey:@"id"];
+            PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+            if (![currentInstallation channels]) {
+                [currentInstallation setChannels:@[]];
+            }
+            [currentInstallation addUniqueObject:[NSString stringWithFormat:@"account_id_%@", contextIO_account_id] forKey:@"channels"];
+            [currentInstallation saveInBackground];
             appDelegate.contextIOAPIClient = [[CIOAPIClient alloc] initWithConsumerKey:kContextIOConsumerKey consumerSecret:kContextIOConsumerSecret token:contextIO_access_token tokenSecret:contextIO_access_token_secret accountID:contextIO_account_id];
             [appDelegate.contextIOAPIClient  saveCredentials];
             
-            [self addToSourceWithAccountID:contextIO_account_id];
+            //fetching contacts
+            [self getUserContact];
+//            [self addToSourceWithAccountID:contextIO_account_id];
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"error getting contacts: %@", error);
@@ -298,7 +316,7 @@ UIButton *loginButton;
     NSString *path = [NSString stringWithFormat:@"https://api.context.io/2.0/accounts/%@/sources",accID];
     [appDelegate.contextIOAPIClient postPath:path params:params success:^(NSDictionary *responseDict) {
         NSLog(@"-----> %@",responseDict.description);
-        [self performSelector:@selector(fetchContacts) withObject:nil afterDelay:20];
+        //[self performSelector:@selector(fetchContacts) withObject:nil afterDelay:20];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"error getting contacts: %@", error);
     }];
@@ -340,6 +358,78 @@ UIButton *loginButton;
     });
 }
 
+#pragma mark -
+#pragma mark Retrieving Contact (NEW)
+#pragma mark getUserContact
+-(void)getUserContact{
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://www.google.com/m8/feeds/contacts/%@/full?alt=json&max-results=%d",[EmailService instance].userEmailID,INT32_MAX]];
+
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPMethod:@"GET"];
+    
+    GTMOAuth2Authentication *currentAuth = [GTMOAuth2ViewControllerTouch authForGoogleFromKeychainForName:kKeychainItemName clientID:kMyClientID clientSecret:kMyClientSecret];
+    GTMHTTPFetcher* myFetcher = [GTMHTTPFetcher fetcherWithRequest:request];
+    [myFetcher setAuthorizer:currentAuth];
+    [myFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error) {
+        if (error != nil) {
+            // status code or network error
+            NSLog(@"--user info error %@: ", [error description]);
+//            NSString* newStr = [[NSString alloc] initWithData:retrievedData encoding:NSUTF8StringEncoding];
+//            NSLog(@"user Info: %@",newStr);
+        } else {
+            // succeeded
+            NSMutableArray *contactArray = [[NSMutableArray alloc] init];
+//            NSString* newStr = [[NSString alloc] initWithData:retrievedData encoding:NSUTF8StringEncoding];
+//            NSLog(@"user Info: %@",newStr);
+            NSDictionary* json = [NSJSONSerialization JSONObjectWithData:retrievedData options:kNilOptions error:&error];
+            NSDictionary *feedDict = [json objectForKey:@"feed"];
+            NSDictionary *contacts = [feedDict objectForKey:@"entry"];
+            for (NSDictionary *contactDict in contacts) {
+                ContactModel *tempContact = [[ContactModel alloc] init];
+                tempContact.name = [[contactDict objectForKey:@"title"] objectForKey:@"$t"];
+                NSArray *emailArray = [contactDict objectForKey:@"gd$email"];
+                
+                if (emailArray.count > 0) {
+                    if ([[emailArray objectAtIndex:0] objectForKey:@"address"]) {
+                        tempContact.email = [[emailArray objectAtIndex:0] objectForKey:@"address"];
+                    }
+                }
+                else {
+                    //when we don't have email id we put string @"nil"
+                    tempContact.email = @"nil";
+                }
+                emailArray = nil;
+                
+                NSArray *linkArray = [contactDict objectForKey:@"link"];
+                if (linkArray.count > 0) {
+                    for (NSDictionary *tempLinkDict in linkArray) {
+                        if ([[tempLinkDict objectForKey:@"type"] isEqualToString:@"image/*"]) {
+                            tempContact.thumbnail = [tempLinkDict objectForKey:@"href"];
+                            break;
+                        }
+                    }
+                }
+                linkArray = nil;
+                
+                //set default value for rest of contact parameters
+                tempContact.count = 0;
+                tempContact.sent_count = 0;
+                tempContact.sent_from_account_count = 0;
+                tempContact.received_count = 0;
+                tempContact.resource_url = @"nil";
+                if (![tempContact.email isEqualToString:@"nil"]) {
+                    [contactArray addObject:tempContact];
+                }
+                else {
+                    NSLog(@"----rec---");
+                }
+            }
+            
+            [[ContactService instance] insertBulkContacts:contactArray];
+        }
+    }];
+}
 
 
 -(void)getUserInfo{
@@ -372,6 +462,8 @@ UIButton *loginButton;
                 [self getContextIOWithEmail:currentEmail withFirstName:currentName withLastName:currentName];
             }
 
+            [self getUserContact];
+            
             [[NSUserDefaults standardUserDefaults] synchronize];
             [EmailService instance].primaryMessages = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"PRIMARY"]];
             NSString *nextPageToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"PRIMARY_PAGE_TOKEN"];
@@ -429,7 +521,7 @@ UIButton *loginButton;
             [[NSUserDefaults standardUserDefaults] setObject:nextPageToken forKey:@"PRIMARY_PAGE_TOKEN"];
             [[NSUserDefaults standardUserDefaults] synchronize];
             
-            if([EmailService instance].primaryMessages.count < 1000)
+            if([EmailService instance].primaryMessages.count < 5000)
                 [self getPrimaryMessages:emailStr nextPageToken:nextPageToken numberOfMaxResult:100];
             else
                 NSLog(@"----- Primary messages count > %d",pArray.count);
@@ -439,11 +531,15 @@ UIButton *loginButton;
 
 -(void)loadHomeScreen {
     [self getUserInfo];
-
+    
     mainViewController = [[MainVC alloc] init];
     UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:mainViewController];
     
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    if(appDelegate.internetAvailable){
+        [[EmailService instance] startLogin:self.mainViewController.emailsTableViewController];
+    }
+    
     appDelegate.menuController = [[MenuViewController alloc] init];
     appDelegate.drawerController = [[MMDrawerController alloc] initWithCenterViewController:nav leftDrawerViewController:appDelegate.menuController];
     [appDelegate.drawerController setRestorationIdentifier:@"MMDrawer"];
@@ -490,6 +586,7 @@ UIButton *loginButton;
     [_receivedData appendData:data];
 }
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    AppDelegate *appDelegate = APPDELEGATE;
     // This object will be used to store the converted received JSON data to string.
     NSString *responseJSON;
     
@@ -513,12 +610,13 @@ UIButton *loginButton;
             NSLog(@"Invalid access Token");
         }
         else{
+            appDelegate.isAlreadyRequestedRefreshToken  = NO;
             self.emailServerModel.accessToken = [NSString stringWithFormat:@"%@",accessToken];
             [[EmailServersService instance] updateEmailServer:self.emailServerModel];
+            [self performSelectorInBackground:@selector(getUserInfo) withObject:nil];
+
         }
         
-        // update database with new access token
-//        [[EmailService instance] startLogin:self.mainViewController.emailsTableViewController];
         
         if (self.isRefreshing) {
             self.isRefreshing = NO;

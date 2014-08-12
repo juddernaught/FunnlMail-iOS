@@ -34,19 +34,19 @@
     tempAttributedString = nil;
     colorArray = nil;
 
-    senderLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 10, 320-105, 20)];
-    subjectLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 30, 320-105, 20)];
-    bodyLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 50, 320-105, 90-47-7+10)];
+    senderLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 10, 320-108, 20)];
+    subjectLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 30, 320-108, 20)];
+    bodyLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 50, 320-108, 90-47-7+10)];
 
 //    senderLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 7, 320-105-6-60, 20)];
     readLabel = [[UILabel alloc] initWithFrame:CGRectMake(10-1, 20, 14, 14)];
     threadLabel = [[UILabel alloc] initWithFrame:CGRectMake(320-20-43, 35, 48-5, 20)];
     detailDiscloser = [[UIImageView alloc] initWithFrame:CGRectMake(320-20, 35, 20, 20)];
     
-    dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(320-70-5, 10, 70, 20)];
-    funnlLabel1 = [[UILabel alloc] initWithFrame:CGRectMake(320-70-5, 50, 70, 20)];
-    funnlLabel2 = [[UILabel alloc] initWithFrame:CGRectMake(320-70-5, 70, 70, 20)];
-//    funnlLabel3 = [[UILabel alloc] initWithFrame:CGRectMake(320-70-5, 70, 70, 20)];
+    dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(320-70-5, 12, 70, 20)];
+    funnlLabel1 = [[UILabel alloc] initWithFrame:CGRectMake(320-70-5, 52, 70, 20)];
+    funnlLabel2 = [[UILabel alloc] initWithFrame:CGRectMake(320-70-5, 72, 70, 20)];
+//    funnlLabel3 = [[UILabel alloc] initWithFrame:CGRectMake(320-70, 70, 70, 20)];
     
     senderLabel.backgroundColor = [UIColor clearColor];
     subjectLabel.backgroundColor = [UIColor clearColor];
@@ -85,9 +85,9 @@
     readLabel.backgroundColor = [UIColor clearColor];
     
     dateLabel.textAlignment = NSTextAlignmentRight;
-    funnlLabel1.textAlignment = NSTextAlignmentRight;
-    funnlLabel2.textAlignment = NSTextAlignmentRight;
-    funnlLabel3.textAlignment = NSTextAlignmentRight;
+    funnlLabel1.textAlignment = NSTextAlignmentCenter;
+    funnlLabel2.textAlignment = NSTextAlignmentCenter;
+    funnlLabel3.textAlignment = NSTextAlignmentCenter;
 //    dateLabel.backgroundColor = [UIColor redColor];
 //    senderLabel.backgroundColor = [UIColor greenColor];
 //    subjectLabel.backgroundColor = [UIColor blueColor];

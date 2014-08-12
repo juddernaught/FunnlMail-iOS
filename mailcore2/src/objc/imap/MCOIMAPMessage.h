@@ -75,7 +75,6 @@
 */
 - (NSString *) htmlRenderingWithFolder:(NSString *)folder
                               delegate:(id <MCOHTMLRendererIMAPDelegate>)delegate;
-
 - (NSString *) serializable;
 + (MCOIMAPMessage *) importSerializable : (NSString *) serializable;
 

@@ -460,7 +460,7 @@ typedef void (^DownloadCallback)(NSError * error);
                 [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 
                 NSArray *randomColors = GRADIENT_ARRAY;
-                NSInteger gradientInt = arc4random_uniform((uint32_t)randomColors.count);
+                NSInteger gradientInt = randomColors.count;
                 NSString *colorString = [randomColors objectAtIndex:gradientInt];
                 UIColor *color = [UIColor colorWithHexString:colorString];
                 if(color == nil){

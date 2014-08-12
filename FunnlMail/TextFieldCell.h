@@ -15,4 +15,6 @@
 @property(nonatomic,assign) BOOL isAddButton;
 @property(nonatomic,assign) BOOL isSwitchVisibleMode;
 @property(nonatomic,retain) UISwitch *switchButton;
+@property(nonatomic,retain) UIImageView *thumbnailImageView;
+@property(nonatomic,retain) UIButton *tapButton;
 @end

@@ -24,6 +24,17 @@
 #import "FunnlPopUpView.h"
 #import <Mixpanel/Mixpanel.h>
 
+@implementation UILabel (Additions)
+
+- (void)sizeToFitWithAlignmentRight {
+    CGRect beforeFrame = self.frame;
+    [self sizeToFit];
+    CGRect afterFrame = self.frame;
+    self.frame = CGRectMake(beforeFrame.origin.x + beforeFrame.size.width - afterFrame.size.width-3, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
+}
+
+@end
+
 static NSString *FILTER_VIEW_CELL = @"FilterViewCell";
 static NSString *mailCellIdentifier = @"MailCell";
 static NSString *inboxInfoIdentifier = @"InboxStatusCell";
@@ -33,6 +44,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
 @implementation EmailsTableViewController
 @synthesize tablecontroller,activityIndicator,isSearching;
+UIView *greyView;
 
 #pragma mark -
 #pragma mark Lifecycle
@@ -46,13 +58,23 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     return self;
 }
 
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        // Custom initialization
+        [self setupView];
+    }
+    return self;
+}
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     tempCellForDisplay = nil;
     currentIndexPath = nil;
     tempAppDelegate = APPDELEGATE;
-//    [[EmailService instance] startLogin: self];
     [self setupView];
     // MUSTFIX: code doesn't work without below line, but it doesn't seem like it really belongs
     self.emailFolder = INBOX;
@@ -61,6 +83,10 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     self.ClearTable = 0;
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
+    greyView = [[UIView alloc] initWithFrame:CGRectMake(0, 104, self.view.bounds.size.width, self.view.bounds.size.height)];
+    greyView.hidden = YES;
+    [greyView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.78]];
+    [self.view addSubview:greyView];
 
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
@@ -71,6 +97,8 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    NSLog(@"how often does this happen");
+    NSLog(@"what is emailFolder: %@",self.emailFolder);
     if ([EmailService instance].filterMessages.count > 0) {
         [self.tableView reloadData];
     }
@@ -181,7 +209,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
         filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : ALL_FUNNL);
         if([EmailService instance].filterMessages.count == 0){
             NSLog(@"Call to loadLastNMessages from setFilterModel function");
-            [[EmailService instance] loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD withTableController:self withFolder:self.emailFolder  withFetchRange:MCORangeEmpty];
+            [[EmailService instance] loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD_AT_START withTableController:self withFolder:self.emailFolder  withFetchRange:MCORangeEmpty];
         }
     }
 }
@@ -243,24 +271,31 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
                 cell.funnlLabel1.text = @"";
                 cell.funnlLabel2.text = @"";
                 cell.funnlLabel3.text = @"";
-
+                cell.funnlLabel1.backgroundColor = CLEAR_COLOR;
+                cell.funnlLabel2.backgroundColor = CLEAR_COLOR;
+                cell.funnlLabel3.backgroundColor = CLEAR_COLOR;
+                
                 NSMutableDictionary *funnlLabelDictionary= [self getFunnlsDictionary:(MessageModel*)[EmailService instance].filterMessages[indexPath.row]];
                 int funnlLabelCount = 0;
                 for (NSString *key in funnlLabelDictionary.allKeys) {
                     if(funnlLabelCount == 0){
                         cell.funnlLabel1.text = key;
-                        cell.funnlLabel1.textColor = [UIColor colorWithHexString:[funnlLabelDictionary objectForKey:key]];
+                        cell.funnlLabel1.backgroundColor = [UIColor colorWithHexString:[funnlLabelDictionary objectForKey:key]];
+                        cell.funnlLabel1.textColor = [UIColor whiteColor];
                     }
                     else if(funnlLabelCount == 1){
                         cell.funnlLabel2.text = key;
                         if(funnlLabelDictionary.allKeys.count > 1){
                             cell.funnlLabel2.text = [NSString stringWithFormat:@"%@ + %d ",key,funnlLabelDictionary.allKeys.count-1];
-                            cell.funnlLabel2.textColor = [UIColor colorWithHexString:[funnlLabelDictionary objectForKey:key]];
+                            cell.funnlLabel2.backgroundColor = [UIColor colorWithHexString:[funnlLabelDictionary objectForKey:key]];
+                            cell.funnlLabel2.textColor = [UIColor whiteColor];
                         }
                     }
-                    
+                    [cell.funnlLabel1 sizeThatFits:CGSizeMake(60, 20)];
+                    [cell.funnlLabel2 sizeThatFits:CGSizeMake(60, 20)];
                     funnlLabelCount++;
                 }
+                
                 
                 //[cell.labelNameText setAttributedText:[self returnFunnelString:(MessageModel*)[EmailService instance].filterMessages[indexPath.row]]];
                 cell.tag = indexPath.row;
@@ -1131,11 +1166,12 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     return YES;
 }
 
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
-    
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar;{
+    greyView.hidden = NO;
 }
 
-- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar{
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar;{
+    greyView.hidden = YES;
 }
 
 #pragma mark SearchFunction
@@ -1143,6 +1179,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
     [searchBar resignFirstResponder];
     NSString *searchText = searchBar.text;
     isSearching = YES;
+    greyView.hidden = YES;
     if(self.filterModel == nil || [self.filterModel.funnelId isEqualToString:@"0"] || [self.filterModel.funnelId isEqualToString:@"1"]){
 //    if([searchBar selectedScopeButtonIndex] == 0){
         //All mailbox

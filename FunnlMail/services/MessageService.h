@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "MessageModel.h"
+#import "EmailsTableViewController.h"
 
 @interface MessageService : NSObject
 
@@ -36,6 +37,9 @@
 -(void) updateMessageWithDictionary:(NSDictionary *)messageDict;
 -(void) updateMessageWithHTMLContent:(NSDictionary *)messageDict;
 - (NSString*)retrieveHTMLContentWithID:(NSString*)uid;
-- (NSString*)retrievePreviewContentWithID:(NSString*)uid ;
+- (NSString*)retrievePreviewContentWithID:(NSString*)uid;
 - (void)insertFunnelJsonForMessages;
+//newly added august 7. 2014. Pranav Herur
+-(NSArray *) retrieveMessages:(NSString *)folderName;
+-(NSArray *) retrieveNewestMessage:(NSString*)folderName;
 @end

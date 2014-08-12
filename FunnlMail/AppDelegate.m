@@ -22,14 +22,14 @@
 #define MIXPANEL_TOKEN @"08b1e55d72f1b22a8e5696c2b56a6777"
 
 @implementation AppDelegate
-@synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable,contextIOAPIClient;
+@synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable,contextIOAPIClient,isAlreadyRequestedRefreshToken;
 
 
 #pragma mark - didFinishLaunching
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.internetAvailable = YES;
-    
+    isAlreadyRequestedRefreshToken = NO;
     [Crashlytics startWithAPIKey:@"44e1f44afdbcda726d1a42fdbbd770dff98bca43"];
     // MixPanel setup
     //[[CIOExampleAPIClient sharedClient] clearCredentials];
@@ -101,6 +101,7 @@
         NSLog(@"------------- Internet is OFF ---------------");
         //[[[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Internet is not available." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
         self.internetAvailable = NO;
+        self.isAlreadyRequestedRefreshToken = NO;
         [self.loginViewController callOffline];
         if(self.loginViewController && self.loginViewController.mainViewController && self.loginViewController.mainViewController.emailsTableViewController){
             [self.loginViewController.mainViewController.emailsTableViewController.tablecontroller.refreshControl endRefreshing];
@@ -108,10 +109,10 @@
     }
     else
     {
-        NSLog(@"------------- Internet is ON ---------------");
-        //EmailServerModel *serverModel = [[[EmailServersService instance] allEmailServers] objectAtIndex:0];
-        //if(serverModel.accessToken == nil || serverModel.accessToken.length == 0){
-            NSLog(@"------------- refresh Access Token ---------------");
+            self.isAlreadyRequestedRefreshToken = NO;
+            //EmailServerModel *serverModel = [[[EmailServersService instance] allEmailServers] objectAtIndex:0];
+            //if(serverModel.accessToken == nil || serverModel.accessToken.length == 0){
+            NSLog(@"------------- Internet ON - Call Refresh Access Token ---------------");
             if(self.loginViewController && self.loginViewController.mainViewController && self.loginViewController.mainViewController.emailsTableViewController){
                 [self.loginViewController.mainViewController.emailsTableViewController.tablecontroller.refreshControl endRefreshing];
             }
@@ -120,6 +121,13 @@
         //}
         self.internetAvailable = YES;
     }
+}
+
+-(void)createLabel:(UILabel*)label{
+    
+    label.backgroundColor = [UIColor grayColor];
+    label.textColor = [UIColor redColor];
+    [showWelcomeOverlay addSubview:label];
 }
 
 #pragma mark - Welcome Overlay
@@ -144,6 +152,7 @@
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
+
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
 }
@@ -167,8 +176,9 @@
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     self.startDate = [NSDate date];
     
-    if([EmailService instance].emailsTableViewController){
-        NSLog(@"-----applicationDidBecomeActive-----");
+    NSLog(@"-----applicationDidBecomeActive-----");
+    if(self.loginViewController){
+        NSLog(@"-----Call Refresh Token -----");
         [self.loginViewController refreshAccessToken];
     }
 }
@@ -185,7 +195,7 @@
     NSTimeInterval time = [self.startDate timeIntervalSinceNow];
     //timeIntervalSinceNow returns negative value so this is required to convert to positive
     NSInteger ti = 0 - (NSInteger)time;
-    //I know some of these look stupid and could be dont faster, but when i tried ((ti % 60)/60) it would return 00.000
+    //I know some of these look stupid and could be done faster, but when i tried ((ti % 60)/60) it would return 00.000
     //which is mostly unuseable
     float secondsInDecimal = (ti % 60);
     float minutes = (ti / 60);

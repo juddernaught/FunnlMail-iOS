@@ -64,9 +64,8 @@ static ContactService *instance;
     
     [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
         FMResultSet *resultSet ;
-
-        
-        NSString *query = [NSString stringWithFormat:@"SELECT email FROM contacts WHERE name LIKE  '%@%%'  OR  email  LIKE  '%@%%'  ORDER BY count DESC LIMIT 5;",searchTerm,searchTerm];
+//        NSString *query = [NSString stringWithFormat:@"SELECT email FROM contacts WHERE email  LIKE  '%@%%' ;",searchTerm];
+        NSString *query = @"SELECT email FROM contacts;";
         resultSet = [db executeQuery:query];
 //        resultSet = [db executeQuery:@"SELECT email FROM contacts WHERE name LIKE  '%' || ? || '%'  OR email LIKE '%' || ? || '%' ORDER BY count DESC LIMIT 5;",searchTerm,searchTerm];
 
@@ -79,5 +78,32 @@ static ContactService *instance;
     return array;
 }
 
+
+-(NSMutableArray*)retrieveContactWithEmail:(NSString*)emailID {
+    __block NSMutableArray *tempContactModel = [[NSMutableArray alloc] init];
+    __block NSMutableDictionary *parameterDictionary = [[NSMutableDictionary alloc] init];
+    __block BOOL success;
+    success = FALSE;
+    parameterDictionary[@"email"] = emailID;
+    
+    NSLog(@"ContactService ---------> email address %@",emailID);
+    
+    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *resultSet = [db executeQuery:[NSString stringWithFormat:@"select name, email,thumbnail from contacts where email = '%@';",emailID]];
+    
+        while ([resultSet next]) {
+//            if ([resultSet stringForColumn:@"messageHTMLBody"]) {
+//                htmlContent = [resultSet stringForColumn:@"messageHTMLBody"];
+//            }
+            ContactModel *tempModel = [[ContactModel alloc] init];
+            tempModel.name = [resultSet stringForColumn:@"name"];
+            tempModel.email = [resultSet stringForColumn:@"email"];
+            tempModel.thumbnail = [resultSet stringForColumn:@"thumbnail"];
+            [tempContactModel addObject:tempModel];
+        }
+    }];
+    
+    return tempContactModel;
+}
 
 @end

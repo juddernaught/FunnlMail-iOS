@@ -30,25 +30,27 @@
 #define EMPTY_DELIMITER @"#NOT#"
 #define HEIGHT [[UIScreen mainScreen] bounds].size.height
 #define WIDTH [[UIScreen mainScreen] bounds].size.width
-#define NUMBER_OF_MESSAGES_TO_LOAD 500
+#define NUMBER_OF_MESSAGES_TO_LOAD_AT_START 500
+#define NUMBER_OF_MESSAGES_TO_LOAD 200
 #define NUMBER_OF_MESSAGES_TO_LOAD_ON_SEARCH NUMBER_OF_MESSAGES_TO_LOAD
 
 #define SHOW_PRIMARY_INBOX 1
 #define IS_AUTO_REFRESH_ENABLE 1
-#define AUTOREFRESH_DELAY 10
+#define AUTOREFRESH_DELAY 30
 #define PRIMARY_CATEGORY_NAME @"CATEGORY_PERSONAL"
 
 
 #define INBOX @"INBOX"
 #define SENT @"[Gmail]/Sent Mail"
 #define TRASH @"[Gmail]/Trash"
+#define DRAFTS @"[Gmail]/Drafts"
 #define ARCHIVE @"[Gmail]/All Mail"
 
 #define CLIENT_ID @"the-client-id"
 #define CLIENT_SECRET @"the-client-secret"
 #define KEYCHAIN_ITEM_NAME @"MailCore OAuth 2.0 Token"
 
-#define GRADIENT_ARRAY [NSArray arrayWithObjects:@"#FFB84D",@"#AD5CFF",@"#33ADFF",@"#85E085",@"#B84D70",nil];
+#define GRADIENT_ARRAY [NSArray arrayWithObjects:@"#8E8E93",@"#007AFF",@"#FF3B30",@"#4CD964",@"#FFCC00",@"5AC8E1",@"FF2D55",@"FF9500",nil];
 #define DONE_BUTTON_BLUE_COLOR @"3878DE"
 #define UNDO_BUTTON_RED_COLOR @"C5000D"
 

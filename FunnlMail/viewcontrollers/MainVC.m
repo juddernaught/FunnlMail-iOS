@@ -18,7 +18,7 @@
 #import "UIColor+HexString.h"
 #import "ComposeViewController.h"
 #import "MainView.h"
-
+#import "EmailServersService.h"
 
 #import <MessageUI/MessageUI.h>
 
@@ -40,10 +40,25 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     return self;
 }
 
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        // Custom initialization
+        self.emailsTableViewController = [[EmailsTableViewController alloc]init];
+
+    }
+    return self;
+}
+
+
+
+
 -(void)viewWillAppear:(BOOL)animated{
     [mainView reloadView];
     AppDelegate *app = APPDELEGATE;
     NSLog(@"viewWillAppear mainVC");
+    emailsTableViewController.emailFolder = INBOX;
     if([app.currentFunnelString.lowercaseString isEqualToString:[ALL_FUNNL lowercaseString]])
     {
          [self setTitle:ALL_FUNNL];
@@ -51,6 +66,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     else
     {
          NSLog(@"do we get here tho: %@", self.parentViewController);
+         NSLog(@"what is emailFolder in mainvc: %@",emailsTableViewController.emailFolder);
          [self setTitle: app.currentFunnelString];
     }
 }
@@ -147,8 +163,9 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [composeEmailButton setImage:[UIImage imageNamed:@"composeIcon.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:composeEmailButton];
     
-    if(emailsTableViewController==nil){
-        emailsTableViewController = [[EmailsTableViewController alloc]init];
+    emailsTableViewController.emailFolder = INBOX;
+//    if(emailsTableViewController==nil){
+//        emailsTableViewController = [[EmailsTableViewController alloc]init];
         emailsTableViewController.mainVCdelegate = self;
         [self addChildViewController:emailsTableViewController];
         [self.view insertSubview:emailsTableViewController.view atIndex:0];
@@ -160,8 +177,9 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
             make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
         }];
         [[EmailService instance] startLogin:emailsTableViewController];
-    }
+//    }
 }
+
 
 
 #pragma mark -
