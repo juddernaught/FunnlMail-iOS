@@ -12,7 +12,7 @@
 #import "OAuth.h"
 #import "SSKeychain.h"
 
-static NSString * const kCIOAPIBaseURLString = @"https://api.context.io/2.0/";
+static NSString * const kCIOAPIBaseURLString = @"https://api.context.io/";
 
 // Keychain keys
 static NSString * const kCIOKeyChainServicePrefix = @"Context-IO-";
@@ -311,7 +311,7 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 }
 
 - (NSString *)accountPath {
-    return [@"accounts" stringByAppendingPathComponent:_accountID];
+    return [@"lite/users" stringByAppendingPathComponent:_accountID];
 }
 
 #pragma mark -
@@ -344,7 +344,7 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 
     NSMutableURLRequest *mutableURLRequest = [self.HTTPClient requestWithMethod:@"POST" path:path parameters:params];
     
-    mutableURLRequest = [self signURLRequest:mutableURLRequest parameters:params useToken:_isAuthorized];
+    mutableURLRequest = [self signURLRequest:mutableURLRequest parameters:params useToken:NO];
     
     mutableURLRequest.timeoutInterval = self.timeoutInterval;
     

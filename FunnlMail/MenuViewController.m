@@ -12,6 +12,8 @@
 #import "MainVC.h"
 #import "SDWebImageDownloader.h"
 #import "UIImageView+WebCache.h"
+#import "LoginViewController.h"
+#import "EmailServersService.h"
 #import "FunnlAlertsVC.h"
 
 @interface MenuViewController ()
@@ -46,10 +48,8 @@
     [self.view addSubview:headerLine];
     
 //    [listView setBackgroundView:[[UIView alloc] init]];
-    listArray =[[NSMutableArray alloc] initWithObjects:@"Email Account",@"Edit Funnl Settings",@"Funnl Alerts", @"Share Funnls", @"Sent Mail", @"Archive",@"Drafts", @"Trash", @"Help",nil];
-    imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"settingListIcon",@"alertListIcon",@"shareListIcon",@"sentListIcon", @"archiveListIcon",@"archiveListIcon", @"trashListIcon",@"helpListIcon", nil];
-    
-    
+    listArray =[[NSMutableArray alloc] initWithObjects:@"Email Account",@"Edit Funnl Settings",@"Funnl Alerts", @"Share Funnls", @"Sent Mail", @"Archive", @"Trash", @"Help",@"Logout",nil];
+    imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"settingListIcon",@"alertListIcon",@"shareListIcon",@"sentListIcon", @"archiveListIcon", @"trashListIcon",@"helpListIcon",@"helpListIcon", nil];
 }
 
 
@@ -152,6 +152,14 @@
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Trash";
         [[EmailService instance] getDatabaseMessages:TRASH withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject];
         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:TRASH withFetchRange:MCORangeEmpty];
+    } else if (indexPath.row == 8){
+        [[MessageService instance] deleteMessageWithGmailMessageID:[EmailService instance].userEmailID];
+        [[EmailServersService instance] deleteEmailServer:[EmailService instance].userEmailID];
+        LoginViewController *loginViewController = [[LoginViewController alloc]init];
+        loginViewController.view.backgroundColor = [UIColor clearColor];
+        appDelegate.window.backgroundColor = [UIColor whiteColor];
+        UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:loginViewController];
+        [appDelegate.window setRootViewController:nav];
     }
 
     [appDelegate.drawerController closeDrawerAnimated:YES completion:nil];
