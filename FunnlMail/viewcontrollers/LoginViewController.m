@@ -140,7 +140,7 @@ UIButton *loginButton;
     images = @[@"WHITEsliders1nobar.png", @"WHITEsliders2.png", @"WHITEsliders3.png", @"WHITEsliders4.png",@"WHITEsliders5.png"];
     PageContentVC *initialViewController = [self viewControllerAtIndex:0];
     NSArray *viewControllers = [NSArray arrayWithObject:initialViewController];
-//    self.pageController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 40);
+    self.pageController.view.frame = CGRectMake(0, 6, self.view.frame.size.width, self.view.frame.size.height); // Changed from (xx, 0 to 6, ...) by Chad
     [self.pageController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     [self addChildViewController:self.pageController];
     [[self view] addSubview:[self.pageController view]];
@@ -148,7 +148,7 @@ UIButton *loginButton;
     UIImage *loginImage = [UIImage imageNamed:@"getStarted"];
     loginButton = [[UIButton alloc] init];
     [loginButton setImage:loginImage forState:UIControlStateNormal];
-    loginButton.frame = CGRectMake(0, HEIGHT-50, 320, 40);
+    loginButton.frame = CGRectMake(0, HEIGHT-43, 320, 40); // Changed from (xx, 50 to 43, ...) by Chad
     [loginButton addTarget:self action:@selector(loginButtonSelected)forControlEvents:UIControlEventTouchUpInside];
     loginButton.hidden = YES;
     [self.pageController.view addSubview:loginButton];
