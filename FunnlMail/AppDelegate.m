@@ -133,75 +133,19 @@
 #pragma mark - Welcome Overlay
 
 -(void)showWelcomeOverlay{
-    showWelcomeOverlay = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
-    showWelcomeOverlay.opaque = NO;
-    UITextView *thing = [[UITextView alloc]initWithFrame:CGRectMake(10, 20, WIDTH, 70)];
-    thing.text = @"Welcome to your customized primary inbox!";
-    thing.backgroundColor = [UIColor clearColor];
-    [thing setTextColor:[UIColor whiteColor]];
-    thing.font = [UIFont boldSystemFontOfSize:24];
-    thing.userInteractionEnabled = NO;
-    
-    UILabel *personal = [[UILabel alloc]initWithFrame:CGRectMake(15, 150, 75, 30)];
-    personal.text = @" Personal ";
-    [personal sizeToFit];
-    personal.textColor = [UIColor greenColor];
-    personal.backgroundColor = [UIColor grayColor];
-    [showWelcomeOverlay addSubview:personal];
-    
-    UILabel *work = [[UILabel alloc]initWithFrame:CGRectMake(95, 150, 75, 30)];
-    work.text = @" Work ";
-    [work sizeToFit];
-    work.textColor = [UIColor greenColor];
-    work.backgroundColor = [UIColor grayColor];
-    //[showWelcomeOverlay addSubview:work];
-    
-    UILabel *updates = [[UILabel alloc]initWithFrame:CGRectMake(15, 180, 75, 30)];
-    updates.text = @" Updates ";
-    [updates sizeToFit];
-    [self createLabel:updates];
-
-    UILabel *Social = [[UILabel alloc]initWithFrame:CGRectMake(95, 180, 57, 30)];
-    Social.text = @" Social ";
-    [Social sizeToFit];
-    [self createLabel:Social];
-    
-    UILabel *Promotions = [[UILabel alloc]initWithFrame:CGRectMake(15, 210, 95, 30)];
-    Promotions.text = @" Promotions ";
-    [Promotions sizeToFit];
-    [self createLabel:Promotions];
-    
-    UILabel *forums =  [[UILabel alloc]initWithFrame:CGRectMake(157, 180, 95, 30)];
-    forums.text = @" Forums ";
-    [forums sizeToFit];
-    [self createLabel:forums];
-    
-    UITextView *text = [[UITextView alloc]initWithFrame:CGRectMake(10, 240, WIDTH, 75)];
-    text.text = @"You can review and modify category setting anytime from the left menu";
-    text.backgroundColor = [UIColor clearColor];
-    [text setTextColor:[UIColor whiteColor]];
-    text.font = [UIFont boldSystemFontOfSize:20];
-    text.userInteractionEnabled = NO;
-    [showWelcomeOverlay addSubview: text];
-
-    UITextView *text2 = [[UITextView alloc]initWithFrame:CGRectMake(10, 330, WIDTH, 70)];
-    text2.text = @"You can also access your non-primary emails in the left menu";
-    text2.backgroundColor = [UIColor clearColor];
-    [text2 setTextColor:[UIColor whiteColor]];
-    text2.font = [UIFont boldSystemFontOfSize:20];
-    text2.userInteractionEnabled = NO;
-    [showWelcomeOverlay addSubview: text2];
-    
-    [showWelcomeOverlay addSubview: thing];
-    [showWelcomeOverlay bringSubviewToFront:thing];
-    showWelcomeOverlay.backgroundColor = CLEAR_COLOR;
-    showWelcomeOverlay.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.78];
-    [self.window addSubview:showWelcomeOverlay];
-    [self.window bringSubviewToFront:showWelcomeOverlay];
+//    showWelcomeOverlay = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+//    showWelcomeOverlay.opaque = NO;
+//    showWelcomeOverlay.backgroundColor = CLEAR_COLOR;
+//    showWelcomeOverlay.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+//    NSString *htmlPath = [[NSBundle mainBundle] pathForResource:@"index" ofType:@"html"];
+//
+//    [showWelcomeOverlay  loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:htmlPath]]];
+//    [self.window addSubview:showWelcomeOverlay];
+//    [self.window bringSubviewToFront:showWelcomeOverlay];
 }
                           
 -(void)hideWelcomeOverlay{
-    [showWelcomeOverlay removeFromSuperview];
+//    [showWelcomeOverlay removeFromSuperview];
 }
 
 #pragma mark - applicationWillResignActive
