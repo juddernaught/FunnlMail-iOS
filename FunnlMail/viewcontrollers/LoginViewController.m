@@ -467,7 +467,7 @@ UIButton *loginButton;
            // [self getUserContact];
             
             [[NSUserDefaults standardUserDefaults] synchronize];
-            [EmailService instance].primaryMessages = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"PRIMARY"]];
+            [EmailService instance].primaryMessages = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey: ALL_FUNNL]];
             NSString *nextPageToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"PRIMARY_PAGE_TOKEN"];
             if(nextPageToken == nil || nextPageToken.length <= 0){
                 nextPageToken = @"";
@@ -519,7 +519,7 @@ UIButton *loginButton;
             }
             
             NSMutableArray *pArray = [[EmailService instance] primaryMessages];
-            [[NSUserDefaults standardUserDefaults] setObject:pArray forKey:@"PRIMARY"];
+            [[NSUserDefaults standardUserDefaults] setObject:pArray forKey: ALL_FUNNL];
             [[NSUserDefaults standardUserDefaults] setObject:nextPageToken forKey:@"PRIMARY_PAGE_TOKEN"];
             [[NSUserDefaults standardUserDefaults] synchronize];
             
@@ -529,6 +529,7 @@ UIButton *loginButton;
                 NSLog(@"----- Primary messages count > %d",pArray.count);
         }
     }];
+
 }
 
 -(void)loadHomeScreen {

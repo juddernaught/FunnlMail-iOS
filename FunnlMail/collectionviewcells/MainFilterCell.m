@@ -209,6 +209,12 @@
 -(void) setNewMessageCount:(NSInteger)newMessageCount{
   _newMessageCount = newMessageCount;
   messageCountLabel.text = [NSString stringWithFormat:@"%zd new", newMessageCount];
+    
+    // added by Chad
+    if ([_filterTitle isEqualToString: ALL_FUNNL]) {
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber: newMessageCount];
+    }
+    
 }
 
 /*

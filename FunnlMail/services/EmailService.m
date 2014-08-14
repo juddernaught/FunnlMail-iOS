@@ -710,7 +710,7 @@ static NSString *currentFolder;
             [self loadLastNMessages:-1 withTableController:emailsTableViewController withFolder:folderName withFetchRange:newFetchRange];
 
             NSMutableArray *pArray = [[EmailService instance] primaryMessages];
-            [[NSUserDefaults standardUserDefaults] setObject:pArray forKey:@"PRIMARY"];
+            [[NSUserDefaults standardUserDefaults] setObject:pArray forKey: ALL_FUNNL];
 //            [[NSUserDefaults standardUserDefaults] setObject:nextPageToken forKey:@"PRIMARY_PAGE_TOKEN"];
             [[NSUserDefaults standardUserDefaults] synchronize];
             

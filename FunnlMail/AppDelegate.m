@@ -27,7 +27,10 @@
 
 #pragma mark - didFinishLaunching
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
+{   //[[UIApplication sharedApplication] setApplicationIconBadgeNumber:99]; //added by Chad
+    
+
+    
     self.internetAvailable = YES;
     isAlreadyRequestedRefreshToken = NO;
     [Crashlytics startWithAPIKey:@"44e1f44afdbcda726d1a42fdbbd770dff98bca43"];
