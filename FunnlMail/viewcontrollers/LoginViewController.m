@@ -140,7 +140,7 @@ UIButton *loginButton;
     images = @[@"WHITEsliders1nobar.png", @"WHITEsliders2.png", @"WHITEsliders3.png", @"WHITEsliders4.png",@"WHITEsliders5.png"];
     PageContentVC *initialViewController = [self viewControllerAtIndex:0];
     NSArray *viewControllers = [NSArray arrayWithObject:initialViewController];
-//    self.pageController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 40);
+    self.pageController.view.frame = CGRectMake(0, 6, self.view.frame.size.width, self.view.frame.size.height); // Changed from (xx, 0 to 6, ...) by Chad
     [self.pageController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     [self addChildViewController:self.pageController];
     [[self view] addSubview:[self.pageController view]];
@@ -148,7 +148,7 @@ UIButton *loginButton;
     UIImage *loginImage = [UIImage imageNamed:@"getStarted"];
     loginButton = [[UIButton alloc] init];
     [loginButton setImage:loginImage forState:UIControlStateNormal];
-    loginButton.frame = CGRectMake(0, HEIGHT-50, 320, 40);
+    loginButton.frame = CGRectMake(0, HEIGHT-43, 320, 40); // Changed from (xx, 50 to 43, ...) by Chad
     [loginButton addTarget:self action:@selector(loginButtonSelected)forControlEvents:UIControlEventTouchUpInside];
     loginButton.hidden = YES;
     [self.pageController.view addSubview:loginButton];
@@ -162,7 +162,9 @@ UIButton *loginButton;
         [self refreshAccessToken];
     }
     else {
-        NSString *scope = @"https://mail.google.com/"; // scope for Gmail
+//        NSString *scope = @"https://mail.google.com/"; // scope for Gmail
+        NSString *scope = @"https://mail.google.com/ https://www.googleapis.com/auth/userinfo.profile https://www.google.com/m8/feeds"; // scope for Gmail
+
         GTMOAuth2ViewControllerTouch *viewController;
         viewController = [[GTMOAuth2ViewControllerTouch alloc] initWithScope:scope
                                                                     clientID:kMyClientID
@@ -316,7 +318,7 @@ UIButton *loginButton;
     NSString *path = [NSString stringWithFormat:@"https://api.context.io/lite/users/%@/email_accounts",accID];
     [appDelegate.contextIOAPIClient postPath:path params:params success:^(NSDictionary *responseDict) {
         NSLog(@"-----> %@",responseDict.description);
-        //[self performSelector:@selector(fetchContacts) withObject:nil afterDelay:20];
+        [self performSelector:@selector(fetchContacts) withObject:nil afterDelay:20];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"error getting contacts: %@", error);
     }];
@@ -462,7 +464,7 @@ UIButton *loginButton;
                 [self getContextIOWithEmail:currentEmail withFirstName:currentName withLastName:currentName];
             }
 
-            [self getUserContact];
+           // [self getUserContact];
             
             [[NSUserDefaults standardUserDefaults] synchronize];
             [EmailService instance].primaryMessages = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"PRIMARY"]];

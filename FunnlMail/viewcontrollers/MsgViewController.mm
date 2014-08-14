@@ -52,6 +52,8 @@
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor whiteColor]];
     [self setUpView];
+    AppDelegate *tempAppDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    tempAppDelegate.headerViewForMailDetailView = headerView;
 //    [self.view addSubview:headerView];
     UIView *seperator = [[UIView alloc] initWithFrame:CGRectMake(25, headerView.frame.origin.y + headerView.frame.size.height, WIDTH - 20, 0)];
     [seperator setBackgroundColor:[UIColor lightGrayColor]];
@@ -61,21 +63,29 @@
     subjectView.frame = CGRectMake(0, 0, WIDTH, subjectHeight + 20);
 //    [self.view addSubview:subjectView];
     
-    _messageView = [[MCOMessageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT-28)];
+    _messageView = [[MCOMessageView alloc] initWithFrame:CGRectMake(0, 64, WIDTH, HEIGHT-44)];
     _messageView.tempMessageModel = _message;
-    _messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-//    [self.view addSubview:_messageView];
-    
-//    NSLog(@"gmail Label: %@",[_message.gmailLabels description]);
-    
-    messageTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT-34)];
-//    [messageTableView setSeparatorColor:[UIColor clearColor]];
-    [messageTableView setScrollEnabled:YES];
+    _messageView.webView.opaque = YES;
+    _messageView.webView.backgroundColor = CLEAR_COLOR;
+    [self.view addSubview:_messageView];
+
+    messageTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, 2000)];
+    [messageTableView setScrollEnabled:NO];
     messageTableView.delegate = self;
     messageTableView.dataSource = self;
     messageTableView.tableFooterView = seperator;
-    [self.view addSubview:messageTableView];
+//    [self.view addSubview:messageTableView];
+//    [messageTableView setTableFooterView:_messageView];
     
+//    [_messageView setHeaderViewHeight:100];
+    [_messageView setHeaderViewHeight:headerView.frame.size.height];
+    UILabel *testHeaderview = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 320-30, 100)];
+    testHeaderview.text = @"This is not zoomable text, we don't have to zoom it at all.This is not zoomable text, we don't have to zoom it at all.This is not zoomable text, we don't have to zoom it at all.This is not zoomable text, we don't have to zoom it at all.";
+    testHeaderview.numberOfLines= 0;
+    
+//    [_messageView setHeaderView:testHeaderview];
+    [_messageView setHeaderView:headerView];
+
     UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, self.view.bounds.size.height-42, self.view.bounds.size.width, 42)];
     centeredButtons.backgroundColor = [UIColor colorWithHexString:@"FEFEFE"];
     //EBE6E9 spare color i was testing
@@ -133,8 +143,6 @@
     UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"backArrow.png"] style:UIBarButtonItemStylePlain target:self action:@selector(back)];
     [self.navigationItem setLeftBarButtonItem:leftButton];
     
-    AppDelegate *tempAppDelegate = APPDELEGATE;
-    
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
     [titleLabel setFont:[UIFont systemFontOfSize:22]];
     [titleLabel setTextColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR]];
@@ -151,11 +159,31 @@
 }
 
 -(void)updateWebView{
-    NSLog(@"----> %d",_messageView.height);
-    webViewHeight = MAX(HEIGHT-40, _messageView.height+60);
-    _messageView.webView.scrollView.alwaysBounceVertical = NO;
-    _messageView.webView.frame = CGRectMake(0, 0, _messageView.webView.frame.size.width, webViewHeight);
-    [messageTableView reloadData];
+    CGFloat contentHeight = _messageView.webView.scrollView.contentSize.height;
+    NSLog(@"----> %d %d",_messageView.height,contentHeight);
+
+    CGRect frame = _messageView.webView.frame;
+    frame.size.height = 1;
+    _messageView.webView.frame = frame;
+    CGSize fittingSize = [_messageView.webView sizeThatFits:CGSizeZero];
+    frame.size = fittingSize;
+    float wHeight = frame.size.height;
+    wHeight = MAX(wHeight, 500);
+    NSLog(@"size: %f, %f", fittingSize.width, fittingSize.height);
+    _messageView.webView.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, wHeight - 60);
+    _messageView.frame = CGRectMake(_messageView.frame.origin.x, _messageView.frame.origin.y, _messageView.frame.size.width, wHeight - 60);
+    NSLog(@"size: %f, %f", _messageView.webView.frame.size.width,  _messageView.webView.frame.size.height);
+    
+    
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        //webViewHeight = MAX(HEIGHT-40, _messageView.height+60);
+//        _messageView.webView.scrollView.alwaysBounceVertical = NO;
+//        _messageView.frame = CGRectMake(0, _messageView.frame.origin.y, _messageView.webView.frame.size.width, 2024);
+//        _messageView.webView.frame = CGRectMake(0, _messageView.webView.frame.origin.y, _messageView.webView.frame.size.width, 2000);
+////        [messageTableView setFrame:CGRectMake(0, 0, WIDTH, 1023)];
+//        
+//        [messageTableView reloadData];
+//    });
 }
 
 #pragma mark -
@@ -172,7 +200,7 @@
     [headerView addSubview:fromLabel];
     fromLabel = nil;
     
-    UIButton *fromValue = [[UIButton alloc] initWithFrame:CGRectMake(20 + 50, padding + 10, WIDTH - 20 - 50, 16)];
+    UIButton *fromValue = [[UIButton alloc] initWithFrame:CGRectMake(20 + 50 - 5, padding + 10, WIDTH - 20 - 50, 16)];
     [fromValue setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
     if (_message.header.sender.displayName) {
         [fromValue setTitle:_message.header.sender.displayName forState:UIControlStateNormal];
@@ -203,33 +231,44 @@
         ccLabel = nil;
         finalY = [self insertCCAddress:_message.header.cc withX:45 andY:finalY];
     }
+    UIView *seperator = [[UILabel alloc] initWithFrame:CGRectMake(20, finalY, 300, 0.5)];
+    [seperator setBackgroundColor:[UIColor lightGrayColor]];
+    [headerView addSubview:seperator];
+    seperator = nil;
+    
+    finalY = finalY + 5;
+    
     headerView.frame = CGRectMake(0, 0, WIDTH, finalY);
     headerHeight = finalY;
     int height = [self calculateSize:_message.header.subject];
     subjectHeight = height;
-    UILabel *subjectLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, 280, height + 5)]; // Added +5 to enable multi-line
+    UILabel *subjectLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, finalY, 280, height + 5)]; // Added +5 to enable multi-line
     [subjectLabel setFont:[UIFont boldSystemFontOfSize:16]];
     subjectLabel.lineBreakMode = NSLineBreakByWordWrapping;
     subjectLabel.numberOfLines = 0;
     subjectLabel.text = _message.header.subject;
     
+    [headerView addSubview:subjectLabel];
+    headerView.frame = CGRectMake(headerView.frame.origin.x, headerView.frame.origin.y, headerView.frame.size.width, headerView.frame.size.height + height + 30);
+    
     subjectView = [[UIView alloc] init];
-    [subjectView addSubview:subjectLabel];
+//    [subjectView addSubview:subjectLabel];
     subjectLabel = nil;
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"d MMMM yyyy h:mm a"]; //Changed by Chad
-    UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 10 + height + 3, 280, 15)];
+    UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, finalY + height + 3, 280, 15)];
     [dateLabel setFont:[UIFont systemFontOfSize:14]];
     [dateLabel setTextColor:[UIColor blackColor]];
     dateLabel.text = [dateFormatter stringFromDate:_message.header.date];
-    [subjectView addSubview:dateLabel];
+    [headerView addSubview:dateLabel];
+//    [subjectView addSubview:dateLabel];
     dateLabel = nil;
     
-//    UIView *seperator = [[UILabel alloc] initWithFrame:CGRectMake(20, 10 + height + 3 + 15 + 11, 300, 0.5)];
-//    [seperator setBackgroundColor:[UIColor lightGrayColor]];
-//    [subjectView addSubview:seperator];
-//    seperator = nil;
+    seperator = [[UILabel alloc] initWithFrame:CGRectMake(20, headerView.frame.size.height - 1, 300, 0.5)];
+    [seperator setBackgroundColor:[UIColor lightGrayColor]];
+    [headerView addSubview:seperator];
+    seperator = nil;
 }
 
 - (CGFloat)calculateSize:(NSString*)string
@@ -253,7 +292,7 @@
             y = y + 16 + 8;
             x = 20;
         }
-        UIButton *toValue = [[UIButton alloc] initWithFrame:CGRectMake(x, y, expectedLength, 16)];
+        UIButton *toValue = [[UIButton alloc] initWithFrame:CGRectMake(x+3, y, expectedLength, 16)];
         [toValue setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
         if (toString) {
             [toValue setTitle:[NSString stringWithFormat:@"%@",toString] forState:UIControlStateNormal];
@@ -323,7 +362,7 @@
 #pragma mark UITableViewDelegate & DataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 3;
+    return 2;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -334,8 +373,10 @@
     }
     else if (indexPath.row == 1)
         [cell.contentView addSubview:subjectView];
-    else
-        [cell.contentView addSubview:_messageView];
+    else{
+        
+    }
+        //[cell.contentView addSubview:_messageView];
     return cell;
 }
 

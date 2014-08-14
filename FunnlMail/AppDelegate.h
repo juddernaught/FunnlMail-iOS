@@ -33,6 +33,7 @@
 @property (strong, nonatomic) LoginViewController *loginViewController;
 @property (strong, nonatomic) CIOAPIClient *contextIOAPIClient;
 @property (assign, nonatomic) BOOL isAlreadyRequestedRefreshToken;
+@property (strong, nonatomic) UIView *headerViewForMailDetailView;
 @property BOOL funnelUpDated,internetAvailable;
 -(void)showWelcomeOverlay;
 -(void)hideWelcomeOverlay;
