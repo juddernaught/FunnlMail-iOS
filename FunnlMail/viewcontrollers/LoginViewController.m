@@ -162,7 +162,9 @@ UIButton *loginButton;
         [self refreshAccessToken];
     }
     else {
-        NSString *scope = @"https://mail.google.com/"; // scope for Gmail
+//        NSString *scope = @"https://mail.google.com/"; // scope for Gmail
+        NSString *scope = @"https://mail.google.com/ https://www.googleapis.com/auth/userinfo.profile https://www.google.com/m8/feeds"; // scope for Gmail
+
         GTMOAuth2ViewControllerTouch *viewController;
         viewController = [[GTMOAuth2ViewControllerTouch alloc] initWithScope:scope
                                                                     clientID:kMyClientID
@@ -316,7 +318,7 @@ UIButton *loginButton;
     NSString *path = [NSString stringWithFormat:@"https://api.context.io/lite/users/%@/email_accounts",accID];
     [appDelegate.contextIOAPIClient postPath:path params:params success:^(NSDictionary *responseDict) {
         NSLog(@"-----> %@",responseDict.description);
-        //[self performSelector:@selector(fetchContacts) withObject:nil afterDelay:20];
+        [self performSelector:@selector(fetchContacts) withObject:nil afterDelay:20];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"error getting contacts: %@", error);
     }];
@@ -462,7 +464,7 @@ UIButton *loginButton;
                 [self getContextIOWithEmail:currentEmail withFirstName:currentName withLastName:currentName];
             }
 
-            [self getUserContact];
+           // [self getUserContact];
             
             [[NSUserDefaults standardUserDefaults] synchronize];
             [EmailService instance].primaryMessages = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"PRIMARY"]];

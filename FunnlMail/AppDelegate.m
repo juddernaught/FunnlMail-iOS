@@ -22,7 +22,7 @@
 #define MIXPANEL_TOKEN @"08b1e55d72f1b22a8e5696c2b56a6777"
 
 @implementation AppDelegate
-@synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable,contextIOAPIClient,isAlreadyRequestedRefreshToken;
+@synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable,contextIOAPIClient,isAlreadyRequestedRefreshToken,headerViewForMailDetailView;
 
 
 #pragma mark - didFinishLaunching
@@ -81,7 +81,6 @@
     [contextIOAPIClient checkSSKeychainDataForNewInstall];
     if(contextIOAPIClient.isAuthorized){
         NSLog(@"---- ContextIO is Already authorized ----- accessToken: %@",contextIOAPIClient.description);
-//        [self.loginViewController performSelector:@selector(fetchContacts) withObject:nil afterDelay:0.1];
 //        [self.loginViewController performSelectorInBackground:@selector(fetchContacts) withObject:nil];
     }
     

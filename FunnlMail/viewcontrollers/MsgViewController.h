@@ -16,7 +16,7 @@
 @class MCOIMAPAsyncSession;
 @class MCOMAPMessage;
 
-@interface MsgViewController :  UIViewController <MFMailComposeViewControllerDelegate,UITableViewDataSource,UITableViewDelegate>{
+@interface MsgViewController :  UIViewController <MFMailComposeViewControllerDelegate,UITableViewDataSource,UITableViewDelegate,UIWebViewDelegate,UIScrollViewDelegate>{
     IBOutlet MCOMessageView * _messageView;
     NSMutableDictionary * _storage;
     NSMutableSet * _pending;
