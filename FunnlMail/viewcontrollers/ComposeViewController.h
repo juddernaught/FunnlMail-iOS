@@ -28,6 +28,7 @@
 @property (nonatomic) NSNumber * reply;
 @property (nonatomic) NSNumber * forward;
 @property (nonatomic) NSNumber * replyAll;
+@property (nonatomic) NSNumber * sendFeedback;
 @property (nonatomic) UITextView * body;
 @property (nonatomic) NSArray * addressArray;
 

@@ -13,6 +13,8 @@
 #import "SDWebImageDownloader.h"
 #import "UIImageView+WebCache.h"
 #import "FunnlAlertsVC.h"
+#import "ComposeViewController.h"
+#import "FAQVC.h"
 
 @interface MenuViewController ()
 
@@ -46,8 +48,8 @@
     [self.view addSubview:headerLine];
     
 //    [listView setBackgroundView:[[UIView alloc] init]];
-    listArray =[[NSMutableArray alloc] initWithObjects:@"Email Account",@"Edit Funnl Settings",@"Funnl Alerts", @"Share Funnls", @"Sent Mail", @"Archive",@"Drafts", @"Trash", @"Help",nil];
-    imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"settingListIcon",@"alertListIcon",@"shareListIcon",@"sentListIcon", @"archiveListIcon",@"archiveListIcon", @"trashListIcon",@"helpListIcon", nil];
+    listArray =[[NSMutableArray alloc] initWithObjects:@"Email Account",@"Edit Funnl Settings",@"Funnl Alerts", @"Share Funnls", @"Sent Mail", @"Archive",@"Drafts", @"Trash",@"Send Feedback",@"Help",nil];
+    imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"settingListIcon",@"alertListIcon",@"shareListIcon",@"sentListIcon", @"archiveListIcon",@"archiveListIcon", @"trashListIcon",@"emailListIcon",@"helpListIcon", nil];
     
     
 }
@@ -113,8 +115,12 @@
     AppDelegate *appDelegate = APPDELEGATE;
     MenuCell *cell = (MenuCell*)[tableView cellForRowAtIndexPath:indexPath];
     
-    
-    if ([cell.menuLabel.text isEqualToString:@"Funnl Alerts"]){
+    if([cell.menuLabel.text isEqualToString:@"Help"]){
+        FAQVC *faq = [[FAQVC alloc]init];
+        
+        [[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationController pushViewController:faq animated:NO];
+    }
+    else if ([cell.menuLabel.text isEqualToString:@"Funnl Alerts"]){
         FunnlAlertsVC *alerts = [[FunnlAlertsVC alloc]init];
         [alerts SetUp];
         [[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationController pushViewController:alerts animated:NO];
@@ -152,6 +158,18 @@
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Trash";
         [[EmailService instance] getDatabaseMessages:TRASH withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject];
         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:TRASH withFetchRange:MCORangeEmpty];
+    }
+    else if ([cell.menuLabel.text isEqualToString:@"Send Feedback"]){
+        NSLog(@"Send Feedback requested");
+        ComposeViewController *mc = [[ComposeViewController alloc] init];
+        mc.sendFeedback = @1;
+
+       
+        [appDelegate.drawerController closeDrawerAnimated:YES completion:^(BOOL finished) {
+            [[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationController pushViewController:mc animated:NO];
+        }];
+    
+    
     }
 
     [appDelegate.drawerController closeDrawerAnimated:YES completion:nil];

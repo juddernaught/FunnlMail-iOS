@@ -28,7 +28,7 @@
 #define accessTokenEndpoint @"https://accounts.google.com/o/oauth2/token"
 
 @interface LoginViewController (){
-    
+    NSNumber *didLoginIn;
 }
 
 @end
@@ -102,10 +102,10 @@ UIButton *loginButton;
 }
 
 
-
 #pragma mark - viewDidLoad
 - (void) viewDidLoad {
     [super viewDidLoad];
+    didLoginIn = 0;
     _receivedData = [[NSMutableData alloc] init];
     _isRefreshing = NO;
     
@@ -206,8 +206,8 @@ UIButton *loginButton;
     } else {
         [[Mixpanel sharedInstance] track:@"User Succesfully logged in"];
         
-        AppDelegate *appDeleage = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-        [appDeleage showWelcomeOverlay];
+        didLoginIn = @1;
+        
         
         NSString * email = [auth userEmail];
         NSString * accessToken = [auth accessToken];
@@ -250,6 +250,8 @@ UIButton *loginButton;
         // Authentication succeeded
 
         [self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
+        AppDelegate *appDeleage = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        [appDeleage showWelcomeOverlay];
     }
 }
 
@@ -443,10 +445,11 @@ UIButton *loginButton;
 
             [EmailService instance].userEmailID = currentEmail;
             [EmailService instance].userImageURL = currentUserImageURL;
+            [EmailService instance].currentName = currentName;
             if(![appDelegate.contextIOAPIClient isAuthorized]){
                 [self getContextIOWithEmail:currentEmail withFirstName:currentName withLastName:currentName];
             }
-
+            NSLog(@"what is currntNam: %@",[EmailService instance].currentName);
             [self getUserContact];
             
             [[NSUserDefaults standardUserDefaults] synchronize];
@@ -460,6 +463,8 @@ UIButton *loginButton;
             [appDelegate.menuController.listArray replaceObjectAtIndex:0 withObject:currentName];
             [appDelegate.menuController.imageArray replaceObjectAtIndex:0 withObject:[EmailService instance].userImageURL];
             [appDelegate.menuController.listView reloadData];
+            
+            
             
             NSLog(@"email: %@", currentEmail);
             [self getPrimaryMessages:currentEmail nextPageToken:nextPageToken numberOfMaxResult:100];
@@ -516,7 +521,7 @@ UIButton *loginButton;
 
 -(void)loadHomeScreen {
     [self getUserInfo];
-    
+
     mainViewController = [[MainVC alloc] init];
     UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:mainViewController];
     

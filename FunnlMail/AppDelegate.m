@@ -133,10 +133,14 @@
 #pragma mark - Welcome Overlay
 
 -(void)showWelcomeOverlay{
+    
     showWelcomeOverlay = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
     showWelcomeOverlay.opaque = NO;
+    
     UITextView *thing = [[UITextView alloc]initWithFrame:CGRectMake(10, 20, WIDTH, 70)];
-    thing.text = @"Welcome to your customized primary inbox!";
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    thing.text =[NSString stringWithFormat: @"Welcome %@, to your customized Primary inbox!",appDelegate.menuController.listArray.firstObject];
+    
     thing.backgroundColor = [UIColor clearColor];
     [thing setTextColor:[UIColor whiteColor]];
     thing.font = [UIFont boldSystemFontOfSize:24];
@@ -144,6 +148,7 @@
     
     UILabel *personal = [[UILabel alloc]initWithFrame:CGRectMake(15, 150, 75, 30)];
     personal.text = @" Personal ";
+    personal.font = [UIFont boldSystemFontOfSize:18];
     [personal sizeToFit];
     personal.textColor = [UIColor greenColor];
     personal.backgroundColor = [UIColor grayColor];
@@ -151,6 +156,7 @@
     
     UILabel *work = [[UILabel alloc]initWithFrame:CGRectMake(95, 150, 75, 30)];
     work.text = @" Work ";
+    work.font = [UIFont fontWithName:@"System" size:18];
     [work sizeToFit];
     work.textColor = [UIColor greenColor];
     work.backgroundColor = [UIColor grayColor];
@@ -158,25 +164,29 @@
     
     UILabel *updates = [[UILabel alloc]initWithFrame:CGRectMake(15, 180, 75, 30)];
     updates.text = @" Updates ";
+    updates.font = [UIFont boldSystemFontOfSize:18];
     [updates sizeToFit];
     [self createLabel:updates];
 
-    UILabel *Social = [[UILabel alloc]initWithFrame:CGRectMake(95, 180, 57, 30)];
+    UILabel *Social = [[UILabel alloc]initWithFrame:CGRectMake(100, 180, 57, 30)];
     Social.text = @" Social ";
+    Social.font = [UIFont boldSystemFontOfSize:18];
     [Social sizeToFit];
     [self createLabel:Social];
     
-    UILabel *Promotions = [[UILabel alloc]initWithFrame:CGRectMake(15, 210, 95, 30)];
+    UILabel *Promotions = [[UILabel alloc]initWithFrame:CGRectMake(30, 210, 95, 30)];
     Promotions.text = @" Promotions ";
+    Promotions.font = [UIFont boldSystemFontOfSize:18];
     [Promotions sizeToFit];
     [self createLabel:Promotions];
     
-    UILabel *forums =  [[UILabel alloc]initWithFrame:CGRectMake(157, 180, 95, 30)];
+    UILabel *forums =  [[UILabel alloc]initWithFrame:CGRectMake(165, 180, 95, 30)];
     forums.text = @" Forums ";
+    forums.font = [UIFont boldSystemFontOfSize:18];
     [forums sizeToFit];
     [self createLabel:forums];
     
-    UITextView *text = [[UITextView alloc]initWithFrame:CGRectMake(10, 240, WIDTH, 75)];
+    UITextView *text = [[UITextView alloc]initWithFrame:CGRectMake(10, 330, WIDTH-10, 75)];
     text.text = @"You can review and modify category setting anytime from the left menu";
     text.backgroundColor = [UIColor clearColor];
     [text setTextColor:[UIColor whiteColor]];
@@ -184,7 +194,7 @@
     text.userInteractionEnabled = NO;
     [showWelcomeOverlay addSubview: text];
 
-    UITextView *text2 = [[UITextView alloc]initWithFrame:CGRectMake(10, 330, WIDTH, 70)];
+    UITextView *text2 = [[UITextView alloc]initWithFrame:CGRectMake(10, 415, WIDTH-10, 70)];
     text2.text = @"You can also access your non-primary emails in the left menu";
     text2.backgroundColor = [UIColor clearColor];
     [text2 setTextColor:[UIColor whiteColor]];

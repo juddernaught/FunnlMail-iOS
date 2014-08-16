@@ -31,7 +31,7 @@
 @property (nonatomic, strong) NSMutableArray *sentMessages;
 @property (nonatomic, strong) NSMutableDictionary *sentMessagePreviews;
 @property (nonatomic, strong) NSMutableArray *primaryMessages;
-@property (nonatomic, strong) NSString *userEmailID,*userImageURL,*userName;
+@property (nonatomic, strong) NSString *userEmailID,*userImageURL,*userName,*currentName;
 @property (nonatomic, strong) EmailsTableViewController *emailsTableViewController;
 +(EmailService *)instance;
 +(NSArray *) getCurrentFilters;

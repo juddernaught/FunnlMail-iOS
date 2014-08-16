@@ -242,11 +242,17 @@ replacementString:(NSString *)string {
     MCOMessageBuilder * builder = [[MCOMessageBuilder alloc] init];
     [[builder header] setFrom:[MCOAddress addressWithDisplayName:nil mailbox:self.imapSession.username]];
     NSMutableArray *toArray = [[NSMutableArray alloc] init];
-    MCOAddress *newAddress = [MCOAddress addressWithMailbox:[toFieldView.tokenTitles componentsJoinedByString:@","]];
-    [toArray addObject:newAddress];
-    [[builder header] setTo:toArray];
+    if (self.sendFeedback) {
+        [toArray addObject:[MCOAddress addressWithMailbox:@"founders@funnlmail.com"]];
+    }
+    
+    else {
+        MCOAddress *newAddress = [MCOAddress addressWithMailbox:[toFieldView.tokenTitles componentsJoinedByString:@","]];
+        [toArray addObject:newAddress];
+        [[builder header] setTo:toArray];
+    }
     NSMutableArray *ccArray = [[NSMutableArray alloc] init];
-    newAddress = [MCOAddress addressWithMailbox:[ccFieldView.tokenTitles componentsJoinedByString:@","]];
+    MCOAddress *newAddress = [MCOAddress addressWithMailbox:[ccFieldView.tokenTitles componentsJoinedByString:@","]];
     [ccArray addObject:newAddress];
     [[builder header] setCc:ccArray];
     NSMutableArray *bccArray = [[NSMutableArray alloc] init];
@@ -396,8 +402,13 @@ replacementString:(NSString *)string {
         
         toFieldView.tokenField.text = temp;
     }
+    else if (self.sendFeedback){
+        NSLog(@"self.reply");
+        NSMutableString *temp = [[NSMutableString alloc] initWithString:@"Feedback for FunnlMail "];
+        subjectFieldView.tokenField.text = temp;
+    }
 
-    if (!self.compose) {
+    if (!self.compose && !self.sendFeedback) {
         NSString *htmlString = [self getBodyData];
         htmlString = [ htmlString stringByReplacingOccurrencesOfString:@"<body bgColor=\"transparent;\">" withString:@"<body bgColor=\"transparent;\"><br/><br/>"];
         
@@ -418,6 +429,7 @@ replacementString:(NSString *)string {
 //            [self textViewDidChange:messageView];
 //            [self resizeViews];
         }
+
         
 //Uncomment below line for the plain body reply/replyAll/forward body
 //        [self applyPlainBodyString
@@ -448,7 +460,8 @@ replacementString:(NSString *)string {
 	
 	// You can call this on either the view on the field.
 	// They both do the same thing.
-    [toFieldView becomeFirstResponder];
+    if(self.sendFeedback)[messageView becomeFirstResponder];
+    else [ccFieldView becomeFirstResponder];
 }
 
 
