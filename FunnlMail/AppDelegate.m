@@ -22,7 +22,7 @@
 #define MIXPANEL_TOKEN @"08b1e55d72f1b22a8e5696c2b56a6777"
 
 @implementation AppDelegate
-@synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable,contextIOAPIClient,isAlreadyRequestedRefreshToken,headerViewForMailDetailView;
+@synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable,contextIOAPIClient,isAlreadyRequestedRefreshToken;
 
 
 #pragma mark - didFinishLaunching
@@ -188,21 +188,21 @@
     [forums sizeToFit];
     [self createLabel:forums];
     
-    UITextView *text = [[UITextView alloc]initWithFrame:CGRectMake(10, 330, WIDTH-10, 75)];
-    text.text = @"You can review and modify category setting anytime from the left menu";
+    UITextView *text = [[UITextView alloc]initWithFrame:CGRectMake(10, 330, WIDTH-10, 90)];
+    text.text = @"You can access your non-primary emails and modify category setting anytime from the top menu";
     text.backgroundColor = [UIColor clearColor];
     [text setTextColor:[UIColor whiteColor]];
     text.font = [UIFont boldSystemFontOfSize:20];
     text.userInteractionEnabled = NO;
     [showWelcomeOverlay addSubview: text];
 
-    UITextView *text2 = [[UITextView alloc]initWithFrame:CGRectMake(10, 415, WIDTH-10, 70)];
-    text2.text = @"You can also access your non-primary emails in the left menu";
+    UITextView *text2 = [[UITextView alloc]initWithFrame:CGRectMake(10, 415, WIDTH-10, 90)];
+    text2.text = @"You can also access your non-primary emails in the top menu";
     text2.backgroundColor = [UIColor clearColor];
     [text2 setTextColor:[UIColor whiteColor]];
     text2.font = [UIFont boldSystemFontOfSize:20];
     text2.userInteractionEnabled = NO;
-    [showWelcomeOverlay addSubview: text2];
+    //[showWelcomeOverlay addSubview: text2];
     
     [showWelcomeOverlay addSubview: thing];
     [showWelcomeOverlay bringSubviewToFront:thing];
@@ -213,7 +213,7 @@
 }
                           
 -(void)hideWelcomeOverlay{
-//    [showWelcomeOverlay removeFromSuperview];
+    [showWelcomeOverlay removeFromSuperview];
 }
 
 #pragma mark - applicationWillResignActive

@@ -83,10 +83,11 @@ UIView *greyView;
     self.ClearTable = 0;
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
-    greyView = [[UIView alloc] initWithFrame:CGRectMake(0, 104, self.view.bounds.size.width, self.view.bounds.size.height)];
+    greyView = [[UIView alloc] initWithFrame:CGRectMake(0, 144, self.view.bounds.size.width, self.view.bounds.size.height)];
     greyView.hidden = YES;
     [greyView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.78]];
     [self.view addSubview:greyView];
+    [self.view bringSubviewToFront:greyView];
 
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
@@ -1155,6 +1156,8 @@ UIView *greyView;
     NSArray *scopeButtonTitles = @[@"All Mail",@"Current Funnl"];
     [searchBar setScopeButtonTitles:scopeButtonTitles];
     self.tableView.tableHeaderView = searchBar;
+    [self.view bringSubviewToFront: greyView];
+    greyView.hidden = NO;
     return YES;
 }
 
@@ -1167,6 +1170,7 @@ UIView *greyView;
     NSArray *scopeButtonTitles = nil;
     [searchBar setScopeButtonTitles:scopeButtonTitles];
     self.tableView.tableHeaderView = searchBar;
+    greyView.hidden = YES;
     return YES;
 }
 

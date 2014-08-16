@@ -67,7 +67,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     {
          NSLog(@"do we get here tho: %@", self.parentViewController);
          NSLog(@"what is emailFolder in mainvc: %@",emailsTableViewController.emailFolder);
-         [self setTitle: app.currentFunnelString];
+         //[self setTitle: app.currentFunnelString];
     }
 }
 
@@ -271,6 +271,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     {
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:filterModel.funnelId top:2000];
     }
+    //self.navigationController.navigationBar.tintColor =  filterModel.barColor;
     [self setFilterTitle:filterModel.funnelName];
     [emailsTableViewController.tableView reloadData];
     

@@ -185,7 +185,10 @@ UIButton *loginButton;
 
 - (void) loginButtonSelected {
     [self setDrawerControllerOnWindow];
-//    [self oauthLogin];
+    didLoginIn = @1;
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    if(didLoginIn)[appDelegate showWelcomeOverlay];
+    //[self oauthLogin];
 }
 
 
@@ -267,8 +270,7 @@ UIButton *loginButton;
         // Authentication succeeded
         [self createDemoPageViewController];
         [self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
-        AppDelegate *appDeleage = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-        [appDeleage showWelcomeOverlay];
+        
     }
 }
 
@@ -480,7 +482,6 @@ UIButton *loginButton;
             [appDelegate.menuController.listArray replaceObjectAtIndex:0 withObject:currentName];
             [appDelegate.menuController.imageArray replaceObjectAtIndex:0 withObject:[EmailService instance].userImageURL];
             [appDelegate.menuController.listView reloadData];
-            
             
             
             NSLog(@"email: %@", currentEmail);
