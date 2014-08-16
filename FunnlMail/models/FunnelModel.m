@@ -19,6 +19,7 @@
     self.filterTitle = filterTitle;
     self.newMessageCount = newMessageCount;
     self.dateOfLastMessage = dateOfLastMessage;
+      
   }
   return self;
 }

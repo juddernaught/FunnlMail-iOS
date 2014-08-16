@@ -1590,7 +1590,7 @@
 				ORGANIZATIONNAME = FunnlMail;
 				TargetAttributes = {
 					66F2C46518E3293E00CD593E = {
-						DevelopmentTeam = 4724LVRTFE;
+						DevelopmentTeam = Y42SDJ5F7J;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -2113,8 +2113,8 @@
 				BUNDLE_ID_SUFFIX = .debug;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Daniel Judd (PL7ET6U94G)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Daniel Judd (PL7ET6U94G)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -2169,8 +2169,8 @@
 				BUNDLE_ID_SUFFIX = "";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Renee Migdal (4724LVRTFE)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Renee Migdal (4724LVRTFE)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -2200,7 +2200,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "B09BCEE0-8ECB-4ABD-AA6A-89D815E0E57D";
+				PROVISIONING_PROFILE = "2525EC94-C5CF-4A18-84B4-9F32F201B525";
 				SDKROOT = iphoneos7.1;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;

@@ -558,7 +558,7 @@ UIView *greyView;
                         cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
                     }
                 }
-                
+                                
                 if([(MessageModel*)searchMessages[indexPath.row] numberOfEmailInThread] > 1){
                     cell.threadLabel.text = [NSString stringWithFormat:@"%d",[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread]];
                     [cell.threadLabel setHidden:NO];
