@@ -129,7 +129,7 @@
     
     label.backgroundColor = [UIColor grayColor];
     label.textColor = [UIColor redColor];
-    [showWelcomeOverlay addSubview:label];
+    //[showWelcomeOverlay addSubview:label];
 }
 
 #pragma mark - Welcome Overlay
@@ -148,13 +148,17 @@
     thing.font = [UIFont boldSystemFontOfSize:24];
     thing.userInteractionEnabled = NO;
     
+    UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"welcome.png"]];
+    imageView.frame = CGRectMake(0, 100, WIDTH, HEIGHT-90);
+    [showWelcomeOverlay addSubview:imageView];
+    
     UILabel *personal = [[UILabel alloc]initWithFrame:CGRectMake(15, 150, 75, 30)];
     personal.text = @" Personal ";
     personal.font = [UIFont boldSystemFontOfSize:18];
     [personal sizeToFit];
     personal.textColor = [UIColor greenColor];
     personal.backgroundColor = [UIColor grayColor];
-    [showWelcomeOverlay addSubview:personal];
+    //[showWelcomeOverlay addSubview:personal];
     
     UILabel *work = [[UILabel alloc]initWithFrame:CGRectMake(95, 150, 75, 30)];
     work.text = @" Work ";
@@ -194,7 +198,7 @@
     [text setTextColor:[UIColor whiteColor]];
     text.font = [UIFont boldSystemFontOfSize:20];
     text.userInteractionEnabled = NO;
-    [showWelcomeOverlay addSubview: text];
+    //[showWelcomeOverlay addSubview: text];
 
     UITextView *text2 = [[UITextView alloc]initWithFrame:CGRectMake(10, 415, WIDTH-10, 90)];
     text2.text = @"You can also access your non-primary emails in the top menu";

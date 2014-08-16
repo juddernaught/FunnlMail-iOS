@@ -61,6 +61,7 @@
 		B751C88F1940FDFF0051DF0B /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B751C88E1940FDFF0051DF0B /* MessageUI.framework */; };
 		B75F56A6197F056F00518743 /* FunnlMail VIP logo.png in Resources */ = {isa = PBXBuildFile; fileRef = B75F56A5197F056F00518743 /* FunnlMail VIP logo.png */; };
 		B7701DC41985F58C001CA2DC /* mail2.png in Resources */ = {isa = PBXBuildFile; fileRef = B7701DC31985F58C001CA2DC /* mail2.png */; };
+		B79AFED019A0174A00725A8D /* welcome.png in Resources */ = {isa = PBXBuildFile; fileRef = B79AFECF19A0174A00725A8D /* welcome.png */; };
 		B79F9FCC1998860E00AEF9B2 /* FunnlAlertsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B79F9FCB1998860E00AEF9B2 /* FunnlAlertsVC.m */; };
 		B7C940E0198D6F49008468E7 /* WHITEsliders1nobar.png in Resources */ = {isa = PBXBuildFile; fileRef = B7C940DB198D6F49008468E7 /* WHITEsliders1nobar.png */; };
 		B7C940E1198D6F49008468E7 /* WHITEsliders2.png in Resources */ = {isa = PBXBuildFile; fileRef = B7C940DC198D6F49008468E7 /* WHITEsliders2.png */; };
@@ -414,6 +415,7 @@
 		B751C88E1940FDFF0051DF0B /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		B75F56A5197F056F00518743 /* FunnlMail VIP logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "FunnlMail VIP logo.png"; sourceTree = "<group>"; };
 		B7701DC31985F58C001CA2DC /* mail2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mail2.png; sourceTree = "<group>"; };
+		B79AFECF19A0174A00725A8D /* welcome.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = welcome.png; sourceTree = "<group>"; };
 		B79F9FCA1998860E00AEF9B2 /* FunnlAlertsVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FunnlAlertsVC.h; sourceTree = "<group>"; };
 		B79F9FCB1998860E00AEF9B2 /* FunnlAlertsVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FunnlAlertsVC.m; sourceTree = "<group>"; };
 		B7C940DB198D6F49008468E7 /* WHITEsliders1nobar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = WHITEsliders1nobar.png; sourceTree = "<group>"; };
@@ -954,6 +956,7 @@
 		B7C940D6198D6F36008468E7 /* DemoSlides */ = {
 			isa = PBXGroup;
 			children = (
+				B79AFECF19A0174A00725A8D /* welcome.png */,
 				B7C940DB198D6F49008468E7 /* WHITEsliders1nobar.png */,
 				B7C940DC198D6F49008468E7 /* WHITEsliders2.png */,
 				B7C940DD198D6F49008468E7 /* WHITEsliders3.png */,
@@ -1753,6 +1756,7 @@
 				FABAF09D1976507E00AA7918 /* shareListIcon.png in Resources */,
 				FABAF0781976507E00AA7918 /* Email 4.png in Resources */,
 				FABAF0801976507E00AA7918 /* Social.png in Resources */,
+				B79AFED019A0174A00725A8D /* welcome.png in Resources */,
 				FA11B2DC199908D200B4EA86 /* popoverArrowLeft.png in Resources */,
 				FA11B2E7199908D200B4EA86 /* popoverBg-white@2x.png in Resources */,
 				FA11B2D7199908D200B4EA86 /* popoverArrowDown-white@2x.png in Resources */,
