@@ -289,6 +289,7 @@ UIButton *loginButton;
                 [currentInstallation setChannels:@[]];
             }
             [currentInstallation addUniqueObject:[NSString stringWithFormat:@"account_id_%@", contextIO_account_id] forKey:@"channels"];
+            NSArray *channels = [currentInstallation channels];
             [currentInstallation saveInBackground];
             appDelegate.contextIOAPIClient = [[CIOAPIClient alloc] initWithConsumerKey:kContextIOConsumerKey consumerSecret:kContextIOConsumerSecret token:contextIO_access_token tokenSecret:contextIO_access_token_secret accountID:contextIO_account_id];
             [appDelegate.contextIOAPIClient  saveCredentials];
