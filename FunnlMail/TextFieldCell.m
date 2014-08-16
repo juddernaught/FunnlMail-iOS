@@ -31,6 +31,7 @@
     if (self) {
         // Initialization code
         textField = [[UITextField alloc] init];
+        textField.textColor = WHITE_CLR;
         switchButton = [[UISwitch alloc] init];
         addButton = [UIButton buttonWithType:UIButtonTypeCustom];
         addButton.frame = CGRectMake(0, 0, 25.f, 25.f);
@@ -42,6 +43,7 @@
         [self addSubview:textField];
         [self addSubview:thumbnailImageView];
         [self addSubview:tapButton];
+        
     }
     return self;
 }

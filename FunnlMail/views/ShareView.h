@@ -15,13 +15,16 @@
 @class MCOIMAPAsyncSession;
 @class MCOMAPMessage;
 
-@interface ShareView : UIView <UIGestureRecognizerDelegate,TITokenFieldDelegate>
+@interface ShareView : UIView <UIGestureRecognizerDelegate,TITokenFieldDelegate,UITableViewDataSource,UITableViewDelegate,UITextViewDelegate>
 {
     TITokenFieldView * toFieldView;
     FunnelModel *funnelModel;
     CGFloat _keyboardHeight;
     UITextView *_messageView;
-
+    UITableView *autocompleteTableView;
+    NSData * rfc822Data;
+    NSString *msgBody;
+    NSMutableArray *emailArr,*searchArray;
 }
 @property (weak) id<MainVCDelegate> mainVCdelegate;
 

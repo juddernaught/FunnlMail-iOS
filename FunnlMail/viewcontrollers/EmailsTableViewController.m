@@ -530,6 +530,14 @@ UIView *greyView;
                 else
                     cell.dateLabel.text = [message.header.date timeAgo];
                 
+                
+                cell.funnlLabel1.text = @"";
+                cell.funnlLabel2.text = @"";
+                cell.funnlLabel3.text = @"";
+                cell.funnlLabel1.backgroundColor = CLEAR_COLOR;
+                cell.funnlLabel2.backgroundColor = CLEAR_COLOR;
+                cell.funnlLabel3.backgroundColor = CLEAR_COLOR;
+                
                 if ([(MessageModel*)searchMessages[indexPath.row] numberOfEmailInThread] > 1) {
                     if ([self isThreadRead:[NSString stringWithFormat:@"%llul",message.gmailThreadID]]) {
                         cell.readLabel.backgroundColor = [UIColor clearColor];
@@ -550,7 +558,7 @@ UIView *greyView;
                         cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
                     }
                 }
-                
+                                
                 if([(MessageModel*)searchMessages[indexPath.row] numberOfEmailInThread] > 1){
                     cell.threadLabel.text = [NSString stringWithFormat:@"%d",[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread]];
                     [cell.threadLabel setHidden:NO];

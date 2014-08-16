@@ -12,17 +12,33 @@
 
 @protocol MCOMessageViewDelegate;
 
-@interface MCOMessageView : UIView <UIWebViewDelegate>
+@interface MCOMessageView : UIView <UIWebViewDelegate,UIScrollViewDelegate>
 
 @property (nonatomic, copy) NSString * folder;
 @property (nonatomic, strong) MCOAbstractMessage * message;
 
 @property (nonatomic, assign) id <MCOMessageViewDelegate> delegate;
-@property (nonatomic, strong) UIWebView *webView;
+//@property (nonatomic, strong) UIWebView *webView;
 @property (nonatomic, assign) int height;
 @property (nonatomic, assign) BOOL prefetchIMAPImagesEnabled;
 @property (nonatomic, assign) BOOL prefetchIMAPAttachmentsEnabled;
 @property (nonatomic, strong) MCOIMAPMessage *tempMessageModel;
+
+
+@property(nonatomic,readonly) UIWebView* webView;
+@property(nonatomic,strong) UIView *headerView;
+@property(nonatomic,strong) UIView *footerView;
+@property(nonatomic,assign) float headerViewHeight;
+@property(nonatomic,assign) float footerViewHeight;
+@property(nonatomic,assign) id<UIWebViewDelegate> webViewDelegate;
+@property(nonatomic,strong) UIScrollView* webScrollView;
+@property(nonatomic,assign) id<UIScrollViewDelegate> oldScrollViewDelegate;
+@property(nonatomic,assign) float actualContentHeight;
+@property(nonatomic,assign) float actualContentWidth;
+@property(nonatomic,assign) BOOL shouldScrollToTopOnLayout;
+
+-(void) setHeaderView:(UIView *)view;
+-(void) setFooterView:(UIView *)view;
 @end
 
 @protocol MCOMessageViewDelegate <NSObject>

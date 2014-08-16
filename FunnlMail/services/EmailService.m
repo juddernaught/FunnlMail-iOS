@@ -303,7 +303,7 @@ static NSString *currentFolder;
     
 	MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)
 	(MCOIMAPMessagesRequestKindUid | MCOIMAPMessagesRequestKindHeaders | MCOIMAPMessagesRequestKindStructure |
-	 MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject | MCOIMAPMessagesRequestKindGmailThreadID | MCOIMAPMessagesRequestKindGmailMessageID |	 MCOIMAPMessagesRequestKindFlags);
+	 MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject | MCOIMAPMessagesRequestKindGmailThreadID | MCOIMAPMessagesRequestKindGmailMessageID |	 MCOIMAPMessagesRequestKindFlags | MCOIMAPMessagesRequestKindGmailLabels);
 	
     MCOIMAPFolderInfoOperation *FolderInfo;
     NSArray *dbBoolArray = [[NSArray alloc]initWithObjects:@"-1",nil];
@@ -454,7 +454,7 @@ static NSString *currentFolder;
                           else if([folderName isEqualToString:DRAFTS]) tempMessageModel.categoryName = DRAFTS;
                           else tempMessageModel.categoryName = @"";
                           //NSLog(@"uid: %u modseqValue: %llu ",m.uid,m.modSeqValue);
-                          
+                          //NSLog(@"gmailLabels: %@",m.gmailLabels.description);
                           
                           
                           for (FunnelModel *tempFunnelModel in funnels)
@@ -710,7 +710,7 @@ static NSString *currentFolder;
             [self loadLastNMessages:-1 withTableController:emailsTableViewController withFolder:folderName withFetchRange:newFetchRange];
 
             NSMutableArray *pArray = [[EmailService instance] primaryMessages];
-            [[NSUserDefaults standardUserDefaults] setObject:pArray forKey:@"PRIMARY"];
+            [[NSUserDefaults standardUserDefaults] setObject:pArray forKey: ALL_FUNNL];
 //            [[NSUserDefaults standardUserDefaults] setObject:nextPageToken forKey:@"PRIMARY_PAGE_TOKEN"];
             [[NSUserDefaults standardUserDefaults] synchronize];
             

@@ -24,6 +24,7 @@
 #import "UIImageView+WebCache.h"
 #import "SDWebImageDownloader.h"
 
+
 @interface CreateFunnlViewController ()<CIOAuthViewController>
 {
 }
@@ -79,6 +80,7 @@ NSMutableArray *emailArr,*searchArray;
         [Tableview setDataSource:self];
         [Tableview setDelegate:self];
         [self.view addSubview:Tableview];
+        [Tableview setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.5]];
         
         if(isEdit){
             UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(10, 0, 300, 60)];
@@ -109,20 +111,21 @@ NSMutableArray *emailArr,*searchArray;
     areNotificationsEnabled = oldModel.notificationsFlag;
     randomColors = GRADIENT_ARRAY;
     self.title = @"Create Funnl";
-    [self.view setBackgroundColor:[UIColor whiteColor]];
+//    [self.view setBackgroundColor:[UIColor whiteColor]];
+    [self.view setBackgroundColor:[UIColor colorWithWhite:0.6 alpha:0.4]];
+
     [self initBarbuttonItem];
     
     [self emailContact];
     
     autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 300, self.view.bounds.size.width, 180)];
-    [autocompleteTableView registerClass:[UITableViewCell class]
-                  forCellReuseIdentifier:@"UITableViewCell"];
+    [autocompleteTableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"UITableViewCell"];
     autocompleteTableView.delegate = self;
     autocompleteTableView.dataSource = self;
     autocompleteTableView.scrollEnabled = YES;
     autocompleteTableView.hidden = YES;
     autocompleteTableView.tag = 1;
-   // [self.view addSubview:autocompleteTableView];
+    [self.view addSubview:autocompleteTableView];
     
     
     
@@ -156,43 +159,81 @@ NSMutableArray *emailArr,*searchArray;
     }
 }
 
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    UILabel *sectionHeader = [[UILabel alloc] initWithFrame:CGRectZero];
+    sectionHeader.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    sectionHeader.textAlignment = NSTextAlignmentLeft;
+    NSString *sectionTitle = @"";
+    if(tableView.tag == 1){
+        sectionTitle = @"";
+    }
+    if(section==0){
+        sectionTitle =  @"Name:";
+    }
+    else if(section == 1){
+        sectionTitle =  @"Conversation With:";
+    }
+    else if(section == 2){
+        sectionTitle =  @"Subject (Optional):";
+    }
+    else if(section == 3){
+        sectionTitle =  [NSString stringWithFormat:@"Skip %@:",ALL_FUNNL];
+    } else {
+        sectionTitle = @"Enable Notifications:";
+    }
+    sectionHeader.font = [UIFont boldSystemFontOfSize:20];
+    sectionHeader.textColor = [UIColor whiteColor];
+    sectionHeader.backgroundColor = CLEAR_COLOR;
+    sectionHeader.text = [NSString stringWithFormat:@"  %@",sectionTitle];
+    return sectionHeader;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    if(tableView == Tableview){
+        return 40;
+    }
+    return  0;
+}
+
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     if(tableView.tag == 1)
         return 1;
     return 5;
 }
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;  {
-    if(tableView.tag == 1){
-        return nil;
-    }
-    if(section==0){
-        return @"Name:";
-    }
-    else if(section == 1){
-        return @"Conversation With:";
-    }
-    else if(section == 2){
-        return @"Subject (Optional):";
-    }
-    else if(section == 3){
-        return [NSString stringWithFormat:@"Skip %@:",ALL_FUNNL];
-    } else {
-        return @"Enable Notifications:";
-    }
-}
+//- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;  {
+//    if(tableView.tag == 1){
+//        return nil;
+//    }
+//    if(section==0){
+//        return @"Name:";
+//    }
+//    else if(section == 1){
+//        return @"Conversation With:";
+//    }
+//    else if(section == 2){
+//        return @"Subject (Optional):";
+//    }
+//    else if(section == 3){
+//        return [NSString stringWithFormat:@"Skip %@:",ALL_FUNNL];
+//    } else {
+//        return @"Enable Notifications:";
+//    }
+//}
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if(tableView == autocompleteTableView){
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCell" forIndexPath:indexPath];
-        cell.textLabel.text = [searchArray objectAtIndex:indexPath.row];
+        if(indexPath.row <= searchArray.count){
+            cell.textLabel.text = [searchArray objectAtIndex:indexPath.row];
+        }
         return cell;
     } else {
         TextFieldCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TextFieldCell" forIndexPath:indexPath];
         //Resetting the reused Cell first and then updating it with new data below that
         [cell.thumbnailImageView setImage:[UIImage imageNamed:@"userimage-placeholder.png"]];
-        
+        cell.backgroundColor = CLEAR_COLOR;
         [cell setIsSwitchVisibleMode:NO];
         cell.textField.delegate = self;
         cell.textField.tag = indexPath.section;
@@ -200,11 +241,12 @@ NSMutableArray *emailArr,*searchArray;
         cell.textField.placeholder = @"";
         cell.textLabel.text = @"";
         cell.switchButton.on = NO;
-        [cell.addButton setImage:[UIImage imageNamed:@"addIcon.png"] forState:UIControlStateNormal];
+        [cell.addButton setImage:[UIImage imageNamed:@"addIcon_white.png"] forState:UIControlStateNormal];
         cell.addButton.tag = indexPath.row;
         cell.switchButton.tag = indexPath.section;
         //resetting cell finshes, set new data from here
-        
+        UIColor *color = [UIColor lightGrayColor];
+
         switch (indexPath.section) {
             case 0:
             {
@@ -212,6 +254,7 @@ NSMutableArray *emailArr,*searchArray;
                 cell.textField.frame = CGRectMake(10, 2, 250, 40);
                 [cell.addButton setHidden:YES];
                 cell.textField.placeholder = @"Enter name";
+                cell.textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Enter name" attributes:@{NSForegroundColorAttributeName: color}];
                 [cell.textField setText:funnlName];
                 //newly added on 11th Aug
                 [cell.thumbnailImageView setHidden:YES];
@@ -228,7 +271,8 @@ NSMutableArray *emailArr,*searchArray;
                 [cell.addButton addTarget:self action:@selector(addButtonPressedForConversation:) forControlEvents:UIControlEventTouchUpInside];
                 
                 cell.textField.placeholder = @"Enter Email ID";
-                
+                cell.textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Enter Email ID" attributes:@{NSForegroundColorAttributeName: color}];
+
                 if(indexPath.row != dictionaryOfConversations.allKeys.count && dictionaryOfConversations.allKeys.count > 0){
                     NSMutableArray *array = [[ContactService instance] retrieveContactWithEmail:[dictionaryOfConversations objectForKey:indexPath]];
                     
@@ -261,10 +305,8 @@ NSMutableArray *emailArr,*searchArray;
                     
                     array = nil;
                     
-                    [cell.addButton setImage:[UIImage imageNamed:@"close.png"]
-                                    forState:UIControlStateNormal];
-                    [cell.addButton addTarget:self
-                                       action:@selector(cancelButtonPressedForConversation:) forControlEvents:UIControlEventTouchUpInside];
+                    [cell.addButton setImage:[UIImage imageNamed:@"close.png"] forState:UIControlStateNormal];
+                    [cell.addButton addTarget:self action:@selector(cancelButtonPressedForConversation:) forControlEvents:UIControlEventTouchUpInside];
                     [cell.thumbnailImageView setHidden:NO];
                     [cell.textField setUserInteractionEnabled:NO];
                 }
@@ -286,13 +328,12 @@ NSMutableArray *emailArr,*searchArray;
                 [cell.addButton addTarget:self action:@selector(addButtonPressedForSubject:) forControlEvents:UIControlEventTouchUpInside];
                 
                 cell.textField.placeholder = @"Enter Subject";
-                
+                cell.textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Enter Subject" attributes:@{NSForegroundColorAttributeName: color}];
+
                 if(indexPath.row != dictionaryOfSubjects.allKeys.count && dictionaryOfSubjects.allKeys.count > 0){
                     cell.textField.text = [dictionaryOfSubjects objectForKey:indexPath];
-                    [cell.addButton setImage:[UIImage imageNamed:@"close.png"]
-                                    forState:UIControlStateNormal];
-                    [cell.addButton addTarget:self
-                                       action:@selector(cancelButtonPressedForSubject:) forControlEvents:UIControlEventTouchUpInside];
+                    [cell.addButton setImage:[UIImage imageNamed:@"close.png"] forState:UIControlStateNormal];
+                    [cell.addButton addTarget:self action:@selector(cancelButtonPressedForSubject:) forControlEvents:UIControlEventTouchUpInside];
                 }
             }
                 break;
@@ -302,6 +343,7 @@ NSMutableArray *emailArr,*searchArray;
                 [cell.thumbnailImageView setHidden:YES];
                 [cell setIsSwitchVisibleMode:YES];
                 cell.textLabel.text = [NSString stringWithFormat:@"Skip %@",ALL_FUNNL];
+                cell.textLabel.textColor = WHITE_CLR;
                 [cell.switchButton setOn:isSkipAll];
                 [cell.switchButton addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
             }
@@ -312,6 +354,7 @@ NSMutableArray *emailArr,*searchArray;
                 [cell.thumbnailImageView setHidden:YES];
                 [cell setIsSwitchVisibleMode:YES];
                 cell.textLabel.text = [NSString stringWithFormat:@"Enable Notifications"];
+                cell.textLabel.textColor = WHITE_CLR;
                 [cell.switchButton setOn:areNotificationsEnabled];
                 [cell.switchButton addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
             }
@@ -408,7 +451,8 @@ NSMutableArray *emailArr,*searchArray;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if(tableView.tag == 1) return 60;
+    if(tableView.tag == 1)
+        return 40;
     return 44;
 }
 
@@ -416,15 +460,24 @@ NSMutableArray *emailArr,*searchArray;
 {
     [self dismissPopUp];
     if(tableView.tag == 1){
-//        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-//        NSString *temp = cell.textLabel.text;
-//        NSLog(@"description: %ld",(long)cell.textLabel.text);
-//        cell = [Tableview cellForRowAtIndexPath: [NSIndexPath indexPathForRow:0 inSection:1]];
-//        cell.textLabel.text = temp;
-//        NSLog(@"description2: %@",cell);
-//        temp = nil;
-//        [tableView deselectRowAtIndexPath:indexPath animated:NO];
-//        autocompleteTableView.hidden = YES;
+        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        NSString *temp = cell.textLabel.text;
+        NSLog(@"description: %ld",(long)cell.textLabel.text);
+        cell = [Tableview cellForRowAtIndexPath: [NSIndexPath indexPathForRow:0 inSection:1]];
+        cell.textLabel.text = temp;
+        if(activeField){
+            activeField.text  = temp;
+            [activeField resignFirstResponder];
+            CGPoint textFieldOrigin = [Tableview convertPoint:activeField.bounds.origin fromView:activeField];
+            NSIndexPath *indexPath = [Tableview indexPathForRowAtPoint:textFieldOrigin];
+            if(activeField.text.length)
+                [dictionaryOfConversations setObject:[activeField.text lowercaseString] forKey:indexPath];
+            [Tableview reloadData];
+        }
+        NSLog(@"description2: %@",cell);
+        temp = nil;
+        [tableView deselectRowAtIndexPath:indexPath animated:NO];
+        autocompleteTableView.hidden = YES;
         
     }
     else{
@@ -866,6 +919,7 @@ NSMutableArray *emailArr,*searchArray;
     [self.mainVCdelegate filterSelected:model];
     model = nil;
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    //[[CIOExampleAPIClient sharedClient] clearCredentials];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -892,8 +946,8 @@ NSMutableArray *emailArr,*searchArray;
     //creation of webhooks
     for (NSString *sender in senders) {
         NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-        [params setObject:sender forKey:@"filter-from"];
-        [params setObject:@"0" forKey:@"sync_period"];
+        [params setObject:sender forKey:@"filter_from"];
+        //[params setObject:@"0" forKey:@"sync_period"];
         if ([subjects count]) {
             for (NSString *subject in subjects) {
                 [params setObject:subject forKey:@"filter_subject"];
@@ -1033,33 +1087,39 @@ NSMutableArray *emailArr,*searchArray;
     [self.presentedViewController dismissViewControllerAnimated:YES completion:NULL];
 }
 
-
 - (void)searchAutocompleteEntriesWithSubstring:(NSString *)substring {
-    
     // Put anything that starts with this substring into the searchArray
     // The items in this array is what will show up in the table view
     [searchArray removeAllObjects];
-    emailArr = [[NSMutableArray alloc] initWithArray:[[ContactService instance] searchContactsWithString:substring]];
-    for(NSMutableString *curString in emailArr) {
-        
-        substring = [substring stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        
-        if ([curString rangeOfString:substring].location == 0) {
-            [searchArray addObject:curString];
+    if(substring.length){
+        emailArr = [[NSMutableArray alloc] initWithArray:[[ContactService instance] searchContactsWithString:substring]];
+        for(NSMutableString *curString in emailArr) {
+            substring = [substring stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            if ([curString rangeOfString:substring].location == 0) {
+                [searchArray addObject:curString];
+            }
         }
-        
     }
-    [autocompleteTableView reloadData];
+    if(searchArray.count <= 0){
+        autocompleteTableView.hidden = YES;
+    }
+    else{
+        autocompleteTableView.hidden = NO;
+        //dispatch_async(dispatch_get_main_queue(), ^{
+            [autocompleteTableView reloadData];
+        //});
+    }
 }
 
 #pragma mark - TextField delegate
+
+
+
 - (BOOL)textFieldShouldClear:(UITextField *)textField{
     return YES;
 }
 
-- (BOOL)textField:(UITextField *)textField
-shouldChangeCharactersInRange:(NSRange)range
-replacementString:(NSString *)string {
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     if (textField.tag != 1) return YES;
     [self.view bringSubviewToFront:autocompleteTableView];
     NSString *substring = [NSString stringWithString:textField.text];
@@ -1081,6 +1141,14 @@ CGRect temp;//this is necessary to reset view
         NSLog(@"this is the height: %f",height);
         //temp = self.view.frame;
         //self.view.frame = CGRectMake(0, -height, 480, self.view.bounds.size.height+height);
+        TextFieldCell *cell = [(TextFieldCell*)[textField superview] superview];
+        NSIndexPath *indexPath = [Tableview indexPathForCell:cell];
+        CGRect myRect = [Tableview rectForRowAtIndexPath:indexPath];
+        //myRect = [Tableview convertRect:cell.frame toView:self.view];
+        [Tableview scrollRectToVisible:CGRectMake(Tableview.frame.origin.x, myRect.origin.y-120, 1, 1) animated:YES];
+    
+
+        Tableview.scrollEnabled = NO;
     }
     return YES;
 }
@@ -1091,6 +1159,7 @@ CGRect temp;//this is necessary to reset view
         funnlName = textField.text;
     }
     else if(textField.tag == 1){
+        Tableview.scrollEnabled = YES;
         NSLog(@"is ending");
         autocompleteTableView.hidden = YES;
         CGPoint textFieldOrigin = [Tableview convertPoint:textField.bounds.origin fromView:textField];
@@ -1126,6 +1195,10 @@ CGRect temp;//this is necessary to reset view
         [Tableview setContentInset:edgeInsets];
         [Tableview setScrollIndicatorInsets:edgeInsets];
     }];
+    CGRect keyboardRect = [[[sender userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+	_keyboardHeight = keyboardRect.size.height > keyboardRect.size.width ? keyboardRect.size.width : keyboardRect.size.height;
+    autocompleteTableView.frame = CGRectMake(autocompleteTableView.frame.origin.x,_keyboardHeight-150,autocompleteTableView.frame.size.width,155.0);
+
 }
 
 - (void)keyboardWillHide:(NSNotification *)sender
@@ -1136,6 +1209,7 @@ CGRect temp;//this is necessary to reset view
         [Tableview setContentInset:edgeInsets];
         [Tableview setScrollIndicatorInsets:edgeInsets];
     }];
+    _keyboardHeight = 0;
 }
 
 #pragma mark - didReceiveMemoryWarning

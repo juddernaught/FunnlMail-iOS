@@ -9,10 +9,6 @@
 #import "MCOIMAPMessage.h"
 
 #include "MCIMAP.h"
-#include "MCIMAPMessage.h"
-#include "MCJSONParser.h"
-#import "NSString+MCO.h"
-
 
 #import "MCOAbstractMessage+Private.h"
 #import "MCOUtils.h"
@@ -20,13 +16,6 @@
 #import "MCOHTMLRendererDelegate.h"
 #import "MCOHTMLRendererIMAPDelegate.h"
 
-@interface MCOIMAPMessage () {
-
-    mailcore::IMAPMessage * msg;
-}
-
-
-@end
 @implementation MCOIMAPMessage
 
 #define nativeType mailcore::IMAPMessage
@@ -38,11 +27,11 @@
 
 - (id) init
 {
-    msg = new mailcore::IMAPMessage();
+    mailcore::IMAPMessage * msg = new mailcore::IMAPMessage();
     self = [self initWithMCMessage:msg];
     msg->release();
     return self;
-} 
+}
 
 + (NSObject *) mco_objectWithMCObject:(mailcore::Object *)object
 {
@@ -65,7 +54,6 @@ MCO_OBJC_SYNTHESIZE_SCALAR(uint64_t, uint64_t, setGmailMessageID, gmailMessageID
 
 - (MCOAbstractPart *) partForPartID:(NSString *)partID
 {
-    
     return MCO_TO_OBJC(MCO_NATIVE_INSTANCE->partForPartID([partID mco_mcString]));
 }
 

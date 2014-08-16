@@ -21,11 +21,9 @@
 #import "AppDelegate.h"
 #import "TITokenField.h"
 #import <AddressBook/AddressBook.h>
+#import "ContactService.h"
 
-NSData * rfc822Data;
-NSString *msgBody;
-NSMutableArray *emailArr,*searchArray;
-UITableView *autocompleteTableView;
+
 
 @implementation ShareView
 
@@ -43,6 +41,7 @@ UITableView *autocompleteTableView;
 }
 
 
+#pragma mark - createFieldViewWithFrame functions
 
 -(TITokenFieldView*)createFieldViewWithFrame:(CGRect)frame{
     NSLog(@"what is frame: %f",frame.origin.y);
@@ -63,6 +62,7 @@ UITableView *autocompleteTableView;
     return tokenFieldView;
 }
 
+#pragma mark - setupView / viewDidLoad
 
 -(void)setupView{
     
@@ -139,7 +139,6 @@ UITableView *autocompleteTableView;
     autocompleteTableView.dataSource = self;
     autocompleteTableView.scrollEnabled = YES;
     autocompleteTableView.hidden = YES;
-    
     [self addSubview:autocompleteTableView];
     
     [self emailContact];
@@ -164,6 +163,7 @@ UITableView *autocompleteTableView;
     [self setHidden:YES];
 }
 
+#pragma mark - shareFunnlClicked functions
 -(void)shareFunnlClicked:(id)sender{
     [toFieldView.tokenField resignFirstResponder];
     MCOMessageBuilder * builder = [[MCOMessageBuilder alloc] init];
@@ -245,6 +245,7 @@ UITableView *autocompleteTableView;
     }];
 }
 
+#pragma mark - keyboard functions
 
 - (void)keyboardWillShow:(NSNotification *)notification {
 	
@@ -266,6 +267,8 @@ UITableView *autocompleteTableView;
     
 }
 
+#pragma mark - TITokenField delegate
+
 - (BOOL)tokenField:(TITokenField *)tokenField willAddToken:(TIToken *)token;{
     return YES;
 }
@@ -286,6 +289,38 @@ UITableView *autocompleteTableView;
     //	[self textViewDidChange:messageView];
     [self resizeViews];
 }
+
+
+- (void)tokenField:(TITokenField *)field performCustomSearchForSearchString:(NSString *)searchString withCompletionHandler:(void (^)(NSArray *))completionHandler
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        //Send a Github API request to retrieve the Contributors of this project.
+        //Using a syncrhonous request in a Background Thread to not over-complexify the demo project
+        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:@"https://api.github.com/repos/thermogl/TITokenField/contributors"]];
+        NSURLResponse * response = nil;
+        NSError * error = nil;
+        NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest returningResponse:&response error:&error];
+        
+        NSMutableArray *results = [[NSMutableArray alloc] init];
+        
+        if (error == nil) {
+            NSError *errorJSON;
+            NSArray *contributors = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&errorJSON];
+            
+            for (NSDictionary *user in contributors) {
+                [results addObject:[user objectForKey:@"login"]];
+            }
+        }
+        
+        
+        dispatch_async(dispatch_get_main_queue(), ^(void) {
+            //Finally call the completionHandler with the results array!
+            completionHandler(results);
+        });
+    });
+}
+
+#pragma mark - TextView delegate
 
 - (void)textViewDidChange:(UITextView *)textView {
 	
@@ -323,14 +358,13 @@ replacementString:(NSString *)string {
     NSLog(@"what is count: %lu",(unsigned long)searchArray.count);
     if(searchArray.count != 0){
         CGFloat temp = toFieldView.tokenField.frame.size.height+121;
-        autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, temp, 320, 180)];
-        autocompleteTableView.delegate = self;
-        autocompleteTableView.dataSource = self;
+        autocompleteTableView.frame = CGRectMake(autocompleteTableView.frame.origin.x, temp, autocompleteTableView.frame.size.width, autocompleteTableView.frame.size.height);
         autocompleteTableView.scrollEnabled = YES;
         autocompleteTableView.hidden = NO;
-        [self addSubview:autocompleteTableView];
+        //[self addSubview:autocompleteTableView];
     }
-    else autocompleteTableView.hidden = YES;
+    else
+        autocompleteTableView.hidden = YES;
     return YES;
 }
 
@@ -355,16 +389,27 @@ replacementString:(NSString *)string {
     // Put anything that starts with this substring into the searchArray
     // The items in this array is what will show up in the table view
     [searchArray removeAllObjects];
-    for(NSMutableString *curString in emailArr) {
-        
-        substring = [substring stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        
-        if ([curString rangeOfString:substring].location == 0) {
-            [searchArray addObject:curString];
+    if(substring.length){
+        emailArr = [[NSMutableArray alloc] initWithArray:[[ContactService instance] searchContactsWithString:substring]];
+        for(NSMutableString *curString in emailArr) {
+            
+            substring = [substring stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            
+            if ([curString rangeOfString:substring].location == 0) {
+                [searchArray addObject:curString];
+            }
+            
         }
-        
     }
-    [autocompleteTableView reloadData];
+    if(searchArray.count <= 0){
+        autocompleteTableView.hidden = YES;
+    }
+    else{
+        autocompleteTableView.hidden = NO;
+//        dispatch_async(dispatch_get_main_queue(), ^{
+            [autocompleteTableView reloadData];
+//        });
+    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -393,7 +438,9 @@ replacementString:(NSString *)string {
                 initWithStyle:UITableViewCellStyleDefault reuseIdentifier:AutoCompleteRowIdentifier];
     }
     
-    cell.textLabel.text = [searchArray objectAtIndex:indexPath.row];
+    if(indexPath.row <= searchArray.count){
+        cell.textLabel.text = [searchArray objectAtIndex:indexPath.row];
+    }
     return cell;
 }
 

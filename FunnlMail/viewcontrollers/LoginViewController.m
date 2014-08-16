@@ -112,42 +112,7 @@ UIButton *loginButton;
     //AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     blockerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
     blockerView.backgroundColor = [UIColor redColor];
-    
-    NSArray *allServers = [[EmailServersService instance] allEmailServers];
-    if (!([allServers count] == 0 || [((EmailServerModel *)[allServers objectAtIndex:0]).refreshToken isEqualToString:@"nil"])) {
-        [self refreshAccessToken];
-        [self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
-    }
-    else {
-        
-        self.view.backgroundColor = [UIColor colorWithHexString:@"F6F6F6"];
-        
-        //adding demo page
-        
-        self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
-        
-        self.pageController.dataSource = self;
-        
-        images = @[@"WHITEsliders1nobar.png", @"WHITEsliders2.png", @"WHITEsliders3.png", @"WHITEsliders4.png",@"WHITEsliders5.png"];
-        
-        PageContentVC *initialViewController = [self viewControllerAtIndex:0];
-        
-        NSArray *viewControllers = [NSArray arrayWithObject:initialViewController];
-        self.pageController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 40);
-        [self.pageController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-        [self addChildViewController:self.pageController];
-        [[self view] addSubview:[self.pageController view]];
-        [self.pageController didMoveToParentViewController:self];
-
-        UIImage *loginImage = [UIImage imageNamed:@"getStarted"];
-        loginButton = [[UIButton alloc] init];
-        [loginButton setImage:loginImage forState:UIControlStateNormal];
-        loginButton.frame = CGRectMake(0, HEIGHT-50, 320, 40);
-        [loginButton addTarget:self action:@selector(loginButtonSelected)forControlEvents:UIControlEventTouchUpInside];
-        loginButton.hidden = YES;
-        [self.view addSubview:loginButton];
-
-    }
+    [self checkCredentialsandShowLoginScreen];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -167,8 +132,60 @@ UIButton *loginButton;
 }
 
 
+-(void) createDemoPageViewController
+{
+    self.view.backgroundColor = [UIColor colorWithHexString:@"F6F6F6"];
+    self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
+    self.pageController.dataSource = self;
+    images = @[@"WHITEsliders1nobar.png", @"WHITEsliders2.png", @"WHITEsliders3.png", @"WHITEsliders4.png",@"WHITEsliders5.png"];
+    PageContentVC *initialViewController = [self viewControllerAtIndex:0];
+    NSArray *viewControllers = [NSArray arrayWithObject:initialViewController];
+    self.pageController.view.frame = CGRectMake(0, 6, self.view.frame.size.width, self.view.frame.size.height); // Changed from (xx, 0 to 6, ...) by Chad
+    [self.pageController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+    [self addChildViewController:self.pageController];
+    [[self view] addSubview:[self.pageController view]];
+    [self.pageController didMoveToParentViewController:self];
+    UIImage *loginImage = [UIImage imageNamed:@"getStarted"];
+    loginButton = [[UIButton alloc] init];
+    [loginButton setImage:loginImage forState:UIControlStateNormal];
+    loginButton.frame = CGRectMake(0, HEIGHT-43, 320, 40); // Changed from (xx, 50 to 43, ...) by Chad
+    [loginButton addTarget:self action:@selector(loginButtonSelected)forControlEvents:UIControlEventTouchUpInside];
+    loginButton.hidden = YES;
+    [self.pageController.view addSubview:loginButton];
+}
+
+-(void) checkCredentialsandShowLoginScreen
+{
+    NSArray *allServers = [[EmailServersService instance] allEmailServers];
+    if (!([allServers count] == 0 || [((EmailServerModel *)[allServers objectAtIndex:0]).refreshToken isEqualToString:@"nil"])) {
+        
+        [self refreshAccessToken];
+    }
+    else {
+//        NSString *scope = @"https://mail.google.com/"; // scope for Gmail
+        NSString *scope = @"https://mail.google.com/ https://www.googleapis.com/auth/userinfo.profile https://www.google.com/m8/feeds"; // scope for Gmail
+
+        GTMOAuth2ViewControllerTouch *viewController;
+        viewController = [[GTMOAuth2ViewControllerTouch alloc] initWithScope:scope
+                                                                    clientID:kMyClientID
+                                                                clientSecret:kMyClientSecret
+                                                            keychainItemName:kKeychainItemName
+                                                                    delegate:self
+                                                            finishedSelector:@selector(viewController:finishedWithAuth:error:)];
+        [self addChildViewController:viewController];
+        [self.view addSubview:viewController.view];
+    }
+}
+
+-(void) setDrawerControllerOnWindow
+{
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate.window setRootViewController:appDelegate.drawerController];
+}
+
 - (void) loginButtonSelected {
-    [self oauthLogin];
+    [self setDrawerControllerOnWindow];
+//    [self oauthLogin];
 }
 
 
@@ -241,14 +258,14 @@ UIButton *loginButton;
         smtpSession.connectionType = MCOConnectionTypeTLS;
         [EmailService instance].smtpSession = smtpSession;
 
-        AppDelegate *tempAppDelegate = APPDELEGATE;
-        [tempAppDelegate.progressHUD show:YES];
-        [tempAppDelegate.window addSubview:tempAppDelegate.progressHUD];
-        [tempAppDelegate.window bringSubviewToFront:tempAppDelegate.progressHUD];
-        [tempAppDelegate.progressHUD setHidden:NO];
+//        AppDelegate *tempAppDelegate = APPDELEGATE;
+//        [tempAppDelegate.progressHUD show:YES];
+//        [tempAppDelegate.window addSubview:tempAppDelegate.progressHUD];
+//        [tempAppDelegate.window bringSubviewToFront:tempAppDelegate.progressHUD];
+//        [tempAppDelegate.progressHUD setHidden:NO];
 
         // Authentication succeeded
-
+        [self createDemoPageViewController];
         [self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
         AppDelegate *appDeleage = (AppDelegate*)[[UIApplication sharedApplication] delegate];
         [appDeleage showWelcomeOverlay];
@@ -264,7 +281,7 @@ UIButton *loginButton;
         [params setObject:firstName forKey:@"first_name"];
         [params setObject:lastName forKey:@"last_name"];
         
-        [appDelegate.contextIOAPIClient postPath:@"accounts" params:params success:^(NSDictionary *responseDict) {
+        [appDelegate.contextIOAPIClient postPath:@"lite/users" params:params success:^(NSDictionary *responseDict) {
             NSLog(@"----- %@",responseDict.description);
             NSString *contextIO_access_token = [responseDict objectForKey:@"access_token"];
             NSString *contextIO_access_token_secret = [responseDict objectForKey:@"access_token_secret"];
@@ -280,7 +297,7 @@ UIButton *loginButton;
             
             //fetching contacts
             [self getUserContact];
-//            [self addToSourceWithAccountID:contextIO_account_id];
+            [self addToSourceWithAccountID:contextIO_account_id];
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"error getting contacts: %@", error);
@@ -300,10 +317,10 @@ UIButton *loginButton;
     [params setObject:self.emailServerModel.accessToken forKey:@"provider_token"];
     [params setObject:kMyClientID forKey:@"provider_consumer_key"];
     [params setObject:kMyClientSecret forKey:@"provider_token_secret"];
-    NSString *path = [NSString stringWithFormat:@"https://api.context.io/2.0/accounts/%@/sources",accID];
+    NSString *path = [NSString stringWithFormat:@"https://api.context.io/lite/users/%@/email_accounts",accID];
     [appDelegate.contextIOAPIClient postPath:path params:params success:^(NSDictionary *responseDict) {
         NSLog(@"-----> %@",responseDict.description);
-        //[self performSelector:@selector(fetchContacts) withObject:nil afterDelay:20];
+        [self performSelector:@selector(fetchContacts) withObject:nil afterDelay:20];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"error getting contacts: %@", error);
     }];
@@ -453,7 +470,7 @@ UIButton *loginButton;
             [self getUserContact];
             
             [[NSUserDefaults standardUserDefaults] synchronize];
-            [EmailService instance].primaryMessages = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"PRIMARY"]];
+            [EmailService instance].primaryMessages = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey: ALL_FUNNL]];
             NSString *nextPageToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"PRIMARY_PAGE_TOKEN"];
             if(nextPageToken == nil || nextPageToken.length <= 0){
                 nextPageToken = @"";
@@ -507,7 +524,7 @@ UIButton *loginButton;
             }
             
             NSMutableArray *pArray = [[EmailService instance] primaryMessages];
-            [[NSUserDefaults standardUserDefaults] setObject:pArray forKey:@"PRIMARY"];
+            [[NSUserDefaults standardUserDefaults] setObject:pArray forKey: ALL_FUNNL];
             [[NSUserDefaults standardUserDefaults] setObject:nextPageToken forKey:@"PRIMARY_PAGE_TOKEN"];
             [[NSUserDefaults standardUserDefaults] synchronize];
             
@@ -517,6 +534,7 @@ UIButton *loginButton;
                 NSLog(@"----- Primary messages count > %d",pArray.count);
         }
     }];
+
 }
 
 -(void)loadHomeScreen {
@@ -537,11 +555,16 @@ UIButton *loginButton;
     [appDelegate.drawerController setOpenDrawerGestureModeMask:MMOpenDrawerGestureModeAll];
     [appDelegate.drawerController setCloseDrawerGestureModeMask:MMCloseDrawerGestureModeAll];
     
-    [self.navigationController presentViewController:appDelegate.drawerController animated:NO completion:nil];
-    AppDelegate *tempAppDelegate = APPDELEGATE;
-    [tempAppDelegate.progressHUD show:NO];
-    [tempAppDelegate.progressHUD setHidden:YES];
-
+    //expilictly calling the view to start the background loading emails
+    [appDelegate.drawerController view];
+    [mainViewController view];
+    [appDelegate.menuController view];
+    
+//    [self.navigationController presentViewController:appDelegate.drawerController animated:NO completion:nil];
+//    AppDelegate *tempAppDelegate = APPDELEGATE;
+//    [tempAppDelegate.progressHUD show:NO];
+//    [tempAppDelegate.progressHUD setHidden:YES];
+    
 
 }
 
@@ -638,7 +661,9 @@ UIButton *loginButton;
 
 
 //    [[EmailService instance] checkMailsAtStart:self.mainViewController.emailsTableViewController]
-//    //[self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
+//    [self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
+    [self loadHomeScreen];
+    [self setDrawerControllerOnWindow];
 
 }
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {

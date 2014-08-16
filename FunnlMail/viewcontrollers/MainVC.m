@@ -165,28 +165,20 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [centeredButtons addSubview:composeEmailButton];
     
     emailsTableViewController.emailFolder = INBOX;
-    if(emailsTableViewController==nil){
-        emailsTableViewController = [[EmailsTableViewController alloc]init];
+//    if(emailsTableViewController==nil){
+//        emailsTableViewController = [[EmailsTableViewController alloc]init];
         emailsTableViewController.mainVCdelegate = self;
         [self addChildViewController:emailsTableViewController];
         [self.view insertSubview:emailsTableViewController.view atIndex:0];
         
-    }
-    
-    self.emailsTableViewController.mainVCdelegate = self;
-    [self addChildViewController:emailsTableViewController];
-    [self.view insertSubview:emailsTableViewController.view atIndex:0];
-    
-    [emailsTableViewController.view mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view.mas_top).with.offset(0);
-        make.left.equalTo(self.view.mas_left).with.offset(0);
-        make.right.equalTo(self.view.mas_right).with.offset(0);
-        make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
-    }];
-    [[EmailService instance] startLogin:self.emailsTableViewController];
-    
-    
-    
+        [emailsTableViewController.view mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.view.mas_top).with.offset(0);
+            make.left.equalTo(self.view.mas_left).with.offset(0);
+            make.right.equalTo(self.view.mas_right).with.offset(0);
+            make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
+        }];
+        [[EmailService instance] startLogin:emailsTableViewController];
+//    }
 }
 
 

@@ -200,6 +200,8 @@ NSString *msgBody;
     cell.filterTitle = ADD_FUNNL;
     cell.newMessageCount = 0;
     cell.dateOfLastMessage = 0;
+      
+    
   }
   else{
     cell = (MainFilterCell *)[collectionView dequeueReusableCellWithReuseIdentifier:MAIN_FILTER_CELL forIndexPath:indexPath];
@@ -215,6 +217,7 @@ NSString *msgBody;
     [cell.shareButton addTarget:self action:@selector(shareButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     cell.notificationButton.tag = indexPath.row;
     //[cell.notificationButton addTarget:self action:@selector(notificationButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+      
       if (editOn) {
           if([fm.funnelName.lowercaseString isEqualToString:[ALL_FUNNL lowercaseString]] || [fm.funnelName.lowercaseString isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]){
               [cell.notificationButton setHidden:YES];
@@ -240,6 +243,7 @@ NSString *msgBody;
       }
   }
   cell.contentView.backgroundColor = [UIColor whiteColor];
+    
   return cell;
 }
 

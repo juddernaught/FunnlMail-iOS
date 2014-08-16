@@ -12,6 +12,8 @@
 #import "MainVC.h"
 #import "SDWebImageDownloader.h"
 #import "UIImageView+WebCache.h"
+#import "LoginViewController.h"
+#import "EmailServersService.h"
 #import "FunnlAlertsVC.h"
 #import "ComposeViewController.h"
 #import "FAQVC.h"
@@ -158,6 +160,14 @@
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Trash";
         [[EmailService instance] getDatabaseMessages:TRASH withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject];
         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:TRASH withFetchRange:MCORangeEmpty];
+    } else if (indexPath.row == 8){
+        [[MessageService instance] deleteMessageWithGmailMessageID:[EmailService instance].userEmailID];
+        [[EmailServersService instance] deleteEmailServer:[EmailService instance].userEmailID];
+        LoginViewController *loginViewController = [[LoginViewController alloc]init];
+        loginViewController.view.backgroundColor = [UIColor clearColor];
+        appDelegate.window.backgroundColor = [UIColor whiteColor];
+        UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:loginViewController];
+        [appDelegate.window setRootViewController:nav];
     }
     else if ([cell.menuLabel.text isEqualToString:@"Send Feedback"]){
         NSLog(@"Send Feedback requested");

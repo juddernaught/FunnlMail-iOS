@@ -48,6 +48,7 @@ body {\
   word-wrap: break-word;\
   -webkit-text-size-adjust:none;\
   -webkit-nbsp-mode: space;\
+  padding: 10px;\
 }\
 \
 pre {\
@@ -76,16 +77,28 @@ pre {\
 @synthesize webView = _webView;
 @synthesize height;
 
+
+@synthesize headerView,footerViewHeight,headerViewHeight,footerView,actualContentHeight,actualContentWidth,shouldScrollToTopOnLayout,webScrollView,oldScrollViewDelegate,webViewDelegate;
+
+
 - (id)initWithFrame:(CGRect)frame
 {
     NSLog(@"THIS HAPPENED");
     self = [super initWithFrame:frame];
     
-    _webView = [[UIWebView alloc] initWithFrame:[self bounds]];
-    _webView.scrollView.bounces = NO;
-    [_webView setAutoresizingMask:(UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth)];
+    // defaults
+    self.headerViewHeight = 0;
+    self.footerViewHeight = 0;
+    
+    // create webview
+    _webView = [[UIWebView alloc] initWithFrame:frame];
+//    _webView.scrollView.bounces = NO;
+//    [_webView setAutoresizingMask:(UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth)];
     [_webView setDelegate:self];
+    _webView.scrollView.delegate = self;
     [self addSubview:_webView];
+    self.webView.scalesPageToFit = YES;
+
     
     return self;
 }
@@ -125,7 +138,7 @@ pre {\
             
         if (![string isEqualToString:EMPTY_DELIMITER] && string && ![string isEqualToString:@""]) {
             NSMutableString * html = [NSMutableString string];
-            [html appendFormat:@"<html><head><script>%@</script><style>%@</style></head>"
+            [html appendFormat:@"<html><head><script>%@</script><style>%@</style><meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=3\"></head>"
              @"<body>%@</body><iframe src='x-mailcore-msgviewloaded:' style='width: 0px; height: 0px; border: none;'>"
              @"</iframe></html>", mainJavascript, mainStyle, string];
             [_webView loadHTMLString:html baseURL:nil];
@@ -148,16 +161,9 @@ pre {\
                     }
                 }
                 paramDict[uidKey] = content;
-                [[MessageService instance] updateMessageWithHTMLContent:paramDict];
-                NSMutableString * html = [NSMutableString string];
-                [html appendFormat:@"<html><head><script>%@</script><style>%@</style></head>"
-                 @"<body>%@</body><iframe src='x-mailcore-msgviewloaded:' style='width: 0px; height: 0px; border: none;'>"
-                 @"</iframe></html>", mainJavascript, mainStyle, content];
-                
-                [_webView loadHTMLString:html baseURL:nil];
             }
             else
-                [_webView loadHTMLString:@"" baseURL:nil];
+                [_webView loadHTMLString:@"Content not found 1" baseURL:nil];
         }
         else if ([_message isKindOfClass:[MCOMessageBuilder class]]) {
             content = [(MCOMessageBuilder *) _message htmlRenderingWithDelegate:self];
@@ -166,17 +172,9 @@ pre {\
                 if (tempArray.count > 1) {
                     content = [tempArray objectAtIndex:1];
                 }
-                paramDict[uidKey] = content;
-                [[MessageService instance] updateMessageWithHTMLContent:paramDict];
-                NSMutableString * html = [NSMutableString string];
-                [html appendFormat:@"<html><head><script>%@</script><style>%@</style></head>"
-                 @"<body>%@</body><iframe src='x-mailcore-msgviewloaded:' style='width: 0px; height: 0px; border: none;'>"
-                 @"</iframe></html>", mainJavascript, mainStyle, content];
-                
-                [_webView loadHTMLString:html baseURL:nil];
             }
             else
-                [_webView loadHTMLString:@"" baseURL:nil];
+                [_webView loadHTMLString:@"Content not found 2" baseURL:nil];
         }
         else if ([_message isKindOfClass:[MCOMessageParser class]]) {
             content = [(MCOMessageParser *) _message htmlRenderingWithDelegate:self];
@@ -185,14 +183,6 @@ pre {\
                 if (tempArray.count > 1) {
                     content = [tempArray objectAtIndex:1];
                 }
-                paramDict[uidKey] = content;
-                [[MessageService instance] updateMessageWithHTMLContent:paramDict];
-                NSMutableString * html = [NSMutableString string];
-                [html appendFormat:@"<html><head><script>%@</script><style>%@</style></head>"
-                 @"<body>%@</body><iframe src='x-mailcore-msgviewloaded:' style='width: 0px; height: 0px; border: none;'>"
-                 @"</iframe></html>", mainJavascript, mainStyle, content];
-                
-                [_webView loadHTMLString:html baseURL:nil];
             }
             else
                 [_webView loadHTMLString:@"" baseURL:nil];
@@ -201,11 +191,21 @@ pre {\
             content = nil;
             MCAssert(0);
         }
+        
+        if(content) {
+            paramDict[uidKey] = content;
+            [[MessageService instance] updateMessageWithHTMLContent:paramDict];
+            NSMutableString * html = [NSMutableString string];
+            [html appendFormat:@"<html><head><script>%@</script><style>%@</style><meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=3\"></head>"
+             @"<body>%@</body><iframe src='x-mailcore-msgviewloaded:' style='width: 0px; height: 0px; border: none;'>"
+             @"</iframe></html>", mainJavascript, mainStyle, content];
+            
+            [_webView loadHTMLString:html baseURL:nil];
+        }
+        else{
+            [_webView loadHTMLString:@"" baseURL:nil];
+        }
     }
-//	if (content == nil) {
-//		[_webView loadHTMLString:@"" baseURL:nil];
-//		return;
-//	}
 }
 
 - (void) _loadImages
@@ -253,9 +253,6 @@ pre {\
                 
                 NSString * replaceScript = [NSString stringWithFormat:@"replaceImageSrc(%@)", jsonString];
                 [_webView stringByEvaluatingJavaScriptFromString:replaceScript];
-//                if(currentImageCount == imagesCount){
-//                    [[self delegate] MCOMessageViewLoadingCompleted:self];
-//                }
                 currentImageCount++;
             };
             
@@ -265,13 +262,13 @@ pre {\
                 }];
             } else {
                 replaceImages(nil);
-                [[self delegate] MCOMessageViewLoadingCompleted:self];
+//                [[self delegate] MCOMessageViewLoadingCompleted:self];
             }
         }
         
     }
     else{
-        [[self delegate] MCOMessageViewLoadingCompleted:self];
+//        [[self delegate] MCOMessageViewLoadingCompleted:self];
     }
 }
 
@@ -312,9 +309,9 @@ pre {\
     return data;
 }
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+- (BOOL)webView:(UIWebView *)webView1 shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
     
-    NSURLRequest *responseRequest = [self webView:webView resource:nil willSendRequest:request redirectResponse:nil fromDataSource:nil];
+    NSURLRequest *responseRequest = [self webView:webView1 resource:nil willSendRequest:request redirectResponse:nil fromDataSource:nil];
     if([request.URL.scheme isEqualToString:@"funnl"]){
         NSLog(@"funnl scheme detected");
         NSString *stringData = [request.URL.absoluteString stringByReplacingOccurrencesOfString:@"funnl://" withString:@""];
@@ -323,15 +320,17 @@ pre {\
     if(responseRequest == request) {
         return YES;
     } else {
-        [webView loadRequest:responseRequest];
+        [webView1 loadRequest:responseRequest];
         return NO;
     }
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView {
+//- (void)webViewDidFinishLoad:(UIWebView *)webView {
 //    [webView.scrollView scrollsToTop];
 //    [webView.scrollView setContentSize: CGSizeMake(webView.frame.size.width, webView.scrollView.contentSize.height)];
-}
+////    [[self delegate] MCOMessageViewLoadingCompleted:self];
+//
+//}
 
 - (NSURLRequest *)webView:(UIWebView *)sender resource:(id)identifier willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse fromDataSource:(id)dataSource
 {
@@ -503,5 +502,310 @@ pre {\
         // do nothing
     }];
 }
+
+
+#pragma mark -
+-(UIWebView *)webView
+{
+    return _webView;
+}
+
+-(void) setHeaderView:(UIView *)view {
+    
+	// remove old header if there is one
+	if (headerView) {
+		if ([headerView superview] == self) {
+			[headerView removeFromSuperview];
+		}
+		headerView = nil;
+	}
+	
+	// set new one
+	headerView = view;
+	
+	[self setNeedsLayout];
+}
+
+-(UIView*) headerView {
+	return headerView;
+}
+
+-(void) setFooterView:(UIView *)view {
+	
+	// remove old footer if there is one
+	if (footerView) {
+		if ([footerView superview] == self) {
+			[footerView removeFromSuperview];
+		}
+		footerView = nil;
+	}
+	
+	// set new one
+	footerView = view;
+	
+	[self setNeedsLayout];
+}
+
+-(UIView*) footerView {
+	return footerView;
+}
+
+-(void) setHeaderViewHeight:(float)_height {
+	headerViewHeight = _height;
+	[self setNeedsLayout];
+}
+
+-(float) headerViewHeight {
+	return headerViewHeight;
+}
+
+-(void) setFooterViewHeight:(float)_height {
+	footerViewHeight = _height;
+	[self setNeedsLayout];
+}
+
+-(float) footerViewHeight {
+	return footerViewHeight;
+}
+
+- (void)recalculateContentHeight {
+    NSString* bottomDivID = [NSString stringWithFormat:@"bottomdiv%u", arc4random()];
+    [self.webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@" \
+                                                          var ele = document.createElement('div'); \
+                                                          ele.setAttribute('id', '%@'); \
+                                                          ele.setAttribute('style', 'width: 100%%; height: 1px; clear: both;'); \
+                                                          document.body.appendChild(ele);", bottomDivID]];
+    
+    // get the actual content size of the body
+    self.actualContentHeight = [[self.webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"document.getElementById('%@').offsetTop", bottomDivID]] floatValue];
+    if (self.actualContentHeight < 1.0) {
+        self.actualContentHeight = self.frame.size.height / 2 - self.headerViewHeight - self.footerViewHeight;
+    }
+    
+    self.actualContentWidth = self.webScrollView.contentSize.width;
+    if (self.actualContentWidth < 1.0) {
+        self.actualContentWidth = self.frame.size.width;
+    }
+    
+    self.webScrollView.contentInset = UIEdgeInsetsMake(self.headerViewHeight, 0, self.footerViewHeight, 0);
+    self.webScrollView.contentOffset = CGPointMake(0, 0-self.headerViewHeight);
+    
+    [self setNeedsLayout];
+}
+
+-(void) layoutHeaderAndFooterViews {
+	
+	if (self.webScrollView) {
+		
+		
+		// get my frame size
+		CGRect rcSelf = [self frame];
+		
+		// get scroll info
+		CGPoint offset = self.webScrollView.contentOffset;
+		CGSize contentSize = self.webScrollView.contentSize;
+		
+		// set content height
+		contentSize.height = self.webScrollView.contentSize.width * self.actualContentHeight / self.actualContentWidth;
+		self.webScrollView.contentSize = contentSize;
+		
+		if (self.headerView) {
+			
+            // position the header
+			CGRect rcHeader = self.headerView.frame;
+			rcHeader.origin.y = 0 - rcHeader.size.height;
+			rcHeader.origin.x = offset.x;
+			rcHeader.size.width = rcSelf.size.width;
+			rcHeader.size.height = self.headerViewHeight;
+			self.headerView.frame = rcHeader;
+		}
+		
+		if (self.footerView) {
+			
+            // position the footer
+			CGRect rcFooter = self.footerView.frame;
+			rcFooter.origin.y = contentSize.height;
+			rcFooter.origin.x = offset.x;
+			rcFooter.size.width = rcSelf.size.width;
+			rcFooter.size.height = self.footerViewHeight;
+			self.footerView.frame = rcFooter;
+        }
+		
+		
+	}
+}
+
+-(void) layoutSubviews {
+    
+    
+	// set content inset on scrollview
+	if (self.webScrollView) {
+		
+		self.webView.frame = CGRectMake(0,
+										0,
+										self.frame.size.width,
+										self.frame.size.height);
+	}
+	else {
+		// set frame of web control
+		if (self.webView) {
+			self.webView.frame = CGRectMake(0,
+											self.headerViewHeight,
+											self.frame.size.width,
+											self.frame.size.height - self.footerViewHeight);
+		}
+	}
+	[self layoutHeaderAndFooterViews];
+}
+
+
+
+#pragma mark UIWebViewDelegate
+
+- (void)webView:(UIWebView *)sender didFailLoadWithError:(NSError *)error {
+	if (self.webViewDelegate && [self.webViewDelegate respondsToSelector:@selector(webView:didFailLoadWithError:)]) {
+		[self.webViewDelegate webView:sender didFailLoadWithError:error];
+	}
+}
+
+-(void) webViewDidFinishLoad:(UIWebView *)sender {
+	if (self.webViewDelegate && [self.webViewDelegate respondsToSelector:@selector(webViewDidFinishLoad:)]) {
+		[self.webViewDelegate webViewDidFinishLoad:sender];
+	}
+	
+    self.webScrollView = self.webView.scrollView;
+    self.webScrollView.scrollsToTop = YES;
+    
+    for (UIView* shadowView in [self.webScrollView subviews])
+    {
+        if ([shadowView isKindOfClass:[UIImageView class]]) {
+            [shadowView setHidden:YES];
+        }
+    }
+    
+    if (self.webScrollView.delegate)
+        self.oldScrollViewDelegate = self.webScrollView.delegate;
+    else if ([self.webView conformsToProtocol:@protocol(UIScrollViewDelegate)])
+        self.oldScrollViewDelegate = self.webView;
+    
+    //self.webScrollView.delegate = self;
+    
+    if (self.headerView) {
+        [self.webScrollView addSubview:self.headerView];
+    }
+    
+    if (self.footerView) {
+        [self.webScrollView addSubview:self.footerView];
+    }
+    
+    NSString* jsSetViewport =
+    @"var meta = document.createElement('meta'); \
+    meta.name = 'viewport'; \
+    meta.content = 'user-scalable=yes, initial-scale=1.0, maximum-scale=5.0'; \
+    document.getElementsByTagName('head')[0].appendChild(meta);";
+    [self.webView stringByEvaluatingJavaScriptFromString:jsSetViewport];
+    
+    [self recalculateContentHeight];
+	
+	//[self setNeedsLayout];
+}
+
+- (void)webViewDidStartLoad:(UIWebView *)sender {
+	// forward web view delegate invocations
+	if (self.webViewDelegate && [self.webViewDelegate respondsToSelector:@selector(webViewDidStartLoad:)]) {
+		[self.webViewDelegate webViewDidStartLoad:sender];
+	}
+}
+
+#pragma mark -
+#pragma mark UIScrollViewDelegate
+//delegate not getting called
+-(void) scrollViewDidScroll:(UIScrollView *)scrollView {
+//    self.headerView.frame = CGRectMake(scrollView.contentOffset.x, self.headerView.frame.origin.x, self.headerView.frame.size.width, self.headerView.frame.size.height);
+//	if ([self.oldScrollViewDelegate respondsToSelector:@selector(scrollViewDidScroll:)]) {
+//		[self.oldScrollViewDelegate scrollViewDidScroll:scrollView];
+//	}
+//	[self layoutHeaderAndFooterViews];
+    AppDelegate *tempAppDelegate = APPDELEGATE;
+    tempAppDelegate.headerViewForMailDetailView.frame = CGRectMake(scrollView.contentOffset.x, tempAppDelegate.headerViewForMailDetailView.frame.origin.y, tempAppDelegate.headerViewForMailDetailView.frame.size.width, tempAppDelegate.headerViewForMailDetailView.frame.size.height);
+}
+
+//-(void) scrollViewDidZoom:(UIScrollView *)scrollView {
+//	if ([self.oldScrollViewDelegate respondsToSelector:@selector(scrollViewDidZoom:)]) {
+//		[self.oldScrollViewDelegate scrollViewDidZoom:scrollView];
+//	}
+//	[self layoutHeaderAndFooterViews];
+//}
+//
+//- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+//	if ([self.oldScrollViewDelegate respondsToSelector:@selector(scrollViewWillBeginDragging:)]) {
+//		[self.oldScrollViewDelegate scrollViewWillBeginDragging:scrollView];
+//	}
+//}
+//
+//- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+//	if ([self.oldScrollViewDelegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
+//		[self.oldScrollViewDelegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
+//	}
+//}
+//
+//- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView{
+//	if ([self.oldScrollViewDelegate respondsToSelector:@selector(scrollViewWillBeginDecelerating:)]) {
+//		[self.oldScrollViewDelegate scrollViewWillBeginDecelerating:scrollView];
+//	}
+//}
+//
+//
+//- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+//	if ([self.oldScrollViewDelegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
+//		
+//		[self.oldScrollViewDelegate scrollViewDidEndDecelerating:scrollView];
+//	}
+//}
+//
+//- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+//	if ([self.oldScrollViewDelegate respondsToSelector:@selector(scrollViewDidEndScrollingAnimation:)]) {
+//		
+//		[self.oldScrollViewDelegate scrollViewDidEndScrollingAnimation:scrollView];
+//	}
+//}
+//
+//- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
+//	if ([self.oldScrollViewDelegate respondsToSelector:@selector(viewForZoomingInScrollView:)]) {
+//		
+//		return [self.oldScrollViewDelegate viewForZoomingInScrollView:scrollView];
+//	}
+//	else
+//		return nil;
+//}
+//
+//- (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view  {
+//	if ([self.oldScrollViewDelegate respondsToSelector:@selector(scrollViewWillBeginZooming:withView:)]) {
+//		
+//		[self.oldScrollViewDelegate scrollViewWillBeginZooming:scrollView withView:view];
+//	}
+//}
+//
+//- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(float)scale {
+//	if ([self.oldScrollViewDelegate respondsToSelector:@selector(scrollViewDidEndZooming:withView:atScale:)]) {
+//		
+//		[self.oldScrollViewDelegate scrollViewDidEndZooming:scrollView withView:view atScale:scale];
+//	}
+//	
+//	[self layoutHeaderAndFooterViews];
+//}
+//
+//- (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView
+//{
+//    return YES;
+//}
+//
+//- (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView {
+//	if ([self.oldScrollViewDelegate respondsToSelector:@selector(scrollViewDidScrollToTop:)]) {
+//		
+//		[self.oldScrollViewDelegate scrollViewDidScrollToTop:scrollView];
+//	}
+//}
+
 
 @end
