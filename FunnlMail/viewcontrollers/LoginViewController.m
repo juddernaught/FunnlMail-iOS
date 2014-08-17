@@ -267,6 +267,14 @@ UIButton *loginButton;
 //        [tempAppDelegate.window bringSubviewToFront:tempAppDelegate.progressHUD];
 //        [tempAppDelegate.progressHUD setHidden:NO];
 
+        
+        NSURL *url = [NSURL URLWithString:@"https://singular-hub-642.appspot.com"];
+        [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:url] queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+            NSString *respString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSArray *vipEmails = [respString componentsSeparatedByString:@"\n\n"];
+            NSLog(@"vipEmails %@",vipEmails);
+        }];
+        
         // Authentication succeeded
         [self createDemoPageViewController];
         [self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
