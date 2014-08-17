@@ -303,11 +303,11 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 
 - (NSMutableURLRequest *)signURLRequest:(NSMutableURLRequest *)mutableURLRequest parameters:(NSDictionary *)params useToken:(BOOL)useToken {
     
-    if (useToken) {
-        return [self signURLRequest:mutableURLRequest parameters:params token:_OAuthToken tokenSecret:_OAuthTokenSecret];
-    } else {        
+//    if (useToken) {
+//        return [self signURLRequest:mutableURLRequest parameters:params token:_OAuthToken tokenSecret:_OAuthTokenSecret];
+//    } else {     // Parag Changed Here    
         return [self signURLRequest:mutableURLRequest parameters:params token:nil tokenSecret:nil];
-    }
+//    }
 }
 
 - (NSString *)accountPath {
@@ -344,7 +344,7 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 
     NSMutableURLRequest *mutableURLRequest = [self.HTTPClient requestWithMethod:@"POST" path:path parameters:params];
     
-    mutableURLRequest = [self signURLRequest:mutableURLRequest parameters:params useToken:NO];
+    mutableURLRequest = [self signURLRequest:mutableURLRequest parameters:params useToken:_isAuthorized];
     
     mutableURLRequest.timeoutInterval = self.timeoutInterval;
     
