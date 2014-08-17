@@ -317,9 +317,9 @@ UIButton *loginButton;
     [params setObject:@"IMAP" forKey:@"type"];
     [params setObject:@"1" forKey:@"use_ssl"];
     [params setObject:@"imap.googlemail.com" forKey:@"server"];
-    [params setObject:self.emailServerModel.accessToken forKey:@"provider_token"];
+    [params setObject:self.emailServerModel.refreshToken forKey:@"provider_refresh_token"];
     [params setObject:kMyClientID forKey:@"provider_consumer_key"];
-    [params setObject:kMyClientSecret forKey:@"provider_token_secret"];
+    //[params setObject:kMyClientSecret forKey:@"provider_token_secret"];
     NSString *path = [NSString stringWithFormat:@"https://api.context.io/lite/users/%@/email_accounts",accID];
     [appDelegate.contextIOAPIClient postPath:path params:params success:^(NSDictionary *responseDict) {
         NSLog(@"-----> %@",responseDict.description);
