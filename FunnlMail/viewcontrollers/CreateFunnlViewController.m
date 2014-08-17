@@ -804,8 +804,7 @@ NSMutableArray *emailArr,*searchArray;
             reqCnt--;
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (reqCnt == 0) {
-                    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                    [self.navigationController popViewControllerAnimated:YES];
+                    [self deleteOperation];
                 }
             });
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
