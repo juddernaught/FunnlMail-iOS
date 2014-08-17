@@ -790,32 +790,34 @@ NSMutableArray *emailArr,*searchArray;
 -(void)deleteButtonClicked:(id)sender{
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    [appDelegate.contextIOAPIClient deleteWebhookWithID:[oldModel webhookIds] success:^(NSDictionary *responseDict) {
-        if ([[responseDict objectForKey:@"success"] boolValue]) {
-            dispatch_async(dispatch_get_global_queue(0, 0), ^{
-                if (oldModel.skipFlag) {
-                    [[MessageFilterXRefService instance] deleteXRefWithFunnelId:oldModel.funnelId];
-                    [self decrementCounterAgainstTheMessage];
-                }
-                [[FunnelService instance] deleteFunnel:oldModel.funnelId];
-                [[MessageService instance] insertFunnelJsonForMessages];
-                NSArray *funnelArray = [[FunnelService instance] allFunnels];
-                tempAppDelegate.currentFunnelString = [[(FunnelModel *)funnelArray[0] funnelName] lowercaseString];
-                tempAppDelegate.currentFunnelDS = (FunnelModel *)funnelArray[0];
-                [self.mainVCdelegate filterSelected:(FunnelModel *)funnelArray[0]];
-                funnelArray = nil;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    //update UI in main thread.
+    NSString *webhookJSONString = [oldModel webhookIds];
+    NSData *jsonData = [webhookJSONString dataUsingEncoding:NSUTF8StringEncoding];
+    NSMutableDictionary *webhooks = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:nil]];
+    NSArray *senders = [[webhooks allKeys] copy];
+    __block int reqCnt = [senders count];
+    for (NSString *sender in senders) {
+        NSDictionary *webhook_id_Dictionary = [webhooks objectForKey:sender];
+        NSString *webhook_id = [webhook_id_Dictionary objectForKey:@"webhook_id"];
+        [appDelegate.contextIOAPIClient deleteWebhookWithID:webhook_id success:^(NSDictionary *responseDict) {
+            NSLog(@"responseDict deletion %@",responseDict);
+            [webhooks removeObjectForKey:webhook_id];
+            reqCnt--;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (reqCnt == 0) {
                     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                     [self.navigationController popViewControllerAnimated:YES];
-                });
+                }
             });
-        }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:[error description] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-        [alert show];
-    }];
-    
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            reqCnt--;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                //[self showAlertForError:error];
+                if (reqCnt == 0) {
+                    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                }
+            });
+        }];
+    }
     [[Mixpanel sharedInstance] track:@"Funnl deleteButton pressed"];
 }
 
