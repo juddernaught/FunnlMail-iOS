@@ -119,7 +119,6 @@
     
     if([cell.menuLabel.text isEqualToString:@"Help"]){
         FAQVC *faq = [[FAQVC alloc]init];
-        
         [[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationController pushViewController:faq animated:NO];
     }
     else if ([cell.menuLabel.text isEqualToString:@"Funnl Alerts"]){
@@ -160,7 +159,8 @@
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Trash";
         [[EmailService instance] getDatabaseMessages:TRASH withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject];
         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:TRASH withFetchRange:MCORangeEmpty];
-    } else if (indexPath.row == 8){
+    }
+    else if (indexPath.row == 8){
         [[MessageService instance] deleteMessageWithGmailMessageID:[EmailService instance].userEmailID];
         [[EmailServersService instance] deleteEmailServer:[EmailService instance].userEmailID];
         LoginViewController *loginViewController = [[LoginViewController alloc]init];
