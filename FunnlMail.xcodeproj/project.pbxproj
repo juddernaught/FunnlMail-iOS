@@ -1043,9 +1043,9 @@
 				5AA690B519501EC200E4CB64 /* EmailThreadTableViewController.m */,
 				667787FF18EF768B00EF1962 /* MsgViewController.h */,
 				6677880018EF768B00EF1962 /* MsgViewController.mm */,
-				660BA98C1902CDEA00CDF86E /* LoginViewController.h */,
 				B7169C82199C6D78004D8759 /* FAQVC.h */,
 				B7169C83199C6D78004D8759 /* FAQVC.m */,
+				660BA98C1902CDEA00CDF86E /* LoginViewController.h */,
 				660BA98D1902CDEA00CDF86E /* LoginViewController.m */,
 				FA2F433D193318BE00C1F119 /* CreateFunnlViewController.h */,
 				FA2F433E193318BE00C1F119 /* CreateFunnlViewController.m */,
@@ -2123,7 +2123,7 @@
 				BUNDLE_ID_SUFFIX = .debug;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Daniel Judd (PL7ET6U94G)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Daniel Judd (PL7ET6U94G)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2179,7 +2179,7 @@
 				BUNDLE_ID_SUFFIX = "";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Renee Migdal (4724LVRTFE)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Renee Migdal (4724LVRTFE)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2210,7 +2210,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "bb645e85-1d2a-45d2-9aaf-1c6fd74893d7";
+				PROVISIONING_PROFILE = "f0906a3e-4806-4970-a8cb-7c8f55b256fa";
 				SDKROOT = iphoneos7.1;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;

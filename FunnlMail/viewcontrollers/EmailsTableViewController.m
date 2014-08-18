@@ -171,16 +171,12 @@ UIView *greyView;
     mailSearchBar.delegate = self;
     mailSearchBar.placeholder = @"Search";
     self.tableView.tableHeaderView = mailSearchBar;
-    //    searchDisplayController = [[UISearchDisplayController alloc] initWithSearchBar:searchBar contentsController:self];
-    //    searchDisplayController.delegate = self;
-    //    searchDisplayController.searchResultsDataSource = self;
-    //    searchDisplayController.searchResultsDelegate = self;
-    //[self.tableView insertSubview:self.searchDisplayController.searchBar aboveSubview:self.tableView];
-    if ([[MessageService instance] messagesAllTopMessages].count > 0) {
-        
-    }
-    else
-        [self.view bringSubviewToFront:tempAppDelegate.progressHUD];
+
+//    if ([[MessageService instance] messagesAllTopMessages].count > 0) {
+//        
+//    }
+//    else
+//        [self.view bringSubviewToFront:tempAppDelegate.progressHUD];
 }
 
 - (void)fetchLatestEmail

@@ -25,7 +25,7 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
     NSString *_OAuthConsumerKey;
     NSString *_OAuthToken;
     NSString *_OAuthTokenSecret;
-    NSString *_accountID;
+    //NSString *_accountID;
     
     NSString *_tmpOAuthToken;
     NSString *_tmpOAuthTokenSecret;
@@ -47,7 +47,7 @@ static NSString * const kCIOTokenSecretKeyChainKey = @"kCIOTokenSecret";
 @synthesize HTTPClient = _HTTPClient;
 @synthesize OAuthGenerator = _OAuthGenerator;
 @synthesize timeoutInterval = _timeoutInterval;
-
+@synthesize _accountID;
 - (id)initWithConsumerKey:(NSString *)consumerKey
            consumerSecret:(NSString *)consumerSecret {
     

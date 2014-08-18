@@ -31,10 +31,12 @@ typedef enum {
 
 @interface CIOAPIClient : NSObject
 
+@property (nonatomic, readonly) BOOL isAuthorized;
+
 /**
  The current authorization status of the API client.
  */
-@property (nonatomic, readonly) BOOL isAuthorized;
+@property (nonatomic, readonly)  NSString *_accountID;
 
 /**
  The HTTP client used to interact with the API.
