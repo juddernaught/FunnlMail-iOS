@@ -283,7 +283,7 @@
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     NSString *loggedInEmail = [EmailService instance].userEmailID;
     [currentInstallation setChannels:@[]];
-    [currentInstallation addUniqueObject:@"testers" forKey:@"channels"];
+    [currentInstallation addUniqueObject:@"testers2" forKey:@"channels"];
     
     if ([loggedInEmail length]) {
         if (![currentInstallation channels] || [currentInstallation channels].count == 0) {
