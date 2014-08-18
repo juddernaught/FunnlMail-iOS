@@ -224,7 +224,7 @@ UIButton *loginButton;
         [[self navigationController] popViewControllerAnimated:YES];
         // Authentication failed
     } else {
-        [[Mixpanel sharedInstance] track:@"User Succesfully logged in"];
+        [[Mixpanel sharedInstance] track:@"User Succesfully logged in"]; // Signed into Gmail
         
         didLoginIn = @1;
         

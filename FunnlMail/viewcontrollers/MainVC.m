@@ -217,7 +217,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 -(void) composeEmailButtonSelected{
     NSLog(@"Compose Email selected");
-    [[Mixpanel sharedInstance] track:@"Compose Email Pressed"];
+    [[Mixpanel sharedInstance] track:@"Compose Email Pressed"]; 
     mainView.hidden = YES;
     
     ComposeViewController *mc = [[ComposeViewController alloc] init];

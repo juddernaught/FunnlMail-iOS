@@ -37,7 +37,7 @@
     // MixPanel setup
     //[[CIOExampleAPIClient sharedClient] clearCredentials];
     [Mixpanel sharedInstanceWithToken:@"08b1e55d72f1b22a8e5696c2b56a6777"];
-    [[Mixpanel sharedInstance] track:@"App opened"];
+    [[Mixpanel sharedInstance] track:@"App opened"]; //Launched app
     // Parse setup
     [Parse setApplicationId:@"oXAOrMLIRzLNZh50VZ3sk3LBEfUuNDXuLZVBvHdV"
                   clientKey:@"Z5mFEsiX7xTXYlKYKXMbN2zlqqf97l39E0PzZoZg"];

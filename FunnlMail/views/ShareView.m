@@ -22,7 +22,7 @@
 #import "TITokenField.h"
 #import <AddressBook/AddressBook.h>
 #import "ContactService.h"
-
+#import <Mixpanel/Mixpanel.h>
 
 
 @implementation ShareView
@@ -32,6 +32,9 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        
+        [[Mixpanel sharedInstance] track:@"Sharing funnl button"];
+        
         self.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.93];
         self.imapSession = [EmailService instance].imapSession;
         funnelModel = fm;
