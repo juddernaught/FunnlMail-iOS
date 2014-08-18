@@ -1598,7 +1598,7 @@
 				ORGANIZATIONNAME = FunnlMail;
 				TargetAttributes = {
 					66F2C46518E3293E00CD593E = {
-						DevelopmentTeam = Y42SDJ5F7J;
+						DevelopmentTeam = 4724LVRTFE;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -2073,7 +2073,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "F3962F6B-FF15-404A-B229-F27BF4827590";
+				PROVISIONING_PROFILE = "69e28a4d-1186-4fab-8041-73ac81f00e8b";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -2106,7 +2106,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PROVISIONING_PROFILE = "433b17d1-065e-45d6-8696-0767fb229688";
+				PROVISIONING_PROFILE = "06fa6b09-dcc5-4527-9f92-1a43f6159784";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2123,7 +2123,7 @@
 				BUNDLE_ID_SUFFIX = .debug;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Daniel Judd (PL7ET6U94G)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Daniel Judd (PL7ET6U94G)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2179,8 +2179,8 @@
 				BUNDLE_ID_SUFFIX = "";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Renee Migdal (4724LVRTFE)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -2210,7 +2210,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "2525EC94-C5CF-4A18-84B4-9F32F201B525";
+				PROVISIONING_PROFILE = "bb645e85-1d2a-45d2-9aaf-1c6fd74893d7";
 				SDKROOT = iphoneos7.1;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
@@ -2285,7 +2285,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PROVISIONING_PROFILE = "433b17d1-065e-45d6-8696-0767fb229688";
+				PROVISIONING_PROFILE = "06fa6b09-dcc5-4527-9f92-1a43f6159784";
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "$(BUILD_ROOT)/../IntermediateBuildFilesPath/UninstalledProducts";
 				VALIDATE_PRODUCT = YES;
@@ -2303,7 +2303,7 @@
 				BUNDLE_ID_SUFFIX = .adhoc;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Renee Migdal (4724LVRTFE)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Renee Migdal (4724LVRTFE)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2336,7 +2336,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "433b17d1-065e-45d6-8696-0767fb229688";
+				PROVISIONING_PROFILE = "bb645e85-1d2a-45d2-9aaf-1c6fd74893d7";
 				SDKROOT = iphoneos7.1;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
