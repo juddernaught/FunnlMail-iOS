@@ -2316,7 +2316,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "f0906a3e-4806-4970-a8cb-7c8f55b256fa";
+				PROVISIONING_PROFILE = "bb645e85-1d2a-45d2-9aaf-1c6fd74893d7";
 				SDKROOT = iphoneos7.1;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
