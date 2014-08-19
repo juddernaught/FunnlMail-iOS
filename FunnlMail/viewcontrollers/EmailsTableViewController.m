@@ -23,6 +23,7 @@
 #import "NSDate+TimeAgo.h"
 #import "FunnlPopUpView.h"
 #import <Mixpanel/Mixpanel.h>
+#import "RNBlurModalView.h"
 
 @implementation UILabel (Additions)
 
@@ -468,7 +469,10 @@ UIView *greyView;
                     MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
                     FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:YES withMessageId:uidKey withMessage:message subViewOnViewController:self];
                     funnlPopUpView.mainVCdelegate = self.mainVCdelegate;
-                    
+                    if ([FunnelService instance].allFunnels.count < 4){
+                        RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Hello Funnler!" message:@"Funnls help you to filter out emails from important senders – you can add multiple senders to a Funnl (eg. team) or create a new Funnl for key senders (eg. boss)"];
+                        [modal show];
+                    }
                     [self.view addSubview:funnlPopUpView];
                     
                 }];

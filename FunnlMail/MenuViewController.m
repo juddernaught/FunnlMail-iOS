@@ -121,12 +121,14 @@
         FAQVC *faq = [[FAQVC alloc]init];
         [[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationController pushViewController:faq animated:NO];
     }
+    
     else if ([cell.menuLabel.text isEqualToString:@"Funnl Alerts"]){
         FunnlAlertsVC *alerts = [[FunnlAlertsVC alloc]init];
         [alerts SetUp];
         [[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationController pushViewController:alerts animated:NO];
         
     }
+    
     else if ([cell.menuLabel.text isEqualToString:@"Sent Mail"]) {
         NSLog(@"sent mail requested");
          //The following line is required to get to the emailTableVC in mainVC
@@ -138,6 +140,7 @@
        
         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:SENT withFetchRange:MCORangeEmpty];
     }
+    
     else if ([cell.menuLabel.text isEqualToString:@"Archive"]){
         NSLog(@"archive mail requested");
         appDelegate.currentFunnelString = ARCHIVE;
@@ -151,8 +154,8 @@
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Drafts";
         [[EmailService instance] getDatabaseMessages:DRAFTS withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject];
         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:DRAFTS withFetchRange:MCORangeEmpty];
-        
     }
+    
     else if ([cell.menuLabel.text isEqualToString:@"Trash"]){
         NSLog(@"trash mail requested");
         appDelegate.currentFunnelString = TRASH;
@@ -160,7 +163,8 @@
         [[EmailService instance] getDatabaseMessages:TRASH withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject];
         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:TRASH withFetchRange:MCORangeEmpty];
     }
-    else if (indexPath.row == 8){
+    
+    else if ([cell.menuLabel.text isEqualToString:@"Logout"]){
         [[MessageService instance] deleteMessageWithGmailMessageID:[EmailService instance].userEmailID];
         [[EmailServersService instance] deleteEmailServer:[EmailService instance].userEmailID];
         LoginViewController *loginViewController = [[LoginViewController alloc]init];
@@ -169,17 +173,14 @@
         UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:loginViewController];
         [appDelegate.window setRootViewController:nav];
     }
+    
     else if ([cell.menuLabel.text isEqualToString:@"Send Feedback"]){
         NSLog(@"Send Feedback requested");
         ComposeViewController *mc = [[ComposeViewController alloc] init];
         mc.sendFeedback = @1;
-
-       
         [appDelegate.drawerController closeDrawerAnimated:YES completion:^(BOOL finished) {
             [[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationController pushViewController:mc animated:NO];
         }];
-    
-    
     }
 
     [appDelegate.drawerController closeDrawerAnimated:YES completion:nil];

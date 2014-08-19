@@ -58,6 +58,10 @@
 		66F2C49518E3293F00CD593E /* FunnlMailTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F2C49418E3293F00CD593E /* FunnlMailTests.m */; };
 		B703C50419760E27003037FC /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B703C50319760E27003037FC /* AddressBook.framework */; };
 		B7169C84199C6D78004D8759 /* FAQVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B7169C83199C6D78004D8759 /* FAQVC.m */; };
+		B72C2FB119A196E3000E5D5B /* RNBlurModalView.h in Headers */ = {isa = PBXBuildFile; fileRef = B72C2FAF19A196E3000E5D5B /* RNBlurModalView.h */; };
+		B72C2FB219A196E3000E5D5B /* RNBlurModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = B72C2FB019A196E3000E5D5B /* RNBlurModalView.m */; };
+		B72C2FB819A19721000E5D5B /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B72C2FB719A19721000E5D5B /* Accelerate.framework */; };
+		B72C2FBC19A1980B000E5D5B /* RNBlurModalView.h in Sources */ = {isa = PBXBuildFile; fileRef = B72C2FAF19A196E3000E5D5B /* RNBlurModalView.h */; };
 		B751C88F1940FDFF0051DF0B /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B751C88E1940FDFF0051DF0B /* MessageUI.framework */; };
 		B75F56A6197F056F00518743 /* FunnlMail VIP logo.png in Resources */ = {isa = PBXBuildFile; fileRef = B75F56A5197F056F00518743 /* FunnlMail VIP logo.png */; };
 		B7701DC41985F58C001CA2DC /* mail2.png in Resources */ = {isa = PBXBuildFile; fileRef = B7701DC31985F58C001CA2DC /* mail2.png */; };
@@ -412,6 +416,9 @@
 		B703C50319760E27003037FC /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		B7169C82199C6D78004D8759 /* FAQVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAQVC.h; sourceTree = "<group>"; };
 		B7169C83199C6D78004D8759 /* FAQVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FAQVC.m; sourceTree = "<group>"; };
+		B72C2FAF19A196E3000E5D5B /* RNBlurModalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNBlurModalView.h; sourceTree = "<group>"; };
+		B72C2FB019A196E3000E5D5B /* RNBlurModalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNBlurModalView.m; sourceTree = "<group>"; };
+		B72C2FB719A19721000E5D5B /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		B751C88E1940FDFF0051DF0B /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		B75F56A5197F056F00518743 /* FunnlMail VIP logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "FunnlMail VIP logo.png"; sourceTree = "<group>"; };
 		B7701DC31985F58C001CA2DC /* mail2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mail2.png; sourceTree = "<group>"; };
@@ -731,6 +738,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA5627FA193C5F5200238F40 /* QuartzCore.framework in Frameworks */,
+				B72C2FB819A19721000E5D5B /* Accelerate.framework in Frameworks */,
 				FAA9ED3C199A13EB00CD72D2 /* libMailCore-ios.a in Frameworks */,
 				FAD311B1198262E500565A90 /* CoreText.framework in Frameworks */,
 				B703C50419760E27003037FC /* AddressBook.framework in Frameworks */,
@@ -745,7 +754,6 @@
 				667787FA18EF6E9400EF1962 /* CFNetwork.framework in Frameworks */,
 				6644FB2F19738632004B4587 /* AudioToolbox.framework in Frameworks */,
 				B751C88F1940FDFF0051DF0B /* MessageUI.framework in Frameworks */,
-				FA5627FA193C5F5200238F40 /* QuartzCore.framework in Frameworks */,
 				CC4263B61934B68600F3C5EB /* libsqlite3.dylib in Frameworks */,
 				6677882518F0ADBB00EF1962 /* SystemConfiguration.framework in Frameworks */,
 				6677881C18F0797800EF1962 /* ImageIO.framework in Frameworks */,
@@ -871,6 +879,7 @@
 		66F2C46818E3293E00CD593E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B72C2FB719A19721000E5D5B /* Accelerate.framework */,
 				D152BB72199145B100058903 /* Crashlytics.framework */,
 				FAD311B0198262E500565A90 /* CoreText.framework */,
 				B703C50319760E27003037FC /* AddressBook.framework */,
@@ -1044,9 +1053,9 @@
 				667787FF18EF768B00EF1962 /* MsgViewController.h */,
 				6677880018EF768B00EF1962 /* MsgViewController.mm */,
 				660BA98C1902CDEA00CDF86E /* LoginViewController.h */,
+				660BA98D1902CDEA00CDF86E /* LoginViewController.m */,
 				B7169C82199C6D78004D8759 /* FAQVC.h */,
 				B7169C83199C6D78004D8759 /* FAQVC.m */,
-				660BA98D1902CDEA00CDF86E /* LoginViewController.m */,
 				FA2F433D193318BE00C1F119 /* CreateFunnlViewController.h */,
 				FA2F433E193318BE00C1F119 /* CreateFunnlViewController.m */,
 				FA2C9BD9193EE66400866BEE /* MenuViewController.h */,
@@ -1166,6 +1175,8 @@
 				5A59DC6D1957FF9D0094B00D /* ConfirmFunnelPopUp.m */,
 				5A59DC7319582A260094B00D /* FunnelPopUpForExtraRules.h */,
 				5A59DC7419582A260094B00D /* FunnelPopUpForExtraRules.m */,
+				B72C2FAF19A196E3000E5D5B /* RNBlurModalView.h */,
+				B72C2FB019A196E3000E5D5B /* RNBlurModalView.m */,
 			);
 			name = views;
 			sourceTree = "<group>";
@@ -1542,6 +1553,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B72C2FB119A196E3000E5D5B /* RNBlurModalView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1874,6 +1886,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B72C2FBC19A1980B000E5D5B /* RNBlurModalView.h in Sources */,
 				FA029C401993BB890021C6B1 /* ContactService.m in Sources */,
 				FAAF171E19863CDD00E877D4 /* SDWebImageDownloader.m in Sources */,
 				FAAF172519863CDD00E877D4 /* UIImage+WebP.m in Sources */,
@@ -1921,6 +1934,7 @@
 				CC8C7EAD18E6F1C100E76AE8 /* MainVC.m in Sources */,
 				FA2C9BD2193EDFCB00866BEE /* MMDrawerController.m in Sources */,
 				FA2C9BDB193EE66400866BEE /* MenuViewController.m in Sources */,
+				B72C2FB219A196E3000E5D5B /* RNBlurModalView.m in Sources */,
 				D1EFF48719817BBF0031A1D1 /* hmac.c in Sources */,
 				D1EFF49119817BFB0031A1D1 /* CIOAuthViewController.m in Sources */,
 				CC8C7ECC18E6F38100E76AE8 /* MASViewAttribute.m in Sources */,

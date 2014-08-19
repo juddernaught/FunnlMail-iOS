@@ -19,6 +19,7 @@
 #import "ComposeViewController.h"
 #import "MainView.h"
 #import "EmailServersService.h"
+#import "RNBlurModalView.h"
 
 #import <MessageUI/MessageUI.h>
 
@@ -209,9 +210,12 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     NSLog(@"Filter button selected");
     if(mainView.hidden == YES){
         mainView.hidden = NO;
+        RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Funnl Time!" message:@"Tap on Any Funnl to view emails under that Funnl or presss 'Manage' to view/change Funnl Settings"];
+        [modal show];
     }else{
         mainView.hidden = YES;
     }
+    
 }
 
 
