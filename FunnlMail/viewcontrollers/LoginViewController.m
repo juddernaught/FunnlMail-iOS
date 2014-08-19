@@ -469,6 +469,14 @@ UIButton *loginButton;
             NSString* currentEmail = [json objectForKey:@"email"];
             NSString* currentName = [json objectForKey:@"name"];
             NSString* currentUserImageURL = [json objectForKey:@"picture"];
+            
+            // Added by Chad to track users
+            Mixpanel *mixpanel = [Mixpanel sharedInstance];
+            
+            // Associate all future events sent from
+            // the library with the distinct_id 13793
+            [mixpanel identify:@"13793"];
+            [mixpanel.people set:@{@"Email" : currentEmail}];
 
             [EmailService instance].userEmailID = currentEmail;
             [EmailService instance].userImageURL = currentUserImageURL;
