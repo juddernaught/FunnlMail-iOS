@@ -150,6 +150,9 @@
     
     UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"welcome.png"]];
     imageView.frame = CGRectMake(0, 100, WIDTH, HEIGHT-90);
+    
+    [[Mixpanel sharedInstance] track:@"Viewed intro overlay"];
+    
     [showWelcomeOverlay addSubview:imageView];
     
     UILabel *personal = [[UILabel alloc]initWithFrame:CGRectMake(15, 150, 75, 30)];

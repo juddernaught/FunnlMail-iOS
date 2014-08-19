@@ -31,10 +31,8 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        
         // Initialization code
-        
-        [[Mixpanel sharedInstance] track:@"Sharing funnl button"];
-        
         self.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.93];
         self.imapSession = [EmailService instance].imapSession;
         funnelModel = fm;
@@ -168,6 +166,9 @@
 
 #pragma mark - shareFunnlClicked functions
 -(void)shareFunnlClicked:(id)sender{
+    
+    [[Mixpanel sharedInstance] track:@"Shared a Funnl (pressed send button successfully after entering email)"];
+    
     [toFieldView.tokenField resignFirstResponder];
     MCOMessageBuilder * builder = [[MCOMessageBuilder alloc] init];
     [[builder header] setFrom:[MCOAddress addressWithDisplayName:nil mailbox:self.imapSession.username]];

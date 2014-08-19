@@ -788,6 +788,9 @@ NSMutableArray *emailArr,*searchArray;
 
 
 -(void)deleteButtonClicked:(id)sender{
+    
+    [[Mixpanel sharedInstance] track:@"Deleted a Funnl (from settings page)"];
+    
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     NSString *webhookJSONString = [oldModel webhookIds];
@@ -1022,7 +1025,7 @@ NSMutableArray *emailArr,*searchArray;
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     NSLog(@"Save Butoon pressed");
     
-    [[Mixpanel sharedInstance] track:@"Created a new Funnl"];
+    [[Mixpanel sharedInstance] track:@"Created a new Funnl or modified existing Funnl"];
     
     
     if(activeField){
