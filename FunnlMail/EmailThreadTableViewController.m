@@ -176,9 +176,11 @@ static NSString *mailCellIdentifier = @"MailCell";
     MCOIMAPMessage *msg = [MCOIMAPMessage importSerializable:[(MessageModel*)dataSourceArray[indexPath.row] messageJSON]];
     [(MessageModel*)dataSourceArray[indexPath.row] setRead:YES];
     MsgViewController *vc = [[MsgViewController alloc] init];
+    vc.selectedIndexPath = indexPath;
     vc.folder = INBOX;
     vc.message = msg;
     vc.session = [EmailService instance].imapSession;
+    vc.messageModel = (MessageModel*)[EmailService instance].filterMessages[indexPath.row];
     msg.flags = msg.flags | MCOMessageFlagSeen;
     MCOIMAPOperation *msgOperation=[[EmailService instance].imapSession storeFlagsOperationWithFolder:INBOX uids:[MCOIndexSet indexSetWithIndex:msg.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagSeen];
     [msgOperation start:^(NSError * error)

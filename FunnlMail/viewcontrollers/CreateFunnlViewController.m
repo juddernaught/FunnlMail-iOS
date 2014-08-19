@@ -112,7 +112,7 @@ NSMutableArray *emailArr,*searchArray;
     randomColors = GRADIENT_ARRAY;
     self.title = @"Create Funnl";
 //    [self.view setBackgroundColor:[UIColor whiteColor]];
-    [self.view setBackgroundColor:[UIColor colorWithWhite:0.6 alpha:0.4]];
+    [self.view setBackgroundColor:[UIColor blackColor]];
 
     [self initBarbuttonItem];
     
@@ -133,7 +133,10 @@ NSMutableArray *emailArr,*searchArray;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 }
 
-
+-(void)viewDidAppear:(BOOL)animated
+{
+    [self.view setBackgroundColor:[UIColor colorWithWhite:0.6 alpha:0.4]];
+}
 
 #pragma -
 #pragma mark TableView Datasource & delegate Methods.
@@ -890,12 +893,21 @@ NSMutableArray *emailArr,*searchArray;
     
     unsigned long temp = [[FunnelService instance] allFunnels].count%8;
     //NSInteger gradientInt = arc4random_uniform((uint32_t)randomColors.count);
-    UIColor *color = [UIColor colorWithHexString:[randomColors objectAtIndex:temp]];
-    if(color == nil){
-        color = [UIColor colorWithHexString:@"#2EB82E"];
+    NSString *colorString = @"#2EB82E";
+    UIColor *color = [UIColor colorWithHexString:colorString];
+    if(isEdit){
+        color = oldModel.barColor;
+        colorString = oldModel.funnelColor;
+    }
+    else{
+        colorString = [randomColors objectAtIndex:temp];
+        UIColor *color = [UIColor colorWithHexString:colorString];
+        if(color == nil){
+            color = [UIColor colorWithHexString:@"#2EB82E"];
+        }
     }
     FunnelModel *model;
-    model = [[FunnelModel alloc]initWithBarColor:color filterTitle:funnlName newMessageCount:0 dateOfLastMessage:[NSDate new] sendersArray:[NSMutableArray arrayWithArray:[dictionaryOfConversations allValues]] subjectsArray:(NSMutableArray*)[dictionaryOfSubjects allValues] skipAllFlag:isSkipAll funnelColor:[randomColors objectAtIndex:temp]];
+    model = [[FunnelModel alloc]initWithBarColor:color filterTitle:funnlName newMessageCount:0 dateOfLastMessage:[NSDate new] sendersArray:[NSMutableArray arrayWithArray:[dictionaryOfConversations allValues]] subjectsArray:(NSMutableArray*)[dictionaryOfSubjects allValues] skipAllFlag:isSkipAll funnelColor:colorString];
     model.funnelId = oldModel.funnelId;
     model.notificationsFlag = areNotificationsEnabled;
     model.webhookIds = webhookId ? webhookId : @"";
