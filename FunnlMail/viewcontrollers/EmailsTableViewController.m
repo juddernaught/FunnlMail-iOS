@@ -409,7 +409,11 @@ UIView *greyView;
                 else {
                     cell.senderLabel.text = [self removeAngularBracket:message.header.sender.mailbox];
                 }
+                
+                // Changed by Chad
                 cell.subjectLabel.text = message.header.subject;
+                if (cell.subjectLabel.text.length == 0) cell.subjectLabel.text = @"No Subject";
+
                 
                 if([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread] > 1){
                     cell.threadLabel.text = [NSString stringWithFormat:@"%d",[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread]];
@@ -426,7 +430,7 @@ UIView *greyView;
                 NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
                 NSString *cachedPreview = [[MessageService instance] retrievePreviewContentWithID:uidKey];
                 if (cachedPreview == nil || cachedPreview.length == 0 )
-                    cachedPreview = @"";
+                    cachedPreview = @"This message has no content";
 
                 if (![cachedPreview isEqualToString:@""])
                 {
