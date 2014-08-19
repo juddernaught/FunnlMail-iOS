@@ -80,8 +80,9 @@ NSArray *answers;
     text.text = [answers objectAtIndex:indexPath.section];
     //[text sizeToFit];
     text.scrollEnabled = NO;
-    text.backgroundColor = [UIColor colorWithHexString:@"FFFAF0"];
+    text.backgroundColor = WHITE_CLR;
     [cell.contentView addSubview:text];
+    text.editable = NO;
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

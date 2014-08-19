@@ -1017,6 +1017,7 @@ NSMutableArray *emailArr,*searchArray;
     }
 }
 
+// TODO: must combine two deletions into one other method that's more sustainable
 -(void)saveButtonPressed
 {
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -1046,7 +1047,37 @@ NSMutableArray *emailArr,*searchArray;
         if(dictionaryOfConversations.allKeys.count){
             [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             if (!areNotificationsEnabled) {
-                [self saveFunnlWithWebhookId:nil];
+                if ([oldModel.webhookIds length]) {
+                    NSString *webhookJSONString = [oldModel webhookIds];
+                    NSData *jsonData = [webhookJSONString dataUsingEncoding:NSUTF8StringEncoding];
+                    NSMutableDictionary *webhooks = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:nil]];
+                    NSArray *senders = [[webhooks allKeys] copy];
+                    __block int reqCnt = [senders count];
+                    for (NSString *sender in senders) {
+                        NSDictionary *webhook_id_Dictionary = [webhooks objectForKey:sender];
+                        NSString *webhook_id = [webhook_id_Dictionary objectForKey:@"webhook_id"];
+                        [appDelegate.contextIOAPIClient deleteWebhookWithID:webhook_id success:^(NSDictionary *responseDict) {
+                            NSLog(@"responseDict deletion %@",responseDict);
+                            [webhooks removeObjectForKey:webhook_id];
+                            reqCnt--;
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                            if (reqCnt == 0) {
+                                    [self saveFunnlWithWebhookId:nil];
+                            }
+                            });
+                        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                            reqCnt--;
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                //[self showAlertForError:error];
+                                if (reqCnt == 0) {
+                                    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                                }
+                            });
+                        }];
+                    }
+                } else {
+                    [self saveFunnlWithWebhookId:nil];
+                }
             } else {
                 [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                 if (oldModel != nil && [oldModel.webhookIds length]) {

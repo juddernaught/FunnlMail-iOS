@@ -584,6 +584,13 @@ UIButton *loginButton;
     [mainViewController view];
     [appDelegate.menuController view];
     
+    NSURL *url = [NSURL URLWithString:@"https://singular-hub-642.appspot.com"];
+    [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:url] queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+        NSString *respString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        NSArray *vipEmails = [respString componentsSeparatedByString:@"\n\n"];
+        NSLog(@"vipEmails %@",vipEmails);
+    }];
+    
 //    [self.navigationController presentViewController:appDelegate.drawerController animated:NO completion:nil];
 //    AppDelegate *tempAppDelegate = APPDELEGATE;
 //    [tempAppDelegate.progressHUD show:NO];
