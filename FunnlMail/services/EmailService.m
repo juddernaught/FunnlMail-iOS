@@ -112,18 +112,20 @@ static NSString *currentFolder;
 	self.messagePreviews = [NSMutableDictionary dictionary];
     self.filterMessagePreviews = [NSMutableDictionary dictionary];
     self.sentMessagePreviews = [NSMutableDictionary dictionary];
+   
     [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
     if ([EmailService instance].filterMessages.count == 0) {
         AppDelegate *tempAppDelegate = APPDELEGATE;
         if ([[tempAppDelegate.currentFunnelString lowercaseString] isEqualToString:[ALL_FUNNL lowercaseString]] || [[tempAppDelegate.currentFunnelString lowercaseString] isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]) {
-            [fv.tableView reloadData];
         }
         else {
             self.filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:tempAppDelegate.currentFunnelDS.funnelId top:2000];
-            [fv.tableView reloadData];
         }
     }
-	NSLog(@"checking account");
+    [fv.tableView reloadData];
+
+	
+    NSLog(@"checking account");
 	self.imapCheckOp = [self.imapSession checkAccountOperation];
     [self.imapSession disconnectOperation];
 	[self.imapCheckOp start:^(NSError *error) {
@@ -752,13 +754,6 @@ static NSString *currentFolder;
          if(self.totalNumberOfMessages == 4294967295){
                 NSLog(@"..........Here its freezing for new messages.......");
              self.totalNumberOfMessages = 1;
-             MCOIMAPFetchFoldersOperation *op = [self.imapSession fetchAllFoldersOperation];
-//             [op start:^(NSError * error, NSArray *folders) {
-//                    for (MCOIMAPFolder *folder in folders) {
-//                        NSLog(@"----> %@",folder.path);
-//                    }
-//             }];
-                //[appDelegate.loginViewController refreshAccessToken];
          }
          NSLog(@"---- Last Info: %llu",self.totalNumberOfMessages);
          NSArray *tempArray = [[MessageService instance] retrieveLatestMessages];
@@ -894,16 +889,26 @@ static NSString *currentFolder;
                 temp.skipFlag = temp.skipFlag + 1;
             }
             NSString *funnelJsonString = [(MessageModel*)[messages objectAtIndex:count] funnelJson];
-            NSError *error = nil;
-            NSMutableDictionary *tempDict = [NSJSONSerialization JSONObjectWithData:[funnelJsonString dataUsingEncoding:NSUTF8StringEncoding]
-                                                                            options: NSJSONReadingAllowFragments
-                                                                              error: &error];
-            if (!error) {
-                tempDict = [self insertIntoDictionary:tempDict funnel:funnel];
-            } else {
+            NSMutableDictionary *tempDict;
+            if(funnelJsonString){
+                NSError *error = nil;
+                
+                tempDict = [NSJSONSerialization JSONObjectWithData:[funnelJsonString dataUsingEncoding:NSUTF8StringEncoding]
+                                                                                options: NSJSONReadingAllowFragments
+                                                                                  error: &error];
+                if (!error) {
+                    tempDict = [self insertIntoDictionary:tempDict funnel:funnel];
+                } else {
+                    tempDict = [[NSMutableDictionary alloc] init];
+                    tempDict[funnel.funnelName] = funnel.funnelColor;
+                }
+            }
+            else{
                 tempDict = [[NSMutableDictionary alloc] init];
                 tempDict[funnel.funnelName] = funnel.funnelColor;
             }
+
+            
             //            NSLog(@"----%@",[self getJsonStringByDictionary:(NSDictionary*)tempDict]);
             [(MessageModel*)[messages objectAtIndex:count] setFunnelJson:[self getJsonStringByDictionary:(NSDictionary*)tempDict]];
             [[MessageService instance] updateMessage:(MessageModel*)[messages objectAtIndex:count]];

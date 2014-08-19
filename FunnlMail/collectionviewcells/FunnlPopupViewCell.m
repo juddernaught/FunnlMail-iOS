@@ -11,6 +11,7 @@
 #import "View+MASAdditions.h"
 #import "UIColor+HexString.h"
 #import "MASConstraintMaker.h"
+#import <Mixpanel/Mixpanel.h>
 
 @implementation FunnlPopupViewCell
 @synthesize mailImageView,messageCountLabel;
@@ -100,6 +101,9 @@
     _filterTitle = filterTitle;
     filterTitleLabel.text = filterTitle;
     if([filterTitleLabel.text isEqualToString:ADD_FUNNL]){
+        
+        [[Mixpanel sharedInstance] track:@"Pressed '+' button inside Funnl overlay"];
+        
         filterTitleLabel.text = @"";
         messageCountLabel.hidden = YES;
         dateOfLastMessageLabel.hidden = YES;

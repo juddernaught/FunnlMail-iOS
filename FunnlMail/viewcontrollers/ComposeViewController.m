@@ -237,13 +237,17 @@ replacementString:(NSString *)string {
 
 
 -(void)cancelButtonSelected{
-    [[Mixpanel sharedInstance] track:@"Cancel button from composeVC"];
+    [[Mixpanel sharedInstance] track:@"Canceled email"];
+    
 //    [self dismissViewControllerAnimated:YES completion:NULL];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(void)sendButtonSelected{
 //    NSLog(@"%@, %@, ",toFieldView.tokenTitles, toFieldView.tokenField.text, toFieldView);
+    
+    [[Mixpanel sharedInstance] track:@"Sent email"];
+    
     MCOMessageBuilder * builder = [[MCOMessageBuilder alloc] init];
     [[builder header] setFrom:[MCOAddress addressWithDisplayName:nil mailbox:self.imapSession.username]];
     NSMutableArray *toArray = [[NSMutableArray alloc] init];

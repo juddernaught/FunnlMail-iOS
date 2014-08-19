@@ -788,6 +788,9 @@ NSMutableArray *emailArr,*searchArray;
 
 
 -(void)deleteButtonClicked:(id)sender{
+    
+    [[Mixpanel sharedInstance] track:@"Deleted a Funnl (from settings page)"];
+    
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     NSString *webhookJSONString = [oldModel webhookIds];
@@ -810,6 +813,7 @@ NSMutableArray *emailArr,*searchArray;
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             reqCnt--;
             dispatch_async(dispatch_get_main_queue(), ^{
+                NSLog(@"deleteButtonClicked --- deleteWebhookWithID : %@",error.userInfo.description);
                 //[self showAlertForError:error];
                 if (reqCnt == 0) {
                     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -862,11 +866,28 @@ NSMutableArray *emailArr,*searchArray;
 
 -(void) saveFunnlWithWebhookId:(NSString *) webhookId
 {
-    if (webhookId) {
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    if(webhookId != nil){
+        //---- Added by Krunal to get work PNs
+        NSData* jsonData = [webhookId dataUsingEncoding:NSUTF8StringEncoding];
+        NSMutableDictionary *webhooks = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:nil]];
+        NSArray *senders = [[webhooks allKeys] copy];
+        NSMutableArray *webhookChannelArray = [NSMutableArray new];
         PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-        [currentInstallation addUniqueObject:([NSString stringWithFormat:@"webhook_id_%@", webhookId]) forKey:@"channels"];
+        for (NSString *sender in senders) {
+            NSDictionary *webhook_id_Dictionary = [webhooks objectForKey:sender];
+            NSString *webhook_id = [webhook_id_Dictionary objectForKey:@"webhook_id"];
+            [webhookChannelArray addObject:webhook_id];
+            [currentInstallation addUniqueObject:([NSString stringWithFormat:@"webhook_id_%@", webhook_id]) forKey:@"channels"];
+        }
         [currentInstallation saveInBackground];
+        //---- end
     }
+    else{
+        
+    }
+    
+    
     unsigned long temp = [[FunnelService instance] allFunnels].count%8;
     //NSInteger gradientInt = arc4random_uniform((uint32_t)randomColors.count);
     UIColor *color = [UIColor colorWithHexString:[randomColors objectAtIndex:temp]];
@@ -936,7 +957,6 @@ NSMutableArray *emailArr,*searchArray;
 -(void) createWebhooksAndSaveFunnl
 {
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
     NSArray *senders = [dictionaryOfConversations allValues];
     NSArray *subjects = [dictionaryOfSubjects allValues];
     __block int reqCnt = [senders count];
@@ -965,7 +985,8 @@ NSMutableArray *emailArr,*searchArray;
                 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                     reqCnt--;
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [self showAlertForError:error];
+                        NSLog(@"createWebhooksandSaveFunnl --- deleteWebhookWithID : %@",error.userInfo.description);
+                        //[self showAlertForError:error];
                         if (reqCnt == 0) {
                             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                         }
@@ -987,9 +1008,11 @@ NSMutableArray *emailArr,*searchArray;
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 reqCnt--;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self showAlertForError:error];
+                    NSLog(@"createWebhooksAndSaveFunnl --- Email : %@",error.userInfo.description);
+                    //[self showAlertForError:error];
                     if (reqCnt == 0) {
                         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                        [self saveFunnlWithWebhookId:nil];
                     }
                 });
             }];
@@ -1000,9 +1023,11 @@ NSMutableArray *emailArr,*searchArray;
 -(void)saveButtonPressed
 {
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     NSLog(@"Save Butoon pressed");
-    [[Mixpanel sharedInstance] track:@"Funnl Save Button pressed"];
+    
+    [[Mixpanel sharedInstance] track:@"Created a new Funnl or modified existing Funnl"];
+    
+    
     if(activeField){
         [activeField resignFirstResponder];
     }
@@ -1025,11 +1050,12 @@ NSMutableArray *emailArr,*searchArray;
         }
 
         if(dictionaryOfConversations.allKeys.count){
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             if (!areNotificationsEnabled) {
                 [self saveFunnlWithWebhookId:nil];
             } else {
                 [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-                if ([oldModel.webhookIds length]) {
+                if (oldModel != nil && [oldModel.webhookIds length]) {
                     NSString *webhookJSONString = [oldModel webhookIds];
                     NSData *jsonData = [webhookJSONString dataUsingEncoding:NSUTF8StringEncoding];
                     NSMutableDictionary *webhooks = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:nil]];
@@ -1051,7 +1077,9 @@ NSMutableArray *emailArr,*searchArray;
                             reqCnt--;
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 //[self showAlertForError:error];
+                                NSLog(@"saveButtonPressed --- deleteWebhookWithID : %@",error.userInfo.description);
                                 if (reqCnt == 0) {
+                                    [self createWebhooksAndSaveFunnl];
                                     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                                 }
                             });

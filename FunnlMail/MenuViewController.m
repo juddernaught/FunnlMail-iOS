@@ -18,6 +18,8 @@
 #import "ComposeViewController.h"
 #import "FAQVC.h"
 
+#import <Mixpanel/Mixpanel.h>
+
 @interface MenuViewController ()
 
 @end
@@ -131,6 +133,9 @@
     
     else if ([cell.menuLabel.text isEqualToString:@"Sent Mail"]) {
         NSLog(@"sent mail requested");
+        
+        [[Mixpanel sharedInstance] track:@"Viewed sent mail"];
+        
          //The following line is required to get to the emailTableVC in mainVC
          // [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject;
     
@@ -143,6 +148,9 @@
     
     else if ([cell.menuLabel.text isEqualToString:@"Archive"]){
         NSLog(@"archive mail requested");
+        
+        [[Mixpanel sharedInstance] track:@"Viewed archive mail"];
+        
         appDelegate.currentFunnelString = ARCHIVE;
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Archive";
         [[EmailService instance] getDatabaseMessages:ARCHIVE withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject];
@@ -150,6 +158,9 @@
     }
     
     else if ([cell.menuLabel.text isEqualToString:@"Drafts"]){
+        
+        [[Mixpanel sharedInstance] track:@"Viewed drafts"];
+        
         appDelegate.currentFunnelString = DRAFTS;
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Drafts";
         [[EmailService instance] getDatabaseMessages:DRAFTS withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject];
@@ -158,6 +169,9 @@
     
     else if ([cell.menuLabel.text isEqualToString:@"Trash"]){
         NSLog(@"trash mail requested");
+        
+        [[Mixpanel sharedInstance] track:@"Viewed trash"];
+        
         appDelegate.currentFunnelString = TRASH;
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Trash";
         [[EmailService instance] getDatabaseMessages:TRASH withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject];
