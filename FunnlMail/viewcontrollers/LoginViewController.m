@@ -544,7 +544,7 @@ UIButton *loginButton;
 
     mainViewController = [[MainVC alloc] init];
     UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:mainViewController];
-    
+    mainViewController.firstTime = @1;
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     if(appDelegate.internetAvailable){
         [[EmailService instance] startLogin:self.mainViewController.emailsTableViewController];

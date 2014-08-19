@@ -25,4 +25,5 @@
 @property (nonatomic, strong) EmailsTableViewController *emailsTableViewController;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property (strong,nonatomic) FunnelModel *filterModel;
+@property (strong,nonatomic) NSNumber *firstTime;
 @end
