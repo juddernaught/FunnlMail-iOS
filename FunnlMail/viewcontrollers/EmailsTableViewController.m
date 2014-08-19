@@ -24,6 +24,8 @@
 #import "FunnlPopUpView.h"
 #import <Mixpanel/Mixpanel.h>
 #import "RNBlurModalView.h"
+#import "UIView+Toast.h"
+
 
 @implementation UILabel (Additions)
 
@@ -105,6 +107,7 @@ UIView *greyView;
         [self.tableView reloadData];
     }
     funnlArray = [[FunnelService instance] allFunnels];
+    tempAppDelegate.mainVCdelegate = self.mainVCdelegate;
 }
 
 - (void)didReceiveMemoryWarning
@@ -112,6 +115,75 @@ UIView *greyView;
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+#pragma mark - Toast
+- (void)undoButtonPressed:(UIButton*)sender {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(deleteMessageAfterOperation:) object:nil];
+    if (sender.tag == 1) {
+        
+    }
+    
+    else if (sender.tag == 2) {
+        
+    }
+    [self.tableView beginUpdates];
+    [[EmailService instance].filterMessages insertObject:selectedMessageModel atIndex:selectedIndexPath.row];
+    [[EmailService instance].messages addObject:selectedMessageModel];
+    [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:selectedIndexPath] withRowAnimation:UITableViewRowAnimationLeft];
+    [self.tableView endUpdates];
+    [returnView setHidden:YES];
+}
+
+- (UIView*)tostViewForOperation:(int)operation {
+    returnView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 50)];
+    returnView.clipsToBounds = YES;
+    returnView.layer.cornerRadius = 2;
+    [returnView setBackgroundColor:[UIColor colorWithWhite:COLOR_OF_WHITE alpha:ALPHA_FOR_TOST]];
+    
+    UILabel *sampleLable = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 250 - 10, 50)];
+    [sampleLable setTextAlignment:NSTextAlignmentLeft];
+    [sampleLable setFont:[UIFont systemFontOfSize:14]];
+    [sampleLable setTextColor:[UIColor whiteColor]];
+    [sampleLable setBackgroundColor:[UIColor clearColor]];
+    sampleLable.text = ARCHIVE_TEXT;
+    [returnView addSubview:sampleLable];
+    sampleLable = nil;
+    
+    UIView *seperatorView = [[UIView alloc] initWithFrame:CGRectMake(250, 0, 0.5, 50)];
+    [seperatorView setBackgroundColor:[UIColor whiteColor]];
+    [returnView addSubview:seperatorView];
+    seperatorView = nil;
+    
+    UIButton *sampleButton = [[UIButton alloc] initWithFrame:CGRectMake(250, 0, 50, 50)];
+    sampleButton.tag = operation;
+    [sampleButton addTarget:self action:@selector(undoButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [sampleButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
+    [sampleButton setTitle:@"Undo" forState:UIControlStateNormal];
+    [sampleButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [returnView addSubview:sampleButton];
+    sampleButton = nil;
+    return returnView;
+}
+
+- (void)deleteMessageAfterOperation:(NSString*)operation {
+    NSString *uidKey = [NSString stringWithFormat:@"%d", messageSelected.uid];
+    if ([operation isEqualToString:@"1"]) {
+        [[MessageService instance] deleteMessage:uidKey];
+        MCOIMAPOperation *msgOperation = [[EmailService instance].imapSession storeFlagsOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:messageSelected.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagDeleted];
+        [msgOperation start:^(NSError * error)
+         {
+             NSLog(@"selected message flags %u UID is %u",messageSelected.flags,messageSelected.uid );
+         }];
+    }
+    else {
+        [[MessageService instance] deleteMessage:uidKey];
+        MCOIMAPCopyMessagesOperation *opt = [[EmailService instance].imapSession copyMessagesOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:messageSelected.uid] destFolder:TRASH];
+        [opt start:^(NSError *error, NSDictionary *uidMapping) {
+            NSLog(@"copied to folder with UID %@", uidMapping);
+        }];
+    }
+}
+
 
 #pragma mark - Table view data source
 
@@ -154,10 +226,9 @@ UIView *greyView;
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     [self.tableView registerClass:[FilterViewCell class] forCellReuseIdentifier:FILTER_VIEW_CELL];
-    //<<<<<<< HEAD
     [self.view addSubview:tablecontroller.view];
-    //=======
     [self.view addSubview:self.tableView];
+
     for (UITextView *view in self.view.subviews) {
         if ([view isKindOfClass:[UITextView class]]) {
             view.scrollsToTop = NO;
@@ -172,12 +243,6 @@ UIView *greyView;
     mailSearchBar.delegate = self;
     mailSearchBar.placeholder = @"Search";
     self.tableView.tableHeaderView = mailSearchBar;
-
-//    if ([[MessageService instance] messagesAllTopMessages].count > 0) {
-//        
-//    }
-//    else
-//        [self.view bringSubviewToFront:tempAppDelegate.progressHUD];
 }
 
 - (void)fetchLatestEmail
@@ -407,61 +472,42 @@ UIView *greyView;
                 
                 
                 [cell setSwipeGestureWithView:archiveView color:yellowColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
-                    
                     [[Mixpanel sharedInstance] track:@" Swiped an email left to right for Archive "];
-                    
                     NSLog(@"Did swipe \"Archive\" cell");
-               
                     NSIndexPath *deleteIndexPath = [tableView indexPathForCell:cell];
+                    selectedIndexPath = deleteIndexPath;
                     [tableView beginUpdates];
-                    [[EmailService instance].filterMessagePreviews removeObjectForKey:uidKey];
+                    selectedMessageModel = [[EmailService instance].filterMessages objectAtIndex:deleteIndexPath.row];
                     [[EmailService instance].filterMessages removeObjectAtIndex:deleteIndexPath.row];
                     [[EmailService instance].messages removeObjectIdenticalTo:message];
-                    NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
-                    [[MessageService instance] deleteMessage:uidKey];
                     [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:deleteIndexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
                     [tableView endUpdates];
-                    
                     [cell swipeToOriginWithCompletion:nil];
-                    
-                    MCOIMAPOperation *msgOperation = [[EmailService instance].imapSession storeFlagsOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:message.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagDeleted];
-                    [msgOperation start:^(NSError * error)
-                     {
-                         NSLog(@"selected message flags %u UID is %u",message.flags,message.uid );
-                     }];
+                    [self.view showToast:[self tostViewForOperation:1] duration:TOST_DISPLAY_DURATION position:@"bottom"];
+                    messageSelected = message;
+                    [self performSelector:@selector(deleteMessageAfterOperation:) withObject:@"1" afterDelay:TOST_DISPLAY_DURATION];
                 }];
                 
+                
+                
                 [cell setSwipeGestureWithView:trashView color:redColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState2 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
-                    
                     [[Mixpanel sharedInstance] track:@"Swiped an email left to right for Trash"];
-
-                    
                     NSLog(@"Did swipe \"Trash\" cell");
                     NSIndexPath *deleteIndexPath = [tableView indexPathForCell:cell];
+                    selectedIndexPath = deleteIndexPath;
+                    selectedMessageModel = [[EmailService instance].filterMessages objectAtIndex:deleteIndexPath.row];
                     [tableView beginUpdates];
                     [[EmailService instance].filterMessagePreviews removeObjectForKey:uidKey];
                     [[EmailService instance].filterMessages removeObjectAtIndex:deleteIndexPath.row];
                     [[EmailService instance].messages removeObjectIdenticalTo:message];
-                    NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
-                    [[MessageService instance] deleteMessage:uidKey];
                     [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:deleteIndexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
                     [tableView endUpdates];
-                    
-//                    [[EmailService instance].imapSession copyMessagesOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:message.uid] destFolder:TRASH];
-                    MCOIMAPCopyMessagesOperation *opt = [[EmailService instance].imapSession copyMessagesOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:message.uid] destFolder:TRASH];
-                    [opt start:^(NSError *error, NSDictionary *uidMapping) {
-                        NSLog(@"copied to folder with UID %@", uidMapping);
-                    }];
-                    
-//                    MCOIMAPOperation *msgOperation = [[EmailService instance].imapSession storeFlagsOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:message.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagDeleted];
-//                    [msgOperation start:^(NSError * error)
-//                     {
-//                  
-//                         [[EmailService instance].imapSession expungeOperation:TRASH];
-//                         NSLog(@"selected message flags %u UID is %u",message.flags,message.uid );
-//                     }];
+                    [self performSelector:@selector(deleteMessageAfterOperation:) withObject:@"2" afterDelay:TOST_DISPLAY_DURATION];
                     [cell swipeToOriginWithCompletion:nil];
+                    [self.view showToast:[self tostViewForOperation:1] duration:TOST_DISPLAY_DURATION position:@"bottom"];
+                    messageSelected = message;
                 }];
+                
                 
                 [cell setSwipeGestureWithView:fullFunnlView color:fullFunnlColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
                     NSLog(@"Did swipe full cell, ");
@@ -885,9 +931,11 @@ UIView *greyView;
                 MCOIMAPMessage *msg = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
                 MsgViewController *vc = [[MsgViewController alloc] init];
                 vc.folder = self.emailFolder;
+                vc.selectedIndexPath = indexPath;
                 vc.message = msg;
                 vc.address = msg.header.from;
                 vc.session = [EmailService instance].imapSession;
+                vc.messageModel = (MessageModel*)[EmailService instance].filterMessages[indexPath.row];
                 msg.flags = msg.flags | MCOMessageFlagSeen;
                 MCOIMAPOperation *msgOperation=[[EmailService instance].imapSession storeFlagsOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:msg.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagSeen];
                 [msgOperation start:^(NSError * error)
@@ -942,10 +990,12 @@ UIView *greyView;
             [[Mixpanel sharedInstance] track:@"User viewed email"];
             MCOIMAPMessage *msg = [MCOIMAPMessage importSerializable:[(MessageModel*)searchMessages[indexPath.row] messageJSON]];
             MsgViewController *vc = [[MsgViewController alloc] init];
+            vc.selectedIndexPath = indexPath;
             vc.folder = self.emailFolder;
             vc.message = msg;
             vc.session = [EmailService instance].imapSession;
             //[self.navigationController pushViewController:vc animated:YES];
+            vc.messageModel = (MessageModel*)searchMessages[indexPath.row];
             [self setReadMessage:(MessageModel*)searchMessages[indexPath.row]];
             [self.mainVCdelegate pushViewController:vc];
         }

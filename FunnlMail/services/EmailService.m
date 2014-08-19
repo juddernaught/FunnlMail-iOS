@@ -114,12 +114,19 @@ static NSString *currentFolder;
     self.sentMessagePreviews = [NSMutableDictionary dictionary];
    
     [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
-    if ([EmailService instance].filterMessages.count == 0) {
+    if ([EmailService instance].filterMessages.count > 0) {
         AppDelegate *tempAppDelegate = APPDELEGATE;
-        if ([[tempAppDelegate.currentFunnelString lowercaseString] isEqualToString:[ALL_FUNNL lowercaseString]] || [[tempAppDelegate.currentFunnelString lowercaseString] isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]) {
-        }
-        else {
-            self.filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:tempAppDelegate.currentFunnelDS.funnelId top:2000];
+        if(tempAppDelegate.currentSelectedFunnlModel){
+            if ([[tempAppDelegate.currentSelectedFunnlModel.funnelName.lowercaseString lowercaseString] isEqualToString:[ALL_FUNNL lowercaseString]]) {
+                //self.filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
+            }
+            else if ([[tempAppDelegate.currentSelectedFunnlModel.funnelName.lowercaseString lowercaseString] isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]) {
+                self.filterMessages = (NSMutableArray*)[[MessageService instance] retrieveOtherMessagesThanPrimary];
+            }
+            else{
+                self.filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:tempAppDelegate.currentSelectedFunnlModel.funnelId top:2000];
+            }
+            
         }
     }
     [fv.tableView reloadData];

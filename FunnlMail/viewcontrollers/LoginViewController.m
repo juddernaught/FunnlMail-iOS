@@ -571,7 +571,6 @@ UIButton *loginButton;
     mainViewController.firstTime = @1;
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     if(appDelegate.internetAvailable){
-        //[[EmailService instance] startLogin:self.mainViewController.emailsTableViewController];
         [[EmailService instance] performSelectorInBackground:@selector(startLogin:) withObject:self.mainViewController.emailsTableViewController];
     }
     
@@ -584,7 +583,7 @@ UIButton *loginButton;
     
     //expilictly calling the view to start the background loading emails
     [appDelegate.drawerController view];
-    [mainViewController view];
+    //[mainViewController view];
     [appDelegate.menuController view];
     
     NSURL *url = [NSURL URLWithString:@"https://singular-hub-642.appspot.com"];
@@ -689,7 +688,6 @@ UIButton *loginButton;
     smtpSession.authType = MCOAuthTypeXOAuth2;
     smtpSession.connectionType = MCOConnectionTypeTLS;
     [EmailService instance].smtpSession = smtpSession;
-    //[[EmailService instance] startLogin:self.mainViewController.emailsTableViewController];
     [self loadHomeScreen];
     [self setDrawerControllerOnWindow];
 

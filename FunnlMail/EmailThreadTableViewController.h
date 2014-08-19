@@ -14,6 +14,8 @@
 #import "EmailCell.h"
 #import "MsgViewController.h"
 #import "RDSwipeableTableViewCell.h"
+#import <MailCore/MailCore.h>
+
 
 @interface EmailThreadTableViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,RDSwipeableTableViewCellDelegate,MCSwipeTableViewCellDelegate>
 {

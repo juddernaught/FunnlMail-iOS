@@ -77,42 +77,44 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     mainView.hidden = YES;
     mainView.mainVCdelegate = self;
     mainView.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.93];
-//    mainView.blurRadius = 33;
-    //take snapshot, then move off screen once complete
-//    [mainView updateAsynchronously:YES completion:^{
-//        mainView.frame = CGRectMake(0, 568, 320, 0);
-//    }];
     
     [self.view addSubview:mainView];
     
     // Set the navigation bar to white
     [self.navigationController.navigationBar setBarTintColor:[UIColor whiteColor]];
-    [[UINavigationBar appearance] setTintColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR]];
+    [self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xCDCDCD)];
     
-    // Filter Title
-    self.navigationItem.title = currentFilterModel.funnelName;
-//    navigationBarTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
-//    [navigationBarTitleLabel setFont:[UIFont systemFontOfSize:22.0]];
-//    
-//    [navigationBarTitleLabel setTextAlignment:NSTextAlignmentCenter];
-//    [navigationBarTitleLabel setTextColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR]];
-//    self.navigationItem.titleView = navigationBarTitleLabel;
     
     // This is the All bar
     NSLog(@"viewDidLoad mainVC");
     AppDelegate *tempAppDelegate = APPDELEGATE;
     tempAppDelegate.mainVCControllerInstance = self;
-    if ([tempAppDelegate.currentFunnelString.lowercaseString isEqualToString:[ALL_FUNNL lowercaseString]]) {
-        navigationBarTitleLabel.text = ALL_FUNNL;
-        self.navigationItem.title = ALL_FUNNL;
+    currentFilterModel =  tempAppDelegate.currentSelectedFunnlModel;
+    
+    
+    // Filter Title
+    if (currentFilterModel && [currentFilterModel.funnelName isEqualToString:ALL_FUNNL]) {
+        [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
+        self.navigationItem.title = currentFilterModel.funnelName;
+        [self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xCDCDCD)];
     }
-    else {
-        self.navigationItem.title = tempAppDelegate.currentFunnelString.capitalizedString;
-        navigationBarTitleLabel.text = tempAppDelegate.currentFunnelString.capitalizedString;
-        self.navigationItem.title = @"Sent mail";
-        navigationBarTitleLabel.text = @"Sent";
+    else if (currentFilterModel &&  [currentFilterModel.funnelName isEqualToString:ALL_OTHER_FUNNL]) {
+        [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveOtherMessagesThanPrimary];
+        self.navigationItem.title = currentFilterModel.funnelName;
+        [self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xCDCDCD)];
+        [[Mixpanel sharedInstance] track:@"Viewed 'All other' mail"];
     }
-    //>>>>>>> befb26a4459794a789ff1240527bd41eba700a00
+    else if(currentFilterModel)
+    {
+        self.navigationItem.title = currentFilterModel.funnelName;
+        [self.navigationController.navigationBar setBarTintColor:[UIColor colorWithHexString:currentFilterModel.funnelColor]];
+        [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:currentFilterModel.funnelId top:2000];
+    }
+    else{
+        [self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xCDCDCD)];
+        [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
+    }
+
     filterLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 44+20, 320, 40)];
     _activityIndicator = tempAppDelegate.appActivityIndicator;
     [_activityIndicator setBackgroundColor:[UIColor clearColor]];
@@ -122,13 +124,6 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#2EB82E"]);
     filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle: ALL_FUNNL);
     filterLabel.textAlignment = NSTextAlignmentCenter;
-    //[self.view addSubview:filterLabel];
-//    self.navigationItem.title = filterLabel.text;
-//    navigationBarTitleLabel.text = filterLabel.text;
-    //*/
-
-
-
   
     UIButton *menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [menuButton addTarget:self action:@selector(menuButtonSelected) forControlEvents:UIControlEventTouchUpInside];
@@ -252,6 +247,8 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 // FIXME: move somewhere else?
 -(void) filterSelected:(FunnelModel *)filterModel{
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    appDelegate.currentSelectedFunnlModel = filterModel;
     emailsTableViewController.isSearching = FALSE;
     [emailsTableViewController resetSearchBar];
     if(filterModel != nil){
@@ -264,22 +261,22 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     //fetching from database
     if ([filterModel.funnelName isEqualToString:ALL_FUNNL]) {
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
+        [self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xCDCDCD)];
     }
     else if ([filterModel.funnelName isEqualToString:ALL_OTHER_FUNNL]) {
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveOtherMessagesThanPrimary];
-        
+        [self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xCDCDCD)];
+
         [[Mixpanel sharedInstance] track:@"Viewed 'All other' mail"];
     }
     else
     {
+        [self.navigationController.navigationBar setBarTintColor:[UIColor colorWithHexString:filterModel.funnelColor]];
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:filterModel.funnelId top:2000];
     }
-    //self.navigationController.navigationBar.tintColor =  filterModel.barColor;
     [self setFilterTitle:filterModel.funnelName];
     [emailsTableViewController.tableView reloadData];
     
-//    [emailsTableViewController.tableView setContentOffset:CGPointMake(0, -40)];
-//    [filterView startLogin];  // TODO: (MSR) I'm guessing we don't want to call this again, may need to refactor retrieving of messages
 }
 
 -(void) pushViewController:(UIViewController *)viewController{

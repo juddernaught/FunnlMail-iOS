@@ -162,8 +162,19 @@
     return funnlDictionary;
 }
 
+- (NSString*) cgColorToString:(CGColorRef)cgColorRef
+{
+    const CGFloat *components = CGColorGetComponents(cgColorRef);
+    int red = (int)(components[0] * 255);
+    int green = (int)(components[1] * 255);
+    int blue = (int)(components[2] * 255);
+    int alpha = (int)(components[3] * 255);
+    return [NSString stringWithFormat:@"#%0.2X%0.2X%0.2X%0.2X", red, green, blue, alpha];
+}
+
 //changed by iaruo001 on 11th June 2014
 -(NSString *) description{
-    return [NSString stringWithFormat:@"{funnelId:%@, funnelName:%@, emailAddresses:%@, phrases:%@}", self.funnelId, self.funnelName, self.emailAddresses, self.phrases];
+    NSString *colorString = [self cgColorToString:self.barColor.CGColor];
+    return [NSString stringWithFormat:@"{funnelId:%@, funnelName:%@, emailAddresses:%@, phrases:%@, barColor: %@}", self.funnelId, self.funnelName, self.emailAddresses, self.phrases,colorString];
 }
 @end
