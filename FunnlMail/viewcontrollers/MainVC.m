@@ -51,9 +51,6 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     return self;
 }
 
-
-
-
 -(void)viewWillAppear:(BOOL)animated{
     [mainView reloadView];
     AppDelegate *app = APPDELEGATE;
@@ -70,7 +67,6 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
          //[self setTitle: app.currentFunnelString];
     }
 }
-
 
 - (void)viewDidLoad
 {
@@ -165,30 +161,26 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [centeredButtons addSubview:composeEmailButton];
     
     emailsTableViewController.emailFolder = INBOX;
-//    if(emailsTableViewController==nil){
-//        emailsTableViewController = [[EmailsTableViewController alloc]init];
-        emailsTableViewController.mainVCdelegate = self;
-        [self addChildViewController:emailsTableViewController];
-        [self.view insertSubview:emailsTableViewController.view atIndex:0];
-        
-        [emailsTableViewController.view mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.view.mas_top).with.offset(0);
-            make.left.equalTo(self.view.mas_left).with.offset(0);
-            make.right.equalTo(self.view.mas_right).with.offset(0);
-            make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
-        }];
-        [[EmailService instance] startLogin:emailsTableViewController];
-//    }
+    emailsTableViewController.mainVCdelegate = self;
+    [self addChildViewController:emailsTableViewController];
+    [self.view insertSubview:emailsTableViewController.view atIndex:0];
+    
+    [emailsTableViewController.view mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.view.mas_top).with.offset(0);
+        make.left.equalTo(self.view.mas_left).with.offset(0);
+        make.right.equalTo(self.view.mas_right).with.offset(0);
+        make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
+    }];
+    [[EmailService instance] startLogin:emailsTableViewController];
 }
 
 
 
 #pragma mark -
 #pragma mark Event-Handler
-
 -(void)menuButtonSelected{
     NSLog(@"Menu button selected");
-    [[Mixpanel sharedInstance] track:@"Side Panel Requested"];
+    [[Mixpanel sharedInstance] track:@"Tapped on Left menu bar button"];
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 //    [appDelegate.drawerController openDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
     [appDelegate.drawerController toggleDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
@@ -198,7 +190,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 
 -(void) filterButtonSelected{
-    [[Mixpanel sharedInstance] track:@"Filter Button Selected"];
+    [[Mixpanel sharedInstance] track:@"Tapped on Funnl button"];
     AppDelegate *tempAppDelegate = APPDELEGATE;
 //    if (tempAppDelegate.funnelUpDated) {
 //        tempAppDelegate.funnelUpDated = FALSE;
@@ -217,7 +209,9 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 -(void) composeEmailButtonSelected{
     NSLog(@"Compose Email selected");
-    [[Mixpanel sharedInstance] track:@"Compose Email Pressed"]; 
+    
+    [[Mixpanel sharedInstance] track:@"Tapped on compose email"];
+    
     mainView.hidden = YES;
     
     ComposeViewController *mc = [[ComposeViewController alloc] init];
@@ -266,6 +260,8 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     }
     else if ([filterModel.funnelName isEqualToString:ALL_OTHER_FUNNL]) {
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveOtherMessagesThanPrimary];
+        
+        [[Mixpanel sharedInstance] track:@"Viewed 'All other' mail"];
     }
     else
     {

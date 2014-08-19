@@ -168,7 +168,9 @@ NSString *msgBody;
 }
 
 - (void)editButtonPressed:(UIButton*)sender {
-    [[Mixpanel sharedInstance] track:@"Edit button pressed"];
+    
+    [[Mixpanel sharedInstance] track:@"Pressed 'Manage' button in Funnl Overlay"];
+    
     if (editOn) {
         editOn = FALSE;
         
@@ -360,6 +362,9 @@ NSString *msgBody;
 }
 
 -(void)settingsButtonClicked:(id)sender{
+    
+  [[Mixpanel sharedInstance] track:@"Pressed 'Settings' button in manage overlay"];
+    
   UIButton *b = (UIButton*)sender;
   FunnelModel *fm = (FunnelModel *)filterArray[b.tag];
   if([[fm.funnelName lowercaseString]  isEqualToString:[ALL_FUNNL lowercaseString]] || [[fm.funnelName lowercaseString]  isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]){

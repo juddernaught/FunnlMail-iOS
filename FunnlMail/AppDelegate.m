@@ -37,13 +37,10 @@
     // MixPanel setup
     //[[CIOExampleAPIClient sharedClient] clearCredentials];
     [Mixpanel sharedInstanceWithToken:@"08b1e55d72f1b22a8e5696c2b56a6777"];
-    [[Mixpanel sharedInstance] track:@"App opened"]; //Launched app
+    [[Mixpanel sharedInstance] track:@"Launched App"]; //Launched app
     // Parse setup
-    [Parse setApplicationId:@"oXAOrMLIRzLNZh50VZ3sk3LBEfUuNDXuLZVBvHdV"
-                  clientKey:@"Z5mFEsiX7xTXYlKYKXMbN2zlqqf97l39E0PzZoZg"];
-    [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge|
-     UIRemoteNotificationTypeAlert|
-     UIRemoteNotificationTypeSound];
+    [Parse setApplicationId:@"oXAOrMLIRzLNZh50VZ3sk3LBEfUuNDXuLZVBvHdV" clientKey:@"Z5mFEsiX7xTXYlKYKXMbN2zlqqf97l39E0PzZoZg"];
+
     funnelUpDated = FALSE;
     progressHUD = [[MBProgressHUD alloc] init];
     //initializing currentFunnelString to "All"
@@ -87,6 +84,9 @@
 //        [self.loginViewController performSelectorInBackground:@selector(fetchContacts) withObject:nil];
     }
     
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge| UIRemoteNotificationTypeAlert| UIRemoteNotificationTypeSound];
+
+    
     // Override point for customization after application launch.
     return YES;
 }
@@ -118,7 +118,7 @@
             if(self.loginViewController && self.loginViewController.mainViewController && self.loginViewController.mainViewController.emailsTableViewController){
                 [self.loginViewController.mainViewController.emailsTableViewController.tablecontroller.refreshControl endRefreshing];
             }
-            [self.loginViewController refreshAccessToken];
+            [self.loginViewController performSelector:@selector(refreshAccessToken) withObject:nil afterDelay:0.1];
             
         //}
         self.internetAvailable = YES;
@@ -251,7 +251,8 @@
     NSLog(@"-----applicationDidBecomeActive-----");
     if(self.loginViewController){
         NSLog(@"-----Call Refresh Token -----");
-        [self.loginViewController refreshAccessToken];
+        self.isAlreadyRequestedRefreshToken = NO;
+        [self.loginViewController performSelector:@selector(refreshAccessToken) withObject:nil afterDelay:0.1];
     }
 }
 
@@ -279,11 +280,12 @@
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
     // Store the deviceToken in the current installation and save it to Parse.
+    NSString* deviceTokenStr = [NSString stringWithUTF8String:[deviceToken bytes]];
     NSLog(@"didRegisterForRemoteNotificationsWithDeviceToken: %@",deviceToken);
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     NSString *loggedInEmail = [EmailService instance].userEmailID;
-    [currentInstallation setChannels:@[]];
-    [currentInstallation addUniqueObject:@"testers2" forKey:@"channels"];
+//    [currentInstallation setChannels:@[]];
+    //[currentInstallation addUniqueObject:@"testers2" forKey:@"channels"];
     
     if ([loggedInEmail length]) {
         if (![currentInstallation channels] || [currentInstallation channels].count == 0) {
@@ -291,6 +293,7 @@
         }
         [currentInstallation addUniqueObject:@"aUser" forKey:loggedInEmail];
     }
+    NSLog(@"didRegisterForRemoteNotificationsWithDeviceToken: %@",currentInstallation.deviceToken);
     [currentInstallation setDeviceTokenFromData:deviceToken];
     [currentInstallation saveInBackground];
 }
