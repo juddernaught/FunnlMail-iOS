@@ -19,6 +19,7 @@
 #import "ComposeViewController.h"
 #import "MainView.h"
 #import "EmailServersService.h"
+#import "RNBlurModalView.h"
 
 #import <MessageUI/MessageUI.h>
 
@@ -180,7 +181,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 #pragma mark Event-Handler
 -(void)menuButtonSelected{
     NSLog(@"Menu button selected");
-    [[Mixpanel sharedInstance] track:@"Side Panel Requested"];
+    [[Mixpanel sharedInstance] track:@"Tapped on Left menu bar button"];
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 //    [appDelegate.drawerController openDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
     [appDelegate.drawerController toggleDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
@@ -190,7 +191,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 
 -(void) filterButtonSelected{
-    [[Mixpanel sharedInstance] track:@"Filter Button Selected"];
+    [[Mixpanel sharedInstance] track:@"Tapped on Funnl button"];
     AppDelegate *tempAppDelegate = APPDELEGATE;
 //    if (tempAppDelegate.funnelUpDated) {
 //        tempAppDelegate.funnelUpDated = FALSE;
@@ -201,15 +202,23 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     NSLog(@"Filter button selected");
     if(mainView.hidden == YES){
         mainView.hidden = NO;
+        if (self.firstTime) {
+            self.firstTime = 0;
+            RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Funnl Time!" message:@"Tap on Any Funnl to view emails under that Funnl or presss 'Manage' to view/change Funnl Settings"];
+            [modal show];
+        }
     }else{
         mainView.hidden = YES;
     }
+    
 }
 
 
 -(void) composeEmailButtonSelected{
     NSLog(@"Compose Email selected");
-    [[Mixpanel sharedInstance] track:@"Compose Email Pressed"];
+    
+    [[Mixpanel sharedInstance] track:@"Tapped on compose email"];
+    
     mainView.hidden = YES;
     
     ComposeViewController *mc = [[ComposeViewController alloc] init];
@@ -258,6 +267,8 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     }
     else if ([filterModel.funnelName isEqualToString:ALL_OTHER_FUNNL]) {
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveOtherMessagesThanPrimary];
+        
+        [[Mixpanel sharedInstance] track:@"Viewed 'All other' mail"];
     }
     else
     {

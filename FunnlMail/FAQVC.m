@@ -8,6 +8,7 @@
 
 #import "FAQVC.h"
 #import "UIColor+HexString.h"
+#import <Mixpanel/Mixpanel.h>
 
 @interface FAQVC ()
 
@@ -28,6 +29,8 @@ NSArray *answers;
 
 - (void)viewDidLoad
 {
+    [[Mixpanel sharedInstance] track:@"FAQ Pressed"]; // Viewed Help/FAQS section
+    
     [super viewDidLoad];
     UITableView *faq = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT) style:UITableViewStylePlain];
     faq.dataSource = self;

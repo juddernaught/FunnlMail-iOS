@@ -18,6 +18,7 @@
 #import "EmailServersService.h"
 #import "LoginViewController.h"
 #import "MainVC.h"
+#import "RNBlurModalView.h"
 
 static EmailService *instance;
 
@@ -656,6 +657,7 @@ static NSString *currentFolder;
                           [tempAppDelegate.progressHUD setHidden:YES];
                           [tempAppDelegate.progressHUD show:NO];
                           [fv.activityIndicator stopAnimating];
+
                       });
                   });
               }];

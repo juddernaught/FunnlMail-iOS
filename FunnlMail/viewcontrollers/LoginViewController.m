@@ -186,6 +186,9 @@ UIButton *loginButton;
 
 - (void) loginButtonSelected {
     [self setDrawerControllerOnWindow];
+    
+    [[Mixpanel sharedInstance] track:@"Viewed last slider"];
+    
     didLoginIn = @1;
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     if(didLoginIn)[appDelegate showWelcomeOverlay];
@@ -225,7 +228,7 @@ UIButton *loginButton;
         [[self navigationController] popViewControllerAnimated:YES];
         // Authentication failed
     } else {
-        [[Mixpanel sharedInstance] track:@"User Succesfully logged in"];
+        [[Mixpanel sharedInstance] track:@"Signed into email"]; // Signed into Gmail
         
         didLoginIn = @1;
         
@@ -565,7 +568,7 @@ UIButton *loginButton;
 
     mainViewController = [[MainVC alloc] init];
     UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:mainViewController];
-    
+    mainViewController.firstTime = @1;
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     if(appDelegate.internetAvailable){
         //[[EmailService instance] startLogin:self.mainViewController.emailsTableViewController];

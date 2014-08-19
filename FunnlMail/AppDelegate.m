@@ -37,7 +37,7 @@
     // MixPanel setup
     //[[CIOExampleAPIClient sharedClient] clearCredentials];
     [Mixpanel sharedInstanceWithToken:@"08b1e55d72f1b22a8e5696c2b56a6777"];
-    [[Mixpanel sharedInstance] track:@"App opened"];
+    [[Mixpanel sharedInstance] track:@"Launched App"]; //Launched app
     // Parse setup
     [Parse setApplicationId:@"oXAOrMLIRzLNZh50VZ3sk3LBEfUuNDXuLZVBvHdV" clientKey:@"Z5mFEsiX7xTXYlKYKXMbN2zlqqf97l39E0PzZoZg"];
 
@@ -150,48 +150,12 @@
     
     UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"welcome.png"]];
     imageView.frame = CGRectMake(0, 100, WIDTH, HEIGHT-90);
+    
+    [[Mixpanel sharedInstance] track:@"Viewed intro overlay"];
+    
     [showWelcomeOverlay addSubview:imageView];
     
-    UILabel *personal = [[UILabel alloc]initWithFrame:CGRectMake(15, 150, 75, 30)];
-    personal.text = @" Personal ";
-    personal.font = [UIFont boldSystemFontOfSize:18];
-    [personal sizeToFit];
-    personal.textColor = [UIColor greenColor];
-    personal.backgroundColor = [UIColor grayColor];
-    //[showWelcomeOverlay addSubview:personal];
-    
-    UILabel *work = [[UILabel alloc]initWithFrame:CGRectMake(95, 150, 75, 30)];
-    work.text = @" Work ";
-    work.font = [UIFont fontWithName:@"System" size:18];
-    [work sizeToFit];
-    work.textColor = [UIColor greenColor];
-    work.backgroundColor = [UIColor grayColor];
-    //[showWelcomeOverlay addSubview:work];
-    
-    UILabel *updates = [[UILabel alloc]initWithFrame:CGRectMake(15, 180, 75, 30)];
-    updates.text = @" Updates ";
-    updates.font = [UIFont boldSystemFontOfSize:18];
-    [updates sizeToFit];
-    [self createLabel:updates];
-
-    UILabel *Social = [[UILabel alloc]initWithFrame:CGRectMake(100, 180, 57, 30)];
-    Social.text = @" Social ";
-    Social.font = [UIFont boldSystemFontOfSize:18];
-    [Social sizeToFit];
-    [self createLabel:Social];
-    
-    UILabel *Promotions = [[UILabel alloc]initWithFrame:CGRectMake(30, 210, 95, 30)];
-    Promotions.text = @" Promotions ";
-    Promotions.font = [UIFont boldSystemFontOfSize:18];
-    [Promotions sizeToFit];
-    [self createLabel:Promotions];
-    
-    UILabel *forums =  [[UILabel alloc]initWithFrame:CGRectMake(165, 180, 95, 30)];
-    forums.text = @" Forums ";
-    forums.font = [UIFont boldSystemFontOfSize:18];
-    [forums sizeToFit];
-    [self createLabel:forums];
-    
+   
     UITextView *text = [[UITextView alloc]initWithFrame:CGRectMake(10, 330, WIDTH-10, 90)];
     text.text = @"You can access your non-primary emails and modify category setting anytime from the top menu";
     text.backgroundColor = [UIColor clearColor];

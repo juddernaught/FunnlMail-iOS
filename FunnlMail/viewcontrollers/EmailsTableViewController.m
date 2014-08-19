@@ -23,6 +23,7 @@
 #import "NSDate+TimeAgo.h"
 #import "FunnlPopUpView.h"
 #import <Mixpanel/Mixpanel.h>
+#import "RNBlurModalView.h"
 
 @implementation UILabel (Additions)
 
@@ -406,7 +407,9 @@ UIView *greyView;
                 
                 
                 [cell setSwipeGestureWithView:archiveView color:yellowColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
-                    [[Mixpanel sharedInstance] track:@"Email Archived"];
+                    
+                    [[Mixpanel sharedInstance] track:@" Swiped an email left to right for Archive "];
+                    
                     NSLog(@"Did swipe \"Archive\" cell");
                
                     NSIndexPath *deleteIndexPath = [tableView indexPathForCell:cell];
@@ -429,7 +432,10 @@ UIView *greyView;
                 }];
                 
                 [cell setSwipeGestureWithView:trashView color:redColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState2 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
-                    [[Mixpanel sharedInstance] track:@"Email Trashed"];
+                    
+                    [[Mixpanel sharedInstance] track:@"Swiped an email left to right for Trash"];
+
+                    
                     NSLog(@"Did swipe \"Trash\" cell");
                     NSIndexPath *deleteIndexPath = [tableView indexPathForCell:cell];
                     [tableView beginUpdates];
@@ -459,12 +465,17 @@ UIView *greyView;
                 
                 [cell setSwipeGestureWithView:fullFunnlView color:fullFunnlColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
                     NSLog(@"Did swipe full cell, ");
-                    [[Mixpanel sharedInstance] track:@"Add email to Funnl"];
+                    
+                    [[Mixpanel sharedInstance] track:@"Swiped an email right to left to add to Funnl"];
+                    
                     [cell swipeToOriginWithCompletion:nil];
                     MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
                     FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:YES withMessageId:uidKey withMessage:message subViewOnViewController:self];
                     funnlPopUpView.mainVCdelegate = self.mainVCdelegate;
-                    
+                    if ([FunnelService instance].allFunnels.count < 4){
+                        RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Hello Funnler!" message:@"Funnls help you to filter out emails from important senders – you can add multiple senders to a Funnl (eg. team) or create a new Funnl for key senders (eg. boss)"];
+                        [modal show];
+                    }
                     [self.view addSubview:funnlPopUpView];
                     
                 }];
@@ -624,7 +635,9 @@ UIView *greyView;
                 
                 
                 [cell setSwipeGestureWithView:archiveView color:yellowColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
-                    [[Mixpanel sharedInstance] track:@"Email Archived"];
+                    
+                    [[Mixpanel sharedInstance] track:@"Swiped an email left to right for Archive"];
+                    
                     NSLog(@"Did swipe \"Archive\" cell");
                     MCOIMAPOperation *msgOperation = [[EmailService instance].imapSession storeFlagsOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:message.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagDeleted];
                     [msgOperation start:^(NSError * error)
@@ -1144,6 +1157,9 @@ UIView *greyView;
 
 #pragma mark - SearchBar delegates
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar{
+    
+    [[Mixpanel sharedInstance] track:@"Clicked in the Search bar"];
+    
     CGRect searchBarFrame = searchBar.frame;
     searchBarFrame.size.height = 80.f;
     searchBar.frame = searchBarFrame;
