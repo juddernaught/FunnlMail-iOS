@@ -28,7 +28,7 @@
 #define accessTokenEndpoint @"https://accounts.google.com/o/oauth2/token"
 
 @interface LoginViewController (){
-    NSNumber *didLoginIn;
+   
 }
 
 @end
@@ -106,7 +106,6 @@ UIButton *loginButton;
 #pragma mark - viewDidLoad
 - (void) viewDidLoad {
     [super viewDidLoad];
-    didLoginIn = 0;
     _receivedData = [[NSMutableData alloc] init];
     _isRefreshing = NO;
     
@@ -159,10 +158,13 @@ UIButton *loginButton;
 {
     NSArray *allServers = [[EmailServersService instance] allEmailServers];
     if (!([allServers count] == 0 || [((EmailServerModel *)[allServers objectAtIndex:0]).refreshToken isEqualToString:@"nil"])) {
-        
+        AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        appDelegate.didLoginIn = 0;
         [self performSelector:@selector(refreshAccessToken) withObject:nil afterDelay:0.1];
     }
     else {
+        AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+        appDelegate.didLoginIn = @1;
 //        NSString *scope = @"https://mail.google.com/"; // scope for Gmail
         NSString *scope = @"https://mail.google.com/ https://www.googleapis.com/auth/userinfo.profile https://www.google.com/m8/feeds"; // scope for Gmail
 
@@ -185,13 +187,10 @@ UIButton *loginButton;
 }
 
 - (void) loginButtonSelected {
-    [self setDrawerControllerOnWindow];
-    
-    [[Mixpanel sharedInstance] track:@"Viewed last slider"];
-    
-    didLoginIn = @1;
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    if(didLoginIn)[appDelegate showWelcomeOverlay];
+    [self setDrawerControllerOnWindow];
+    [[Mixpanel sharedInstance] track:@"Viewed last slider"];
+    if(appDelegate.didLoginIn)[appDelegate showWelcomeOverlay];
     //[self oauthLogin];
 }
 
@@ -230,7 +229,6 @@ UIButton *loginButton;
     } else {
         [[Mixpanel sharedInstance] track:@"Signed into email"]; // Signed into Gmail
         
-        didLoginIn = @1;
         
         
         NSString * email = [auth userEmail];
@@ -568,7 +566,6 @@ UIButton *loginButton;
 
     mainViewController = [[MainVC alloc] init];
     UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:mainViewController];
-    mainViewController.firstTime = @1;
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     if(appDelegate.internetAvailable){
         [[EmailService instance] performSelectorInBackground:@selector(startLogin:) withObject:self.mainViewController.emailsTableViewController];

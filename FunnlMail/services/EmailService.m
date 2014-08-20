@@ -658,7 +658,7 @@ static NSString *currentFolder;
                       
                       dispatch_async(dispatch_get_main_queue(), ^(void){
                           AppDelegate *appDeleage = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-                          [appDeleage hideWelcomeOverlay];
+                          //[appDeleage hideWelcomeOverlay];
                           [fv.tableView reloadData];
                           [fv.tablecontroller.refreshControl endRefreshing];
                           [tempAppDelegate.progressHUD setHidden:YES];
