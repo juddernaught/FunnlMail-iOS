@@ -177,7 +177,7 @@ static NSString *currentFolder;
     u_int64_t modSeqValue = UINT64_MAX;
 
     NSString *modSeqString = [[NSUserDefaults standardUserDefaults] objectForKey:@"MODSEQ"];
-    if(modSeqString == nil || modSeqString.length <= 0){
+    if(modSeqString.length <= 0){
         NSArray *dataArray = [[MessageService instance] messagesWithTop:1];
         if(dataArray.count){
             MCOIMAPMessage *tempMessage = [dataArray objectAtIndex:0];

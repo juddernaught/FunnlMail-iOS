@@ -303,7 +303,7 @@ UIButton *loginButton;
             [appDelegate.contextIOAPIClient saveCredentials];
             
             //fetching contacts
-            //[self performSelector:@selector(getUserContact) withObject:nil afterDelay:0.1];
+            [self performSelector:@selector(getUserContact) withObject:nil afterDelay:0.1];
             //[self addToSourceWithAccountID:contextIO_account_id];
             [self performSelector:@selector(addToSourceWithAccountID:) withObject:contextIO_account_id afterDelay:0.01];
             
@@ -499,7 +499,7 @@ UIButton *loginButton;
                 }];
             }
             NSLog(@"what is currntNam: %@",[EmailService instance].currentName);
-            //[self performSelector:@selector(getUserContact) withObject:nil afterDelay:0.1];
+            [self performSelector:@selector(getUserContact) withObject:nil afterDelay:0.1];
 
             [[NSUserDefaults standardUserDefaults] synchronize];
             [EmailService instance].primaryMessages = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey: ALL_FUNNL]];
