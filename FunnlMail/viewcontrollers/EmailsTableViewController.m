@@ -430,7 +430,7 @@ UIView *greyView;
                 
                 NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
                 NSString *cachedPreview = [[MessageService instance] retrievePreviewContentWithID:uidKey];
-                if ([cachedPreview isEqualToString:@"empty"]) {
+                if (![cachedPreview isEqualToString:@"empty"]) {
                     cell.bodyLabel.text = cachedPreview;
                 }
                 else{
@@ -456,10 +456,13 @@ UIView *greyView;
                                 cell.bodyLabel.text = [[MessageService instance] retrievePreviewContentWithID:uidKey];
                                 
                             }
+                            else {
+                                cell.bodyLabel.text = @"This message has no content.";
+                            }
                         }
                         // message body is empty
                         else {
-                            cell.bodyLabel.text = @"This message has no content";
+                            cell.bodyLabel.text = @"This message has no content.";
 
                         }
                         cell.messageRenderingOperation = nil;

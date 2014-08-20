@@ -177,7 +177,7 @@ static MessageService *instance;
     if (previewChanged)
         return previewBody;
     else
-        return @"This message has no content";
+        return @"This message has no content.";
 }
 
 -(BOOL) updateMessageMetaInfo:(MessageModel *)messageModel{
