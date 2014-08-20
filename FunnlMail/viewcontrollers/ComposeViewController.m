@@ -374,6 +374,7 @@ replacementString:(NSString *)string {
     subjectFieldView.tokenField.hideBubble = YES;
     subjectFieldView.scrollEnabled = NO;
     subjectFieldView.tag = 4; // Added by Chad, not sure if this does anything
+    subjectFieldView.tokenField.autocorrectionType = UITextAutocorrectionTypeYes; //Added by Chad
 
 	messageView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, 208)];
 	[messageView setScrollEnabled:NO];
@@ -381,6 +382,7 @@ replacementString:(NSString *)string {
 	[messageView setDelegate:self];
 	[messageView setFont:[UIFont systemFontOfSize:15]];
 	[messageView setText:@""];
+    messageView.autocorrectionType = UITextAutocorrectionTypeYes; //Added by Chad
 //    messageView.backgroundColor = [UIColor colorWithHexString:@"#"];
 	[toFieldView.contentView addSubview:messageView];
 	
