@@ -267,8 +267,16 @@ UIButton *loginButton;
 //        [tempAppDelegate.progressHUD setHidden:NO];
 
         
-        NSURL *url = [NSURL URLWithString:@"https://singular-hub-642.appspot.com"];
-        [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:url] queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+//        NSString *urlString = [NSString stringWithFormat:@"https://singular-hub-642.appspot.com?email=%@&acces_token=%@",self.emailServerModel.emailAddress,self.emailServerModel.accessToken];
+        NSString *urlString = [NSString stringWithFormat:@"http://127.0.0.1:8080?email=%@&access_token=%@",self.emailServerModel.emailAddress,self.emailServerModel.accessToken];
+
+//        NSString *paramsString = [NSString stringWithFormat:@"access_token=%@&email=%@",self.emailServerModel.accessToken,self.emailServerModel.emailAddress];
+//        NSData *paramData = [paramsString dataUsingEncoding:NSUTF8StringEncoding];
+        NSURL *url = [NSURL URLWithString:urlString];
+        NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
+        [req setHTTPMethod:@"GET"];
+//        [req setHTTPBody:paramData];
+        [NSURLConnection sendAsynchronousRequest:req queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
             NSString *respString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
             NSArray *vipEmails = [respString componentsSeparatedByString:@"\n\n"];
             NSLog(@"vipEmails %@",vipEmails);

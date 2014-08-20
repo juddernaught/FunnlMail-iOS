@@ -310,7 +310,11 @@ pre {\
 }
 
 - (BOOL)webView:(UIWebView *)webView1 shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-    
+    if ([[request.URL absoluteString] hasPrefix:@"http://"] ||
+        [[request.URL absoluteString] hasPrefix:@"https://"]) {
+        [[UIApplication sharedApplication] openURL:request.URL];
+        return NO;
+    }
     NSURLRequest *responseRequest = [self webView:webView1 resource:nil willSendRequest:request redirectResponse:nil fromDataSource:nil];
     if([request.URL.scheme isEqualToString:@"funnl"]){
         NSLog(@"funnl scheme detected");
