@@ -36,9 +36,18 @@ static NSString *contactCellIdentifier = @"ContactCell";
 
 #pragma mark -
 #pragma mark Helper
+- (BOOL)checkForDuplicatesForEmail:(NSString*)address {
+    for ( int counter = 0; counter < tempFunnelModel.sendersArray.count ; counter++ ) {
+        if ([address isEqualToString:[tempFunnelModel.sendersArray objectAtIndex:counter]] || [address isEqualToString:[EmailService instance].userEmailID]) {
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
 - (void)setUpViews
 {
-    int width = 280;
+//    int width = 280;
     UIButton *outterButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
     [outterButton addTarget:self action:@selector(outterButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:outterButton];
@@ -81,6 +90,23 @@ static NSString *contactCellIdentifier = @"ContactCell";
     for (int counter = 0; counter < contactInCC.count; counter++) {
         [flagArray setObject:@"0" atIndexedSubscript:counter];
     }
+    
+    for ( int counter = 0 ; counter < contactInCC.count ; counter++ ) {
+        NSString *ccEmailAddress = [contactInCC objectAtIndex:counter];
+        if (![self checkForDuplicatesForEmail:[(MCOAddress*)ccEmailAddress mailbox]]) {
+            if (!dataSourceArray) {
+                dataSourceArray = [[NSMutableArray alloc] init];
+            }
+            [dataSourceArray addObject:[(MCOAddress*)ccEmailAddress mailbox]];
+        }
+    }
+    
+//    if (![self checkForDuplicatesForEmail:[message.header.from mailbox]]) {
+//        if (!dataSourceArray) {
+//            dataSourceArray = [[NSMutableArray alloc] init];
+//        }
+//        [dataSourceArray addObject:[message.header.from mailbox]];
+//    }
     
     contactsTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 190, WIDTH, HEIGHT - 190 - 50)];
     [contactsTableView setBackgroundColor:CLEAR_COLOR];
@@ -193,8 +219,8 @@ static NSString *contactCellIdentifier = @"ContactCell";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (contactInCC.count > 0) {
-        return contactInCC.count;
+    if (dataSourceArray.count > 0) {
+        return dataSourceArray.count;
     }
     return 0;
 }
@@ -202,7 +228,7 @@ static NSString *contactCellIdentifier = @"ContactCell";
 - (ContactTableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ContactTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:contactCellIdentifier forIndexPath:indexPath];
     [cell setBackgroundColor:[UIColor clearColor]];
-    cell.nameLabel.text = [(MCOAddress*)[contactInCC objectAtIndex:indexPath.row] mailbox];
+    cell.nameLabel.text = [dataSourceArray objectAtIndex:indexPath.row];
     if ([[flagArray objectAtIndex:indexPath.row] isEqualToString:@"0"]) {
 //        [cell.selectionIndicator setBackgroundColor:[UIColor clearColor]];
         cell.accessoryType = UITableViewCellAccessoryNone;
