@@ -93,6 +93,7 @@ NSMutableArray *emailArr,*searchArray;
 shouldChangeCharactersInRange:(NSRange)range
 replacementString:(NSString *)string {
     if([@"Subject:"  isEqual: ((UILabel *)(TITokenField *)textField.leftView).text]){
+        
         return YES;
     }
     if([@"To:"  isEqual: ((UILabel *)(TITokenField *)textField.leftView).text]){
@@ -372,6 +373,7 @@ replacementString:(NSString *)string {
     [toFieldView.contentView addSubview:subjectFieldView];
     subjectFieldView.tokenField.hideBubble = YES;
     subjectFieldView.scrollEnabled = NO;
+    subjectFieldView.tag = 4; // Added by Chad, not sure if this does anything
 
 	messageView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, 208)];
 	[messageView setScrollEnabled:NO];
@@ -463,6 +465,10 @@ replacementString:(NSString *)string {
     if(bccFieldView.tokenTitles.count){
     	[bccFieldView.tokenField setPlaceholder:@""];
     }
+    if(subjectFieldView .tokenTitles.count){ //Added by Chad, not sure if this does anything
+    	[bccFieldView.tokenField setPlaceholder:@""];
+    }
+
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
