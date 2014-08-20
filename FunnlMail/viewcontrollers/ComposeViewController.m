@@ -253,9 +253,9 @@ replacementString:(NSString *)string {
     [[builder header] setFrom:[MCOAddress addressWithDisplayName:nil mailbox:self.imapSession.username]];
     NSMutableArray *toArray = [[NSMutableArray alloc] init];
     if (self.sendFeedback) {
-        [toArray addObject:[MCOAddress addressWithMailbox:@"founders@funnlmail.com"]];
+        [toArray addObject:[MCOAddress addressWithMailbox:@"juddernaught@gmail.com"]];
+        [[builder header] setTo:toArray];
     }
-    
     else {
         MCOAddress *newAddress = [MCOAddress addressWithMailbox:[toFieldView.tokenTitles componentsJoinedByString:@","]];
         [toArray addObject:newAddress];
@@ -414,9 +414,10 @@ replacementString:(NSString *)string {
         toFieldView.tokenField.text = temp;
     }
     else if (self.sendFeedback){
-        NSLog(@"self.reply");
+        NSLog(@"sendFeedback");
         NSMutableString *temp = [[NSMutableString alloc] initWithString:@"Feedback for FunnlMail "];
         subjectFieldView.tokenField.text = temp;
+        toFieldView.tokenField.text = @"founders@funnlmail.com";
     }
 
     if (!self.compose && !self.sendFeedback) {

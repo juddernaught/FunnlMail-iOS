@@ -53,8 +53,8 @@
     
 //    [listView setBackgroundView:[[UIView alloc] init]];
     // listArray =[[NSMutableArray alloc] initWithObjects:@"Email Account",@"Edit Funnl Settings",@"Funnl Alerts", @"Share Funnls", @"Sent Mail", @"Archive",@"Drafts", @"Trash",@"Send Feedback",@"Help",nil];
-    listArray =[[NSMutableArray alloc] initWithObjects:@"Email Account", @"Sent Mail", @"Archive",@"Drafts", @"Trash",@"Send Feedback",@"Help",nil];
-    imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"settingListIcon",@"alertListIcon",@"shareListIcon",@"sentListIcon", @"archiveListIcon",@"archiveListIcon", @"trashListIcon",@"emailListIcon",@"helpListIcon", nil];
+    listArray =[[NSMutableArray alloc] initWithObjects:@"Email Account", @"Sent Mail", @"Archive",@"Drafts", @"Trash",@"Send Feedback",@"Help",@"LogOut",nil];
+    imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"settingListIcon",@"alertListIcon",@"shareListIcon",@"sentListIcon", @"archiveListIcon",@"archiveListIcon", @"trashListIcon",@"emailListIcon",@"helpListIcon", @"helpListLogOutIcon",nil];
     
     
 }
@@ -179,7 +179,7 @@
         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:TRASH withFetchRange:MCORangeEmpty];
     }
     
-    else if ([cell.menuLabel.text isEqualToString:@"Logout"]){
+    else if ([cell.menuLabel.text isEqualToString:@"LogOut"]){
         [[MessageService instance] deleteMessageWithGmailMessageID:[EmailService instance].userEmailID];
         [[EmailServersService instance] deleteEmailServer:[EmailService instance].userEmailID];
         LoginViewController *loginViewController = [[LoginViewController alloc]init];
