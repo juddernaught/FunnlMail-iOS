@@ -412,6 +412,7 @@ UIView *greyView;
                 
                 // Changed by Chad
                 cell.subjectLabel.text = message.header.subject;
+                
                 if (cell.subjectLabel.text.length == 0) cell.subjectLabel.text = @"No Subject";
 
                 
@@ -429,11 +430,7 @@ UIView *greyView;
                 
                 NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
                 NSString *cachedPreview = [[MessageService instance] retrievePreviewContentWithID:uidKey];
-                if (cachedPreview == nil || cachedPreview.length == 0 )
-                    cachedPreview = @"This message has no content";
-
-                if (![cachedPreview isEqualToString:@""])
-                {
+                if ([cachedPreview isEqualToString:@"empty"]) {
                     cell.bodyLabel.text = cachedPreview;
                 }
                 else{
@@ -451,11 +448,19 @@ UIView *greyView;
                                     plainTextBodyString = [plainTextBodyString substringWithRange:stringRange];
                                 }
                                 
+                                //if (plainTextBodyString.length == 0)
+                                
                                 NSMutableDictionary *paramDict = [[NSMutableDictionary alloc] init];
                                 paramDict[uidKey] = [self removeStartingSpaceFromString:plainTextBodyString];
                                 [[MessageService instance] updateMessageWithDictionary:paramDict];
                                 cell.bodyLabel.text = [[MessageService instance] retrievePreviewContentWithID:uidKey];
+                                
                             }
+                        }
+                        // message body is empty
+                        else {
+                            cell.bodyLabel.text = @"This message has no content";
+
                         }
                         cell.messageRenderingOperation = nil;
                     }];
