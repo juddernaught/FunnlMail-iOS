@@ -656,6 +656,21 @@ static MessageService *instance;
   return success;
 }
 
+-(BOOL) clearAllTables{
+    
+    __block BOOL success = NO;
+    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+        [db executeUpdate:@"DELETE FROM messages" withParameterDictionary:nil];
+        [db executeUpdate:@"DELETE FROM funnels" withParameterDictionary:nil];
+        [db executeUpdate:@"DELETE FROM messageFilterXRef" withParameterDictionary:nil];
+        [db executeUpdate:@"DELETE FROM emailServers" withParameterDictionary:nil];
+        success = [db executeUpdate:@"DELETE FROM contacts" withParameterDictionary:nil];
+        
+    }];
+    
+    return success;
+}
+
 
 -(BOOL) deleteMessageWithGmailMessageID:(NSString *)gmailMessageID{
     __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];

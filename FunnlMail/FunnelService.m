@@ -146,10 +146,12 @@ static FunnelService *instance;
     
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
       
-    NSString *query = [NSString stringWithFormat:@"SELECT funnels.funnelId as funnelId, funnels.funnelName as funnelName, funnels.emailAddresses as emailAddresses, funnels.webhookIds as webhookIds, funnels.phrases as phrases, funnels.skipFlag as skipFlag, funnels.notificationsFlag as notificationsFlag, funnels.funnelColor as funnelColor, (COUNT(read) - SUM (read )) as readCount FROM funnels INNER JOIN messageFilterXRef ON (messageFilterXRef.funnelId = funnels.funnelId) INNER JOIN messages ON (messageFilterXRef.messageId = messages.messageId) GROUP BY 1, 2, 3, 4, 5, 6\
-        UNION SELECT 0 as funnelId, '%@' asfunnelName, '' as emailAddresses, '' as webhookIds, '', 0 as skipFlag, 0 as notificationsFlag, '#000000' as funnelColor, COUNT(read) as readCount FROM messages where messages.read = 0\
-        UNION SELECT 1 as funnelId, '%@' asfunnelName, '' as emailAddresses, '' as webhookIds, '', 0 as skipFlag, 0 as notificationsFlag, '#000000' as funnelColor, COUNT(read) as readCount FROM messages where messages.read = 0 AND messages.categoryName <> '%@'\
-                       ;",ALL_FUNNL,ALL_OTHER_FUNNL,PRIMARY_CATEGORY_NAME];
+    NSString *query = [NSString stringWithFormat:@"\
+                       SELECT funnels.funnelId as funnelId, funnels.funnelName as funnelName, funnels.emailAddresses as emailAddresses, funnels.webhookIds as webhookIds, funnels.phrases as phrases, funnels.skipFlag as skipFlag, funnels.notificationsFlag as notificationsFlag, funnels.funnelColor as funnelColor, (COUNT(read) - SUM (read )) as readCount FROM funnels LEFT OUTER JOIN messageFilterXRef ON (messageFilterXRef.funnelId = funnels.funnelId) LEFT OUTER JOIN  messages ON (messageFilterXRef.messageId = messages.messageId) GROUP BY 1, 2, 3, 4, 5, 6 HAVING funnels.funnelName <> '%@' AND funnels.funnelName <> '%@'\
+        UNION\
+                       SELECT 0 as funnelId, '%@' as funnelName, '' as emailAddresses, '' as webhookIds, '', 0 as skipFlag, 0 as notificationsFlag, '#000000' as funnelColor, COUNT(read) as readCount FROM messages where messages.read = 0\
+        UNION\
+                       SELECT 1 as funnelId, '%@' as funnelName, '' as emailAddresses, '' as webhookIds, '', 0 as skipFlag, 0 as notificationsFlag, '#000000' as funnelColor, COUNT(read) as readCount FROM messages where messages.read = 0 AND messages.categoryName <> '%@';",ALL_FUNNL,ALL_OTHER_FUNNL,ALL_FUNNL,ALL_OTHER_FUNNL,PRIMARY_CATEGORY_NAME];
     FMResultSet *resultSet = [db executeQuery:query];
     FunnelModel *model;
 //      FilterModel *modelForFilter;

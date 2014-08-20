@@ -149,6 +149,23 @@ static NSString *currentFolder;
 	}];
 }
 
+-(void)clearData{
+    self.messages = [[NSMutableArray alloc] init];
+    self.filterMessages = [[NSMutableArray alloc] init];
+    self.sentMessages = [[NSMutableArray alloc] init];
+    self.threadIdDictionary = [[NSMutableDictionary alloc] init];
+    self.primaryMessages = [[NSMutableArray alloc] init];
+    
+	self.totalNumberOfMessages = -1;
+	self.isLoading = NO;
+	self.messagePreviews = [NSMutableDictionary dictionary];
+    self.filterMessagePreviews = [NSMutableDictionary dictionary];
+    self.sentMessagePreviews = [NSMutableDictionary dictionary];
+    
+    [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
+    [emailsTableViewController.tableView reloadData];
+}
+
 //function to be called in background
 - (void)checkMailsAtStart:(EmailsTableViewController*)fv
 {

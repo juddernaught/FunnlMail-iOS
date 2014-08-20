@@ -17,7 +17,7 @@
 #import "FunnlAlertsVC.h"
 #import "ComposeViewController.h"
 #import "FAQVC.h"
-
+#import "SQLiteDatabase.h"
 #import <Mixpanel/Mixpanel.h>
 
 @interface MenuViewController ()
@@ -120,6 +120,27 @@
     AppDelegate *appDelegate = APPDELEGATE;
     MenuCell *cell = (MenuCell*)[tableView cellForRowAtIndexPath:indexPath];
     
+    if(indexPath.row == 0){
+        AppDelegate *tempAppDelegate = APPDELEGATE;
+        NSMutableArray *filterArray = (NSMutableArray*)[[FunnelService instance] allFunnels];
+        FunnelModel *primaryFunnl = nil;
+        for (FunnelModel *f in filterArray) {
+            if([[f.funnelName lowercaseString] isEqualToString:[ALL_FUNNL lowercaseString]]){
+                primaryFunnl = f;
+                break;
+            }
+        }
+
+        if(primaryFunnl){
+            tempAppDelegate.currentFunnelString = [primaryFunnl.funnelName lowercaseString];
+            tempAppDelegate.currentFunnelDS = primaryFunnl;
+            [tempAppDelegate.mainVCdelegate filterSelected:primaryFunnl];
+            [tempAppDelegate.drawerController closeDrawerAnimated:YES completion:nil];
+        }
+
+        return;
+    }
+    
     if([cell.menuLabel.text isEqualToString:@"Help"]){
         FAQVC *faq = [[FAQVC alloc]init];
         [[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationController pushViewController:faq animated:NO];
@@ -180,8 +201,40 @@
     }
     
     else if ([cell.menuLabel.text isEqualToString:@"LogOut"]){
-        [[MessageService instance] deleteMessageWithGmailMessageID:[EmailService instance].userEmailID];
-        [[EmailServersService instance] deleteEmailServer:[EmailService instance].userEmailID];
+//        [[EmailServersService instance] deleteEmailServer:[EmailService instance].userEmailID];
+        [[MessageService instance] clearAllTables];
+
+        [appDelegate.contextIOAPIClient clearCredentials];
+        [SQLiteDatabase sharedInstance];
+        [[NSUserDefaults standardUserDefaults] setObject:[NSMutableArray new] forKey: ALL_FUNNL];
+        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"PRIMARY_PAGE_TOKEN"];
+        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"PRIMARY_PAGE_TOKEN"];
+        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"PRIMARY_PAGE_TOKEN"];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"IS_NEW_INSTALL"];
+        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"MODSEQ"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [[EmailService instance] clearData];
+        
+        
+        FunnelModel *defaultFilter = [[FunnelModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#2EB82E"] filterTitle:ALL_FUNNL newMessageCount:0 dateOfLastMessage:[NSDate new]];
+        defaultFilter.funnelName = ALL_FUNNL;
+        defaultFilter.funnelId = @"0";
+        defaultFilter.emailAddresses = @"";
+        defaultFilter.webhookIds = @"";
+        defaultFilter.phrases = @"";
+        [[FunnelService instance] insertFunnel:defaultFilter];
+        defaultFilter = nil;
+        
+        FunnelModel *otherFilter = [[FunnelModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#4986E7"] filterTitle:ALL_OTHER_FUNNL newMessageCount:0 dateOfLastMessage:[NSDate new]];
+        otherFilter.funnelName = ALL_OTHER_FUNNL;
+        otherFilter.funnelId = @"1";
+        otherFilter.emailAddresses = @"";
+        otherFilter.webhookIds = @"";
+        otherFilter.phrases = @"";
+        [[FunnelService instance] insertFunnel:otherFilter];
+        otherFilter = nil;
+
+        
         LoginViewController *loginViewController = [[LoginViewController alloc]init];
         loginViewController.view.backgroundColor = [UIColor clearColor];
         appDelegate.window.backgroundColor = [UIColor whiteColor];
