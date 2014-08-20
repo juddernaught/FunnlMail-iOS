@@ -17,6 +17,8 @@
 #import "FunnlAlertsVC.h"
 #import "ComposeViewController.h"
 #import "FAQVC.h"
+#import "SQLiteDatabase.h"
+#import <Mixpanel/Mixpanel.h>
 
 @interface MenuViewController ()
 
@@ -50,8 +52,9 @@
     [self.view addSubview:headerLine];
     
 //    [listView setBackgroundView:[[UIView alloc] init]];
-    listArray =[[NSMutableArray alloc] initWithObjects:@"Email Account",@"Edit Funnl Settings",@"Funnl Alerts", @"Share Funnls", @"Sent Mail", @"Archive",@"Drafts", @"Trash",@"Send Feedback",@"Help",nil];
-    imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"settingListIcon",@"alertListIcon",@"shareListIcon",@"sentListIcon", @"archiveListIcon",@"archiveListIcon", @"trashListIcon",@"emailListIcon",@"helpListIcon", nil];
+    // listArray =[[NSMutableArray alloc] initWithObjects:@"Email Account",@"Edit Funnl Settings",@"Funnl Alerts", @"Share Funnls", @"Sent Mail", @"Archive",@"Drafts", @"Trash",@"Send Feedback",@"Help",nil];
+    listArray =[[NSMutableArray alloc] initWithObjects:@"Email Account", @"Sent Mail", @"Archive",@"Drafts", @"Trash",@"Send Feedback",@"Help",@"LogOut",nil];
+    imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"settingListIcon",@"alertListIcon",@"shareListIcon",@"sentListIcon", @"archiveListIcon",@"archiveListIcon", @"trashListIcon",@"emailListIcon",@"helpListIcon", @"helpListLogOutIcon",nil];
     
     
 }
@@ -117,19 +120,45 @@
     AppDelegate *appDelegate = APPDELEGATE;
     MenuCell *cell = (MenuCell*)[tableView cellForRowAtIndexPath:indexPath];
     
+    if(indexPath.row == 0){
+        [MBProgressHUD showHUDAddedTo:appDelegate.window animated:YES];
+        AppDelegate *tempAppDelegate = APPDELEGATE;
+        NSMutableArray *filterArray = (NSMutableArray*)[[FunnelService instance] allFunnels];
+        FunnelModel *primaryFunnl = nil;
+        for (FunnelModel *f in filterArray) {
+            if([[f.funnelName lowercaseString] isEqualToString:[ALL_FUNNL lowercaseString]]){
+                primaryFunnl = f;
+                break;
+            }
+        }
+
+        if(primaryFunnl){
+            tempAppDelegate.currentFunnelString = [primaryFunnl.funnelName lowercaseString];
+            tempAppDelegate.currentFunnelDS = primaryFunnl;
+            [tempAppDelegate.mainVCdelegate filterSelected:primaryFunnl];
+            [tempAppDelegate.drawerController closeDrawerAnimated:YES completion:nil];
+        }
+
+        [MBProgressHUD hideAllHUDsForView:appDelegate.window animated:YES];
+        return;
+    }
+    
     if([cell.menuLabel.text isEqualToString:@"Help"]){
         FAQVC *faq = [[FAQVC alloc]init];
-        
         [[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationController pushViewController:faq animated:NO];
     }
+    
     else if ([cell.menuLabel.text isEqualToString:@"Funnl Alerts"]){
         FunnlAlertsVC *alerts = [[FunnlAlertsVC alloc]init];
         [alerts SetUp];
         [[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationController pushViewController:alerts animated:NO];
-        
     }
+    
     else if ([cell.menuLabel.text isEqualToString:@"Sent Mail"]) {
         NSLog(@"sent mail requested");
+        [MBProgressHUD showHUDAddedTo:appDelegate.window animated:YES];
+        [[Mixpanel sharedInstance] track:@"Viewed sent mail"];
+        
          //The following line is required to get to the emailTableVC in mainVC
          // [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject;
     
@@ -138,48 +167,98 @@
         [[EmailService instance] getDatabaseMessages:SENT withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject];
        
         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:SENT withFetchRange:MCORangeEmpty];
+        //[MBProgressHUD hideAllHUDsForView:appDelegate.window animated:YES];
+
     }
+    
     else if ([cell.menuLabel.text isEqualToString:@"Archive"]){
         NSLog(@"archive mail requested");
+        [MBProgressHUD showHUDAddedTo:appDelegate.window animated:YES];
+
+        [[Mixpanel sharedInstance] track:@"Viewed archive mail"];
+        
         appDelegate.currentFunnelString = ARCHIVE;
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Archive";
         [[EmailService instance] getDatabaseMessages:ARCHIVE withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject];
         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:ARCHIVE withFetchRange:MCORangeEmpty];
+    
     }
     
     else if ([cell.menuLabel.text isEqualToString:@"Drafts"]){
+        [MBProgressHUD showHUDAddedTo:appDelegate.window animated:YES];
+
+        [[Mixpanel sharedInstance] track:@"Viewed drafts"];
+        
         appDelegate.currentFunnelString = DRAFTS;
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Drafts";
         [[EmailService instance] getDatabaseMessages:DRAFTS withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject];
         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:DRAFTS withFetchRange:MCORangeEmpty];
-        
+    
+        //[MBProgressHUD hideAllHUDsForView:appDelegate.window animated:YES];
     }
+    
     else if ([cell.menuLabel.text isEqualToString:@"Trash"]){
         NSLog(@"trash mail requested");
+        [MBProgressHUD showHUDAddedTo:appDelegate.window animated:YES];
+
+        [[Mixpanel sharedInstance] track:@"Viewed trash"];
+        
         appDelegate.currentFunnelString = TRASH;
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Trash";
         [[EmailService instance] getDatabaseMessages:TRASH withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject];
         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:TRASH withFetchRange:MCORangeEmpty];
-    } else if (indexPath.row == 8){
-        [[MessageService instance] deleteMessageWithGmailMessageID:[EmailService instance].userEmailID];
-        [[EmailServersService instance] deleteEmailServer:[EmailService instance].userEmailID];
+        //[MBProgressHUD hideAllHUDsForView:appDelegate.window animated:YES];
+    }
+    
+    else if ([cell.menuLabel.text isEqualToString:@"LogOut"]){
+//        [[EmailServersService instance] deleteEmailServer:[EmailService instance].userEmailID];
+        [[MessageService instance] clearAllTables];
+
+        [appDelegate.contextIOAPIClient clearCredentials];
+        [SQLiteDatabase sharedInstance];
+        [[NSUserDefaults standardUserDefaults] setObject:[NSMutableArray new] forKey: ALL_FUNNL];
+        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"PRIMARY_PAGE_TOKEN"];
+        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"PRIMARY_PAGE_TOKEN"];
+        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"PRIMARY_PAGE_TOKEN"];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"IS_NEW_INSTALL"];
+        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"MODSEQ"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [[EmailService instance] clearData];
+        
+        
+        FunnelModel *defaultFilter = [[FunnelModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#2EB82E"] filterTitle:ALL_FUNNL newMessageCount:0 dateOfLastMessage:[NSDate new]];
+        defaultFilter.funnelName = ALL_FUNNL;
+        defaultFilter.funnelId = @"0";
+        defaultFilter.emailAddresses = @"";
+        defaultFilter.webhookIds = @"";
+        defaultFilter.phrases = @"";
+        [[FunnelService instance] insertFunnel:defaultFilter];
+        defaultFilter = nil;
+        
+        FunnelModel *otherFilter = [[FunnelModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#4986E7"] filterTitle:ALL_OTHER_FUNNL newMessageCount:0 dateOfLastMessage:[NSDate new]];
+        otherFilter.funnelName = ALL_OTHER_FUNNL;
+        otherFilter.funnelId = @"1";
+        otherFilter.emailAddresses = @"";
+        otherFilter.webhookIds = @"";
+        otherFilter.phrases = @"";
+        [[FunnelService instance] insertFunnel:otherFilter];
+        otherFilter = nil;
+
+        
         LoginViewController *loginViewController = [[LoginViewController alloc]init];
         loginViewController.view.backgroundColor = [UIColor clearColor];
         appDelegate.window.backgroundColor = [UIColor whiteColor];
         UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:loginViewController];
         [appDelegate.window setRootViewController:nav];
     }
+    
     else if ([cell.menuLabel.text isEqualToString:@"Send Feedback"]){
         NSLog(@"Send Feedback requested");
         ComposeViewController *mc = [[ComposeViewController alloc] init];
         mc.sendFeedback = @1;
-
-       
         [appDelegate.drawerController closeDrawerAnimated:YES completion:^(BOOL finished) {
             [[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationController pushViewController:mc animated:NO];
         }];
-    
-    
     }
 
     [appDelegate.drawerController closeDrawerAnimated:YES completion:nil];

@@ -13,6 +13,7 @@
 #import "MBProgressHUD.h"
 #import "Reachability.h"
 #import "CIOAPIClient.h"
+#import "MainVCDelegate.h"
 
 @class MenuViewController;
 @class LoginViewController;
@@ -21,9 +22,11 @@
     UIView *showWelcomeOverlay;
 
 }
+@property (nonatomic,strong)  NSNumber *didLoginIn;
 @property (strong, nonatomic)id mainVCControllerInstance;
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) MenuViewController *menuController;
+@property (strong, nonatomic) FunnelModel *currentSelectedFunnlModel;
 @property (strong, nonatomic) MMDrawerController * drawerController;
 @property (strong, nonatomic) MBProgressHUD *progressHUD;
 @property (strong, nonatomic) UIActivityIndicatorView *appActivityIndicator;
@@ -34,6 +37,8 @@
 @property (strong, nonatomic) CIOAPIClient *contextIOAPIClient;
 @property (assign, nonatomic) BOOL isAlreadyRequestedRefreshToken;
 @property (strong, nonatomic) UIView *headerViewForMailDetailView;
+@property (weak) id<MainVCDelegate> mainVCdelegate;
+
 @property BOOL funnelUpDated,internetAvailable;
 -(void)showWelcomeOverlay;
 -(void)hideWelcomeOverlay;

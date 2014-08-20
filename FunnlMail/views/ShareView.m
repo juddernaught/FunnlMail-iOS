@@ -22,7 +22,7 @@
 #import "TITokenField.h"
 #import <AddressBook/AddressBook.h>
 #import "ContactService.h"
-
+#import <Mixpanel/Mixpanel.h>
 
 
 @implementation ShareView
@@ -31,6 +31,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        
         // Initialization code
         self.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.93];
         self.imapSession = [EmailService instance].imapSession;
@@ -165,6 +166,9 @@
 
 #pragma mark - shareFunnlClicked functions
 -(void)shareFunnlClicked:(id)sender{
+    
+    [[Mixpanel sharedInstance] track:@"Shared a Funnl (pressed send button successfully after entering email)"];
+    
     [toFieldView.tokenField resignFirstResponder];
     MCOMessageBuilder * builder = [[MCOMessageBuilder alloc] init];
     [[builder header] setFrom:[MCOAddress addressWithDisplayName:nil mailbox:self.imapSession.username]];

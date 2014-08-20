@@ -48,4 +48,5 @@
 - (void)checkMailsAtStart:(EmailsTableViewController*)fv;
 -(void)syncMessages;
 -(void)getDatabaseMessages:(NSString*)folderName withTableController:(EmailsTableViewController *)emailsTableViewController;
+-(void)clearData;
 @end

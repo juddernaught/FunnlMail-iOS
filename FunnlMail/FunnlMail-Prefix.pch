@@ -15,6 +15,7 @@
     #import <Foundation/Foundation.h>
 #endif
 
+
 #define kKeychainItemName @"OAuth2 Sample: Gmail"
 #define kMyClientID @"655269106649-rkom4nvj3m9ofdpg6sk53pi65mpivv7d.apps.googleusercontent.com"
 #define kMyClientSecret @"1ggvIxWh-rV_Eb9OX9so7aCt"
@@ -39,6 +40,11 @@
 #define AUTOREFRESH_DELAY 30
 #define PRIMARY_CATEGORY_NAME @"CATEGORY_PERSONAL"
 
+#define ALPHA_FOR_TOST 0.7
+#define COLOR_OF_WHITE 0.0
+#define ARCHIVE_TEXT @"Conversation Archived"
+#define DELETE_TEXT @"Conversation Deleted"
+#define TOST_DISPLAY_DURATION 3.0
 
 #define INBOX @"INBOX"
 #define SENT @"[Gmail]/Sent Mail"

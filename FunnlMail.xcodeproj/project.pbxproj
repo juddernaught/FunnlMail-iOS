@@ -19,6 +19,7 @@
 		5ACEBEA3195DA0CA00D4EAAA /* RDSwipeableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ACEBEA2195DA0CA00D4EAAA /* RDSwipeableTableViewCell.m */; };
 		639B69D4195254D1004217DB /* EmailThreadTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AA690B519501EC200E4CB64 /* EmailThreadTableViewController.m */; };
 		660BA98E1902CDEA00CDF86E /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 660BA98D1902CDEA00CDF86E /* LoginViewController.m */; };
+		661C66C819A2C464003276A3 /* notifsound.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 661C66C719A2C464003276A3 /* notifsound.m4a */; };
 		6644FB2D197385ED004B4587 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6644FB2C197385ED004B4587 /* Parse.framework */; };
 		6644FB2F19738632004B4587 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6644FB2E19738632004B4587 /* AudioToolbox.framework */; };
 		6644FB311973864A004B4587 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6644FB301973864A004B4587 /* CoreLocation.framework */; };
@@ -58,6 +59,10 @@
 		66F2C49518E3293F00CD593E /* FunnlMailTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F2C49418E3293F00CD593E /* FunnlMailTests.m */; };
 		B703C50419760E27003037FC /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B703C50319760E27003037FC /* AddressBook.framework */; };
 		B7169C84199C6D78004D8759 /* FAQVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B7169C83199C6D78004D8759 /* FAQVC.m */; };
+		B72C2FB119A196E3000E5D5B /* RNBlurModalView.h in Headers */ = {isa = PBXBuildFile; fileRef = B72C2FAF19A196E3000E5D5B /* RNBlurModalView.h */; };
+		B72C2FB219A196E3000E5D5B /* RNBlurModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = B72C2FB019A196E3000E5D5B /* RNBlurModalView.m */; };
+		B72C2FB819A19721000E5D5B /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B72C2FB719A19721000E5D5B /* Accelerate.framework */; };
+		B72C2FBC19A1980B000E5D5B /* RNBlurModalView.h in Sources */ = {isa = PBXBuildFile; fileRef = B72C2FAF19A196E3000E5D5B /* RNBlurModalView.h */; };
 		B751C88F1940FDFF0051DF0B /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B751C88E1940FDFF0051DF0B /* MessageUI.framework */; };
 		B75F56A6197F056F00518743 /* FunnlMail VIP logo.png in Resources */ = {isa = PBXBuildFile; fileRef = B75F56A5197F056F00518743 /* FunnlMail VIP logo.png */; };
 		B7701DC41985F58C001CA2DC /* mail2.png in Resources */ = {isa = PBXBuildFile; fileRef = B7701DC31985F58C001CA2DC /* mail2.png */; };
@@ -188,6 +193,22 @@
 		FAA9ED3C199A13EB00CD72D2 /* libMailCore-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FA4B9FC71999FBFE00955678 /* libMailCore-ios.a */; };
 		FAABF1801952FA750072FFE8 /* FunnlPopUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = FAABF17F1952FA750072FFE8 /* FunnlPopUpView.m */; };
 		FAABF1871952FB720072FFE8 /* FunnlPopupViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FAABF1861952FB720072FFE8 /* FunnlPopupViewCell.m */; };
+		FAAE9CDA19A354F0007FB804 /* UIView+Toast.h in Headers */ = {isa = PBXBuildFile; fileRef = FAAE9CD819A354F0007FB804 /* UIView+Toast.h */; };
+		FAAE9CDB19A354F0007FB804 /* UIView+Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = FAAE9CD919A354F0007FB804 /* UIView+Toast.m */; };
+		FAAE9CEF19A38ADD007FB804 /* emailDetailViewArchive.png in Resources */ = {isa = PBXBuildFile; fileRef = FAAE9CE119A38ADD007FB804 /* emailDetailViewArchive.png */; };
+		FAAE9CF019A38ADD007FB804 /* emailDetailViewArchive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FAAE9CE219A38ADD007FB804 /* emailDetailViewArchive@2x.png */; };
+		FAAE9CF119A38ADD007FB804 /* emailDetailViewForward.png in Resources */ = {isa = PBXBuildFile; fileRef = FAAE9CE319A38ADD007FB804 /* emailDetailViewForward.png */; };
+		FAAE9CF219A38ADD007FB804 /* emailDetailViewForward@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FAAE9CE419A38ADD007FB804 /* emailDetailViewForward@2x.png */; };
+		FAAE9CF319A38ADD007FB804 /* emailDetailViewFunnel.png in Resources */ = {isa = PBXBuildFile; fileRef = FAAE9CE519A38ADD007FB804 /* emailDetailViewFunnel.png */; };
+		FAAE9CF419A38ADD007FB804 /* emailDetailViewFunnel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FAAE9CE619A38ADD007FB804 /* emailDetailViewFunnel@2x.png */; };
+		FAAE9CF519A38ADD007FB804 /* emailDetailViewMail.png in Resources */ = {isa = PBXBuildFile; fileRef = FAAE9CE719A38ADD007FB804 /* emailDetailViewMail.png */; };
+		FAAE9CF619A38ADD007FB804 /* emailDetailViewMail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FAAE9CE819A38ADD007FB804 /* emailDetailViewMail@2x.png */; };
+		FAAE9CF719A38ADD007FB804 /* emailDetailViewReply.png in Resources */ = {isa = PBXBuildFile; fileRef = FAAE9CE919A38ADD007FB804 /* emailDetailViewReply.png */; };
+		FAAE9CF819A38ADD007FB804 /* emailDetailViewReply@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FAAE9CEA19A38ADD007FB804 /* emailDetailViewReply@2x.png */; };
+		FAAE9CF919A38ADD007FB804 /* emailDetailViewReplyAll.png in Resources */ = {isa = PBXBuildFile; fileRef = FAAE9CEB19A38ADD007FB804 /* emailDetailViewReplyAll.png */; };
+		FAAE9CFA19A38ADD007FB804 /* emailDetailViewReplyAll@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FAAE9CEC19A38ADD007FB804 /* emailDetailViewReplyAll@2x.png */; };
+		FAAE9CFB19A38ADD007FB804 /* emailDetailViewTrash.png in Resources */ = {isa = PBXBuildFile; fileRef = FAAE9CED19A38ADD007FB804 /* emailDetailViewTrash.png */; };
+		FAAE9CFC19A38ADD007FB804 /* emailDetailViewTrash@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FAAE9CEE19A38ADD007FB804 /* emailDetailViewTrash@2x.png */; };
 		FAAF171919863CDD00E877D4 /* MKAnnotationView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = FAAF16FD19863CDD00E877D4 /* MKAnnotationView+WebCache.m */; };
 		FAAF171A19863CDD00E877D4 /* NSData+ImageContentType.m in Sources */ = {isa = PBXBuildFile; fileRef = FAAF16FF19863CDD00E877D4 /* NSData+ImageContentType.m */; };
 		FAAF171B19863CDD00E877D4 /* SDImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = FAAF170119863CDD00E877D4 /* SDImageCache.m */; };
@@ -358,6 +379,7 @@
 		5ACEBEA2195DA0CA00D4EAAA /* RDSwipeableTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RDSwipeableTableViewCell.m; sourceTree = "<group>"; };
 		660BA98C1902CDEA00CDF86E /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = viewcontrollers/LoginViewController.h; sourceTree = "<group>"; };
 		660BA98D1902CDEA00CDF86E /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = viewcontrollers/LoginViewController.m; sourceTree = "<group>"; };
+		661C66C719A2C464003276A3 /* notifsound.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = notifsound.m4a; path = Sound/notifsound.m4a; sourceTree = "<group>"; };
 		6644FB2C197385ED004B4587 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		6644FB2E19738632004B4587 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		6644FB301973864A004B4587 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -412,6 +434,9 @@
 		B703C50319760E27003037FC /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		B7169C82199C6D78004D8759 /* FAQVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAQVC.h; sourceTree = "<group>"; };
 		B7169C83199C6D78004D8759 /* FAQVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FAQVC.m; sourceTree = "<group>"; };
+		B72C2FAF19A196E3000E5D5B /* RNBlurModalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNBlurModalView.h; sourceTree = "<group>"; };
+		B72C2FB019A196E3000E5D5B /* RNBlurModalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNBlurModalView.m; sourceTree = "<group>"; };
+		B72C2FB719A19721000E5D5B /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		B751C88E1940FDFF0051DF0B /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		B75F56A5197F056F00518743 /* FunnlMail VIP logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "FunnlMail VIP logo.png"; sourceTree = "<group>"; };
 		B7701DC31985F58C001CA2DC /* mail2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mail2.png; sourceTree = "<group>"; };
@@ -620,6 +645,22 @@
 		FAABF17F1952FA750072FFE8 /* FunnlPopUpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FunnlPopUpView.m; path = views/FunnlPopUpView.m; sourceTree = "<group>"; };
 		FAABF1851952FB720072FFE8 /* FunnlPopupViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FunnlPopupViewCell.h; path = collectionviewcells/FunnlPopupViewCell.h; sourceTree = "<group>"; };
 		FAABF1861952FB720072FFE8 /* FunnlPopupViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FunnlPopupViewCell.m; path = collectionviewcells/FunnlPopupViewCell.m; sourceTree = "<group>"; };
+		FAAE9CD819A354F0007FB804 /* UIView+Toast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Toast.h"; sourceTree = "<group>"; };
+		FAAE9CD919A354F0007FB804 /* UIView+Toast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Toast.m"; sourceTree = "<group>"; };
+		FAAE9CE119A38ADD007FB804 /* emailDetailViewArchive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = emailDetailViewArchive.png; sourceTree = "<group>"; };
+		FAAE9CE219A38ADD007FB804 /* emailDetailViewArchive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "emailDetailViewArchive@2x.png"; sourceTree = "<group>"; };
+		FAAE9CE319A38ADD007FB804 /* emailDetailViewForward.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = emailDetailViewForward.png; sourceTree = "<group>"; };
+		FAAE9CE419A38ADD007FB804 /* emailDetailViewForward@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "emailDetailViewForward@2x.png"; sourceTree = "<group>"; };
+		FAAE9CE519A38ADD007FB804 /* emailDetailViewFunnel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = emailDetailViewFunnel.png; sourceTree = "<group>"; };
+		FAAE9CE619A38ADD007FB804 /* emailDetailViewFunnel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "emailDetailViewFunnel@2x.png"; sourceTree = "<group>"; };
+		FAAE9CE719A38ADD007FB804 /* emailDetailViewMail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = emailDetailViewMail.png; sourceTree = "<group>"; };
+		FAAE9CE819A38ADD007FB804 /* emailDetailViewMail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "emailDetailViewMail@2x.png"; sourceTree = "<group>"; };
+		FAAE9CE919A38ADD007FB804 /* emailDetailViewReply.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = emailDetailViewReply.png; sourceTree = "<group>"; };
+		FAAE9CEA19A38ADD007FB804 /* emailDetailViewReply@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "emailDetailViewReply@2x.png"; sourceTree = "<group>"; };
+		FAAE9CEB19A38ADD007FB804 /* emailDetailViewReplyAll.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = emailDetailViewReplyAll.png; sourceTree = "<group>"; };
+		FAAE9CEC19A38ADD007FB804 /* emailDetailViewReplyAll@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "emailDetailViewReplyAll@2x.png"; sourceTree = "<group>"; };
+		FAAE9CED19A38ADD007FB804 /* emailDetailViewTrash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = emailDetailViewTrash.png; sourceTree = "<group>"; };
+		FAAE9CEE19A38ADD007FB804 /* emailDetailViewTrash@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "emailDetailViewTrash@2x.png"; sourceTree = "<group>"; };
 		FAAF16FC19863CDD00E877D4 /* MKAnnotationView+WebCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MKAnnotationView+WebCache.h"; sourceTree = "<group>"; };
 		FAAF16FD19863CDD00E877D4 /* MKAnnotationView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MKAnnotationView+WebCache.m"; sourceTree = "<group>"; };
 		FAAF16FE19863CDD00E877D4 /* NSData+ImageContentType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+ImageContentType.h"; sourceTree = "<group>"; };
@@ -731,6 +772,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA5627FA193C5F5200238F40 /* QuartzCore.framework in Frameworks */,
+				B72C2FB819A19721000E5D5B /* Accelerate.framework in Frameworks */,
 				FAA9ED3C199A13EB00CD72D2 /* libMailCore-ios.a in Frameworks */,
 				FAD311B1198262E500565A90 /* CoreText.framework in Frameworks */,
 				B703C50419760E27003037FC /* AddressBook.framework in Frameworks */,
@@ -745,7 +788,6 @@
 				667787FA18EF6E9400EF1962 /* CFNetwork.framework in Frameworks */,
 				6644FB2F19738632004B4587 /* AudioToolbox.framework in Frameworks */,
 				B751C88F1940FDFF0051DF0B /* MessageUI.framework in Frameworks */,
-				FA5627FA193C5F5200238F40 /* QuartzCore.framework in Frameworks */,
 				CC4263B61934B68600F3C5EB /* libsqlite3.dylib in Frameworks */,
 				6677882518F0ADBB00EF1962 /* SystemConfiguration.framework in Frameworks */,
 				6677881C18F0797800EF1962 /* ImageIO.framework in Frameworks */,
@@ -802,9 +844,18 @@
 			path = RDSwipeableTableViewCell;
 			sourceTree = "<group>";
 		};
+		661C66CD19A2CD2F003276A3 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				661C66C719A2C464003276A3 /* notifsound.m4a */,
+			);
+			name = Sounds;
+			sourceTree = "<group>";
+		};
 		6620BA8918E3439000769C48 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				661C66CD19A2CD2F003276A3 /* Sounds */,
 				FA26CAEF199508C900FFD9B3 /* html */,
 				FABAF01F1976507E00AA7918 /* Images */,
 			);
@@ -871,6 +922,7 @@
 		66F2C46818E3293E00CD593E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B72C2FB719A19721000E5D5B /* Accelerate.framework */,
 				D152BB72199145B100058903 /* Crashlytics.framework */,
 				FAD311B0198262E500565A90 /* CoreText.framework */,
 				B703C50319760E27003037FC /* AddressBook.framework */,
@@ -1044,9 +1096,9 @@
 				667787FF18EF768B00EF1962 /* MsgViewController.h */,
 				6677880018EF768B00EF1962 /* MsgViewController.mm */,
 				660BA98C1902CDEA00CDF86E /* LoginViewController.h */,
+				660BA98D1902CDEA00CDF86E /* LoginViewController.m */,
 				B7169C82199C6D78004D8759 /* FAQVC.h */,
 				B7169C83199C6D78004D8759 /* FAQVC.m */,
-				660BA98D1902CDEA00CDF86E /* LoginViewController.m */,
 				FA2F433D193318BE00C1F119 /* CreateFunnlViewController.h */,
 				FA2F433E193318BE00C1F119 /* CreateFunnlViewController.m */,
 				FA2C9BD9193EE66400866BEE /* MenuViewController.h */,
@@ -1094,6 +1146,7 @@
 		CC8C7EB018E6F34D00E76AE8 /* external */ = {
 			isa = PBXGroup;
 			children = (
+				FAAE9CD719A354F0007FB804 /* Toast */,
 				2522AC0A1998DBEC002B1207 /* Popover */,
 				D1EFF47219817BBF0031A1D1 /* ContextIO */,
 				FA2B42701990C7600036EF0F /* Reachability.h */,
@@ -1166,6 +1219,8 @@
 				5A59DC6D1957FF9D0094B00D /* ConfirmFunnelPopUp.m */,
 				5A59DC7319582A260094B00D /* FunnelPopUpForExtraRules.h */,
 				5A59DC7419582A260094B00D /* FunnelPopUpForExtraRules.m */,
+				B72C2FAF19A196E3000E5D5B /* RNBlurModalView.h */,
+				B72C2FB019A196E3000E5D5B /* RNBlurModalView.m */,
 			);
 			name = views;
 			sourceTree = "<group>";
@@ -1360,6 +1415,36 @@
 			path = TITokenField;
 			sourceTree = "<group>";
 		};
+		FAAE9CD719A354F0007FB804 /* Toast */ = {
+			isa = PBXGroup;
+			children = (
+				FAAE9CD819A354F0007FB804 /* UIView+Toast.h */,
+				FAAE9CD919A354F0007FB804 /* UIView+Toast.m */,
+			);
+			path = Toast;
+			sourceTree = "<group>";
+		};
+		FAAE9CE019A38ADD007FB804 /* EmailDetailViewImages */ = {
+			isa = PBXGroup;
+			children = (
+				FAAE9CE119A38ADD007FB804 /* emailDetailViewArchive.png */,
+				FAAE9CE219A38ADD007FB804 /* emailDetailViewArchive@2x.png */,
+				FAAE9CE319A38ADD007FB804 /* emailDetailViewForward.png */,
+				FAAE9CE419A38ADD007FB804 /* emailDetailViewForward@2x.png */,
+				FAAE9CE519A38ADD007FB804 /* emailDetailViewFunnel.png */,
+				FAAE9CE619A38ADD007FB804 /* emailDetailViewFunnel@2x.png */,
+				FAAE9CE719A38ADD007FB804 /* emailDetailViewMail.png */,
+				FAAE9CE819A38ADD007FB804 /* emailDetailViewMail@2x.png */,
+				FAAE9CE919A38ADD007FB804 /* emailDetailViewReply.png */,
+				FAAE9CEA19A38ADD007FB804 /* emailDetailViewReply@2x.png */,
+				FAAE9CEB19A38ADD007FB804 /* emailDetailViewReplyAll.png */,
+				FAAE9CEC19A38ADD007FB804 /* emailDetailViewReplyAll@2x.png */,
+				FAAE9CED19A38ADD007FB804 /* emailDetailViewTrash.png */,
+				FAAE9CEE19A38ADD007FB804 /* emailDetailViewTrash@2x.png */,
+			);
+			path = EmailDetailViewImages;
+			sourceTree = "<group>";
+		};
 		FAAF16FB19863CDD00E877D4 /* SDWebImage */ = {
 			isa = PBXGroup;
 			children = (
@@ -1399,6 +1484,7 @@
 		FABAF01F1976507E00AA7918 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				FAAE9CE019A38ADD007FB804 /* EmailDetailViewImages */,
 				B7C940D6198D6F36008468E7 /* DemoSlides */,
 				FABAF0201976507E00AA7918 /* Dummy */,
 				FABAF02E1976507E00AA7918 /* Funnl */,
@@ -1542,6 +1628,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B72C2FB119A196E3000E5D5B /* RNBlurModalView.h in Headers */,
+				FAAE9CDA19A354F0007FB804 /* UIView+Toast.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1598,7 +1686,7 @@
 				ORGANIZATIONNAME = FunnlMail;
 				TargetAttributes = {
 					66F2C46518E3293E00CD593E = {
-						DevelopmentTeam = Y42SDJ5F7J;
+						DevelopmentTeam = 4724LVRTFE;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -1691,6 +1779,7 @@
 				FABAF08E1976507E00AA7918 /* Message.png in Resources */,
 				FABAF07F1976507E00AA7918 /* Shopping.png in Resources */,
 				FA4A2E8A198A7E2C00CB9FAD /* menuIcon@2x.png in Resources */,
+				FAAE9CF219A38ADD007FB804 /* emailDetailViewForward@2x.png in Resources */,
 				FABAF0D21976629000AA7918 /* reply@2x.png in Resources */,
 				FABAF0951976507E00AA7918 /* archiveListIcon.png in Resources */,
 				FABAF0921976507E00AA7918 /* Share@2x.png in Resources */,
@@ -1705,14 +1794,17 @@
 				FA11B2E4199908D200B4EA86 /* popoverArrowUp.png in Resources */,
 				FABAF0D31976629000AA7918 /* replyAll@2x.png in Resources */,
 				FA11B30E1999D70900B4EA86 /* close_black@2x.png in Resources */,
+				FAAE9CFC19A38ADD007FB804 /* emailDetailViewTrash@2x.png in Resources */,
 				D1EFF4C719818B6F0031A1D1 /* button-provider-yahoo.png in Resources */,
 				FABAF09F1976507E00AA7918 /* trashListIcon.png in Resources */,
 				FABAF0AC1976507E00AA7918 /* close.png in Resources */,
+				FAAE9CFB19A38ADD007FB804 /* emailDetailViewTrash.png in Resources */,
 				FA11B2DE199908D200B4EA86 /* popoverArrowLeftSimple.png in Resources */,
 				FA11B2DD199908D200B4EA86 /* popoverArrowLeft@2x.png in Resources */,
 				FA11B2DB199908D200B4EA86 /* popoverArrowLeft-white@2x.png in Resources */,
 				FA11B2E5199908D200B4EA86 /* popoverArrowUp@2x.png in Resources */,
 				FABAF0D11976629000AA7918 /* forward@2x.png in Resources */,
+				FAAE9CF319A38ADD007FB804 /* emailDetailViewFunnel.png in Resources */,
 				D1EFF4C219818B6F0031A1D1 /* button-provider-aol@2x.png in Resources */,
 				FA11B2E8199908D200B4EA86 /* popoverBg.png in Resources */,
 				FABAF0771976507E00AA7918 /* Email 3.png in Resources */,
@@ -1724,6 +1816,7 @@
 				FABAF0851976507E00AA7918 /* Done_Button@2x.png in Resources */,
 				FABAF0C81976573400AA7918 /* composeIcon.png in Resources */,
 				B7C940E0198D6F49008468E7 /* WHITEsliders1nobar.png in Resources */,
+				FAAE9CF619A38ADD007FB804 /* emailDetailViewMail@2x.png in Resources */,
 				FABAF0C21976507E00AA7918 /* swipeFunnl.png in Resources */,
 				FABAF0CB1976573400AA7918 /* funnlIcon@2x.png in Resources */,
 				FA11B2E3199908D200B4EA86 /* popoverArrowUp-white@2x.png in Resources */,
@@ -1737,11 +1830,14 @@
 				FA11B30B1999D70900B4EA86 /* addIcon_white.png in Resources */,
 				FABAF0961976507E00AA7918 /* archiveListIcon@2x.png in Resources */,
 				FA2B426A1990AE320036EF0F /* Message@2x.png in Resources */,
+				FAAE9CF419A38ADD007FB804 /* emailDetailViewFunnel@2x.png in Resources */,
+				FAAE9CEF19A38ADD007FB804 /* emailDetailViewArchive.png in Resources */,
 				FA4A2E8D198A837500CB9FAD /* swipeTrash.png in Resources */,
 				B7C940E2198D6F49008468E7 /* WHITEsliders3.png in Resources */,
 				66F2C47418E3293E00CD593E /* InfoPlist.strings in Resources */,
 				FABAF0A11976507E00AA7918 /* getStarted@2x.png in Resources */,
 				FA4A2E8E198A837500CB9FAD /* swipeTrash@2x.png in Resources */,
+				661C66C819A2C464003276A3 /* notifsound.m4a in Resources */,
 				FABAF0AA1976507E00AA7918 /* backArrow.png in Resources */,
 				FA11B2DA199908D200B4EA86 /* popoverArrowDownSimple.png in Resources */,
 				FABAF0901976507E00AA7918 /* Settings@2x.png in Resources */,
@@ -1759,6 +1855,7 @@
 				B79AFED019A0174A00725A8D /* welcome.png in Resources */,
 				FA11B2DC199908D200B4EA86 /* popoverArrowLeft.png in Resources */,
 				FA11B2E7199908D200B4EA86 /* popoverBg-white@2x.png in Resources */,
+				FAAE9CFA19A38ADD007FB804 /* emailDetailViewReplyAll@2x.png in Resources */,
 				FA11B2D7199908D200B4EA86 /* popoverArrowDown-white@2x.png in Resources */,
 				FABAF0B11976507E00AA7918 /* cross.png in Resources */,
 				FABAF0C01976507E00AA7918 /* swipeArchive.png in Resources */,
@@ -1766,6 +1863,7 @@
 				B7C940E3198D6F49008468E7 /* WHITEsliders4.png in Resources */,
 				FABAF0C31976507E00AA7918 /* swipeFunnl@2x.png in Resources */,
 				D1EFF4C319818B6F0031A1D1 /* button-provider-bg.png in Resources */,
+				FAAE9CF719A38ADD007FB804 /* emailDetailViewReply.png in Resources */,
 				FA26CAF7199508C900FFD9B3 /* menuIcon_web.png in Resources */,
 				B7C940E4198D6F49008468E7 /* WHITEsliders5.png in Resources */,
 				FABAF0A81976507E00AA7918 /* arrow.png in Resources */,
@@ -1777,10 +1875,12 @@
 				FABAF0BD1976507E00AA7918 /* replyAll.png in Resources */,
 				FABAF0CD1976621C00AA7918 /* mail@2x.png in Resources */,
 				FA8A4ADC193D902B004890E3 /* NSDateTimeAgo.bundle in Resources */,
+				FAAE9CF119A38ADD007FB804 /* emailDetailViewForward.png in Resources */,
 				FA11B2D9199908D200B4EA86 /* popoverArrowDown@2x.png in Resources */,
 				FABAF0991976507E00AA7918 /* sentListIcon.png in Resources */,
 				FABAF08F1976507E00AA7918 /* Settings.png in Resources */,
 				FABAF0B31976507E00AA7918 /* forward.png in Resources */,
+				FAAE9CF819A38ADD007FB804 /* emailDetailViewReply@2x.png in Resources */,
 				D1EFF4C619818B6F0031A1D1 /* button-provider-gmail@2x.png in Resources */,
 				FABAF0D61976634C00AA7918 /* menuIcon.png in Resources */,
 				FABAF0D61976634C00AA7918 /* menuIcon.png in Resources */,
@@ -1789,6 +1889,7 @@
 				FABAF0B51976507E00AA7918 /* mail.png in Resources */,
 				CC4263BC1934BB6700F3C5EB /* dbschema.sql in Resources */,
 				FABAF0811976507E00AA7918 /* Travel.png in Resources */,
+				FAAE9CF019A38ADD007FB804 /* emailDetailViewArchive@2x.png in Resources */,
 				FABAF09A1976507E00AA7918 /* sentListIcon@2x.png in Resources */,
 				FABAF0751976507E00AA7918 /* Email 1.png in Resources */,
 				FABAF0A61976507E00AA7918 /* addIcon.png in Resources */,
@@ -1801,11 +1902,13 @@
 				FABAF0791976507E00AA7918 /* Email 5.png in Resources */,
 				FA11B2C11999085700B4EA86 /* userimage-placeholder@2x.png in Resources */,
 				B7C940E1198D6F49008468E7 /* WHITEsliders2.png in Resources */,
+				FAAE9CF919A38ADD007FB804 /* emailDetailViewReplyAll.png in Resources */,
 				FA11B2DF199908D200B4EA86 /* popoverArrowRight-white@2x.png in Resources */,
 				FABAF0A91976507E00AA7918 /* arrow@2x.png in Resources */,
 				FABAF07A1976507E00AA7918 /* Files.png in Resources */,
 				FABAF0841976507E00AA7918 /* Done_Button.png in Resources */,
 				B75F56A6197F056F00518743 /* FunnlMail VIP logo.png in Resources */,
+				FAAE9CF519A38ADD007FB804 /* emailDetailViewMail.png in Resources */,
 				FABAF0911976507E00AA7918 /* Share.png in Resources */,
 				FABAF0AD1976507E00AA7918 /* close@2x.png in Resources */,
 				FA11B2E2199908D200B4EA86 /* popoverArrowRightSimple.png in Resources */,
@@ -1874,6 +1977,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B72C2FBC19A1980B000E5D5B /* RNBlurModalView.h in Sources */,
 				FA029C401993BB890021C6B1 /* ContactService.m in Sources */,
 				FAAF171E19863CDD00E877D4 /* SDWebImageDownloader.m in Sources */,
 				FAAF172519863CDD00E877D4 /* UIImage+WebP.m in Sources */,
@@ -1908,6 +2012,7 @@
 				FA9164CB1973D302006A4726 /* TITokenField.m in Sources */,
 				FAAF171C19863CDD00E877D4 /* SDWebImageCompat.m in Sources */,
 				6677881A18EF84FB00EF1962 /* MCOCIDURLProtocol.mm in Sources */,
+				FAAE9CDB19A354F0007FB804 /* UIView+Toast.m in Sources */,
 				FAAF172F198777FC00E877D4 /* PrimarySettingViewController.m in Sources */,
 				FAABF1871952FB720072FFE8 /* FunnlPopupViewCell.m in Sources */,
 				FA2C9BD3193EDFCB00866BEE /* MMDrawerVisualState.m in Sources */,
@@ -1921,6 +2026,7 @@
 				CC8C7EAD18E6F1C100E76AE8 /* MainVC.m in Sources */,
 				FA2C9BD2193EDFCB00866BEE /* MMDrawerController.m in Sources */,
 				FA2C9BDB193EE66400866BEE /* MenuViewController.m in Sources */,
+				B72C2FB219A196E3000E5D5B /* RNBlurModalView.m in Sources */,
 				D1EFF48719817BBF0031A1D1 /* hmac.c in Sources */,
 				D1EFF49119817BFB0031A1D1 /* CIOAuthViewController.m in Sources */,
 				CC8C7ECC18E6F38100E76AE8 /* MASViewAttribute.m in Sources */,
@@ -2073,7 +2179,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "F3962F6B-FF15-404A-B229-F27BF4827590";
+				PROVISIONING_PROFILE = "69e28a4d-1186-4fab-8041-73ac81f00e8b";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -2106,7 +2212,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PROVISIONING_PROFILE = "433b17d1-065e-45d6-8696-0767fb229688";
+				PROVISIONING_PROFILE = "06fa6b09-dcc5-4527-9f92-1a43f6159784";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2179,8 +2285,8 @@
 				BUNDLE_ID_SUFFIX = "";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Renee Migdal (4724LVRTFE)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Renee Migdal (4724LVRTFE)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -2210,7 +2316,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "2525EC94-C5CF-4A18-84B4-9F32F201B525";
+				PROVISIONING_PROFILE = "bb645e85-1d2a-45d2-9aaf-1c6fd74893d7";
 				SDKROOT = iphoneos7.1;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
@@ -2285,7 +2391,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PROVISIONING_PROFILE = "433b17d1-065e-45d6-8696-0767fb229688";
+				PROVISIONING_PROFILE = "06fa6b09-dcc5-4527-9f92-1a43f6159784";
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "$(BUILD_ROOT)/../IntermediateBuildFilesPath/UninstalledProducts";
 				VALIDATE_PRODUCT = YES;
@@ -2303,7 +2409,7 @@
 				BUNDLE_ID_SUFFIX = .adhoc;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Renee Migdal (4724LVRTFE)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Renee Migdal (4724LVRTFE)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2336,7 +2442,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "433b17d1-065e-45d6-8696-0767fb229688";
+				PROVISIONING_PROFILE = "bb645e85-1d2a-45d2-9aaf-1c6fd74893d7";
 				SDKROOT = iphoneos7.1;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;

@@ -158,6 +158,7 @@ static MessageService *instance;
 
 - (NSString*)retrievePreviewContentWithID:(NSString*)uid {
     __block NSString *previewBody = [[NSString alloc] initWithFormat:@""];
+    __block BOOL previewChanged = NO;
     __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
     paramDict[@"messageID"] = uid;
     [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
@@ -169,10 +170,14 @@ static MessageService *instance;
         while ([resultSet next]) {
             if ([resultSet stringForColumn:@"messageBodyToBeRendered"]) {
                 previewBody = [resultSet stringForColumn:@"messageBodyToBeRendered"];
+                previewChanged = YES;
             }
         }
     }];
-    return previewBody;
+    if (previewChanged)
+        return previewBody;
+    else
+        return @"This message has no content.";
 }
 
 -(BOOL) updateMessageMetaInfo:(MessageModel *)messageModel{
@@ -649,6 +654,21 @@ static MessageService *instance;
   }];
   
   return success;
+}
+
+-(BOOL) clearAllTables{
+    
+    __block BOOL success = NO;
+    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+        [db executeUpdate:@"DELETE FROM messages" withParameterDictionary:nil];
+        [db executeUpdate:@"DELETE FROM funnels" withParameterDictionary:nil];
+        [db executeUpdate:@"DELETE FROM messageFilterXRef" withParameterDictionary:nil];
+        [db executeUpdate:@"DELETE FROM emailServers" withParameterDictionary:nil];
+        success = [db executeUpdate:@"DELETE FROM contacts" withParameterDictionary:nil];
+        
+    }];
+    
+    return success;
 }
 
 

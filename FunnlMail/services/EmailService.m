@@ -18,6 +18,7 @@
 #import "EmailServersService.h"
 #import "LoginViewController.h"
 #import "MainVC.h"
+#import "RNBlurModalView.h"
 
 static EmailService *instance;
 
@@ -111,18 +112,27 @@ static NSString *currentFolder;
 	self.messagePreviews = [NSMutableDictionary dictionary];
     self.filterMessagePreviews = [NSMutableDictionary dictionary];
     self.sentMessagePreviews = [NSMutableDictionary dictionary];
+   
     [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
-    if ([EmailService instance].filterMessages.count == 0) {
+    if ([EmailService instance].filterMessages.count > 0) {
         AppDelegate *tempAppDelegate = APPDELEGATE;
-        if ([[tempAppDelegate.currentFunnelString lowercaseString] isEqualToString:[ALL_FUNNL lowercaseString]] || [[tempAppDelegate.currentFunnelString lowercaseString] isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]) {
-            [fv.tableView reloadData];
-        }
-        else {
-            self.filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:tempAppDelegate.currentFunnelDS.funnelId top:2000];
-            [fv.tableView reloadData];
+        if(tempAppDelegate.currentSelectedFunnlModel){
+            if ([[tempAppDelegate.currentSelectedFunnlModel.funnelName.lowercaseString lowercaseString] isEqualToString:[ALL_FUNNL lowercaseString]]) {
+                //self.filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
+            }
+            else if ([[tempAppDelegate.currentSelectedFunnlModel.funnelName.lowercaseString lowercaseString] isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]) {
+                self.filterMessages = (NSMutableArray*)[[MessageService instance] retrieveOtherMessagesThanPrimary];
+            }
+            else{
+                self.filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:tempAppDelegate.currentSelectedFunnlModel.funnelId top:2000];
+            }
+            
         }
     }
-	NSLog(@"checking account");
+    [fv.tableView reloadData];
+
+	
+    NSLog(@"checking account");
 	self.imapCheckOp = [self.imapSession checkAccountOperation];
     [self.imapSession disconnectOperation];
 	[self.imapCheckOp start:^(NSError *error) {
@@ -139,6 +149,23 @@ static NSString *currentFolder;
 	}];
 }
 
+-(void)clearData{
+    self.messages = [[NSMutableArray alloc] init];
+    self.filterMessages = [[NSMutableArray alloc] init];
+    self.sentMessages = [[NSMutableArray alloc] init];
+    self.threadIdDictionary = [[NSMutableDictionary alloc] init];
+    self.primaryMessages = [[NSMutableArray alloc] init];
+    
+	self.totalNumberOfMessages = -1;
+	self.isLoading = NO;
+	self.messagePreviews = [NSMutableDictionary dictionary];
+    self.filterMessagePreviews = [NSMutableDictionary dictionary];
+    self.sentMessagePreviews = [NSMutableDictionary dictionary];
+    
+    [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
+    [emailsTableViewController.tableView reloadData];
+}
+
 //function to be called in background
 - (void)checkMailsAtStart:(EmailsTableViewController*)fv
 {
@@ -150,7 +177,7 @@ static NSString *currentFolder;
     u_int64_t modSeqValue = UINT64_MAX;
 
     NSString *modSeqString = [[NSUserDefaults standardUserDefaults] objectForKey:@"MODSEQ"];
-    if(modSeqString == nil || modSeqString.length <= 0){
+    if(modSeqString.length <= 0){
         NSArray *dataArray = [[MessageService instance] messagesWithTop:1];
         if(dataArray.count){
             MCOIMAPMessage *tempMessage = [dataArray objectAtIndex:0];
@@ -292,7 +319,7 @@ static NSString *currentFolder;
 - (void)loadLastNMessages:(NSUInteger)nMessages withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName withFetchRange:(MCORange)newFetchRange
 {
      emailsTableViewController = fv;
-    AppDelegate *tempAppDelegate = APPDELEGATE;
+    AppDelegate *appDelegate = APPDELEGATE;
 //    if(fv == nil){
 //        emailsTableViewController = tempAppDelegate.loginViewController.mainViewController.emailsTableViewController;
 //    }else{
@@ -310,6 +337,7 @@ static NSString *currentFolder;
     if([folderName isEqualToString:INBOX]){
         FolderInfo = [self.imapSession folderInfoOperation:INBOX];
         emailsTableViewController.navigationItem.title = ALL_FUNNL;
+        [MBProgressHUD hideAllHUDsForView:appDelegate.window animated:YES];
     }
     else if([folderName isEqualToString:SENT]){
         FolderInfo = [self.imapSession folderInfoOperation:SENT];
@@ -323,10 +351,11 @@ static NSString *currentFolder;
         FolderInfo = [self.imapSession folderInfoOperation:DRAFTS];
         dbBoolArray = [[MessageService instance] retrieveNewestMessage:DRAFTS];
     }
-    else{
+    else if([folderName isEqualToString:ARCHIVE]){
         FolderInfo = [self.imapSession folderInfoOperation:ARCHIVE];
         dbBoolArray = [[MessageService instance] retrieveNewestMessage:ARCHIVE];
     }
+    
     NSInteger newestID;
     if(dbBoolArray.count) newestID = [[dbBoolArray objectAtIndex:0] integerValue];
     else newestID = 0;
@@ -635,7 +664,10 @@ static NSString *currentFolder;
 //                          [emailTableViewController.tableView reloadData];
                       }
                       else {
-                          self.filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:tempAppDelegate.currentFunnelDS.funnelId top:2000];
+                          if(tempAppDelegate.currentFunnelDS)
+                              self.filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:tempAppDelegate.currentFunnelDS.funnelId top:2000];
+                          else
+                              NSLog(@"app crash fixed");
                       }
                       [tempAppDelegate.progressHUD setHidden:YES];
                       [tempAppDelegate.progressHUD show:NO];
@@ -647,13 +679,17 @@ static NSString *currentFolder;
                       });
                       
                       dispatch_async(dispatch_get_main_queue(), ^(void){
-                          AppDelegate *appDeleage = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-                          [appDeleage hideWelcomeOverlay];
+                          AppDelegate *tempAppDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+                          //[appDeleage hideWelcomeOverlay];
                           [fv.tableView reloadData];
                           [fv.tablecontroller.refreshControl endRefreshing];
                           [tempAppDelegate.progressHUD setHidden:YES];
                           [tempAppDelegate.progressHUD show:NO];
                           [fv.activityIndicator stopAnimating];
+
+                          if([folderName isEqualToString:SENT]  || [folderName isEqualToString:TRASH] || [folderName isEqualToString:DRAFTS] || [folderName isEqualToString:ARCHIVE]){
+                              [MBProgressHUD hideAllHUDsForView:appDelegate.window animated:YES];
+                          }
                       });
                   });
               }];
@@ -750,13 +786,6 @@ static NSString *currentFolder;
          if(self.totalNumberOfMessages == 4294967295){
                 NSLog(@"..........Here its freezing for new messages.......");
              self.totalNumberOfMessages = 1;
-             MCOIMAPFetchFoldersOperation *op = [self.imapSession fetchAllFoldersOperation];
-//             [op start:^(NSError * error, NSArray *folders) {
-//                    for (MCOIMAPFolder *folder in folders) {
-//                        NSLog(@"----> %@",folder.path);
-//                    }
-//             }];
-                //[appDelegate.loginViewController refreshAccessToken];
          }
          NSLog(@"---- Last Info: %llu",self.totalNumberOfMessages);
          NSArray *tempArray = [[MessageService instance] retrieveLatestMessages];
@@ -892,16 +921,26 @@ static NSString *currentFolder;
                 temp.skipFlag = temp.skipFlag + 1;
             }
             NSString *funnelJsonString = [(MessageModel*)[messages objectAtIndex:count] funnelJson];
-            NSError *error = nil;
-            NSMutableDictionary *tempDict = [NSJSONSerialization JSONObjectWithData:[funnelJsonString dataUsingEncoding:NSUTF8StringEncoding]
-                                                                            options: NSJSONReadingAllowFragments
-                                                                              error: &error];
-            if (!error) {
-                tempDict = [self insertIntoDictionary:tempDict funnel:funnel];
-            } else {
+            NSMutableDictionary *tempDict;
+            if(funnelJsonString){
+                NSError *error = nil;
+                
+                tempDict = [NSJSONSerialization JSONObjectWithData:[funnelJsonString dataUsingEncoding:NSUTF8StringEncoding]
+                                                                                options: NSJSONReadingAllowFragments
+                                                                                  error: &error];
+                if (!error) {
+                    tempDict = [self insertIntoDictionary:tempDict funnel:funnel];
+                } else {
+                    tempDict = [[NSMutableDictionary alloc] init];
+                    tempDict[funnel.funnelName] = funnel.funnelColor;
+                }
+            }
+            else{
                 tempDict = [[NSMutableDictionary alloc] init];
                 tempDict[funnel.funnelName] = funnel.funnelColor;
             }
+
+            
             //            NSLog(@"----%@",[self getJsonStringByDictionary:(NSDictionary*)tempDict]);
             [(MessageModel*)[messages objectAtIndex:count] setFunnelJson:[self getJsonStringByDictionary:(NSDictionary*)tempDict]];
             [[MessageService instance] updateMessage:(MessageModel*)[messages objectAtIndex:count]];

@@ -15,6 +15,7 @@
 #import "FunnelModel.h"
 #import "MainVCDelegate.h"
 #import "AppDelegate.h"
+#import <MailCore/MailCore.h>
 
 @interface EmailsTableViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate,MCSwipeTableViewCellDelegate,RDSwipeableTableViewCellDelegate> {
     RDSwipeableTableViewCell *tempCellForDisplay;
@@ -26,6 +27,12 @@
     AppDelegate *tempAppDelegate;
     NSIndexPath *currentIndexPath;
     NSTimer *loadNextMsgTimer;
+    
+    MCOIMAPMessage *messageSelected;
+    NSIndexPath *selectedIndexPath;
+    MessageModel *selectedMessageModel;
+    UIView *returnView;
+    
 @public
     NSMutableArray *searchMessages;
 }

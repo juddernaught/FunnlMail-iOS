@@ -22,8 +22,8 @@
 #define MIXPANEL_TOKEN @"08b1e55d72f1b22a8e5696c2b56a6777"
 
 @implementation AppDelegate
-@synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable,contextIOAPIClient,isAlreadyRequestedRefreshToken;
-
+@synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable,contextIOAPIClient,isAlreadyRequestedRefreshToken,currentSelectedFunnlModel;
+@synthesize mainVCdelegate;
 
 #pragma mark - didFinishLaunching
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -37,13 +37,10 @@
     // MixPanel setup
     //[[CIOExampleAPIClient sharedClient] clearCredentials];
     [Mixpanel sharedInstanceWithToken:@"08b1e55d72f1b22a8e5696c2b56a6777"];
-    [[Mixpanel sharedInstance] track:@"App opened"];
+    [[Mixpanel sharedInstance] track:@"Launched App"]; //Launched app
     // Parse setup
-    [Parse setApplicationId:@"oXAOrMLIRzLNZh50VZ3sk3LBEfUuNDXuLZVBvHdV"
-                  clientKey:@"Z5mFEsiX7xTXYlKYKXMbN2zlqqf97l39E0PzZoZg"];
-    [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge|
-     UIRemoteNotificationTypeAlert|
-     UIRemoteNotificationTypeSound];
+    [Parse setApplicationId:@"oXAOrMLIRzLNZh50VZ3sk3LBEfUuNDXuLZVBvHdV" clientKey:@"Z5mFEsiX7xTXYlKYKXMbN2zlqqf97l39E0PzZoZg"];
+
     funnelUpDated = FALSE;
     progressHUD = [[MBProgressHUD alloc] init];
     //initializing currentFunnelString to "All"
@@ -87,6 +84,9 @@
 //        [self.loginViewController performSelectorInBackground:@selector(fetchContacts) withObject:nil];
     }
     
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge| UIRemoteNotificationTypeAlert| UIRemoteNotificationTypeSound];
+
+    
     // Override point for customization after application launch.
     return YES;
 }
@@ -118,7 +118,7 @@
             if(self.loginViewController && self.loginViewController.mainViewController && self.loginViewController.mainViewController.emailsTableViewController){
                 [self.loginViewController.mainViewController.emailsTableViewController.tablecontroller.refreshControl endRefreshing];
             }
-            [self.loginViewController refreshAccessToken];
+            [self.loginViewController performSelector:@selector(refreshAccessToken) withObject:nil afterDelay:0.1];
             
         //}
         self.internetAvailable = YES;
@@ -139,7 +139,7 @@
     showWelcomeOverlay = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
     showWelcomeOverlay.opaque = NO;
     
-    UITextView *thing = [[UITextView alloc]initWithFrame:CGRectMake(10, 20, WIDTH, 70)];
+    UITextView *thing = [[UITextView alloc]initWithFrame:CGRectMake(10, 40, WIDTH, 70)];
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     thing.text =[NSString stringWithFormat: @"Welcome %@, to your customized Primary inbox!",appDelegate.menuController.listArray.firstObject];
     
@@ -149,76 +149,38 @@
     thing.userInteractionEnabled = NO;
     
     UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"welcome.png"]];
-    imageView.frame = CGRectMake(0, 100, WIDTH, HEIGHT-90);
+    imageView.frame = CGRectMake(0, 110, WIDTH, HEIGHT-110);
+    
+    [[Mixpanel sharedInstance] track:@"Viewed intro overlay"];
+    
     [showWelcomeOverlay addSubview:imageView];
-    
-    UILabel *personal = [[UILabel alloc]initWithFrame:CGRectMake(15, 150, 75, 30)];
-    personal.text = @" Personal ";
-    personal.font = [UIFont boldSystemFontOfSize:18];
-    [personal sizeToFit];
-    personal.textColor = [UIColor greenColor];
-    personal.backgroundColor = [UIColor grayColor];
-    //[showWelcomeOverlay addSubview:personal];
-    
-    UILabel *work = [[UILabel alloc]initWithFrame:CGRectMake(95, 150, 75, 30)];
-    work.text = @" Work ";
-    work.font = [UIFont fontWithName:@"System" size:18];
-    [work sizeToFit];
-    work.textColor = [UIColor greenColor];
-    work.backgroundColor = [UIColor grayColor];
-    //[showWelcomeOverlay addSubview:work];
-    
-    UILabel *updates = [[UILabel alloc]initWithFrame:CGRectMake(15, 180, 75, 30)];
-    updates.text = @" Updates ";
-    updates.font = [UIFont boldSystemFontOfSize:18];
-    [updates sizeToFit];
-    [self createLabel:updates];
-
-    UILabel *Social = [[UILabel alloc]initWithFrame:CGRectMake(100, 180, 57, 30)];
-    Social.text = @" Social ";
-    Social.font = [UIFont boldSystemFontOfSize:18];
-    [Social sizeToFit];
-    [self createLabel:Social];
-    
-    UILabel *Promotions = [[UILabel alloc]initWithFrame:CGRectMake(30, 210, 95, 30)];
-    Promotions.text = @" Promotions ";
-    Promotions.font = [UIFont boldSystemFontOfSize:18];
-    [Promotions sizeToFit];
-    [self createLabel:Promotions];
-    
-    UILabel *forums =  [[UILabel alloc]initWithFrame:CGRectMake(165, 180, 95, 30)];
-    forums.text = @" Forums ";
-    forums.font = [UIFont boldSystemFontOfSize:18];
-    [forums sizeToFit];
-    [self createLabel:forums];
-    
-    UITextView *text = [[UITextView alloc]initWithFrame:CGRectMake(10, 330, WIDTH-10, 90)];
-    text.text = @"You can access your non-primary emails and modify category setting anytime from the top menu";
-    text.backgroundColor = [UIColor clearColor];
-    [text setTextColor:[UIColor whiteColor]];
-    text.font = [UIFont boldSystemFontOfSize:20];
-    text.userInteractionEnabled = NO;
-    //[showWelcomeOverlay addSubview: text];
-
-    UITextView *text2 = [[UITextView alloc]initWithFrame:CGRectMake(10, 415, WIDTH-10, 90)];
-    text2.text = @"You can also access your non-primary emails in the top menu";
-    text2.backgroundColor = [UIColor clearColor];
-    [text2 setTextColor:[UIColor whiteColor]];
-    text2.font = [UIFont boldSystemFontOfSize:20];
-    text2.userInteractionEnabled = NO;
-    //[showWelcomeOverlay addSubview: text2];
     
     [showWelcomeOverlay addSubview: thing];
     [showWelcomeOverlay bringSubviewToFront:thing];
     showWelcomeOverlay.backgroundColor = CLEAR_COLOR;
     showWelcomeOverlay.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.78];
+    
+    UIButton *letsGo = [UIButton buttonWithType:UIButtonTypeCustom];
+    letsGo.frame = CGRectMake(WIDTH-40, 20, 30, 30);
+    [letsGo setTitle:@"X" forState:UIControlStateNormal];
+    [letsGo setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [letsGo addTarget:self action:@selector(hideWelcomeOverlay:) forControlEvents:UIControlEventTouchUpInside];
+    [[letsGo layer] setBorderWidth:2.0f];
+    [[letsGo layer] setBorderColor:[UIColor whiteColor].CGColor];
+    [letsGo.layer setCornerRadius:3.0];
+    [showWelcomeOverlay addSubview:letsGo];
+    [showWelcomeOverlay bringSubviewToFront:letsGo];
+    
     [self.window addSubview:showWelcomeOverlay];
     [self.window bringSubviewToFront:showWelcomeOverlay];
+    
+    
 }
-                          
--(void)hideWelcomeOverlay{
+
+-(IBAction)hideWelcomeOverlay:(id)sender{
     [showWelcomeOverlay removeFromSuperview];
 }
+
 
 #pragma mark - applicationWillResignActive
 
@@ -251,7 +213,9 @@
     NSLog(@"-----applicationDidBecomeActive-----");
     if(self.loginViewController){
         NSLog(@"-----Call Refresh Token -----");
-        [self.loginViewController refreshAccessToken];
+        self.isAlreadyRequestedRefreshToken = NO;
+        if(!self.didLoginIn) self.didLoginIn = 0;
+        [self.loginViewController performSelector:@selector(refreshAccessToken) withObject:nil afterDelay:0.1];
     }
 }
 
@@ -279,11 +243,12 @@
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
     // Store the deviceToken in the current installation and save it to Parse.
+    NSString* deviceTokenStr = [NSString stringWithUTF8String:[deviceToken bytes]];
     NSLog(@"didRegisterForRemoteNotificationsWithDeviceToken: %@",deviceToken);
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     NSString *loggedInEmail = [EmailService instance].userEmailID;
-    [currentInstallation setChannels:@[]];
-    [currentInstallation addUniqueObject:@"testers" forKey:@"channels"];
+//    [currentInstallation setChannels:@[]];
+    //[currentInstallation addUniqueObject:@"testers2" forKey:@"channels"];
     
     if ([loggedInEmail length]) {
         if (![currentInstallation channels] || [currentInstallation channels].count == 0) {
@@ -291,6 +256,7 @@
         }
         [currentInstallation addUniqueObject:@"aUser" forKey:loggedInEmail];
     }
+    NSLog(@"didRegisterForRemoteNotificationsWithDeviceToken: %@",currentInstallation.deviceToken);
     [currentInstallation setDeviceTokenFromData:deviceToken];
     [currentInstallation saveInBackground];
 }

@@ -93,6 +93,7 @@ NSMutableArray *emailArr,*searchArray;
 shouldChangeCharactersInRange:(NSRange)range
 replacementString:(NSString *)string {
     if([@"Subject:"  isEqual: ((UILabel *)(TITokenField *)textField.leftView).text]){
+        
         return YES;
     }
     if([@"To:"  isEqual: ((UILabel *)(TITokenField *)textField.leftView).text]){
@@ -237,20 +238,24 @@ replacementString:(NSString *)string {
 
 
 -(void)cancelButtonSelected{
-    [[Mixpanel sharedInstance] track:@"Cancel button from composeVC"];
+    [[Mixpanel sharedInstance] track:@"Canceled email"];
+    
 //    [self dismissViewControllerAnimated:YES completion:NULL];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(void)sendButtonSelected{
 //    NSLog(@"%@, %@, ",toFieldView.tokenTitles, toFieldView.tokenField.text, toFieldView);
+    
+    [[Mixpanel sharedInstance] track:@"Sent email"];
+    
     MCOMessageBuilder * builder = [[MCOMessageBuilder alloc] init];
     [[builder header] setFrom:[MCOAddress addressWithDisplayName:nil mailbox:self.imapSession.username]];
     NSMutableArray *toArray = [[NSMutableArray alloc] init];
     if (self.sendFeedback) {
-        [toArray addObject:[MCOAddress addressWithMailbox:@"founders@funnlmail.com"]];
+        [toArray addObject:[MCOAddress addressWithMailbox:@"funnlmailfounders@gmail.com"]];
+        [[builder header] setTo:toArray];
     }
-    
     else {
         MCOAddress *newAddress = [MCOAddress addressWithMailbox:[toFieldView.tokenTitles componentsJoinedByString:@","]];
         [toArray addObject:newAddress];
@@ -368,6 +373,7 @@ replacementString:(NSString *)string {
     [toFieldView.contentView addSubview:subjectFieldView];
     subjectFieldView.tokenField.hideBubble = YES;
     subjectFieldView.scrollEnabled = NO;
+    subjectFieldView.tag = 4; // Added by Chad, not sure if this does anything
 
 	messageView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, 208)];
 	[messageView setScrollEnabled:NO];
@@ -408,9 +414,10 @@ replacementString:(NSString *)string {
         toFieldView.tokenField.text = temp;
     }
     else if (self.sendFeedback){
-        NSLog(@"self.reply");
+        NSLog(@"sendFeedback");
         NSMutableString *temp = [[NSMutableString alloc] initWithString:@"Feedback for FunnlMail "];
         subjectFieldView.tokenField.text = temp;
+        toFieldView.tokenField.text = @"founders@funnlmail.com";
     }
 
     if (!self.compose && !self.sendFeedback) {
@@ -459,6 +466,10 @@ replacementString:(NSString *)string {
     if(bccFieldView.tokenTitles.count){
     	[bccFieldView.tokenField setPlaceholder:@""];
     }
+    if(subjectFieldView .tokenTitles.count){ //Added by Chad, not sure if this does anything
+    	[bccFieldView.tokenField setPlaceholder:@""];
+    }
+
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];

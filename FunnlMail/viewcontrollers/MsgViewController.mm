@@ -20,6 +20,7 @@
 #import "FunnelService.h"
 #import "EmailService.h"
 #import "FunnelModel.h"
+#import "FunnlPopUpView.h"
 
 @interface MsgViewController () <MCOMessageViewDelegate>
 
@@ -29,7 +30,8 @@
 
 @synthesize folder = _folder;
 @synthesize session = _session;
-
+@synthesize selectedIndexPath;
+@synthesize messageModel;
 - (void) awakeFromNib
 {
     _storage = [[NSMutableDictionary alloc] init];
@@ -79,9 +81,10 @@
     
 //    [_messageView setHeaderViewHeight:100];
     [_messageView setHeaderViewHeight:headerView.frame.size.height];
-    UILabel *testHeaderview = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 320-30, 100)];
-    testHeaderview.text = @"This is not zoomable text, we don't have to zoom it at all.This is not zoomable text, we don't have to zoom it at all.This is not zoomable text, we don't have to zoom it at all.This is not zoomable text, we don't have to zoom it at all.";
-    testHeaderview.numberOfLines= 0;
+    
+//    UILabel *testHeaderview = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 320-30, 100)];
+//    testHeaderview.text = @"This is not zoomable text, we don't have to zoom it at all.This is not zoomable text, we don't have to zoom it at all.This is not zoomable text, we don't have to zoom it at all.This is not zoomable text, we don't have to zoom it at all.";
+//    testHeaderview.numberOfLines= 0;
     
 //    [_messageView setHeaderView:testHeaderview];
     [_messageView setHeaderView:headerView];
@@ -95,18 +98,25 @@
     UIButton *forwardButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [replyButton addTarget:self action:@selector(replyButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    replyButton.frame = CGRectMake(70, 0, 42, 42);
-    [replyButton setBackgroundImage:[UIImage imageNamed:@"reply.png"] forState:UIControlStateNormal];
+    replyButton.frame = CGRectMake(51, 0, 42, 42);
+    [replyButton setImage:[UIImage imageNamed:@"emailDetailViewReply.png"] forState:UIControlStateNormal];
+    [replyButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentCenter];
+    [replyButton setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
     [centeredButtons addSubview:replyButton];
     
     [replyAllButton addTarget:self action:@selector(replyAllButtonSelected) forControlEvents:UIControlEventTouchUpInside];
     replyAllButton.frame = CGRectMake(140, 0, 42, 42);
-    [replyAllButton setBackgroundImage:[UIImage imageNamed:@"replyAll.png"] forState:UIControlStateNormal];
+    [replyAllButton setImage:[UIImage imageNamed:@"emailDetailViewReplyAll.png"] forState:UIControlStateNormal];
+    [replyAllButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentCenter];
+    [replyAllButton setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
+//    [replyAllButton setBackgroundImage:[UIImage imageNamed:@"emailDetailViewReplyAll.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:replyAllButton];
 
     [forwardButton addTarget:self action:@selector(forwardButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    forwardButton.frame = CGRectMake(210, 0, 42, 42);
-    [forwardButton setBackgroundImage:[UIImage imageNamed:@"forward.png"] forState:UIControlStateNormal];
+    forwardButton.frame = CGRectMake(WIDTH - 42 - 51, 0, 42, 42);
+    [forwardButton setImage:[UIImage imageNamed:@"emailDetailViewForward.png"] forState:UIControlStateNormal];
+    [forwardButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentCenter];
+    [forwardButton setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
     [centeredButtons addSubview:forwardButton];
     
     UIView *topBorder = [[UIView alloc]
@@ -143,7 +153,7 @@
     UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"backArrow.png"] style:UIBarButtonItemStylePlain target:self action:@selector(back)];
     [self.navigationItem setLeftBarButtonItem:leftButton];
     
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 40)];
     [titleLabel setFont:[UIFont systemFontOfSize:22]];
     [titleLabel setTextColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR]];
     if ([tempAppDelegate.currentFunnelString.lowercaseString isEqualToString:[ALL_FUNNL lowercaseString]] || [tempAppDelegate.currentFunnelString.lowercaseString isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]) {
@@ -151,11 +161,20 @@
     }
     else {
         self.navigationItem.title = @"";
-//        titleLabel.text = tempAppDelegate.currentFunnelString.capitalizedString;
     }
-//    [titleLabel setTextAlignment:NSTextAlignmentCenter];
-//    self.navigationItem.titleView = titleLabel;
-//    titleLabel = nil;
+    
+    UIBarButtonItem *funnelButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"emailDetailViewFunnel.png"] style:UIBarButtonItemStylePlain target:self action:@selector(createFunnl:)];
+//    [self.navigationItem setLeftBarButtonItem:leftButton1];
+    
+    UIBarButtonItem *archiveButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"emailDetailViewArchive.png"] style:UIBarButtonItemStylePlain target:self action:@selector(archiveMail:)];
+//    [self.navigationItem setLeftBarButtonItem:leftButton2];
+    
+    UIBarButtonItem *emailButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"emailDetailViewMail.png"] style:UIBarButtonItemStylePlain target:self action:@selector(unreadMail:)];
+//    [self.navigationItem setLeftBarButtonItem:leftButton3];
+    
+    UIBarButtonItem *deleteButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"emailDetailViewTrash.png"] style:UIBarButtonItemStylePlain target:self action:@selector(deleteMail:)];
+//    [self.navigationItem setLeftBarButtonItem:leftButton4];
+    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:deleteButton, archiveButton, emailButton, funnelButton, nil]];
 }
 
 -(void)updateWebView{
@@ -188,6 +207,13 @@
 
 #pragma mark -
 #pragma mark Helper
+- (void)setReadMessage:(MessageModel*)messageRead
+{
+    [messageRead setRead:NO];
+    messageRead.read = FALSE;
+    [[MessageService instance] updateMessage:messageRead];
+}
+
 - (void)setUpView
 {
     headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, 100)];
@@ -396,6 +422,58 @@
 
 #pragma mark -
 #pragma mark EventHandler
+- (void)unreadMail:(UIButton*)sender {
+    _message.flags = MCOMessageFlagNone;
+    MCOIMAPOperation *msgOperation=[[EmailService instance].imapSession storeFlagsOperationWithFolder:self.folder uids:[MCOIndexSet indexSetWithIndex:_message.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagSeen];
+    [msgOperation start:^(NSError * error)
+     {
+         NSLog(@"selected message flags %u UID is %u",_message.flags,_message.uid );
+     }];
+    [self setReadMessage:messageModel];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)deleteMail:(UIButton*)sender {
+    
+    NSString *uidKey = [NSString stringWithFormat:@"%d",_message.uid];
+    [[MessageService instance] deleteMessage:uidKey];
+    MCOIMAPCopyMessagesOperation *opt = [[EmailService instance].imapSession copyMessagesOperationWithFolder:self.folder uids:[MCOIndexSet indexSetWithIndex:_message.uid] destFolder:TRASH];
+    [opt start:^(NSError *error, NSDictionary *uidMapping) {
+        NSLog(@"copied to folder with UID %@", uidMapping);
+    }];
+    [[EmailService instance].filterMessagePreviews removeObjectForKey:uidKey];
+    [[EmailService instance].filterMessages removeObjectAtIndex:selectedIndexPath.row];
+    [[EmailService instance].messages removeObjectIdenticalTo:_message];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+- (void)archiveMail:(UIButton*)sender {
+    
+    NSString *uidKey = [NSString stringWithFormat:@"%d",_message.uid];
+    [[MessageService instance] deleteMessage:uidKey];
+    MCOIMAPOperation *msgOperation = [[EmailService instance].imapSession storeFlagsOperationWithFolder:self.folder uids:[MCOIndexSet indexSetWithIndex:_message.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagDeleted];
+    [msgOperation start:^(NSError * error)
+     {
+         NSLog(@"selected message flags %u UID is %u",_message.flags,_message.uid );
+     }];
+    [[EmailService instance].filterMessagePreviews removeObjectForKey:uidKey];
+    [[EmailService instance].filterMessages removeObjectAtIndex:selectedIndexPath.row];
+    [[EmailService instance].messages removeObjectIdenticalTo:_message];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+-(void)createFunnl:(UIButton*)sender{
+    AppDelegate *appDelegate = APPDELEGATE;
+    NSString *uidKey = [NSString stringWithFormat:@"%d",_message.uid];
+    FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:YES withMessageId:uidKey withMessage:_message subViewOnViewController:self];
+    funnlPopUpView.mainVCdelegate = appDelegate.mainVCdelegate;
+    if ([FunnelService instance].allFunnels.count < 4){
+    }
+    [self.view addSubview:funnlPopUpView];
+
+}
+
 //newly added by iauro001 on 24th June 2014
 - (void)back
 {
@@ -508,7 +586,7 @@ typedef void (^DownloadCallback)(NSError * error);
                     color = [UIColor colorWithHexString:@"#2EB82E"];
                 }
                 FunnelModel *funnlModel = [[FunnelModel alloc] initWithBarColor:color filterTitle:name newMessageCount:0 dateOfLastMessage:nil sendersArray:sendersArray subjectsArray:subjectsArray skipAllFlag:NO funnelColor:colorString];
-                [self performSelector:@selector(createFunnl:) withObject:funnlModel afterDelay:0.01];
+                [self performSelector:@selector(createFunnlFromShareLink:) withObject:funnlModel afterDelay:0.01];
               
                 // save to db
             }
@@ -519,7 +597,7 @@ typedef void (^DownloadCallback)(NSError * error);
     }
 }
 
--(void)createFunnl:(FunnelModel*)fm{
+-(void)createFunnlFromShareLink:(FunnelModel*)fm{
 
     NSMutableDictionary *sendersDictionary = [[NSMutableDictionary alloc] init];
     int count = 0;

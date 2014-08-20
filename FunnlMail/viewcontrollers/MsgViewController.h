@@ -10,6 +10,7 @@
 #include <MailCore/MailCore.h>
 #import <MessageUI/MessageUI.h>
 #import "UIColor+HexString.h"
+#import "MessageModel.h"
 #define TO_TAG_STARTING 20000
 #define CC_TAG_STARTING 30000
 @class MCOMessageView;
@@ -32,10 +33,11 @@
     UITableView *messageTableView;
     int webViewHeight;
 }
-
+@property (nonatomic, retain)NSIndexPath *selectedIndexPath;
 @property (nonatomic, copy) NSString * folder;
 
 @property (nonatomic, strong) MCOIMAPSession * session;
 @property (nonatomic, strong) MCOIMAPMessage * message;
 @property (nonatomic, strong) MCOAddress * address;
+@property (nonatomic, strong) MessageModel *messageModel;
 @end
