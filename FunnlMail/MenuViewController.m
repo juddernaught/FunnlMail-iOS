@@ -121,6 +121,7 @@
     MenuCell *cell = (MenuCell*)[tableView cellForRowAtIndexPath:indexPath];
     
     if(indexPath.row == 0){
+        [MBProgressHUD showHUDAddedTo:appDelegate.window animated:YES];
         AppDelegate *tempAppDelegate = APPDELEGATE;
         NSMutableArray *filterArray = (NSMutableArray*)[[FunnelService instance] allFunnels];
         FunnelModel *primaryFunnl = nil;
@@ -138,6 +139,7 @@
             [tempAppDelegate.drawerController closeDrawerAnimated:YES completion:nil];
         }
 
+        [MBProgressHUD hideAllHUDsForView:appDelegate.window animated:YES];
         return;
     }
     
@@ -150,12 +152,11 @@
         FunnlAlertsVC *alerts = [[FunnlAlertsVC alloc]init];
         [alerts SetUp];
         [[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationController pushViewController:alerts animated:NO];
-        
     }
     
     else if ([cell.menuLabel.text isEqualToString:@"Sent Mail"]) {
         NSLog(@"sent mail requested");
-        
+        [MBProgressHUD showHUDAddedTo:appDelegate.window animated:YES];
         [[Mixpanel sharedInstance] track:@"Viewed sent mail"];
         
          //The following line is required to get to the emailTableVC in mainVC
@@ -166,38 +167,47 @@
         [[EmailService instance] getDatabaseMessages:SENT withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject];
        
         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:SENT withFetchRange:MCORangeEmpty];
+        //[MBProgressHUD hideAllHUDsForView:appDelegate.window animated:YES];
+
     }
     
     else if ([cell.menuLabel.text isEqualToString:@"Archive"]){
         NSLog(@"archive mail requested");
-        
+        [MBProgressHUD showHUDAddedTo:appDelegate.window animated:YES];
+
         [[Mixpanel sharedInstance] track:@"Viewed archive mail"];
         
         appDelegate.currentFunnelString = ARCHIVE;
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Archive";
         [[EmailService instance] getDatabaseMessages:ARCHIVE withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject];
         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:ARCHIVE withFetchRange:MCORangeEmpty];
+    
     }
     
     else if ([cell.menuLabel.text isEqualToString:@"Drafts"]){
-        
+        [MBProgressHUD showHUDAddedTo:appDelegate.window animated:YES];
+
         [[Mixpanel sharedInstance] track:@"Viewed drafts"];
         
         appDelegate.currentFunnelString = DRAFTS;
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Drafts";
         [[EmailService instance] getDatabaseMessages:DRAFTS withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject];
         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:DRAFTS withFetchRange:MCORangeEmpty];
+    
+        //[MBProgressHUD hideAllHUDsForView:appDelegate.window animated:YES];
     }
     
     else if ([cell.menuLabel.text isEqualToString:@"Trash"]){
         NSLog(@"trash mail requested");
-        
+        [MBProgressHUD showHUDAddedTo:appDelegate.window animated:YES];
+
         [[Mixpanel sharedInstance] track:@"Viewed trash"];
         
         appDelegate.currentFunnelString = TRASH;
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Trash";
         [[EmailService instance] getDatabaseMessages:TRASH withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject];
         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:TRASH withFetchRange:MCORangeEmpty];
+        //[MBProgressHUD hideAllHUDsForView:appDelegate.window animated:YES];
     }
     
     else if ([cell.menuLabel.text isEqualToString:@"LogOut"]){

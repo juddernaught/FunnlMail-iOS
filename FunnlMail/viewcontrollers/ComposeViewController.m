@@ -253,7 +253,7 @@ replacementString:(NSString *)string {
     [[builder header] setFrom:[MCOAddress addressWithDisplayName:nil mailbox:self.imapSession.username]];
     NSMutableArray *toArray = [[NSMutableArray alloc] init];
     if (self.sendFeedback) {
-        [toArray addObject:[MCOAddress addressWithMailbox:@"juddernaught@gmail.com"]];
+        [toArray addObject:[MCOAddress addressWithMailbox:@"funnlmailfounders@gmail.com"]];
         [[builder header] setTo:toArray];
     }
     else {
