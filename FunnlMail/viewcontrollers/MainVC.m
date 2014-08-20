@@ -91,7 +91,6 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     tempAppDelegate.mainVCControllerInstance = self;
     currentFilterModel =  tempAppDelegate.currentSelectedFunnlModel;
     
-    
     // Filter Title
     if (currentFilterModel && [currentFilterModel.funnelName isEqualToString:ALL_FUNNL]) {
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
@@ -197,8 +196,8 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     NSLog(@"Filter button selected");
     if(mainView.hidden == YES){
         mainView.hidden = NO;
-        if (self.firstTime) {
-            self.firstTime = 0;
+        if (tempAppDelegate.didLoginIn) {
+            tempAppDelegate.didLoginIn = 0;
             RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Funnl Time!" message:@"Tap on Any Funnl to view emails under that Funnl or presss 'Manage' to view/change Funnl Settings"];
             [modal show];
         }

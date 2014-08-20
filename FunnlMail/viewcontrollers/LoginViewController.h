@@ -22,6 +22,7 @@
 @property (nonatomic, retain) UITextField *password;
 @property (nonatomic, retain) UIView *blockerView;
 
+
 // The mutable data object that is used for storing incoming data in each connection.
 @property (nonatomic, strong) NSMutableData *receivedData;
 // A NSURLConnection object.
@@ -31,6 +32,7 @@
 @property (nonatomic, strong) MainVC *mainViewController;
 // A flag indicating whether an access token refresh is on the way or not.
 @property (nonatomic) BOOL isRefreshing;
+@property (nonatomic, strong) NSNumber * firstTime;
 @property (strong, nonatomic) UIPageViewController *pageController;
 -(void)getPrimaryMessages:(NSString*)emailStr nextPageToken:(NSString*)nextPage numberOfMaxResult:(NSInteger)maxResult;
 -(void)refreshAccessToken;

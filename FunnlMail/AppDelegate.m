@@ -139,7 +139,7 @@
     showWelcomeOverlay = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
     showWelcomeOverlay.opaque = NO;
     
-    UITextView *thing = [[UITextView alloc]initWithFrame:CGRectMake(10, 20, WIDTH, 70)];
+    UITextView *thing = [[UITextView alloc]initWithFrame:CGRectMake(10, 40, WIDTH, 70)];
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     thing.text =[NSString stringWithFormat: @"Welcome %@, to your customized Primary inbox!",appDelegate.menuController.listArray.firstObject];
     
@@ -149,40 +149,38 @@
     thing.userInteractionEnabled = NO;
     
     UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"welcome.png"]];
-    imageView.frame = CGRectMake(0, 100, WIDTH, HEIGHT-90);
+    imageView.frame = CGRectMake(0, 110, WIDTH, HEIGHT-110);
     
     [[Mixpanel sharedInstance] track:@"Viewed intro overlay"];
     
     [showWelcomeOverlay addSubview:imageView];
     
-   
-    UITextView *text = [[UITextView alloc]initWithFrame:CGRectMake(10, 330, WIDTH-10, 90)];
-    text.text = @"You can access your non-primary emails and modify category setting anytime from the top menu";
-    text.backgroundColor = [UIColor clearColor];
-    [text setTextColor:[UIColor whiteColor]];
-    text.font = [UIFont boldSystemFontOfSize:20];
-    text.userInteractionEnabled = NO;
-    //[showWelcomeOverlay addSubview: text];
-
-    UITextView *text2 = [[UITextView alloc]initWithFrame:CGRectMake(10, 415, WIDTH-10, 90)];
-    text2.text = @"You can also access your non-primary emails in the top menu";
-    text2.backgroundColor = [UIColor clearColor];
-    [text2 setTextColor:[UIColor whiteColor]];
-    text2.font = [UIFont boldSystemFontOfSize:20];
-    text2.userInteractionEnabled = NO;
-    //[showWelcomeOverlay addSubview: text2];
-    
     [showWelcomeOverlay addSubview: thing];
     [showWelcomeOverlay bringSubviewToFront:thing];
     showWelcomeOverlay.backgroundColor = CLEAR_COLOR;
     showWelcomeOverlay.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.78];
+    
+    UIButton *letsGo = [UIButton buttonWithType:UIButtonTypeCustom];
+    letsGo.frame = CGRectMake(WIDTH-40, 20, 30, 30);
+    [letsGo setTitle:@"X" forState:UIControlStateNormal];
+    [letsGo setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [letsGo addTarget:self action:@selector(hideWelcomeOverlay:) forControlEvents:UIControlEventTouchUpInside];
+    [[letsGo layer] setBorderWidth:2.0f];
+    [[letsGo layer] setBorderColor:[UIColor whiteColor].CGColor];
+    [letsGo.layer setCornerRadius:3.0];
+    [showWelcomeOverlay addSubview:letsGo];
+    [showWelcomeOverlay bringSubviewToFront:letsGo];
+    
     [self.window addSubview:showWelcomeOverlay];
     [self.window bringSubviewToFront:showWelcomeOverlay];
+    
+    
 }
-                          
--(void)hideWelcomeOverlay{
+
+-(IBAction)hideWelcomeOverlay:(id)sender{
     [showWelcomeOverlay removeFromSuperview];
 }
+
 
 #pragma mark - applicationWillResignActive
 
@@ -216,6 +214,7 @@
     if(self.loginViewController){
         NSLog(@"-----Call Refresh Token -----");
         self.isAlreadyRequestedRefreshToken = NO;
+        if(!self.didLoginIn) self.didLoginIn = 0;
         [self.loginViewController performSelector:@selector(refreshAccessToken) withObject:nil afterDelay:0.1];
     }
 }
