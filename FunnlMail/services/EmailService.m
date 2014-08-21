@@ -150,6 +150,23 @@ static NSString *currentFolder;
 	}];
 }
 
+-(void)clearData{
+    self.messages = [[NSMutableArray alloc] init];
+    self.filterMessages = [[NSMutableArray alloc] init];
+    self.sentMessages = [[NSMutableArray alloc] init];
+    self.threadIdDictionary = [[NSMutableDictionary alloc] init];
+    self.primaryMessages = [[NSMutableArray alloc] init];
+    
+	self.totalNumberOfMessages = -1;
+	self.isLoading = NO;
+	self.messagePreviews = [NSMutableDictionary dictionary];
+    self.filterMessagePreviews = [NSMutableDictionary dictionary];
+    self.sentMessagePreviews = [NSMutableDictionary dictionary];
+    
+    [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
+    [emailsTableViewController.tableView reloadData];
+}
+
 //function to be called in background
 - (void)checkMailsAtStart:(EmailsTableViewController*)fv
 {
@@ -161,7 +178,7 @@ static NSString *currentFolder;
     u_int64_t modSeqValue = UINT64_MAX;
 
     NSString *modSeqString = [[NSUserDefaults standardUserDefaults] objectForKey:@"MODSEQ"];
-    if(modSeqString == nil || modSeqString.length <= 0){
+    if(modSeqString.length <= 0){
         NSArray *dataArray = [[MessageService instance] messagesWithTop:1];
         if(dataArray.count){
             MCOIMAPMessage *tempMessage = [dataArray objectAtIndex:0];
@@ -303,7 +320,7 @@ static NSString *currentFolder;
 - (void)loadLastNMessages:(NSUInteger)nMessages withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName withFetchRange:(MCORange)newFetchRange
 {
      emailsTableViewController = fv;
-    AppDelegate *tempAppDelegate = APPDELEGATE;
+    AppDelegate *appDelegate = APPDELEGATE;
 //    if(fv == nil){
 //        emailsTableViewController = tempAppDelegate.loginViewController.mainViewController.emailsTableViewController;
 //    }else{
@@ -321,6 +338,7 @@ static NSString *currentFolder;
     if([folderName isEqualToString:INBOX]){
         FolderInfo = [self.imapSession folderInfoOperation:INBOX];
         emailsTableViewController.navigationItem.title = ALL_FUNNL;
+        [MBProgressHUD hideAllHUDsForView:appDelegate.window animated:YES];
     }
     else if([folderName isEqualToString:SENT]){
         FolderInfo = [self.imapSession folderInfoOperation:SENT];
@@ -334,10 +352,11 @@ static NSString *currentFolder;
         FolderInfo = [self.imapSession folderInfoOperation:DRAFTS];
         dbBoolArray = [[MessageService instance] retrieveNewestMessage:DRAFTS];
     }
-    else{
+    else if([folderName isEqualToString:ARCHIVE]){
         FolderInfo = [self.imapSession folderInfoOperation:ARCHIVE];
         dbBoolArray = [[MessageService instance] retrieveNewestMessage:ARCHIVE];
     }
+    
     NSInteger newestID;
     if(dbBoolArray.count) newestID = [[dbBoolArray objectAtIndex:0] integerValue];
     else newestID = 0;
@@ -646,7 +665,10 @@ static NSString *currentFolder;
 //                          [emailTableViewController.tableView reloadData];
                       }
                       else {
-                          self.filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:tempAppDelegate.currentFunnelDS.funnelId top:2000];
+                          if(tempAppDelegate.currentFunnelDS)
+                              self.filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:tempAppDelegate.currentFunnelDS.funnelId top:2000];
+                          else
+                              NSLog(@"app crash fixed");
                       }
                       [tempAppDelegate.progressHUD setHidden:YES];
                       [tempAppDelegate.progressHUD show:NO];
@@ -658,7 +680,7 @@ static NSString *currentFolder;
                       });
                       
                       dispatch_async(dispatch_get_main_queue(), ^(void){
-                          AppDelegate *appDeleage = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+                          AppDelegate *tempAppDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
                           //[appDeleage hideWelcomeOverlay];
                           [fv.tableView reloadData];
                           [fv.tablecontroller.refreshControl endRefreshing];
@@ -666,6 +688,9 @@ static NSString *currentFolder;
                           [tempAppDelegate.progressHUD show:NO];
                           [fv.activityIndicator stopAnimating];
 
+                          if([folderName isEqualToString:SENT]  || [folderName isEqualToString:TRASH] || [folderName isEqualToString:DRAFTS] || [folderName isEqualToString:ARCHIVE]){
+                              [MBProgressHUD hideAllHUDsForView:appDelegate.window animated:YES];
+                          }
                       });
                   });
               }];

@@ -177,7 +177,7 @@ static MessageService *instance;
     if (previewChanged)
         return previewBody;
     else
-        return @"This message has no content";
+        return @"This message has no content.";
 }
 
 -(BOOL) updateMessageMetaInfo:(MessageModel *)messageModel{
@@ -654,6 +654,21 @@ static MessageService *instance;
   }];
   
   return success;
+}
+
+-(BOOL) clearAllTables{
+    
+    __block BOOL success = NO;
+    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+        [db executeUpdate:@"DELETE FROM messages" withParameterDictionary:nil];
+        [db executeUpdate:@"DELETE FROM funnels" withParameterDictionary:nil];
+        [db executeUpdate:@"DELETE FROM messageFilterXRef" withParameterDictionary:nil];
+        [db executeUpdate:@"DELETE FROM emailServers" withParameterDictionary:nil];
+        success = [db executeUpdate:@"DELETE FROM contacts" withParameterDictionary:nil];
+        
+    }];
+    
+    return success;
 }
 
 

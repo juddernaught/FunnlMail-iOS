@@ -198,7 +198,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
         mainView.hidden = NO;
         if (tempAppDelegate.didLoginIn) {
             tempAppDelegate.didLoginIn = 0;
-            RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Funnl Time!" message:@"Tap on Any Funnl to view emails under that Funnl or presss 'Manage' to view/change Funnl Settings"];
+            RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Funnl Time!" message:@"Tap on any Funnl to view emails under that Funnl or press 'Manage' to view/change Funnl Settings"];
             [modal show];
         }
     }else{

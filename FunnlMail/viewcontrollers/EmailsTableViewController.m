@@ -119,7 +119,8 @@ UIView *greyView;
 
 #pragma mark - Toast
 - (void)undoButtonPressed:(UIButton*)sender {
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(deleteMessageAfterOperation:) object:nil];
+//    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(deleteMessageAfterOperation:) object:nil];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
     if (sender.tag == 1) {
         
     }
@@ -136,6 +137,7 @@ UIView *greyView;
 }
 
 - (UIView*)tostViewForOperation:(int)operation {
+    
     returnView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 50)];
     returnView.clipsToBounds = YES;
     returnView.layer.cornerRadius = 2;
@@ -146,7 +148,11 @@ UIView *greyView;
     [sampleLable setFont:[UIFont systemFontOfSize:14]];
     [sampleLable setTextColor:[UIColor whiteColor]];
     [sampleLable setBackgroundColor:[UIColor clearColor]];
-    sampleLable.text = ARCHIVE_TEXT;
+    if(operation == 1)
+        sampleLable.text = ARCHIVE_TEXT;
+    else if(operation == 2)
+        sampleLable.text = DELETE_TEXT;
+        
     [returnView addSubview:sampleLable];
     sampleLable = nil;
     
@@ -438,7 +444,7 @@ UIView *greyView;
                 
                 NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
                 NSString *cachedPreview = [[MessageService instance] retrievePreviewContentWithID:uidKey];
-                if ([cachedPreview isEqualToString:@"empty"]) {
+                if (![cachedPreview isEqualToString:@"empty"]) {
                     cell.bodyLabel.text = cachedPreview;
                 }
                 else{
@@ -464,10 +470,13 @@ UIView *greyView;
                                 cell.bodyLabel.text = [[MessageService instance] retrievePreviewContentWithID:uidKey];
                                 
                             }
+                            else {
+                                cell.bodyLabel.text = @"This message has no content.";
+                            }
                         }
                         // message body is empty
                         else {
-                            cell.bodyLabel.text = @"This message has no content";
+                            cell.bodyLabel.text = @"This message has no content.";
 
                         }
                         cell.messageRenderingOperation = nil;
@@ -521,7 +530,7 @@ UIView *greyView;
                     [tableView endUpdates];
                     [self performSelector:@selector(deleteMessageAfterOperation:) withObject:@"2" afterDelay:TOST_DISPLAY_DURATION];
                     [cell swipeToOriginWithCompletion:nil];
-                    [self.view showToast:[self tostViewForOperation:1] duration:TOST_DISPLAY_DURATION position:@"bottom"];
+                    [self.view showToast:[self tostViewForOperation:2] duration:TOST_DISPLAY_DURATION position:@"bottom"];
                     messageSelected = message;
                 }];
                 

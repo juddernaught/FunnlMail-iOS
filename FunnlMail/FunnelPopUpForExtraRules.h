@@ -20,6 +20,7 @@
     FunnelModel *tempFunnelModel;
     UITableView *contactsTableView;
     NSMutableArray *contactInCC;
+    NSMutableArray *dataSourceArray;
     NSMutableArray *flagArray;
     id viewController;
     UILabel *alsoAddLabel;

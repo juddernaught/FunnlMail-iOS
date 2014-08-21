@@ -19,6 +19,7 @@
 		5ACEBEA3195DA0CA00D4EAAA /* RDSwipeableTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ACEBEA2195DA0CA00D4EAAA /* RDSwipeableTableViewCell.m */; };
 		639B69D4195254D1004217DB /* EmailThreadTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AA690B519501EC200E4CB64 /* EmailThreadTableViewController.m */; };
 		660BA98E1902CDEA00CDF86E /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 660BA98D1902CDEA00CDF86E /* LoginViewController.m */; };
+		661C66C819A2C464003276A3 /* notifsound.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 661C66C719A2C464003276A3 /* notifsound.m4a */; };
 		6644FB2D197385ED004B4587 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6644FB2C197385ED004B4587 /* Parse.framework */; };
 		6644FB2F19738632004B4587 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6644FB2E19738632004B4587 /* AudioToolbox.framework */; };
 		6644FB311973864A004B4587 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6644FB301973864A004B4587 /* CoreLocation.framework */; };
@@ -381,6 +382,7 @@
 		5ACEBEA2195DA0CA00D4EAAA /* RDSwipeableTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RDSwipeableTableViewCell.m; sourceTree = "<group>"; };
 		660BA98C1902CDEA00CDF86E /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = viewcontrollers/LoginViewController.h; sourceTree = "<group>"; };
 		660BA98D1902CDEA00CDF86E /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = viewcontrollers/LoginViewController.m; sourceTree = "<group>"; };
+		661C66C719A2C464003276A3 /* notifsound.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = notifsound.m4a; path = Sound/notifsound.m4a; sourceTree = "<group>"; };
 		6644FB2C197385ED004B4587 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		6644FB2E19738632004B4587 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		6644FB301973864A004B4587 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -847,9 +849,18 @@
 			path = RDSwipeableTableViewCell;
 			sourceTree = "<group>";
 		};
+		661C66CD19A2CD2F003276A3 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				661C66C719A2C464003276A3 /* notifsound.m4a */,
+			);
+			name = Sounds;
+			sourceTree = "<group>";
+		};
 		6620BA8918E3439000769C48 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				661C66CD19A2CD2F003276A3 /* Sounds */,
 				FA26CAEF199508C900FFD9B3 /* html */,
 				FABAF01F1976507E00AA7918 /* Images */,
 			);
@@ -1834,6 +1845,7 @@
 				66F2C47418E3293E00CD593E /* InfoPlist.strings in Resources */,
 				FABAF0A11976507E00AA7918 /* getStarted@2x.png in Resources */,
 				FA4A2E8E198A837500CB9FAD /* swipeTrash@2x.png in Resources */,
+				661C66C819A2C464003276A3 /* notifsound.m4a in Resources */,
 				FABAF0AA1976507E00AA7918 /* backArrow.png in Resources */,
 				FA11B2DA199908D200B4EA86 /* popoverArrowDownSimple.png in Resources */,
 				FABAF0901976507E00AA7918 /* Settings@2x.png in Resources */,
@@ -2314,7 +2326,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "f0906a3e-4806-4970-a8cb-7c8f55b256fa";
+				PROVISIONING_PROFILE = "bb645e85-1d2a-45d2-9aaf-1c6fd74893d7";
 				SDKROOT = iphoneos7.1;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;

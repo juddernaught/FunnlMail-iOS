@@ -253,9 +253,9 @@ replacementString:(NSString *)string {
     [[builder header] setFrom:[MCOAddress addressWithDisplayName:nil mailbox:self.imapSession.username]];
     NSMutableArray *toArray = [[NSMutableArray alloc] init];
     if (self.sendFeedback) {
-        [toArray addObject:[MCOAddress addressWithMailbox:@"founders@funnlmail.com"]];
+        [toArray addObject:[MCOAddress addressWithMailbox:@"funnlmailfounders@gmail.com"]];
+        [[builder header] setTo:toArray];
     }
-    
     else {
         MCOAddress *newAddress = [MCOAddress addressWithMailbox:[toFieldView.tokenTitles componentsJoinedByString:@","]];
         [toArray addObject:newAddress];
@@ -374,6 +374,7 @@ replacementString:(NSString *)string {
     subjectFieldView.tokenField.hideBubble = YES;
     subjectFieldView.scrollEnabled = NO;
     subjectFieldView.tag = 4; // Added by Chad, not sure if this does anything
+    subjectFieldView.tokenField.autocorrectionType = UITextAutocorrectionTypeYes; //Added by Chad
 
 	messageView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, 208)];
 	[messageView setScrollEnabled:NO];
@@ -381,6 +382,7 @@ replacementString:(NSString *)string {
 	[messageView setDelegate:self];
 	[messageView setFont:[UIFont systemFontOfSize:15]];
 	[messageView setText:@""];
+    messageView.autocorrectionType = UITextAutocorrectionTypeYes; //Added by Chad
 //    messageView.backgroundColor = [UIColor colorWithHexString:@"#"];
 	[toFieldView.contentView addSubview:messageView];
 	
@@ -414,9 +416,10 @@ replacementString:(NSString *)string {
         toFieldView.tokenField.text = temp;
     }
     else if (self.sendFeedback){
-        NSLog(@"self.reply");
+        NSLog(@"sendFeedback");
         NSMutableString *temp = [[NSMutableString alloc] initWithString:@"Feedback for FunnlMail "];
         subjectFieldView.tokenField.text = temp;
+        toFieldView.tokenField.text = @"founders@funnlmail.com";
     }
 
     if (!self.compose && !self.sendFeedback) {

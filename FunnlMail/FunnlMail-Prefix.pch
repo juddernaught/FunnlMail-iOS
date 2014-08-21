@@ -42,7 +42,8 @@
 
 #define ALPHA_FOR_TOST 0.7
 #define COLOR_OF_WHITE 0.0
-#define ARCHIVE_TEXT @"Conversation Archived/Deleted"
+#define ARCHIVE_TEXT @"Conversation Archived"
+#define DELETE_TEXT @"Conversation Deleted"
 #define TOST_DISPLAY_DURATION 3.0
 
 #define INBOX @"INBOX"
