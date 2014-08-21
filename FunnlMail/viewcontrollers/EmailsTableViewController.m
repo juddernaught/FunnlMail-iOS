@@ -1243,6 +1243,8 @@ UIView *greyView;
     searchBar.showsScopeBar = YES;
     NSArray *scopeButtonTitles = @[@"All Mail",@"Current Funnl"];
     [searchBar setScopeButtonTitles:scopeButtonTitles];
+    searchBar.selectedScopeButtonIndex = 1;
+    scopeButtonPressedIndexNumber = YES;
     self.tableView.tableHeaderView = searchBar;
     [self.view bringSubviewToFront: greyView];
     greyView.hidden = NO;
@@ -1262,6 +1264,11 @@ UIView *greyView;
     return YES;
 }
 
+- (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
+    scopeButtonPressedIndexNumber = selectedScope;
+}
+
+
 - (BOOL)searchBar:(UISearchBar *)searchBar shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
     return YES;
 }
@@ -1276,12 +1283,12 @@ UIView *greyView;
 
 #pragma mark SearchFunction
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+    
     [searchBar resignFirstResponder];
     NSString *searchText = searchBar.text;
     isSearching = YES;
     greyView.hidden = YES;
-    if(self.filterModel == nil || [self.filterModel.funnelId isEqualToString:@"0"] || [self.filterModel.funnelId isEqualToString:@"1"]){
-//    if([searchBar selectedScopeButtonIndex] == 0){
+    if(!scopeButtonPressedIndexNumber){
         //All mailbox
         [self searchInMemory:searchText];
     }
@@ -1289,7 +1296,6 @@ UIView *greyView;
         //Other funnsl
         [self searchInDatabaseWithSearchText:searchText withFunnelId:self.filterModel.funnelId];
     }
-
 }
 
 - (void)searchInDatabaseWithSearchText:(NSString*)searchText withFunnelId:(NSString*)funnelId{

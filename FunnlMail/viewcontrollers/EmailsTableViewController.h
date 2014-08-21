@@ -32,6 +32,7 @@
     NSIndexPath *selectedIndexPath;
     MessageModel *selectedMessageModel;
     UIView *returnView;
+    BOOL scopeButtonPressedIndexNumber;
     
 @public
     NSMutableArray *searchMessages;
