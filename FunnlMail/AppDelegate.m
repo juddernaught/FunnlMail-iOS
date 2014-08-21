@@ -168,7 +168,7 @@
     [[letsGo layer] setBorderWidth:2.0f];
     [[letsGo layer] setBorderColor:[UIColor whiteColor].CGColor];
     [letsGo.layer setCornerRadius:3.0];
-    [showWelcomeOverlay addSubview:letsGo];
+    //[showWelcomeOverlay addSubview:letsGo];
     [showWelcomeOverlay bringSubviewToFront:letsGo];
     
     [self.window addSubview:showWelcomeOverlay];

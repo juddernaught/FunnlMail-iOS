@@ -163,8 +163,8 @@ static NSString *currentFolder;
     self.filterMessagePreviews = [NSMutableDictionary dictionary];
     self.sentMessagePreviews = [NSMutableDictionary dictionary];
     
-    [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
-    [emailsTableViewController.tableView reloadData];
+//    [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
+//    [emailsTableViewController.tableView reloadData];
 }
 
 //function to be called in background
@@ -681,7 +681,7 @@ static NSString *currentFolder;
                       
                       dispatch_async(dispatch_get_main_queue(), ^(void){
                           AppDelegate *tempAppDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-                          //[appDeleage hideWelcomeOverlay];
+                          [tempAppDelegate hideWelcomeOverlay:nil];
                           [fv.tableView reloadData];
                           [fv.tablecontroller.refreshControl endRefreshing];
                           [tempAppDelegate.progressHUD setHidden:YES];

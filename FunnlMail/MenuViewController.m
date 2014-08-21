@@ -212,6 +212,7 @@
     
     else if ([cell.menuLabel.text isEqualToString:@"LogOut"]){
 //        [[EmailServersService instance] deleteEmailServer:[EmailService instance].userEmailID];
+        [NSObject cancelPreviousPerformRequestsWithTarget:[EmailService instance]];
         [[MessageService instance] clearAllTables];
 
         [appDelegate.contextIOAPIClient clearCredentials];

@@ -41,5 +41,5 @@
 
 @property BOOL funnelUpDated,internetAvailable;
 -(void)showWelcomeOverlay;
--(void)hideWelcomeOverlay;
+-(void)hideWelcomeOverlay:(id)sender;
 @end
