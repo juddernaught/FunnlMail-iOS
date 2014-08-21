@@ -19,6 +19,7 @@
 #import "LoginViewController.h"
 #import "MainVC.h"
 #import "RNBlurModalView.h"
+#import "MTStatusBarOverlay.h"
 
 static EmailService *instance;
 
@@ -752,7 +753,7 @@ static NSString *currentFolder;
     
 	[inboxFolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
      {
-         
+         MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
          if(error != nil){
              
              NSLog(@"******* ERROR: %@ for folderinfo: %@ ********",error.description,inboxFolder);
@@ -784,11 +785,21 @@ static NSString *currentFolder;
              MCORange fetchRange;
              fetchRange = MCORangeMake(inDatabaseMessageID,self.totalNumberOfMessages);
              if(numberOfMessagesToLoad){
+                 overlay.progress = 0.5;
                  NSLog(@"checking new messages:  Range: %qu - %qu",fetchRange.location, fetchRange.length);
                  [self getNewMessages:[EmailService instance].userEmailID nextPageToken:0 numberOfMaxResult:numberOfMessagesToLoad + 10 withFolder:inboxFolder withFetchRange:fetchRange];
-
+                 if(overlay.tag == 1){
+                     overlay.progress = 1;
+                     [overlay postImmediateFinishMessage:@"Finished Downloading" duration:2.0 animated:YES];
+                     overlay.tag = 0;
+                 }
              }
              else{
+                 if(overlay.tag == 1){
+                     overlay.progress = 1;
+                     [overlay postImmediateFinishMessage:@"No new emails" duration:2.0 animated:YES];
+                     overlay.tag = 0;
+                 }
                  NSLog(@"No New Message Found:  LastMessageIDSynced: %llu",self.totalNumberOfMessages);
                  AppDelegate *tempAppDelegate = APPDELEGATE;
                  [tempAppDelegate.progressHUD show:NO];

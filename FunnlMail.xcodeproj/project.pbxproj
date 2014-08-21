@@ -73,6 +73,9 @@
 		B7C940E3198D6F49008468E7 /* WHITEsliders4.png in Resources */ = {isa = PBXBuildFile; fileRef = B7C940DE198D6F49008468E7 /* WHITEsliders4.png */; };
 		B7C940E4198D6F49008468E7 /* WHITEsliders5.png in Resources */ = {isa = PBXBuildFile; fileRef = B7C940DF198D6F49008468E7 /* WHITEsliders5.png */; };
 		B7F093C6198C50EB0083D59E /* PageContentVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B7F093C5198C50EB0083D59E /* PageContentVC.m */; };
+		B7F3BB0619A597F00049CEE8 /* MTStatusBarOverlay.h in Headers */ = {isa = PBXBuildFile; fileRef = B7F3BB0419A597F00049CEE8 /* MTStatusBarOverlay.h */; };
+		B7F3BB0719A597F00049CEE8 /* MTStatusBarOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = B7F3BB0519A597F00049CEE8 /* MTStatusBarOverlay.m */; };
+		B7F3BB0C19A5A0E30049CEE8 /* MTStatusBarOverlay.h in Sources */ = {isa = PBXBuildFile; fileRef = B7F3BB0419A597F00049CEE8 /* MTStatusBarOverlay.h */; };
 		CC39517218E6F9700093C787 /* MainFilterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CC39517118E6F9700093C787 /* MainFilterCell.m */; };
 		CC4263B01934B67A00F3C5EB /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = CC4263A61934B67A00F3C5EB /* FMDatabase.m */; };
 		CC4263B11934B67A00F3C5EB /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = CC4263A81934B67A00F3C5EB /* FMDatabaseAdditions.m */; };
@@ -448,6 +451,8 @@
 		B7C940DF198D6F49008468E7 /* WHITEsliders5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = WHITEsliders5.png; sourceTree = "<group>"; };
 		B7F093C4198C50EB0083D59E /* PageContentVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageContentVC.h; sourceTree = "<group>"; };
 		B7F093C5198C50EB0083D59E /* PageContentVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageContentVC.m; sourceTree = "<group>"; };
+		B7F3BB0419A597F00049CEE8 /* MTStatusBarOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTStatusBarOverlay.h; sourceTree = "<group>"; };
+		B7F3BB0519A597F00049CEE8 /* MTStatusBarOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStatusBarOverlay.m; sourceTree = "<group>"; };
 		CC1AD1DC18F54BE9000E356C /* MainVCDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainVCDelegate.h; path = viewcontrollers/MainVCDelegate.h; sourceTree = "<group>"; };
 		CC39517018E6F9700093C787 /* MainFilterCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainFilterCell.h; path = collectionviewcells/MainFilterCell.h; sourceTree = "<group>"; };
 		CC39517118E6F9700093C787 /* MainFilterCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainFilterCell.m; path = collectionviewcells/MainFilterCell.m; sourceTree = "<group>"; };
@@ -1198,6 +1203,8 @@
 		CCE45D8B18F5418C00C2BC64 /* views */ = {
 			isa = PBXGroup;
 			children = (
+				B7F3BB0419A597F00049CEE8 /* MTStatusBarOverlay.h */,
+				B7F3BB0519A597F00049CEE8 /* MTStatusBarOverlay.m */,
 				CCD00B5918F54797007A675F /* MainView.h */,
 				CCD00B5A18F54797007A675F /* MainView.m */,
 				FA2B9EA51977F5F800319391 /* ShareView.h */,
@@ -1618,6 +1625,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B72C2FB119A196E3000E5D5B /* RNBlurModalView.h in Headers */,
+				B7F3BB0619A597F00049CEE8 /* MTStatusBarOverlay.h in Headers */,
 				FAAE9CDA19A354F0007FB804 /* UIView+Toast.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1965,6 +1973,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B7F3BB0C19A5A0E30049CEE8 /* MTStatusBarOverlay.h in Sources */,
 				B72C2FBC19A1980B000E5D5B /* RNBlurModalView.h in Sources */,
 				FA029C401993BB890021C6B1 /* ContactService.m in Sources */,
 				FAAF171E19863CDD00E877D4 /* SDWebImageDownloader.m in Sources */,
@@ -2018,6 +2027,7 @@
 				D1EFF48719817BBF0031A1D1 /* hmac.c in Sources */,
 				D1EFF49119817BFB0031A1D1 /* CIOAuthViewController.m in Sources */,
 				CC8C7ECC18E6F38100E76AE8 /* MASViewAttribute.m in Sources */,
+				B7F3BB0719A597F00049CEE8 /* MTStatusBarOverlay.m in Sources */,
 				CC8C7ECF18E6F38100E76AE8 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
 				66AEEBAB1936B26B00B6DBE5 /* GTMOAuth2ViewControllerTouch.m in Sources */,
 				5ACEBEA3195DA0CA00D4EAAA /* RDSwipeableTableViewCell.m in Sources */,

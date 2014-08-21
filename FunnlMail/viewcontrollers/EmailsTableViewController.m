@@ -25,6 +25,7 @@
 #import <Mixpanel/Mixpanel.h>
 #import "RNBlurModalView.h"
 #import "UIView+Toast.h"
+#import "MTStatusBarOverlay.h"
 
 
 @implementation UILabel (Additions)
@@ -254,6 +255,13 @@ UIView *greyView;
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     if(appDelegate.internetAvailable){
         [activityIndicator startAnimating];
+        MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
+        [overlay postImmediateMessage:@"Downloading.." animated:YES];
+        overlay.animation = MTStatusBarOverlayAnimationFallDown;  // MTStatusBarOverlayAnimationShrink
+        overlay.detailViewMode = MTDetailViewModeHistory;         // enable automatic history-tracking and show in detail-view
+        overlay.tag = 1;
+        overlay.delegate = self;
+        overlay.progress = 0.0;
         [[EmailService instance] loadLatestMail:10 withTableController:self withFolder:INBOX];
     }
     else{
