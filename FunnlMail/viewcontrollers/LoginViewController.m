@@ -474,7 +474,9 @@ UIButton *loginButton;
             // Associate all future events sent from
             // the library with a distinct_id
             [mixpanel identify: mixpanel.distinctId];
+            
             [mixpanel.people set:@{@"Email" : currentEmail}];
+            [mixpanel.people set:@{@"Name" : currentName}];
 
             [EmailService instance].userEmailID = currentEmail;
             [EmailService instance].userImageURL = currentUserImageURL;
