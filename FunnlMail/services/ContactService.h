@@ -14,4 +14,5 @@
 -(BOOL) insertBulkContacts:(NSArray *)ContactModelArray;
 -(NSArray *) searchContactsWithString:(NSString*)searchTerm;
 -(NSMutableArray*)retrieveContactWithEmail:(NSString*)emailID;
+-(NSArray *) retrieveAllContact;
 @end

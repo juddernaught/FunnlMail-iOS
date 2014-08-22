@@ -78,6 +78,37 @@ static ContactService *instance;
     return array;
 }
 
+//create table contacts(
+//                      name TEXT,
+//                      email TEXT,
+//                      thumbnail TEXT,
+//                      count INTEGER,
+//                      received_count INTEGER,
+//                      sent_count INTEGER,
+//                      sent_from_account_count INTEGER,
+//                      resource_url TEXT,
+//                      PRIMARY KEY (email)
+//                      );
+
+-(NSArray *) retrieveAllContact {
+    __block NSMutableArray *array = [[NSMutableArray alloc] init];
+    
+    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *resultSet ;
+        NSString *query = @"SELECT * FROM contacts;";
+        resultSet = [db executeQuery:query];
+        while ([resultSet next]) {
+            ContactModel *tempModel = [[ContactModel alloc] init];
+            tempModel.name = [resultSet stringForColumn:@"name"];
+            tempModel.email = [resultSet stringForColumn:@"email"];
+            tempModel.thumbnail = [resultSet stringForColumn:@"thumbnail"];
+            [array addObject:tempModel];
+        }
+    }];
+    
+    return array;
+}
+
 
 -(NSMutableArray*)retrieveContactWithEmail:(NSString*)emailID {
     __block NSMutableArray *tempContactModel = [[NSMutableArray alloc] init];

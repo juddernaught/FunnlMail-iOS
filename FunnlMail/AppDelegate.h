@@ -39,7 +39,9 @@
 @property (strong, nonatomic) UIView *headerViewForMailDetailView;
 @property (weak) id<MainVCDelegate> mainVCdelegate;
 @property (strong,nonatomic) UIButton* letsGo;
+@property (strong,nonatomic) UINavigationController *navControllerForCentralView;
 @property BOOL funnelUpDated,internetAvailable;
 -(void)showWelcomeOverlay;
 -(void)hideWelcomeOverlay:(id)sender;
+- (void)loadVIPFunnelViewController;
 @end

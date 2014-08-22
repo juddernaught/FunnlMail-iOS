@@ -2,7 +2,7 @@
 //  UIPopoverController+iPhone.m
 //  FunnlMail
 //
-//  Created by shrinivas on 11/08/14.
+//  Created by Macbook on 11/08/14.
 //  Copyright (c) 2014 FunnlMail. All rights reserved.
 //
 

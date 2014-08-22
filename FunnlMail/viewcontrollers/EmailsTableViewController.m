@@ -109,6 +109,9 @@ UIView *greyView;
     }
     funnlArray = [[FunnelService instance] allFunnels];
     tempAppDelegate.mainVCdelegate = self.mainVCdelegate;
+    if (IS_FUNNEL_POP_UP_ENABLE) {
+        [tempAppDelegate performSelector:@selector(loadVIPFunnelViewController) withObject:nil afterDelay:kVIP_FUNNEL_POP_UP_DISPLY_INTERVAL];
+    }
 }
 
 - (void)didReceiveMemoryWarning

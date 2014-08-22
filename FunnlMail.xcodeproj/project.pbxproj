@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2505503719A72A710048A804 /* VIPCreateFunnelViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2505503319A72A710048A804 /* VIPCreateFunnelViewController.h */; };
+		2505503819A72A710048A804 /* VIPCreateFunnelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2505503419A72A710048A804 /* VIPCreateFunnelViewController.m */; };
+		2505503919A72A710048A804 /* VIPViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2505503519A72A710048A804 /* VIPViewController.h */; };
+		2505503A19A72A710048A804 /* VIPViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2505503619A72A710048A804 /* VIPViewController.m */; };
+		2505504119A7641D0048A804 /* VIPFunnelCreationConfirmationController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2505503F19A7641D0048A804 /* VIPFunnelCreationConfirmationController.h */; };
+		2505504219A7641D0048A804 /* VIPFunnelCreationConfirmationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2505504019A7641D0048A804 /* VIPFunnelCreationConfirmationController.m */; };
 		2522AC141998DBEC002B1207 /* UIBarButtonItem+WEPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 2522AC0C1998DBEC002B1207 /* UIBarButtonItem+WEPopover.m */; };
 		2522AC151998DBEC002B1207 /* WEPopoverContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2522AC0E1998DBEC002B1207 /* WEPopoverContainerView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		2522AC161998DBEC002B1207 /* WEPopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2522AC101998DBEC002B1207 /* WEPopoverController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -355,6 +361,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2505503319A72A710048A804 /* VIPCreateFunnelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VIPCreateFunnelViewController.h; sourceTree = "<group>"; };
+		2505503419A72A710048A804 /* VIPCreateFunnelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VIPCreateFunnelViewController.m; sourceTree = "<group>"; };
+		2505503519A72A710048A804 /* VIPViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VIPViewController.h; sourceTree = "<group>"; };
+		2505503619A72A710048A804 /* VIPViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VIPViewController.m; sourceTree = "<group>"; };
+		2505503F19A7641D0048A804 /* VIPFunnelCreationConfirmationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VIPFunnelCreationConfirmationController.h; sourceTree = "<group>"; };
+		2505504019A7641D0048A804 /* VIPFunnelCreationConfirmationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VIPFunnelCreationConfirmationController.m; sourceTree = "<group>"; };
 		2522AC0B1998DBEC002B1207 /* UIBarButtonItem+WEPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBarButtonItem+WEPopover.h"; sourceTree = "<group>"; };
 		2522AC0C1998DBEC002B1207 /* UIBarButtonItem+WEPopover.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBarButtonItem+WEPopover.m"; sourceTree = "<group>"; };
 		2522AC0D1998DBEC002B1207 /* WEPopoverContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WEPopoverContainerView.h; sourceTree = "<group>"; };
@@ -819,6 +831,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2505503219A72A710048A804 /* VIPFunnelViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				2505503519A72A710048A804 /* VIPViewController.h */,
+				2505503619A72A710048A804 /* VIPViewController.m */,
+				2505503319A72A710048A804 /* VIPCreateFunnelViewController.h */,
+				2505503419A72A710048A804 /* VIPCreateFunnelViewController.m */,
+				2505503F19A7641D0048A804 /* VIPFunnelCreationConfirmationController.h */,
+				2505504019A7641D0048A804 /* VIPFunnelCreationConfirmationController.m */,
+			);
+			path = VIPFunnelViewControllers;
+			sourceTree = "<group>";
+		};
 		2522AC0A1998DBEC002B1207 /* Popover */ = {
 			isa = PBXGroup;
 			children = (
@@ -1091,6 +1116,7 @@
 		CC8C7EAA18E6EF8600E76AE8 /* viewcontrollers */ = {
 			isa = PBXGroup;
 			children = (
+				2505503219A72A710048A804 /* VIPFunnelViewControllers */,
 				CC1AD1DC18F54BE9000E356C /* MainVCDelegate.h */,
 				CC8C7EAB18E6F1C100E76AE8 /* MainVC.h */,
 				CC8C7EAC18E6F1C100E76AE8 /* MainVC.m */,
@@ -1635,9 +1661,12 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2505504119A7641D0048A804 /* VIPFunnelCreationConfirmationController.h in Headers */,
 				B72C2FB119A196E3000E5D5B /* RNBlurModalView.h in Headers */,
+				2505503919A72A710048A804 /* VIPViewController.h in Headers */,
 				B7F3BB0619A597F00049CEE8 /* MTStatusBarOverlay.h in Headers */,
 				FAAE9CDA19A354F0007FB804 /* UIView+Toast.h in Headers */,
+				2505503719A72A710048A804 /* VIPCreateFunnelViewController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1994,6 +2023,7 @@
 				CCC9E428193E47980028DC84 /* ServiceTests.m in Sources */,
 				CCC9E41F193DF91D0028DC84 /* MessageModel.m in Sources */,
 				CCC9E40F193D5CC20028DC84 /* EmailServersService.m in Sources */,
+				2505503A19A72A710048A804 /* VIPViewController.m in Sources */,
 				D1EFF4AD198184C60031A1D1 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				CC8C7ECD18E6F38100E76AE8 /* MASViewConstraint.m in Sources */,
 				FA2F433F193318BE00C1F119 /* CreateFunnlViewController.m in Sources */,
@@ -2049,6 +2079,7 @@
 				FAAF172019863CDD00E877D4 /* SDWebImageManager.m in Sources */,
 				6677880C18EF80BF00EF1962 /* EmailCell.m in Sources */,
 				FAAF171F19863CDD00E877D4 /* SDWebImageDownloaderOperation.m in Sources */,
+				2505503819A72A710048A804 /* VIPCreateFunnelViewController.m in Sources */,
 				FA7A445C193F2FE300ABCB29 /* MenuCell.m in Sources */,
 				FAAF171D19863CDD00E877D4 /* SDWebImageDecoder.m in Sources */,
 				5A1FF53D1948263B0056750F /* FunnelModel.m in Sources */,
@@ -2074,6 +2105,7 @@
 				2522AC171998DBEC002B1207 /* WETouchableView.m in Sources */,
 				D1EFF4AF198184C60031A1D1 /* AFURLConnectionOperation.m in Sources */,
 				D1EFF48819817BBF0031A1D1 /* OAHMAC_SHA1SignatureProvider.m in Sources */,
+				2505504219A7641D0048A804 /* VIPFunnelCreationConfirmationController.m in Sources */,
 				D1EFF48A19817BBF0031A1D1 /* NSString+URLEncoding.m in Sources */,
 				CCC9E425193E414F0028DC84 /* ServiceUtils.m in Sources */,
 				5A59DC7519582A260094B00D /* FunnelPopUpForExtraRules.m in Sources */,

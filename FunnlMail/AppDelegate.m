@@ -18,12 +18,13 @@
 #import "EmailServersService.h"
 #import <Crashlytics/Crashlytics.h>
 #import "GTMOAuth2ViewControllerTouch.h"
+#import "VIPViewController.h"
 
 #define MIXPANEL_TOKEN @"08b1e55d72f1b22a8e5696c2b56a6777"
 
 @implementation AppDelegate
 @synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable,contextIOAPIClient,isAlreadyRequestedRefreshToken,currentSelectedFunnlModel;
-@synthesize mainVCdelegate,letsGo;
+@synthesize mainVCdelegate,letsGo,navControllerForCentralView;
 
 #pragma mark - didFinishLaunching
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -180,8 +181,23 @@
 
 -(IBAction)hideWelcomeOverlay:(id)sender{
     [showWelcomeOverlay removeFromSuperview];
+    if (IS_FUNNEL_POP_UP_ENABLE) {
+        [self performSelector:@selector(loadVIPFunnelViewController) withObject:nil afterDelay:kVIP_FUNNEL_POP_UP_DISPLY_INTERVAL];
+    }
 }
 
+- (void)loadVIPFunnelViewController {
+    if (navControllerForCentralView) {
+        VIPViewController *viewController = [[VIPViewController alloc] init];
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
+        [navControllerForCentralView presentViewController:navController animated:YES completion:nil];
+    }
+    else {
+        if (IS_FUNNEL_POP_UP_ENABLE) {
+            [self performSelector:@selector(loadVIPFunnelViewController) withObject:nil afterDelay:kVIP_FUNNEL_POP_UP_DISPLY_INTERVAL];
+        }
+    }
+}
 
 #pragma mark - applicationWillResignActive
 
