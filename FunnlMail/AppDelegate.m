@@ -23,7 +23,7 @@
 
 @implementation AppDelegate
 @synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable,contextIOAPIClient,isAlreadyRequestedRefreshToken,currentSelectedFunnlModel;
-@synthesize mainVCdelegate;
+@synthesize mainVCdelegate,letsGo;
 
 #pragma mark - didFinishLaunching
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -160,7 +160,7 @@
     showWelcomeOverlay.backgroundColor = CLEAR_COLOR;
     showWelcomeOverlay.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.78];
     
-    UIButton *letsGo = [UIButton buttonWithType:UIButtonTypeCustom];
+    letsGo = [UIButton buttonWithType:UIButtonTypeCustom];
     letsGo.frame = CGRectMake(WIDTH-40, 20, 30, 30);
     [letsGo setTitle:@"X" forState:UIControlStateNormal];
     [letsGo setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -168,7 +168,8 @@
     [[letsGo layer] setBorderWidth:2.0f];
     [[letsGo layer] setBorderColor:[UIColor whiteColor].CGColor];
     [letsGo.layer setCornerRadius:3.0];
-    //[showWelcomeOverlay addSubview:letsGo];
+    [showWelcomeOverlay addSubview:letsGo];
+    letsGo.hidden = YES;
     [showWelcomeOverlay bringSubviewToFront:letsGo];
     
     [self.window addSubview:showWelcomeOverlay];

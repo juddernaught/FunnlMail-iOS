@@ -38,7 +38,7 @@
 @property (assign, nonatomic) BOOL isAlreadyRequestedRefreshToken;
 @property (strong, nonatomic) UIView *headerViewForMailDetailView;
 @property (weak) id<MainVCDelegate> mainVCdelegate;
-
+@property (strong,nonatomic) UIButton* letsGo;
 @property BOOL funnelUpDated,internetAvailable;
 -(void)showWelcomeOverlay;
 -(void)hideWelcomeOverlay:(id)sender;

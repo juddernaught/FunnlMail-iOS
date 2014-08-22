@@ -187,10 +187,16 @@ UIButton *loginButton;
 }
 
 - (void) loginButtonSelected {
+    
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     [self setDrawerControllerOnWindow];
     [[Mixpanel sharedInstance] track:@"Viewed last slider"];
-    if(appDelegate.didLoginIn)[appDelegate showWelcomeOverlay];
+    if(appDelegate.didLoginIn) {
+        [appDelegate showWelcomeOverlay];
+        if ([[[MessageService instance] retrieveAllMessages] count] > 0) {
+            [appDelegate.letsGo setHidden:NO];
+        }
+    }
     //[self oauthLogin];
 }
 
