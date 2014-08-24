@@ -180,6 +180,8 @@
 		FA2C9BDB193EE66400866BEE /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2C9BDA193EE66400866BEE /* MenuViewController.m */; };
 		FA2C9BDE193EF92400866BEE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA2C9BDC193EF92400866BEE /* Main.storyboard */; };
 		FA2F433F193318BE00C1F119 /* CreateFunnlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2F433E193318BE00C1F119 /* CreateFunnlViewController.m */; };
+		FA33E1B119A9A48100CE79B0 /* MCTMsgViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = FA33E1AF19A9A48100CE79B0 /* MCTMsgViewController.h */; };
+		FA33E1B219A9A48100CE79B0 /* MCTMsgViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = FA33E1B019A9A48100CE79B0 /* MCTMsgViewController.mm */; };
 		FA4A2E8A198A7E2C00CB9FAD /* menuIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FA4A2E89198A7E2C00CB9FAD /* menuIcon@2x.png */; };
 		FA4A2E8D198A837500CB9FAD /* swipeTrash.png in Resources */ = {isa = PBXBuildFile; fileRef = FA4A2E8B198A837500CB9FAD /* swipeTrash.png */; };
 		FA4A2E8E198A837500CB9FAD /* swipeTrash@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FA4A2E8C198A837500CB9FAD /* swipeTrash@2x.png */; };
@@ -625,6 +627,8 @@
 		FA2C9BDD193EF92400866BEE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		FA2F433D193318BE00C1F119 /* CreateFunnlViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CreateFunnlViewController.h; path = viewcontrollers/CreateFunnlViewController.h; sourceTree = "<group>"; };
 		FA2F433E193318BE00C1F119 /* CreateFunnlViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CreateFunnlViewController.m; path = viewcontrollers/CreateFunnlViewController.m; sourceTree = "<group>"; };
+		FA33E1AF19A9A48100CE79B0 /* MCTMsgViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCTMsgViewController.h; sourceTree = "<group>"; };
+		FA33E1B019A9A48100CE79B0 /* MCTMsgViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MCTMsgViewController.mm; sourceTree = "<group>"; };
 		FA4A2E89198A7E2C00CB9FAD /* menuIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menuIcon@2x.png"; sourceTree = "<group>"; };
 		FA4A2E8B198A837500CB9FAD /* swipeTrash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = swipeTrash.png; sourceTree = "<group>"; };
 		FA4A2E8C198A837500CB9FAD /* swipeTrash@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipeTrash@2x.png"; sourceTree = "<group>"; };
@@ -1100,6 +1104,8 @@
 				5AA690B519501EC200E4CB64 /* EmailThreadTableViewController.m */,
 				667787FF18EF768B00EF1962 /* MsgViewController.h */,
 				6677880018EF768B00EF1962 /* MsgViewController.mm */,
+				FA33E1AF19A9A48100CE79B0 /* MCTMsgViewController.h */,
+				FA33E1B019A9A48100CE79B0 /* MCTMsgViewController.mm */,
 				660BA98C1902CDEA00CDF86E /* LoginViewController.h */,
 				660BA98D1902CDEA00CDF86E /* LoginViewController.m */,
 				B7169C82199C6D78004D8759 /* FAQVC.h */,
@@ -1637,6 +1643,7 @@
 			files = (
 				B72C2FB119A196E3000E5D5B /* RNBlurModalView.h in Headers */,
 				B7F3BB0619A597F00049CEE8 /* MTStatusBarOverlay.h in Headers */,
+				FA33E1B119A9A48100CE79B0 /* MCTMsgViewController.h in Headers */,
 				FAAE9CDA19A354F0007FB804 /* UIView+Toast.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1986,6 +1993,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B7F3BB0C19A5A0E30049CEE8 /* MTStatusBarOverlay.h in Sources */,
+				FA33E1B219A9A48100CE79B0 /* MCTMsgViewController.mm in Sources */,
 				B72C2FBC19A1980B000E5D5B /* RNBlurModalView.h in Sources */,
 				FA029C401993BB890021C6B1 /* ContactService.m in Sources */,
 				FAAF171E19863CDD00E877D4 /* SDWebImageDownloader.m in Sources */,
@@ -2326,7 +2334,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "bb645e85-1d2a-45d2-9aaf-1c6fd74893d7";
+				PROVISIONING_PROFILE = "f0906a3e-4806-4970-a8cb-7c8f55b256fa";
 				SDKROOT = iphoneos7.1;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;

@@ -79,7 +79,7 @@ pre {\
 
 
 @synthesize headerView,footerViewHeight,headerViewHeight,footerView,actualContentHeight,actualContentWidth,shouldScrollToTopOnLayout,webScrollView,oldScrollViewDelegate,webViewDelegate;
-
+@synthesize activityIndicator;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -98,6 +98,16 @@ pre {\
     _webView.scrollView.delegate = self;
     [self addSubview:_webView];
     self.webView.scalesPageToFit = YES;
+
+    activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    activityIndicator.frame = CGRectMake(150, headerViewHeight + 20, 25, 25);
+    [_webView addSubview:activityIndicator];
+    activityIndicator.hidesWhenStopped = YES;
+    activityIndicator.hidden = NO;
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [activityIndicator startAnimating];
+    });
 
     
     return self;
@@ -126,7 +136,7 @@ pre {\
 {
     NSString *uidKey = [NSString stringWithFormat:@"%d",tempMessageModel.uid];
     NSString * content = @"";
-    
+
     if (_message == nil) {
         content = nil;
         [_webView loadHTMLString:@"" baseURL:nil];
@@ -137,6 +147,8 @@ pre {\
             string = @"";
             
         if (![string isEqualToString:EMPTY_DELIMITER] && string && ![string isEqualToString:@""]) {
+            [activityIndicator removeFromSuperview];
+            
             NSMutableString * html = [NSMutableString string];
             [html appendFormat:@"<html><head><script>%@</script><style>%@</style><meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=3\"></head>"
              @"<body>%@</body><iframe src='x-mailcore-msgviewloaded:' style='width: 0px; height: 0px; border: none;'>"
@@ -201,6 +213,8 @@ pre {\
              @"</iframe></html>", mainJavascript, mainStyle, content];
             
             [_webView loadHTMLString:html baseURL:nil];
+
+            activityIndicator.hidden = YES;
         }
         else{
             [_webView loadHTMLString:@"" baseURL:nil];
@@ -310,7 +324,6 @@ pre {\
 }
 
 - (BOOL)webView:(UIWebView *)webView1 shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-    
     NSURLRequest *responseRequest = [self webView:webView1 resource:nil willSendRequest:request redirectResponse:nil fromDataSource:nil];
     if([request.URL.scheme isEqualToString:@"funnl"]){
         NSLog(@"funnl scheme detected");
@@ -324,13 +337,6 @@ pre {\
         return NO;
     }
 }
-
-//- (void)webViewDidFinishLoad:(UIWebView *)webView {
-//    [webView.scrollView scrollsToTop];
-//    [webView.scrollView setContentSize: CGSizeMake(webView.frame.size.width, webView.scrollView.contentSize.height)];
-////    [[self delegate] MCOMessageViewLoadingCompleted:self];
-//
-//}
 
 - (NSURLRequest *)webView:(UIWebView *)sender resource:(id)identifier willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse fromDataSource:(id)dataSource
 {
@@ -520,6 +526,7 @@ pre {\
 		headerView = nil;
 	}
 	
+    
 	// set new one
 	headerView = view;
 	
@@ -552,6 +559,8 @@ pre {\
 
 -(void) setHeaderViewHeight:(float)_height {
 	headerViewHeight = _height;
+    activityIndicator.frame = CGRectMake(150, headerViewHeight + 20, 25, 25);
+
 	[self setNeedsLayout];
 }
 
@@ -644,7 +653,7 @@ pre {\
 		self.webView.frame = CGRectMake(0,
 										0,
 										self.frame.size.width,
-										self.frame.size.height);
+										self.frame.size.height - 40);
 	}
 	else {
 		// set frame of web control
@@ -652,7 +661,7 @@ pre {\
 			self.webView.frame = CGRectMake(0,
 											self.headerViewHeight,
 											self.frame.size.width,
-											self.frame.size.height - self.footerViewHeight);
+											self.frame.size.height - self.footerViewHeight - 40);
 		}
 	}
 	[self layoutHeaderAndFooterViews];
@@ -663,13 +672,13 @@ pre {\
 #pragma mark UIWebViewDelegate
 
 - (void)webView:(UIWebView *)sender didFailLoadWithError:(NSError *)error {
-	if (self.webViewDelegate && [self.webViewDelegate respondsToSelector:@selector(webView:didFailLoadWithError:)]) {
+    if (self.webViewDelegate && [self.webViewDelegate respondsToSelector:@selector(webView:didFailLoadWithError:)]) {
 		[self.webViewDelegate webView:sender didFailLoadWithError:error];
 	}
 }
 
 -(void) webViewDidFinishLoad:(UIWebView *)sender {
-	if (self.webViewDelegate && [self.webViewDelegate respondsToSelector:@selector(webViewDidFinishLoad:)]) {
+    if (self.webViewDelegate && [self.webViewDelegate respondsToSelector:@selector(webViewDidFinishLoad:)]) {
 		[self.webViewDelegate webViewDidFinishLoad:sender];
 	}
 	
@@ -705,13 +714,16 @@ pre {\
     document.getElementsByTagName('head')[0].appendChild(meta);";
     [self.webView stringByEvaluatingJavaScriptFromString:jsSetViewport];
     
+//    [[self delegate] MCOMessageViewLoadingCompleted:self];
+
     [self recalculateContentHeight];
 	
-	//[self setNeedsLayout];
+    [self setNeedsLayout];
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)sender {
-	// forward web view delegate invocations
+    [activityIndicator startAnimating];
+    // forward web view delegate invocations
 	if (self.webViewDelegate && [self.webViewDelegate respondsToSelector:@selector(webViewDidStartLoad:)]) {
 		[self.webViewDelegate webViewDidStartLoad:sender];
 	}

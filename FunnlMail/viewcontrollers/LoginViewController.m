@@ -24,6 +24,8 @@
 #import "CIOAPIClient.h"
 #import "ContactService.h"
 #import <Parse/parse.h>
+#import "SQLiteDatabase.h"
+#import "CIOAPIClient.h"
 
 #define accessTokenEndpoint @"https://accounts.google.com/o/oauth2/token"
 
@@ -235,6 +237,20 @@ UIButton *loginButton;
     } else {
         [[Mixpanel sharedInstance] track:@"Signed into email"]; // Signed into Gmail
         
+        [NSObject cancelPreviousPerformRequestsWithTarget:[EmailService instance]];
+        [[MessageService instance] clearAllTables];
+        
+        AppDelegate *appDelegate = APPDELEGATE;
+        [appDelegate.contextIOAPIClient clearCredentials];
+        [SQLiteDatabase sharedInstance];
+        [[NSUserDefaults standardUserDefaults] setObject:[NSMutableArray new] forKey: ALL_FUNNL];
+        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"PRIMARY_PAGE_TOKEN"];
+        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"PRIMARY_PAGE_TOKEN"];
+        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"PRIMARY_PAGE_TOKEN"];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"IS_NEW_INSTALL"];
+        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"MODSEQ"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [[EmailService instance] clearData];
         
         
         NSString * email = [auth userEmail];
@@ -310,6 +326,7 @@ UIButton *loginButton;
             
             //fetching contacts
             [self performSelector:@selector(getUserContact) withObject:nil afterDelay:0.1];
+            //[self performSelectorInBackground:@selector(getUserContact) withObject:nil];
             //[self addToSourceWithAccountID:contextIO_account_id];
             [self performSelector:@selector(addToSourceWithAccountID:) withObject:contextIO_account_id afterDelay:0.01];
             
@@ -508,6 +525,7 @@ UIButton *loginButton;
             }
             NSLog(@"what is currntNam: %@",[EmailService instance].currentName);
             [self performSelector:@selector(getUserContact) withObject:nil afterDelay:0.1];
+            //[self performSelectorInBackground:@selector(getUserContact) withObject:nil];
 
             [[NSUserDefaults standardUserDefaults] synchronize];
             [EmailService instance].primaryMessages = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey: ALL_FUNNL]];

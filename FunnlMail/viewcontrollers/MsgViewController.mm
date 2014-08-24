@@ -53,17 +53,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor whiteColor]];
+   
     [self setUpView];
     AppDelegate *tempAppDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     tempAppDelegate.headerViewForMailDetailView = headerView;
-//    [self.view addSubview:headerView];
     UIView *seperator = [[UIView alloc] initWithFrame:CGRectMake(25, headerView.frame.origin.y + headerView.frame.size.height, WIDTH - 20, 0)];
     [seperator setBackgroundColor:[UIColor lightGrayColor]];
-//    [self.view addSubview:seperator];
     
-//    subjectView.frame = CGRectMake(0, headerView.frame.origin.y + headerView.frame.size.height, WIDTH, subjectHeight + 20);
     subjectView.frame = CGRectMake(0, 0, WIDTH, subjectHeight + 20);
-//    [self.view addSubview:subjectView];
     
     _messageView = [[MCOMessageView alloc] initWithFrame:CGRectMake(0, 64, WIDTH, HEIGHT-44)];
     _messageView.tempMessageModel = _message;
@@ -76,17 +73,8 @@
     messageTableView.delegate = self;
     messageTableView.dataSource = self;
     messageTableView.tableFooterView = seperator;
-//    [self.view addSubview:messageTableView];
-//    [messageTableView setTableFooterView:_messageView];
-    
-//    [_messageView setHeaderViewHeight:100];
     [_messageView setHeaderViewHeight:headerView.frame.size.height];
     
-//    UILabel *testHeaderview = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 320-30, 100)];
-//    testHeaderview.text = @"This is not zoomable text, we don't have to zoom it at all.This is not zoomable text, we don't have to zoom it at all.This is not zoomable text, we don't have to zoom it at all.This is not zoomable text, we don't have to zoom it at all.";
-//    testHeaderview.numberOfLines= 0;
-    
-//    [_messageView setHeaderView:testHeaderview];
     [_messageView setHeaderView:headerView];
 
     UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, self.view.bounds.size.height-42, self.view.bounds.size.width, 42)];
@@ -109,7 +97,6 @@
     [replyAllButton setImage:[UIImage imageNamed:@"emailDetailViewReplyAll.png"] forState:UIControlStateNormal];
     [replyAllButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentCenter];
     [replyAllButton setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
-//    [replyAllButton setBackgroundImage:[UIImage imageNamed:@"emailDetailViewReplyAll.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:replyAllButton];
 
     [forwardButton addTarget:self action:@selector(forwardButtonSelected) forControlEvents:UIControlEventTouchUpInside];
@@ -119,9 +106,7 @@
     [forwardButton setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
     [centeredButtons addSubview:forwardButton];
     
-    UIView *topBorder = [[UIView alloc]
-                         
-                          initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,1)];
+    UIView *topBorder = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,1)];
     topBorder.backgroundColor = [UIColor lightGrayColor];
     [centeredButtons addSubview:topBorder];
     
@@ -149,6 +134,7 @@
             
         }];
     }
+    
     //customize back button.
     UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"backArrow.png"] style:UIBarButtonItemStylePlain target:self action:@selector(back)];
     [self.navigationItem setLeftBarButtonItem:leftButton];
@@ -615,14 +601,6 @@ typedef void (^DownloadCallback)(NSError * error);
             count ++;
         }
     }
-    
-    
-//    [[FunnelService instance] insertFunnel:fm];
-//    [[EmailService instance] applyingFunnel:fm toMessages:[[MessageService instance] messagesAllTopMessages]];
-//    [EmailService setNewFilterModel:fm];
-//    
-//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"FunnlMail" message:@"Funnl added successfully." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-//    [alert show];
 
     CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:subjectsDictionary filterModel:fm];
     creatFunnlViewController.isEdit = NO;
@@ -698,7 +676,7 @@ typedef void (^DownloadCallback)(NSError * error);
 		NSData * data = [_storage objectForKey:partUniqueID];
 		return data;
 	}
-    [self updateWebView];
+    //[self updateWebView];
 }
 
 - (void) MCOMessageView:(MCOMessageView *)view fetchDataForPartWithUniqueID:(NSString *)partUniqueID
@@ -721,12 +699,12 @@ typedef void (^DownloadCallback)(NSError * error);
         }
         [blocks addObject:[downloadFinished copy]];
     }
-    [self updateWebView];
+    //[self updateWebView];
 }
 
 - (void) MCOMessageViewLoadingCompleted:(MCOMessageView *)view;
 {
-    [self updateWebView];
+    //[self updateWebView];
 }
 
 - (NSData *) MCOMessageView:(MCOMessageView *)view previewForData:(NSData *)data isHTMLInlineImage:(BOOL)isHTMLInlineImage
@@ -793,8 +771,6 @@ typedef void (^DownloadCallback)(NSError * error);
     viewEmail.folder = _folder;
     viewEmail.imapSession = _session;
     viewEmail.reply = @1;
-//    UINavigationController *navBar=[[UINavigationController alloc]initWithRootViewController:viewEmail];
-    //[self presentViewController:navBar animated:YES completion:NULL];
     [self.navigationController pushViewController:viewEmail animated:YES];
 }
 
@@ -808,8 +784,6 @@ typedef void (^DownloadCallback)(NSError * error);
     viewEmail.folder = _folder;
     viewEmail.imapSession = _session;
     viewEmail.replyAll = @1;
-//    UINavigationController *navBar=[[UINavigationController alloc]initWithRootViewController:viewEmail];
-//    [self presentViewController:navBar animated:YES completion:NULL];
     [self.navigationController pushViewController:viewEmail animated:YES];
 }
 
@@ -821,9 +795,7 @@ typedef void (^DownloadCallback)(NSError * error);
     viewEmail.folder = _folder;
     viewEmail.imapSession = _session;
     viewEmail.forward = @1;
-//    UINavigationController *navBar=[[UINavigationController alloc]initWithRootViewController:viewEmail];
-//    [self presentViewController:navBar animated:YES completion:NULL];
-        [self.navigationController pushViewController:viewEmail animated:YES];
+    [self.navigationController pushViewController:viewEmail animated:YES];
 }
 
 

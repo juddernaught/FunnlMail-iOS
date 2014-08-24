@@ -12,6 +12,7 @@
 #import "EmailService.h"
 #import <Mixpanel/Mixpanel.h>
 #import "FunnlPopUpView.h"
+#import "MCTMsgViewController.h"
 
 static NSString *mailCellIdentifier = @"MailCell";
 
@@ -175,12 +176,13 @@ static NSString *mailCellIdentifier = @"MailCell";
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     MCOIMAPMessage *msg = [MCOIMAPMessage importSerializable:[(MessageModel*)dataSourceArray[indexPath.row] messageJSON]];
     [(MessageModel*)dataSourceArray[indexPath.row] setRead:YES];
-    MsgViewController *vc = [[MsgViewController alloc] init];
+    //MsgViewController *vc = [[MsgViewController alloc] init];
+    MCTMsgViewController *vc = [[MCTMsgViewController alloc] init];
     vc.selectedIndexPath = indexPath;
+    vc.messageModel = (MessageModel*)[EmailService instance].filterMessages[indexPath.row];
     vc.folder = INBOX;
     vc.message = msg;
     vc.session = [EmailService instance].imapSession;
-    vc.messageModel = (MessageModel*)[EmailService instance].filterMessages[indexPath.row];
     msg.flags = msg.flags | MCOMessageFlagSeen;
     MCOIMAPOperation *msgOperation=[[EmailService instance].imapSession storeFlagsOperationWithFolder:INBOX uids:[MCOIndexSet indexSetWithIndex:msg.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagSeen];
     [msgOperation start:^(NSError * error)

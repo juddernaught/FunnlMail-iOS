@@ -16,6 +16,8 @@
 
 @interface EmailService : NSObject{
 //    NSMutableArray *filterArray;
+    
+    BOOL isfetchingOperationActive;
 }
 @property (nonatomic, strong) NSMutableArray *filterArray;
 @property (nonatomic, strong) MCOIMAPOperation *imapCheckOp;

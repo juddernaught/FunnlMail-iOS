@@ -36,6 +36,7 @@
 @property(nonatomic,assign) float actualContentHeight;
 @property(nonatomic,assign) float actualContentWidth;
 @property(nonatomic,assign) BOOL shouldScrollToTopOnLayout;
+@property(nonatomic,retain) UIActivityIndicatorView *activityIndicator;
 
 -(void) setHeaderView:(UIView *)view;
 -(void) setFooterView:(UIView *)view;

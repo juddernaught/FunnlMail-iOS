@@ -26,7 +26,8 @@
 #import "RNBlurModalView.h"
 #import "UIView+Toast.h"
 #import "MTStatusBarOverlay.h"
-
+#import "MCTMsgViewController.h"
+#import "LoginViewController.h"
 
 @implementation UILabel (Additions)
 
@@ -262,7 +263,7 @@ UIView *greyView;
     if(appDelegate.internetAvailable){
         [activityIndicator startAnimating];
         MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
-        [overlay postImmediateMessage:@"Downloading.." animated:YES];
+        [overlay postImmediateMessage:@"Downloading..." animated:YES];
         overlay.animation = MTStatusBarOverlayAnimationFallDown;  // MTStatusBarOverlayAnimationShrink
         overlay.detailViewMode = MTDetailViewModeHistory;         // enable automatic history-tracking and show in detail-view
         overlay.tag = 1;
@@ -955,20 +956,20 @@ UIView *greyView;
             {
                 [[Mixpanel sharedInstance] track:@"User Viewed Email"];
                 MCOIMAPMessage *msg = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
-                MsgViewController *vc = [[MsgViewController alloc] init];
+                //MsgViewController *vc = [[MsgViewController alloc] init];
+                MCTMsgViewController *vc = [[MCTMsgViewController alloc] init];
                 vc.folder = self.emailFolder;
                 vc.selectedIndexPath = indexPath;
-                vc.message = msg;
-                vc.address = msg.header.from;
-                vc.session = [EmailService instance].imapSession;
                 vc.messageModel = (MessageModel*)[EmailService instance].filterMessages[indexPath.row];
-                msg.flags = msg.flags | MCOMessageFlagSeen;
-                MCOIMAPOperation *msgOperation=[[EmailService instance].imapSession storeFlagsOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:msg.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagSeen];
-                [msgOperation start:^(NSError * error)
-                 {
-                     NSLog(@"selected message flags %u UID is %u",msg.flags,msg.uid );
-                 }];
-                //[self.navigationController pushViewController:vc animated:YES];
+                vc.address = msg.header.from;
+                vc.message = msg;
+                vc.session = [EmailService instance].imapSession;
+//                msg.flags = msg.flags | MCOMessageFlagSeen;
+//                MCOIMAPOperation *msgOperation=[[EmailService instance].imapSession storeFlagsOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:msg.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagSeen];
+//                [msgOperation start:^(NSError * error)
+//                 {
+//                     NSLog(@"selected message flags %u UID is %u",msg.flags,msg.uid );
+//                 }];
                 if ([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread] > 1) {
                     EmailThreadTableViewController *threadViewController = [[EmailThreadTableViewController alloc] initWithGmailThreadID:[NSString stringWithFormat:@"%llu",msg.gmailThreadID]];
                     [self.navigationController pushViewController:threadViewController animated:YES];
@@ -989,6 +990,10 @@ UIView *greyView;
                     NSLog(@"Call to loadLastNMessages from  didSelectRowAtIndexPath   function & isSearching = NO");
                     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
                     if(appDelegate.internetAvailable){
+                        NSString *PRIMARY_PAGE_TOKEN = [[NSUserDefaults standardUserDefaults] objectForKey:@"PRIMARY_PAGE_TOKEN"];
+                        if(PRIMARY_PAGE_TOKEN)
+                            [appDelegate.loginViewController getPrimaryMessages:[EmailService instance].userEmailID nextPageToken:PRIMARY_PAGE_TOKEN numberOfMaxResult:100 ];
+                        
                         int totalNumberOfMessage = (int)[[MessageService instance] messagesAllTopMessages].count + NUMBER_OF_MESSAGES_TO_LOAD;
                         [[EmailService instance] loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD withTableController:self withFolder:INBOX  withFetchRange:MCORangeEmpty];
                         cell.accessoryView = self.loadMoreActivityView;
@@ -1015,13 +1020,14 @@ UIView *greyView;
         else {
             [[Mixpanel sharedInstance] track:@"User viewed email"];
             MCOIMAPMessage *msg = [MCOIMAPMessage importSerializable:[(MessageModel*)searchMessages[indexPath.row] messageJSON]];
-            MsgViewController *vc = [[MsgViewController alloc] init];
+            //MsgViewController *vc = [[MsgViewController alloc] init];
+            MCTMsgViewController *vc = [[MCTMsgViewController alloc] init];
             vc.selectedIndexPath = indexPath;
+            vc.messageModel = (MessageModel*)searchMessages[indexPath.row];
             vc.folder = self.emailFolder;
             vc.message = msg;
             vc.session = [EmailService instance].imapSession;
             //[self.navigationController pushViewController:vc animated:YES];
-            vc.messageModel = (MessageModel*)searchMessages[indexPath.row];
             [self setReadMessage:(MessageModel*)searchMessages[indexPath.row]];
             [self.mainVCdelegate pushViewController:vc];
         }

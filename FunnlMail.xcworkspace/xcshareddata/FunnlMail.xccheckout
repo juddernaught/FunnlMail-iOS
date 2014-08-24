@@ -10,6 +10,10 @@
 	<string>FunnlMail</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
+		<key>7ACF23A507BCFA5964C32B48177971421D05CCCE</key>
+		<string>https://github.com/MailCore/mailcore2.git</string>
+		<key>8AA2318D40AE3F253D48190F550CE0ADD3A71977</key>
+		<string>https://github.com/juddernaught/FunnlMail-iOS.git</string>
 		<key>90282D2D-4E87-460C-83FE-96794E2EF458</key>
 		<string>https://github.com/juddernaught/FunnlMail-iOS.git</string>
 	</dict>
@@ -17,15 +21,19 @@
 	<string>FunnlMail.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>90282D2D-4E87-460C-83FE-96794E2EF458</key>
+		<key>7ACF23A507BCFA5964C32B48177971421D05CCCE</key>
+		<string>..mailcore2</string>
+		<key>8AA2318D40AE3F253D48190F550CE0ADD3A71977</key>
 		<string>..</string>
+		<key>90282D2D-4E87-460C-83FE-96794E2EF458</key>
+		<string>../../FunnlMail</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/juddernaught/FunnlMail-iOS.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>90282D2D-4E87-460C-83FE-96794E2EF458</string>
+	<string>8AA2318D40AE3F253D48190F550CE0ADD3A71977</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
@@ -35,6 +43,22 @@
 			<string>90282D2D-4E87-460C-83FE-96794E2EF458</string>
 			<key>IDESourceControlWCCName</key>
 			<string>FunnlMail</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>8AA2318D40AE3F253D48190F550CE0ADD3A71977</string>
+			<key>IDESourceControlWCCName</key>
+			<string>git-FunnlMail-iOS</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>7ACF23A507BCFA5964C32B48177971421D05CCCE</string>
+			<key>IDESourceControlWCCName</key>
+			<string>git-FunnlMail-iOSmailcore2</string>
 		</dict>
 	</array>
 </dict>

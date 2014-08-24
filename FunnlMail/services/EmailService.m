@@ -258,34 +258,6 @@ static NSString *currentFolder;
              }
          }];
     });
-    
-    
-    /*MCOIMAPFetchMessagesOperation *archiveSyncMessagesFetchOperation =  [[EmailService instance].imapSession syncMessagesByUIDWithFolder:ARCHIVE requestKind:requestKind uids:mcoIndexSet modSeq:modSeqValue];
-    [archiveSyncMessagesFetchOperation setProgress:^(unsigned int progress) {
-        NSLog(@"Progress: %u ", progress);
-    }];
-    //         __weak EmailService *weakSelf = self;
-    NSLog(@"--- start Sync - ARCHIVE fetch operation for mail download");
-    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [archiveSyncMessagesFetchOperation start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
-         {
-             NSInteger count = 0;
-             for (MCOIMAPMessage *m in messages) {
-                 NSString *gmailMessageID = [NSString stringWithFormat:@"%llu",m.gmailMessageID];
-                 //[[MessageService instance] deleteMessageWithGmailMessageID:gmailMessageID];
-                 count++;
-//                 if(messages.count == count){
-//                     [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%llu",m.modSeqValue] forKey:@"MODSEQ"];
-//                     [[NSUserDefaults standardUserDefaults] synchronize];
-//                 }
-             }
-             if(count){
-                 NSLog(@"ARCHIVE----  added or modified messages: %@", messages);
-                 NSLog(@"ARCHIVE----  deleted messages: %@", vanishedMessages);
-                 [self refreshMessages];
-             }
-         }];
-    });*/
 }
 
 -(void)refreshMessages{
@@ -362,6 +334,7 @@ static NSString *currentFolder;
     else newestID = 0;
     [FolderInfo start:^(NSError *error, MCOIMAPFolderInfo *info)
      {
+         isfetchingOperationActive = YES;
 //         BOOL totalNumberOfMessagesDidChange = self.totalNumberOfMessages != info.uidNext;        
          
          BOOL isNewMessage = NO;
@@ -436,13 +409,13 @@ static NSString *currentFolder;
          
          int numberOfMessages = 40;
          MCOIndexSet *numbers = [MCOIndexSet indexSetWithRange:MCORangeMake(1, info.uidNext)];
-         //if(![folderName isEqualToString:INBOX]) self.imapMessagesFetchOp = [self.imapSession fetchMessagesByNumberOperationWithFolder:folderName requestKind:requestKind numbers:numbers];
          
          if(![folderName isEqualToString:INBOX] && ![folderName isEqualToString:ARCHIVE]){
              self.imapMessagesFetchOp = [self.imapSession fetchMessagesByUIDOperationWithFolder:folderName requestKind:requestKind uids:numbers];
              NSLog(@"detected other mailbox");
          }
-         else if([folderName isEqualToString:ARCHIVE]) self.imapMessagesFetchOp = [self.imapSession fetchMessagesByNumberOperationWithFolder:folderName requestKind:requestKind numbers:[MCOIndexSet indexSetWithRange:MCORangeMake(1,40)]];
+         else if([folderName isEqualToString:ARCHIVE])
+             self.imapMessagesFetchOp = [self.imapSession fetchMessagesByNumberOperationWithFolder:folderName requestKind:requestKind numbers:[MCOIndexSet indexSetWithRange:MCORangeMake(1,40)]];
          else{
              self.imapMessagesFetchOp = [self.imapSession fetchMessagesByUIDOperationWithFolder:folderName requestKind:requestKind uids:uids];
              NSLog(@"inbox detected");
@@ -597,7 +570,7 @@ static NSString *currentFolder;
 
                       
                       //[self performSelector:@selector(applyingFilters:) withObject:tempArray];
-                      [self applyingFilters:tempArray];
+                      //[self applyingFilters:tempArray];
                       self.filterMessages = (NSMutableArray*)tempArray;
                       if(![folderName isEqualToString:SENT] && ![folderName isEqualToString:TRASH])
                           emailsTableViewController.navigationItem.title = ALL_FUNNL;
@@ -680,6 +653,7 @@ static NSString *currentFolder;
                       });
                       
                       dispatch_async(dispatch_get_main_queue(), ^(void){
+                          isfetchingOperationActive = NO;
                           AppDelegate *tempAppDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
                           [tempAppDelegate hideWelcomeOverlay:nil];
                           [fv.tableView reloadData];
@@ -761,6 +735,17 @@ static NSString *currentFolder;
 #pragma mark loadLatestMail
 - (void)loadLatestMail:(NSUInteger)nMessages withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName
 {
+    if(isfetchingOperationActive){
+        NSLog(@"=== øøøøøøøøøøø ==");
+        if(IS_AUTO_REFRESH_ENABLE){
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(startAutoRefresh) object:nil];
+            [self performSelector:@selector(startAutoRefresh) withObject:nil afterDelay:AUTOREFRESH_DELAY];
+        }
+        return;
+    }
+    else{
+        NSLog(@"√√√√√ sync");
+    }
     
     //	self.isLoading = YES;
     if(self.imapSession == nil)
