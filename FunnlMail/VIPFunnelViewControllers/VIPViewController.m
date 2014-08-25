@@ -22,13 +22,20 @@
     selectedContact = [[NSMutableArray alloc] init];
 	// Do any additional setup after loading the view, typically from a nib.
     [[self navigationController] setNavigationBarHidden:YES animated:YES];
-    [self.view setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.6]];
-    [self retrieveContact];
-    [self setUpView];
+//    [self.view setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.6]];
+    [self.view setBackgroundColor:[UIColor blackColor]];
+//    [self retrieveContact];
+//    [self setUpView];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    if (selectedContact) {
+        [selectedContact removeAllObjects];
+    }
+    [self.view setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.6]];
     [[self navigationController] setNavigationBarHidden:YES animated:YES];
+    [self retrieveContact];
+    [self setUpView];
 }
 
 #pragma mark -
@@ -232,6 +239,8 @@
     }
     else {
         VIPCreateFunnelViewController *viewControllerToBePushed = [[VIPCreateFunnelViewController alloc] initWithSelectedContactArray:selectedContact];
+//        [self.navigationController.view setBackgroundColor:[UIColor whiteColor]];
+//        [viewControllerToBePushed.view setBackgroundColor:[UIColor whiteColor]];
         [self.navigationController pushViewController:viewControllerToBePushed animated:YES];
     }
 }
@@ -246,6 +255,9 @@
 
 - (void)retrieveContact {
     NSArray *contactArray = [[ContactService instance] retrieveAllContact];
+    if (contactMutableArray) {
+        [contactMutableArray removeAllObjects];
+    }
     NSLog(@"number of contact ---> %d",contactArray.count);
     for (ContactModel *tempContact in contactArray) {
         if (tempContact.name && tempContact.email && ![tempContact.name isEqualToString:@""]) {

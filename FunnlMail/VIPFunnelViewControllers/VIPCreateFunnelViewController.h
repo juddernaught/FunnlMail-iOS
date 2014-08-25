@@ -19,6 +19,10 @@
     UITextField *funnelNameTextField;
     UITextField *subjectTextField;
     NSMutableArray *buttonArray;
+    BOOL advanceFlag;
+    int finalHeight;
+    UIView *containerView;
+    int innerY;
 }
 - (id)initWithSelectedContactArray:(NSMutableArray *)contactArray;
 @end

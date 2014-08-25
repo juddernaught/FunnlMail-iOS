@@ -13,6 +13,7 @@
 @interface VIPFunnelCreationConfirmationController : UIViewController
 {
     NSMutableArray *contactMutableArray;
+    NSMutableArray *buttonArray;
 }
 - (id)initWithContacts:(NSMutableArray*)contacts;
 @end

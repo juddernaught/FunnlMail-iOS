@@ -36,8 +36,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    advanceFlag = TRUE;
     buttonArray = [[NSMutableArray alloc] init];
-    [self.view setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.6]];
+//    [self.view setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.6]];
+    [self.view setBackgroundColor:[UIColor clearColor]];
     // Do any additional setup after loading the view.
     UIBarButtonItem *sampleBarButton = [[UIBarButtonItem alloc] init];
     [sampleBarButton setTitle:@"Cancel"];
@@ -53,6 +55,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+//    [self.view setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.6]];
     [[self navigationController] setNavigationBarHidden:YES animated:YES];
 }
 
@@ -60,7 +63,7 @@
 #pragma mark Helper
 - (void)setUpViewForCreatingFunnel {
     int y = 0;
-    mainScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, self.navigationController.navigationBar.frame.size.height + 22, WIDTH, HEIGHT - self.navigationController.navigationBar.frame.size.height)];
+    mainScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, self.navigationController.navigationBar.frame.size.height + 22, WIDTH, HEIGHT - self.navigationController.navigationBar.frame.size.height - 22)];
     [mainScrollView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.6]];
     
     UILabel *sampleLAbel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 125, 40)];
@@ -71,7 +74,13 @@
     sampleLAbel = nil;
     
     funnelNameTextField = [[UITextField alloc] initWithFrame:CGRectMake(125, 0, WIDTH - 125 - 10, 40)];
-    funnelNameTextField.text = @"VIP";
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"IS_VIP_CREATED"]) {
+        funnelNameTextField.text = @"VIP";
+    }
+    else {
+        funnelNameTextField.text = @"";
+    }
+    
     [funnelNameTextField setFont:[UIFont boldSystemFontOfSize:18]];
     [funnelNameTextField setTextColor:[UIColor whiteColor]];
     [funnelNameTextField setTextAlignment:NSTextAlignmentLeft];
@@ -240,36 +249,125 @@
     
     y = y + 1 + 10;
     
-    sampleLAbel = [[UILabel alloc] initWithFrame:CGRectMake(10, y, 300, 40)];
-    sampleLAbel.text = @"Subject (Optional):";
+    if (containerView) {
+        containerView = nil;
+    }
+    containerView = [[UIView alloc] initWithFrame:CGRectMake(0, y, WIDTH, 10)];
+    
+//    [containerView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.6]];
+    [containerView setBackgroundColor:[UIColor clearColor]];
+    
+    innerY = 0;
+    
+    sampleLAbel = [[UILabel alloc] initWithFrame:CGRectMake(10, innerY, 300, 40)];
+    sampleLAbel.text = @"ADVANCED";
     [sampleLAbel setTextColor:[UIColor whiteColor]];
     [sampleLAbel setBackgroundColor:[UIColor clearColor]];
-    [sampleLAbel setFont:[UIFont boldSystemFontOfSize:20]];
-    [mainScrollView addSubview:sampleLAbel];
+//    [sampleLAbel setFont:[UIFont boldSystemFontOfSize:20]];
+//    [mainScrollView addSubview:sampleLAbel];
+    [containerView addSubview:sampleLAbel];
     sampleLAbel = nil;
     
-    y = y + 40 + 10;
+    UIButton *sampleButton = [[UIButton alloc] initWithFrame:CGRectMake(0, innerY, WIDTH, 40)];
+    [sampleButton addTarget:self action:@selector(advanceButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+//    [mainScrollView addSubview:sampleButton];
+    [containerView addSubview:sampleButton];
+    sampleButton = nil;
     
-    sampleView = [[UIView alloc] initWithFrame:CGRectMake(10, y, 300, 1)];
+//    y = y + 40 + 10;
+    innerY = innerY + 40 + 10;
+    
+    sampleView = [[UIView alloc] initWithFrame:CGRectMake(0, innerY, WIDTH, 1)];
     [sampleView setBackgroundColor:[UIColor lightGrayColor]];
-    [mainScrollView addSubview:sampleView];
+//    [mainScrollView addSubview:sampleView];
+    [containerView addSubview:sampleView];
     sampleView = nil;
     
-    y = y + 1 + 20;
+//    y = y + 1 + 20;
+    innerY = innerY + 1 + 20;
     
-    subjectTextField = [[UITextField alloc] initWithFrame:CGRectMake(10, y, 300, 20)];
-    [subjectTextField setPlaceholder:@"Enter the subject"];
+    sampleLAbel = [[UILabel alloc] initWithFrame:CGRectMake(10, innerY, WIDTH - 20, 15)];
+    sampleLAbel.text = @"Include Subject Keywords:";
+    [sampleLAbel setTextColor:[UIColor whiteColor]];
+//    [mainScrollView addSubview:sampleLAbel];
+    [containerView addSubview:sampleLAbel];
+    sampleLAbel = nil;
+    
+//    y = y + 15 + 5;
+    innerY = innerY + 15 + 5;
+    
+    subjectTextField = [[UITextField alloc] initWithFrame:CGRectMake(10, innerY, 300, 20)];
+//    [subjectTextField setPlaceholder:@"Enter the subject"];
     subjectTextField.returnKeyType = UIReturnKeyDone;
     subjectTextField.delegate = self;
+    NSMutableAttributedString *tempString = [[NSMutableAttributedString alloc] initWithString:@"Enter the subject"];
+    [tempString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithHexString:@"FAFAFA"] range:NSMakeRange(0,@"Enter the subject".length)];
+    [subjectTextField setAttributedPlaceholder:tempString];
+    tempString = nil;
     [subjectTextField setTextColor:[UIColor whiteColor]];
-    [mainScrollView addSubview:subjectTextField];
+//    [mainScrollView addSubview:subjectTextField];
+    [containerView addSubview:subjectTextField];
+    
+//    y = y + 20;
+    innerY = innerY + 20;
+    
+    innerY = innerY + 5;
+    
+    sampleView = [[UIView alloc] initWithFrame:CGRectMake(10, innerY, WIDTH - 20, 1)];
+    [sampleView setBackgroundColor:[UIColor lightGrayColor]];
+    [containerView addSubview:sampleView];
+    sampleView = nil;
+    
+    innerY = innerY + 5;
+    
+    sampleLAbel = [[UILabel alloc] initWithFrame:CGRectMake(10, innerY, WIDTH - 20, 40)];
+    sampleLAbel.numberOfLines = 2;
+    [sampleLAbel setFont:[UIFont systemFontOfSize:14]];
+    [sampleLAbel setTextColor:[UIColor whiteColor]];
+    sampleLAbel.text = @"Only emails having subjects containing your keywords will be filtered into this Funnel";
+    [containerView addSubview:sampleLAbel];
+    sampleLAbel = nil;
+    
+    innerY = innerY + 40;
+    
+    innerY = innerY + 5;
+    
+    sampleView = [[UIView alloc] initWithFrame:CGRectMake(10, innerY, WIDTH - 20, 1)];
+    [sampleView setBackgroundColor:[UIColor lightGrayColor]];
+    [containerView addSubview:sampleView];
+    sampleView = nil;
+    
+    innerY = innerY + 5 + 10;
+    
+    sampleLAbel = [[UILabel alloc] initWithFrame:CGRectMake(10, innerY, 300, 40 - 10)];
+    [sampleLAbel setBackgroundColor:[UIColor clearColor]];
+    [sampleLAbel setTextColor:[UIColor whiteColor]];
+    sampleLAbel.text = @"Skip Primary Inbox";
+    [containerView addSubview:sampleLAbel];
+    sampleLAbel = nil;
+    
+    UISwitch *primarySkipSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(WIDTH - 10 - 50, innerY, 70, 40)];
+    [primarySkipSwitch setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+    [containerView addSubview:primarySkipSwitch];
+    primarySkipSwitch = nil;
+    
+    innerY = innerY + 40;
+    
+    containerView.frame = CGRectMake(0, y, WIDTH, innerY);
+    
+    [containerView setClipsToBounds:YES];
+    
+    [mainScrollView addSubview:containerView];
     
     [self.view addSubview:mainScrollView];
-    [mainScrollView setContentSize:CGSizeMake(WIDTH, y)];
+    [mainScrollView setContentSize:CGSizeMake(WIDTH, y + innerY)];
+    y = y + innerY;
+    finalHeight = y;
 }
 
 - (void)setUpCustomNavigationBar {
     UIView *naviGationBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, 66)];
+//    [naviGationBar setBackgroundColor:[UIColor clearColor]];
     [naviGationBar setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.6]];
     UIButton *sampleButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 22, 100, 44)];
     [sampleButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
@@ -279,12 +377,12 @@
     [naviGationBar addSubview:sampleButton];
     sampleButton = nil;
     
-    UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 0, 100, 40)];
+    UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 22, 100, 44)];
     [sampleLabel setTextAlignment:NSTextAlignmentCenter];
     sampleLabel.text = @"Create Funnl";
     [sampleLabel setTextColor:[UIColor whiteColor]];
     [sampleLabel setBackgroundColor:[UIColor clearColor]];
-    [mainScrollView addSubview:sampleLabel];
+    [naviGationBar addSubview:sampleLabel];
     sampleLabel = nil;
     
     sampleButton = [[UIButton alloc] initWithFrame:CGRectMake(WIDTH - 100 - 10, 22, 100, 44)];
@@ -338,6 +436,23 @@
 
 #pragma mark -
 #pragma mark Event Handler
+- (void)advanceButtonClicked:(UIButton*)sender {
+    if (advanceFlag) {
+        [UIView beginAnimations:nil context:nil];
+        [UIView setAnimationDuration:0.3];
+        containerView.frame = CGRectMake(0, containerView.frame.origin.y, containerView.frame.size.width, 50);
+        [UIView commitAnimations];
+        advanceFlag = FALSE;
+    }
+    else {
+        [UIView beginAnimations:nil context:nil];
+        [UIView setAnimationDuration:0.3];
+        containerView.frame = CGRectMake(0, containerView.frame.origin.y, containerView.frame.size.width, innerY);
+        [UIView commitAnimations];
+        advanceFlag = TRUE;
+    }
+}
+
 - (void)cancelButtonPressed:(UIButton*)sender {
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
     AppDelegate *tempAppDelegate = [[UIApplication sharedApplication] delegate];
@@ -347,13 +462,17 @@
 }
 
 - (void)saveButtonPressed:(UIButton*)sender {
-//    VIPFunnelCreationConfirmationController *viewController = [[VIPFunnelCreationConfirmationController alloc] initWithContacts:contactMutableArray];
-//    [self.navigationController pushViewController:viewController animated:YES];
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-    AppDelegate *tempAppDelegate = [[UIApplication sharedApplication] delegate];
-    if (IS_FUNNEL_POP_UP_ENABLE) {
-        [tempAppDelegate performSelector:@selector(loadVIPFunnelViewController) withObject:nil afterDelay:kVIP_FUNNEL_POP_UP_DISPLY_INTERVAL];
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"IS_VIP_CREATED"]) {
+        [[NSUserDefaults standardUserDefaults] setBool:TRUE forKey:@"IS_VIP_CREATED"];
     }
+    VIPFunnelCreationConfirmationController *viewController = [[VIPFunnelCreationConfirmationController alloc] initWithContacts:contactMutableArray];
+//    [viewController.view setBackgroundColor:[UIColor whiteColor]];
+    [self.navigationController pushViewController:viewController animated:YES];
+//    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+//    AppDelegate *tempAppDelegate = [[UIApplication sharedApplication] delegate];
+//    if (IS_FUNNEL_POP_UP_ENABLE) {
+//        [tempAppDelegate performSelector:@selector(loadVIPFunnelViewController) withObject:nil afterDelay:kVIP_FUNNEL_POP_UP_DISPLY_INTERVAL];
+//    }
 }
 
 - (void)didReceiveMemoryWarning
