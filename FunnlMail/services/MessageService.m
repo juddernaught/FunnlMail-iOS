@@ -170,14 +170,15 @@ static MessageService *instance;
         while ([resultSet next]) {
             if ([resultSet stringForColumn:@"messageBodyToBeRendered"]) {
                 previewBody = [resultSet stringForColumn:@"messageBodyToBeRendered"];
-                previewChanged = YES;
+                //previewChanged = YES;
             }
         }
     }];
-    if (previewChanged)
-        return previewBody;
-    else
-        return @"This message has no content.";
+    return previewBody;
+//    if (previewChanged)
+//        return previewBody;
+//    else
+//        return @"";
 }
 
 -(BOOL) updateMessageMetaInfo:(MessageModel *)messageModel{

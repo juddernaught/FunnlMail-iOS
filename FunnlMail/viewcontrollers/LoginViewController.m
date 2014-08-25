@@ -86,7 +86,8 @@ UIButton *loginButton;
             
             // Make the request.
             //[self makeAsyncRequest:request];
-            [self performSelector:@selector(makeRequest:) withObject:request afterDelay:0.1];
+            [self makeRequest:request];
+            //[self performSelector:@selector(makeRequest:) withObject:request afterDelay:0.1];
         }
     }
     else{
@@ -617,12 +618,12 @@ UIButton *loginButton;
     //[mainViewController view];
     [appDelegate.menuController view];
     
-    NSURL *url = [NSURL URLWithString:@"https://singular-hub-642.appspot.com"];
-    [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:url] queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-        NSString *respString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        NSArray *vipEmails = [respString componentsSeparatedByString:@"\n\n"];
-        NSLog(@"vipEmails %@",vipEmails);
-    }];
+//    NSURL *url = [NSURL URLWithString:@"https://singular-hub-642.appspot.com"];
+//    [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:url] queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+//        NSString *respString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+//        NSArray *vipEmails = [respString componentsSeparatedByString:@"\n\n"];
+//        NSLog(@"vipEmails %@",vipEmails);
+//    }];
     
 //    [self.navigationController presentViewController:appDelegate.drawerController animated:NO completion:nil];
 //    AppDelegate *tempAppDelegate = APPDELEGATE;
@@ -842,6 +843,7 @@ UIButton *loginButton;
             smtpSession.authType = MCOAuthTypeXOAuth2;
             smtpSession.connectionType = MCOConnectionTypeTLS;
             [EmailService instance].smtpSession = smtpSession;
+
             [[EmailService instance] startLogin:self.mainViewController.emailsTableViewController];
 
             

@@ -11,6 +11,8 @@
 #import <MessageUI/MessageUI.h>
 #import "UIColor+HexString.h"
 #import "MessageModel.h"
+#import "AppDelegate.h"
+
 @class MCOMessageView;
 @class MCOIMAPAsyncSession;
 @class MCOMAPMessage;
@@ -31,7 +33,7 @@
     int subjectHeight;
     int headerHeight;
     int webViewHeight;
-
+    AppDelegate *appDelegate;
 }
 
 @property (nonatomic, copy) NSString * folder;

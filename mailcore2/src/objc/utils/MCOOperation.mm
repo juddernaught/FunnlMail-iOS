@@ -95,7 +95,7 @@ MCO_OBJC_SYNTHESIZE_SCALAR(BOOL, bool, setShouldRunWhenCancelled, shouldRunWhenC
 
 - (void) start
 {
-    NSLog(@"-- operation stared...");
+    //NSLog(@"-- operation stared...");
     _started = YES;
     [self retain];
     _operation->start();
@@ -103,7 +103,7 @@ MCO_OBJC_SYNTHESIZE_SCALAR(BOOL, bool, setShouldRunWhenCancelled, shouldRunWhenC
 
 - (void) _operationCompleted
 {
-    NSLog(@"-- operation completed...");
+    //NSLog(@"-- operation completed...");
     _started = NO;
     [self operationCompleted];
     [self release];

@@ -215,8 +215,13 @@
     if(self.loginViewController){
         NSLog(@"-----Call Refresh Token -----");
         self.isAlreadyRequestedRefreshToken = NO;
-        if(!self.didLoginIn) self.didLoginIn = 0;
-        [self.loginViewController performSelector:@selector(refreshAccessToken) withObject:nil afterDelay:0.1];
+        if(!self.didLoginIn)
+            self.didLoginIn = 0;
+        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            [self.loginViewController refreshAccessToken];
+        });
+//        [self.loginViewController performSelector:@selector(refreshAccessToken) withObject:nil afterDelay:0.1];
+//        [self.loginViewController performSelectorInBackground:@selector(refreshAccessToken) withObject:nil];
     }
 }
 

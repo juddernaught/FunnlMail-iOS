@@ -130,7 +130,10 @@ static NSString *currentFolder;
             
         }
     }
-    [fv.tableView reloadData];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [fv.tableView reloadData];
+    });
 
 	
     NSLog(@"checking account");
@@ -1029,7 +1032,7 @@ static NSString *currentFolder;
 
 
 +(void)addInitialFilter{
-    defaultFilter = [[FunnelModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#2EB82E"] filterTitle:ALL_FUNNL newMessageCount:16 dateOfLastMessage:[NSDate new]];
+    defaultFilter = [[FunnelModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#F9F9F9"] filterTitle:ALL_FUNNL newMessageCount:16 dateOfLastMessage:[NSDate new]];
     [filterArray addObject:defaultFilter];
 }
 

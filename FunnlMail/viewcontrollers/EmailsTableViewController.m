@@ -212,7 +212,7 @@ UIView *greyView;
     [activityIndicator startAnimating];
     [filterLabel addSubview:activityIndicator];
     filterLabel.textColor = [UIColor whiteColor];
-    filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#2EB82E"]);
+    filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#F9F9F9"]);
     filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : ALL_FUNNL);
     filterLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:filterLabel];
@@ -283,7 +283,7 @@ UIView *greyView;
     }
     
     if(filterLabel!=nil){
-        filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#2EB82E"]);
+        filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#F9F9F9"]);
         filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : ALL_FUNNL);
         if([EmailService instance].filterMessages.count == 0){
             NSLog(@"Call to loadLastNMessages from setFilterModel function");
@@ -445,7 +445,7 @@ UIView *greyView;
                 
                 NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
                 NSString *cachedPreview = [[MessageService instance] retrievePreviewContentWithID:uidKey];
-                if (![cachedPreview isEqualToString:@"empty"]) {
+                if ( cachedPreview != nil && ![cachedPreview isEqualToString:@""]) {
                     cell.bodyLabel.text = cachedPreview;
                 }
                 else{
@@ -489,13 +489,13 @@ UIView *greyView;
 //                cell.revealDirection = RDSwipeableTableViewCellRevealDirectionRight | RDSwipeableTableViewCellRevealDirectionLeft;
                 
                 UIView *archiveView = [self viewWithImageName:@"swipeArchive"];
-                UIColor *yellowColor = [UIColor colorWithHexString:@"#F8CB0A"];
+                UIColor *yellowColor = [UIColor colorWithHexString:@"#FD814A"];
 
                 UIView *trashView = [self viewWithImageName:@"swipeTrash"];
-                UIColor *redColor = [UIColor colorWithHexString:@"#E03D13"];
+                UIColor *redColor = [UIColor colorWithHexString:@"#FD4747"];
 
                 UIView *fullFunnlView = [self viewWithImageName:@"swipeFunnl"];
-                UIColor *fullFunnlColor = [UIColor colorWithHexString:@"#92F190"];
+                UIColor *fullFunnlColor = [UIColor colorWithHexString:@"#57DB7F"];
                 
                 
                 [cell setSwipeGestureWithView:archiveView color:yellowColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
@@ -1215,7 +1215,7 @@ UIView *greyView;
     else
         imageView.frame = CGRectMake(30, 0, 80, 80);
     [imageView setImage:image];
-    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    imageView.contentMode = UIViewContentModeCenter;
     [imageView setBackgroundColor:[UIColor clearColor]];
     return imageView;
 }

@@ -78,7 +78,7 @@
         [self.view addSubview:CoverView];
         offset = CoverView.bounds.size.height;
     }
-    
+    appDelegate = APPDELEGATE;
 
     _messageView = [[MCOMessageView alloc] initWithFrame:CGRectMake(0, 64, WIDTH, HEIGHT- 64)];
     //_messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -91,23 +91,38 @@
         [_messageView setDelegate:self];
         [_messageView setFolder:_folder];
         [_messageView setMessage:_message];
+   
+        if(appDelegate.internetAvailable == NO){
+            if(_messageView.activityIndicator)
+                [_messageView.activityIndicator removeFromSuperview];
+            [_messageView.webView loadHTMLString:@"Internet not available" baseURL:nil];
+        }
+        
     }
     else {
         [_messageView setMessage:NULL];
-        MCOIMAPFetchContentOperation * op = [_session fetchMessageByUIDOperationWithFolder:_folder uid:[_message uid] urgent:YES];
-        [_ops addObject:op];
-        [op start:^(NSError * error, NSData * data) {
-            if ([error code] != MCOErrorNone) {
-                return;
-            }
-            
-            NSAssert(data != nil, @"data != nil");
-            
-            MCOMessageParser * msg = [MCOMessageParser messageParserWithData:data];
-            [_messageView setDelegate:self];
-            [_messageView setFolder:_folder];
-            [_messageView setMessage:msg];
-        }];
+        
+        if(appDelegate.internetAvailable){
+            MCOIMAPFetchContentOperation * op = [_session fetchMessageByUIDOperationWithFolder:_folder uid:[_message uid] urgent:YES];
+            [_ops addObject:op];
+            [op start:^(NSError * error, NSData * data) {
+                if ([error code] != MCOErrorNone) {
+                    return;
+                }
+                
+                NSAssert(data != nil, @"data != nil");
+                
+                MCOMessageParser * msg = [MCOMessageParser messageParserWithData:data];
+                [_messageView setDelegate:self];
+                [_messageView setFolder:_folder];
+                [_messageView setMessage:msg];
+            }];
+        }
+        else{
+            if(_messageView.activityIndicator)
+                [_messageView.activityIndicator removeFromSuperview];
+            [_messageView.webView loadHTMLString:@"Internet not available" baseURL:nil];
+        }
     }
     
     //---New changes
@@ -121,24 +136,24 @@
     UIButton *forwardButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [replyButton addTarget:self action:@selector(replyButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    replyButton.frame = CGRectMake(51, 0, 42, 42);
+    replyButton.frame = CGRectMake(51, 6, 40, 35);
     [replyButton setImage:[UIImage imageNamed:@"emailDetailViewReply.png"] forState:UIControlStateNormal];
-    [replyButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentCenter];
-    [replyButton setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
+//    [replyButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentCenter];
+//    [replyButton setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
     [centeredButtons addSubview:replyButton];
     
     [replyAllButton addTarget:self action:@selector(replyAllButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    replyAllButton.frame = CGRectMake(140, 0, 42, 42);
+    replyAllButton.frame = CGRectMake(140, 6, 40, 35);
     [replyAllButton setImage:[UIImage imageNamed:@"emailDetailViewReplyAll.png"] forState:UIControlStateNormal];
-    [replyAllButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentCenter];
-    [replyAllButton setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
+//    [replyAllButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentCenter];
+//    [replyAllButton setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
     [centeredButtons addSubview:replyAllButton];
     
     [forwardButton addTarget:self action:@selector(forwardButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    forwardButton.frame = CGRectMake(WIDTH - 42 - 51, 0, 42, 42);
+    forwardButton.frame = CGRectMake(WIDTH - 42 - 51, 6, 35, 35);
     [forwardButton setImage:[UIImage imageNamed:@"emailDetailViewForward.png"] forState:UIControlStateNormal];
-    [forwardButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentCenter];
-    [forwardButton setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
+//    [forwardButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentCenter];
+//    [forwardButton setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
     [centeredButtons addSubview:forwardButton];
     
     UIView *topBorder = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,1)];
@@ -256,11 +271,14 @@
     UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"backArrow.png"] style:UIBarButtonItemStylePlain target:self action:@selector(back)];
     [self.navigationItem setLeftBarButtonItem:leftButton];
 
+    UIBarButtonItem *fixedSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    fixedSpace.width = 4;
+
     UIBarButtonItem *funnelButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"emailDetailViewFunnel.png"] style:UIBarButtonItemStylePlain target:self action:@selector(createFunnl:)];
     UIBarButtonItem *archiveButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"emailDetailViewArchive.png"] style:UIBarButtonItemStylePlain target:self action:@selector(archiveMail:)];
     UIBarButtonItem *emailButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"emailDetailViewMail.png"] style:UIBarButtonItemStylePlain target:self action:@selector(unreadMail:)];
     UIBarButtonItem *deleteButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"emailDetailViewTrash.png"] style:UIBarButtonItemStylePlain target:self action:@selector(deleteMail:)];
-    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:deleteButton, archiveButton, emailButton, funnelButton, nil]];
+    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:fixedSpace, deleteButton,fixedSpace, archiveButton,fixedSpace, emailButton,fixedSpace, funnelButton,fixedSpace, nil]];
     //---end of new changes
 }
 
@@ -292,30 +310,32 @@
     if ([_pending containsObject:partUniqueID]) {
         return nil;
     }
-    
-    MCOIMAPPart * part = (MCOIMAPPart *) [_message partForUniqueID:partUniqueID];
-    NSAssert(part != nil, @"part != nil");
-    
-    [_pending addObject:partUniqueID];
-    
-    MCOIMAPFetchContentOperation * op = [_session fetchMessageAttachmentByUIDOperationWithFolder:folder uid:[_message uid] partID:[part partID] encoding:[part encoding] urgent:YES];
-    [_ops addObject:op];
-    [op start:^(NSError * error, NSData * data) {
-        if ([error code] != MCOErrorNone) {
-            [self _callbackForPartUniqueID:partUniqueID error:error];
-            return;
-        }
+    if(appDelegate.internetAvailable){
+
+        MCOIMAPPart * part = (MCOIMAPPart *) [_message partForUniqueID:partUniqueID];
+        NSAssert(part != nil, @"part != nil");
         
-        NSAssert(data != NULL, @"data != nil");
-        [_ops removeObject:op];
-        [_storage setObject:data forKey:partUniqueID];
-        [_pending removeObject:partUniqueID];
-        MCLog("downloaded %s", partUniqueID.description.UTF8String);
+        [_pending addObject:partUniqueID];
         
-        [self _callbackForPartUniqueID:partUniqueID error:nil];
-    }];
-    
-    return op;
+        MCOIMAPFetchContentOperation * op = [_session fetchMessageAttachmentByUIDOperationWithFolder:folder uid:[_message uid] partID:[part partID] encoding:[part encoding] urgent:YES];
+        [_ops addObject:op];
+        [op start:^(NSError * error, NSData * data) {
+            if ([error code] != MCOErrorNone) {
+                [self _callbackForPartUniqueID:partUniqueID error:error];
+                return;
+            }
+            
+            NSAssert(data != NULL, @"data != nil");
+            [_ops removeObject:op];
+            [_storage setObject:data forKey:partUniqueID];
+            [_pending removeObject:partUniqueID];
+            MCLog("downloaded %s", partUniqueID.description.UTF8String);
+            
+            [self _callbackForPartUniqueID:partUniqueID error:nil];
+        }];
+        return op;
+    }
+    return nil;
 }
 
 typedef void (^DownloadCallback)(NSError * error);
@@ -402,21 +422,25 @@ typedef void (^DownloadCallback)(NSError * error);
 - (void) MCOMessageView:(MCOMessageView *)view fetchDataForPartWithUniqueID:(NSString *)partUniqueID
      downloadedFinished:(void (^)(NSError * error))downloadFinished
 {
-    MCOIMAPFetchContentOperation * op = [self _fetchIMAPPartWithUniqueID:partUniqueID folder:_folder];
-    [op setProgress:^(unsigned int current, unsigned int maximum) {
-        MCLog("progress content: %u/%u", current, maximum);
-    }];
-    if (op != nil) {
-        [_ops addObject:op];
-    }
-    if (downloadFinished != NULL) {
-        NSMutableArray * blocks;
-        blocks = [_callbacks objectForKey:partUniqueID];
-        if (blocks == nil) {
-            blocks = [NSMutableArray array];
-            [_callbacks setObject:blocks forKey:partUniqueID];
+    
+    if(appDelegate.internetAvailable){
+
+        MCOIMAPFetchContentOperation * op = [self _fetchIMAPPartWithUniqueID:partUniqueID folder:_folder];
+        [op setProgress:^(unsigned int current, unsigned int maximum) {
+            MCLog("progress content: %u/%u", current, maximum);
+        }];
+        if (op != nil) {
+            [_ops addObject:op];
         }
-        [blocks addObject:[downloadFinished copy]];
+        if (downloadFinished != NULL) {
+            NSMutableArray * blocks;
+            blocks = [_callbacks objectForKey:partUniqueID];
+            if (blocks == nil) {
+                blocks = [NSMutableArray array];
+                [_callbacks setObject:blocks forKey:partUniqueID];
+            }
+            [blocks addObject:[downloadFinished copy]];
+        }
     }
     //[self updateWebView];
 }
@@ -522,7 +546,7 @@ typedef void (^DownloadCallback)(NSError * error);
                 NSString *colorString = [randomColors objectAtIndex:gradientInt];
                 UIColor *color = [UIColor colorWithHexString:colorString];
                 if(color == nil){
-                    color = [UIColor colorWithHexString:@"#2EB82E"];
+                    color = [UIColor colorWithHexString:@"#F9F9F9"];
                 }
                 FunnelModel *funnlModel = [[FunnelModel alloc] initWithBarColor:color filterTitle:name newMessageCount:0 dateOfLastMessage:nil sendersArray:sendersArray subjectsArray:subjectsArray skipAllFlag:NO funnelColor:colorString];
                 [self performSelector:@selector(createFunnlFromShareLink:) withObject:funnlModel afterDelay:0.01];

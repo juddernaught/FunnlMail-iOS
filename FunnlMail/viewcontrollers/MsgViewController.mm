@@ -569,7 +569,7 @@ typedef void (^DownloadCallback)(NSError * error);
                 NSString *colorString = [randomColors objectAtIndex:gradientInt];
                 UIColor *color = [UIColor colorWithHexString:colorString];
                 if(color == nil){
-                    color = [UIColor colorWithHexString:@"#2EB82E"];
+                    color = [UIColor colorWithHexString:@"#F9F9F9"];
                 }
                 FunnelModel *funnlModel = [[FunnelModel alloc] initWithBarColor:color filterTitle:name newMessageCount:0 dateOfLastMessage:nil sendersArray:sendersArray subjectsArray:subjectsArray skipAllFlag:NO funnelColor:colorString];
                 [self performSelector:@selector(createFunnlFromShareLink:) withObject:funnlModel afterDelay:0.01];

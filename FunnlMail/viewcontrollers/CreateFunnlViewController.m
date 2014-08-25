@@ -906,7 +906,7 @@ NSMutableArray *emailArr,*searchArray;
     
     unsigned long temp = [[FunnelService instance] allFunnels].count%8;
     //NSInteger gradientInt = arc4random_uniform((uint32_t)randomColors.count);
-    NSString *colorString = @"#2EB82E";
+    NSString *colorString = @"#F9F9F9";
     UIColor *color = [UIColor colorWithHexString:colorString];
     if(isEdit){
         color = oldModel.barColor;
@@ -916,7 +916,7 @@ NSMutableArray *emailArr,*searchArray;
         colorString = [randomColors objectAtIndex:temp];
         UIColor *color = [UIColor colorWithHexString:colorString];
         if(color == nil){
-            color = [UIColor colorWithHexString:@"#2EB82E"];
+            color = [UIColor colorWithHexString:@"#F9F9F9"];
         }
     }
     FunnelModel *model;

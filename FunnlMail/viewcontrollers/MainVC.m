@@ -120,18 +120,18 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [_activityIndicator startAnimating];
     [filterLabel addSubview:_activityIndicator];
     filterLabel.textColor = [UIColor whiteColor];
-    filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#2EB82E"]);
+    filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#F9F9F9"]);
     filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle: ALL_FUNNL);
     filterLabel.textAlignment = NSTextAlignmentCenter;
   
     UIButton *menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [menuButton addTarget:self action:@selector(menuButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    menuButton.frame = CGRectMake(0, 0, 33, 28);
+    menuButton.frame = CGRectMake(0, 0, 18, 13);
     [menuButton setBackgroundImage:[UIImage imageNamed:@"menuIcon.png"] forState:UIControlStateNormal];
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
     self.navigationItem.leftBarButtonItem = leftItem;
     
-    UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 99, 28)];
+    UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, 30, 60, 28)];
     //centeredButtons.backgroundColor = [UIColor orangeColor];
     UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:centeredButtons];
     self.navigationItem.rightBarButtonItem = rightItem;
@@ -139,19 +139,14 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     //UIButton *mailButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIButton *filterButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIButton *composeEmailButton = [UIButton buttonWithType:UIButtonTypeCustom];
-  
-    /*[mailButton addTarget:self action:@selector(mailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    mailButton.frame = CGRectMake(0, 0, 33, 28);
-    [mailButton setBackgroundImage:[UIImage imageNamed:@"mail.png"] forState:UIControlStateNormal];
-    [centeredButtons addSubview:mailButton];*/
-  
+    
     [filterButton addTarget:self action:@selector(filterButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    filterButton.frame = CGRectMake(15, 0, 32, 29);
+    filterButton.frame = CGRectMake(3, 6, 18, 18);
     [filterButton setImage:[UIImage imageNamed:@"funnlIcon.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:filterButton];
     
     [composeEmailButton addTarget:self action:@selector(composeEmailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    composeEmailButton.frame = CGRectMake(65, -5, 32, 32);
+    composeEmailButton.frame = CGRectMake(40, 6, 18, 18);
     [composeEmailButton setImage:[UIImage imageNamed:@"composeIcon.png"] forState:UIControlStateNormal];
     [centeredButtons addSubview:composeEmailButton];
     

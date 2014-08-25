@@ -56,7 +56,7 @@
 #define CLIENT_SECRET @"the-client-secret"
 #define KEYCHAIN_ITEM_NAME @"MailCore OAuth 2.0 Token"
 
-#define GRADIENT_ARRAY [NSArray arrayWithObjects:@"#8E8E93",@"#007AFF",@"#FF3B30",@"#4CD964",@"#FFCC00",@"5AC8E1",@"FF2D55",@"FF9500",nil];
+#define GRADIENT_ARRAY [NSArray arrayWithObjects:@"#A1A1AC",@"#46EEA5",@"#B48FD3",@"#598FC8",@"#FF605D",@"#48D4D1",@"#FDDC74",@"#82D9F9",@"#FF8194",@"#FF815E",nil];
 #define DONE_BUTTON_BLUE_COLOR @"3878DE"
 #define UNDO_BUTTON_RED_COLOR @"C5000D"
 

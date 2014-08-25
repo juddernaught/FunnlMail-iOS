@@ -227,7 +227,7 @@
         [[EmailService instance] clearData];
         
         
-        FunnelModel *defaultFilter = [[FunnelModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#2EB82E"] filterTitle:ALL_FUNNL newMessageCount:0 dateOfLastMessage:[NSDate new]];
+        FunnelModel *defaultFilter = [[FunnelModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#F9F9F9"] filterTitle:ALL_FUNNL newMessageCount:0 dateOfLastMessage:[NSDate new]];
         defaultFilter.funnelName = ALL_FUNNL;
         defaultFilter.funnelId = @"0";
         defaultFilter.emailAddresses = @"";
@@ -236,7 +236,7 @@
         [[FunnelService instance] insertFunnel:defaultFilter];
         defaultFilter = nil;
         
-        FunnelModel *otherFilter = [[FunnelModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#4986E7"] filterTitle:ALL_OTHER_FUNNL newMessageCount:0 dateOfLastMessage:[NSDate new]];
+        FunnelModel *otherFilter = [[FunnelModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#F9F9F9"] filterTitle:ALL_OTHER_FUNNL newMessageCount:0 dateOfLastMessage:[NSDate new]];
         otherFilter.funnelName = ALL_OTHER_FUNNL;
         otherFilter.funnelId = @"1";
         otherFilter.emailAddresses = @"";
