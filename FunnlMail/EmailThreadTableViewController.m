@@ -101,8 +101,6 @@ static NSString *mailCellIdentifier = @"MailCell";
     }else{
         cell.readLabel.hidden = NO;
         cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
-        
-
     }
     cell.delegate = self;
     [cell.detailDiscloser setHidden:NO];
@@ -156,7 +154,7 @@ static NSString *mailCellIdentifier = @"MailCell";
     }
     
     UIView *fullFunnlView = [self viewWithImageName:@"swipeFunnl"];
-    UIColor *fullFunnlColor = [UIColor colorWithHexString:@"#92F190"];
+    UIColor *fullFunnlColor = [UIColor colorWithHexString:@"#57DB7F"];
     
     [cell setSwipeGestureWithView:fullFunnlView color:fullFunnlColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
         NSLog(@"Did swipe full cell, ");
@@ -228,7 +226,7 @@ static NSString *mailCellIdentifier = @"MailCell";
     else
         imageView.frame = CGRectMake(30, 0, 80, 80);
     [imageView setImage:image];
-    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    imageView.contentMode = UIViewContentModeCenter;
     [imageView setBackgroundColor:[UIColor clearColor]];
     return imageView;
 }
