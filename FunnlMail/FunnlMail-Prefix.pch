@@ -37,7 +37,7 @@
 
 #define SHOW_PRIMARY_INBOX 1
 #define IS_AUTO_REFRESH_ENABLE 1
-#define AUTOREFRESH_DELAY 30
+#define AUTOREFRESH_DELAY 10
 #define PRIMARY_CATEGORY_NAME @"CATEGORY_PERSONAL"
 
 #define ALPHA_FOR_TOST 0.7
@@ -74,22 +74,22 @@
 
 #define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000)>>16))/255.0 green:((float)((rgbValue & 0xFF00)>> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
-#define BOLD_FONT_XXL   [UIFont fontWithName:@"Helvetica-Bold" size:60]
-#define BOLD_FONT_H0    [UIFont fontWithName:@"Helvetica-Bold" size:28]
-#define BOLD_FONT_H1    [UIFont fontWithName:@"Helvetica-Bold" size:22]
-#define BOLD_FONT_H2    [UIFont fontWithName:@"Helvetica-Bold" size:18]
-#define BOLD_FONT_H3    [UIFont fontWithName:@"Helvetica-Bold" size:16]
-#define BOLD_FONT_H4    [UIFont fontWithName:@"Helvetica-Bold" size:14]
-#define BOLD_FONT_H5    [UIFont fontWithName:@"Helvetica-Bold" size:12]
-#define NORMAL_FONT_S2   [UIFont fontWithName:@"Helvetica-Regular" size:8]
-#define NORMAL_FONT_S   [UIFont fontWithName:@"Helvetica-Regular" size:14]
-#define NORMAL_FONT_M   [UIFont fontWithName:@"Helvetica-Regular" size:18]
-#define NORMAL_FONT_M2   [UIFont fontWithName:@"Helvetica-Regular" size:16]
-#define NORMAL_FONT_L   [UIFont fontWithName:@"Helvetica-Regular" size:20]
-#define NORMAL_FONT_L2   [UIFont fontWithName:@"Helvetica-Regular" size:22]
-#define NORMAL_FONT_L3   [UIFont fontWithName:@"Helvetica-Regular" size:24]
-#define NORMAL_FONT_XL   [UIFont fontWithName:@"Helvetica-Regular" size:26]
-#define NORMAL_FONT_XXL   [UIFont fontWithName:@"Helvetica-Regular" size:30]
+#define BOLD_FONT_XXL   [UIFont fontWithName:@"HelveticaNeue-Bold" size:60]
+#define BOLD_FONT_H0    [UIFont fontWithName:@"HelveticaNeue-Bold" size:28]
+#define BOLD_FONT_H1    [UIFont fontWithName:@"HelveticaNeue-Bold" size:22]
+#define BOLD_FONT_H2    [UIFont fontWithName:@"HelveticaNeue-Bold" size:18]
+#define BOLD_FONT_H3    [UIFont fontWithName:@"HelveticaNeue-Bold" size:16]
+#define BOLD_FONT_H4    [UIFont fontWithName:@"HelveticaNeue-Bold" size:14]
+#define BOLD_FONT_H5    [UIFont fontWithName:@"HelveticaNeue-Bold" size:12]
+#define NORMAL_FONT_S2   [UIFont fontWithName:@"HelveticaNeue-Regular" size:8]
+#define NORMAL_FONT_S   [UIFont fontWithName:@"HelveticaNeue-Regular" size:14]
+#define NORMAL_FONT_M   [UIFont fontWithName:@"HelveticaNeue-Regular" size:18]
+#define NORMAL_FONT_M2   [UIFont fontWithName:@"HelveticaNeue-Regular" size:16]
+#define NORMAL_FONT_L   [UIFont fontWithName:@"HelveticaNeue-Regular" size:20]
+#define NORMAL_FONT_L2   [UIFont fontWithName:@"HelveticaNeue-Regular" size:22]
+#define NORMAL_FONT_L3   [UIFont fontWithName:@"HelveticaNeue-Regular" size:24]
+#define NORMAL_FONT_XL   [UIFont fontWithName:@"HelveticaNeue-Regular" size:26]
+#define NORMAL_FONT_XXL   [UIFont fontWithName:@"HelveticaNeue-Regular" size:30]
 
 #define WHITE_CLR [UIColor whiteColor]
 #define BLACK_CLR [UIColor blackColor]

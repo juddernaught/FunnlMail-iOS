@@ -71,15 +71,17 @@ static NSString *currentFolder;
 	NSString *password = [keychainItem objectForKey:(__bridge id)(kSecAttrService)];
 	NSString *hostname = @"imap.gmail.com";
     emailsTableViewController = fv;
-	[self loadAccountWithUsername:username password:password hostname:hostname oauth2Token:nil filterview: fv];
+    [self loadAccountWithUsername:username password:password hostname:hostname oauth2Token:nil filterview: fv withBackgroundActivity:NO];
 }
 
 - (void)loadAccountWithUsername:(NSString *)username
                        password:(NSString *)password
                        hostname:(NSString *)hostname
                     oauth2Token:(NSString *)oauth2Token
-                     filterview:(EmailsTableViewController *) fv
+                     filterview:(EmailsTableViewController *) fv withBackgroundActivity:(BOOL)isBackground
 {
+    NSLog(@"***************** In loadAccountWithUsername ***************** ");
+
 	//self.imapSession = [[MCOIMAPSession alloc] init];
 	self.imapSession.hostname = hostname;
 	self.imapSession.port = 993;
@@ -573,7 +575,7 @@ static NSString *currentFolder;
 
                       
                       //[self performSelector:@selector(applyingFilters:) withObject:tempArray];
-                      //[self applyingFilters:tempArray];
+                      [self applyingFilters:tempArray];
                       self.filterMessages = (NSMutableArray*)tempArray;
                       if(![folderName isEqualToString:SENT] && ![folderName isEqualToString:TRASH])
                           emailsTableViewController.navigationItem.title = ALL_FUNNL;

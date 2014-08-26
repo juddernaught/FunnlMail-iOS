@@ -126,12 +126,12 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
   
     UIButton *menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [menuButton addTarget:self action:@selector(menuButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    menuButton.frame = CGRectMake(0, 0, 18, 13);
-    [menuButton setBackgroundImage:[UIImage imageNamed:@"menuIcon.png"] forState:UIControlStateNormal];
+    menuButton.frame = CGRectMake(0, 0, 20, 15);
+    [menuButton setImage:[UIImage imageNamed:@"menuIcon.png"] forState:UIControlStateNormal];
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
     self.navigationItem.leftBarButtonItem = leftItem;
     
-    UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, 30, 60, 28)];
+    UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 70, 44)];
     //centeredButtons.backgroundColor = [UIColor orangeColor];
     UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:centeredButtons];
     self.navigationItem.rightBarButtonItem = rightItem;
@@ -141,13 +141,15 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     UIButton *composeEmailButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [filterButton addTarget:self action:@selector(filterButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    filterButton.frame = CGRectMake(3, 4, 18, 18);
+    filterButton.frame = CGRectMake(0, 4, 40, 40);
     [filterButton setImage:[UIImage imageNamed:@"funnlIcon.png"] forState:UIControlStateNormal];
+    [filterButton setContentMode:UIViewContentModeCenter];
     [centeredButtons addSubview:filterButton];
     
     [composeEmailButton addTarget:self action:@selector(composeEmailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    composeEmailButton.frame = CGRectMake(40, 4, 18, 18);
+    composeEmailButton.frame = CGRectMake(40, 0, 40, 40);
     [composeEmailButton setImage:[UIImage imageNamed:@"composeIcon.png"] forState:UIControlStateNormal];
+    [composeEmailButton setContentMode:UIViewContentModeCenter];
     [centeredButtons addSubview:composeEmailButton];
     
     emailsTableViewController.emailFolder = INBOX;
@@ -161,7 +163,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
         make.right.equalTo(self.view.mas_right).with.offset(0);
         make.bottom.equalTo(self.view.mas_bottom).with.offset(0);
     }];
-    [[EmailService instance] startLogin:emailsTableViewController];
+    //[[EmailService instance] startLogin:emailsTableViewController];
 }
 
 

@@ -85,8 +85,8 @@ UIButton *loginButton;
             [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
             
             // Make the request.
-            //[self makeAsyncRequest:request];
-            [self makeRequest:request];
+            [self makeAsyncRequest:request];
+            //[self makeRequest:request];
             //[self performSelector:@selector(makeRequest:) withObject:request afterDelay:0.1];
         }
     }
@@ -116,6 +116,16 @@ UIButton *loginButton;
     blockerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
     blockerView.backgroundColor = [UIColor redColor];
     [self checkCredentialsandShowLoginScreen];
+    
+    AppDelegate *appDelegate = APPDELEGATE;
+    mainViewController = [[MainVC alloc] init];
+    UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:mainViewController];
+    appDelegate.menuController = [[MenuViewController alloc] init];
+    appDelegate.drawerController = [[MMDrawerController alloc] initWithCenterViewController:nav leftDrawerViewController:appDelegate.menuController];
+    [appDelegate.drawerController setRestorationIdentifier:@"MMDrawer"];
+    [appDelegate.drawerController setMaximumLeftDrawerWidth:250.0];
+    [appDelegate.drawerController setOpenDrawerGestureModeMask:MMOpenDrawerGestureModeAll];
+    [appDelegate.drawerController setCloseDrawerGestureModeMask:MMCloseDrawerGestureModeAll];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -159,6 +169,8 @@ UIButton *loginButton;
 
 -(void) checkCredentialsandShowLoginScreen
 {
+    
+    NSLog(@"--checkCredentialsandShowLoginScreen--");
     NSArray *allServers = [[EmailServersService instance] allEmailServers];
     if (!([allServers count] == 0 || [((EmailServerModel *)[allServers objectAtIndex:0]).refreshToken isEqualToString:@"nil"])) {
         AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -252,7 +264,7 @@ UIButton *loginButton;
         [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"MODSEQ"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         [[EmailService instance] clearData];
-        
+        [EmailService instance].userEmailID = @"";
         
         NSString * email = [auth userEmail];
         NSString * accessToken = [auth accessToken];
@@ -326,8 +338,7 @@ UIButton *loginButton;
             [appDelegate.contextIOAPIClient saveCredentials];
             
             //fetching contacts
-            [self performSelector:@selector(getUserContact) withObject:nil afterDelay:0.1];
-            //[self performSelectorInBackground:@selector(getUserContact) withObject:nil];
+            //[self performSelector:@selector(getUserContact) withObject:nil afterDelay:0.1];
             //[self addToSourceWithAccountID:contextIO_account_id];
             [self performSelector:@selector(addToSourceWithAccountID:) withObject:contextIO_account_id afterDelay:0.01];
             
@@ -525,7 +536,11 @@ UIButton *loginButton;
                 }];
             }
             NSLog(@"what is currntNam: %@",[EmailService instance].currentName);
-            [self performSelector:@selector(getUserContact) withObject:nil afterDelay:0.1];
+            
+            NSArray *array = [[ContactService instance] getAllContacts];
+            if(array.count == 0){
+                [self performSelector:@selector(getUserContact) withObject:nil afterDelay:0.1];
+            }
             //[self performSelectorInBackground:@selector(getUserContact) withObject:nil];
 
             [[NSUserDefaults standardUserDefaults] synchronize];
@@ -552,7 +567,7 @@ UIButton *loginButton;
     NSString *newAPIStr = @"";
 
     if(nextPage.length){
-        newAPIStr = [NSString stringWithFormat:@"https://www.googleapis.com/gmail/v1/users/%@/messages?pageToken=%@&labelIds=CATEGORY_PERSONAL&maxResults=%d",emailStr,nextPage,maxResult];
+        newAPIStr = [NSString stringWithFormat:@"https://www.googleapis.com/gmail/v1/users/%@/messages?fields=messages(id,labelIds,threadId),nextPageToken&pageToken=%@&labelIds=CATEGORY_PERSONAL&maxResults=%d",emailStr,nextPage,maxResult];
     }
     else{
         newAPIStr = [NSString stringWithFormat:@"https://www.googleapis.com/gmail/v1/users/%@/messages?fields=messages(id,labelIds,threadId),nextPageToken&labelIds=CATEGORY_PERSONAL&maxResults=%d",emailStr,maxResult];
@@ -569,54 +584,57 @@ UIButton *loginButton;
     [myFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error) {
         if (error != nil) {
             // status code or network error
-            //NSLog(@"--Message info error %@: ", [error description]);
+            NSLog(@"--Message info error %@: ", [error description]);
         } else {
             // succeeded
-//            NSString* newStr = [[NSString alloc] initWithData:retrievedData encoding:NSUTF8StringEncoding];
-//            NSLog(@"Message Info: %@",newStr);
+            NSString* newStr = [[NSString alloc] initWithData:retrievedData encoding:NSUTF8StringEncoding];
             NSDictionary* json = [NSJSONSerialization JSONObjectWithData:retrievedData options:kNilOptions error:&error];
             NSArray* messageArray =[json objectForKey:@"messages"];
             NSString *nextPageToken = [json objectForKey:@"nextPageToken"];
             for (NSDictionary *dictionary in messageArray) {
                 [[EmailService instance].primaryMessages addObject:[dictionary objectForKey:@"id"]];
             }
-            
+            NSLog(@"Message Info Count:%d      nextPageToken: %@    Total Count:%d",messageArray.count,nextPageToken,[[EmailService instance].primaryMessages count]);
+
             NSMutableArray *pArray = [[EmailService instance] primaryMessages];
             [[NSUserDefaults standardUserDefaults] setObject:pArray forKey: ALL_FUNNL];
             [[NSUserDefaults standardUserDefaults] setObject:nextPageToken forKey:@"PRIMARY_PAGE_TOKEN"];
             [[NSUserDefaults standardUserDefaults] synchronize];
             
-            if([EmailService instance].primaryMessages.count < 5000)
-                [self getPrimaryMessages:emailStr nextPageToken:nextPageToken numberOfMaxResult:100];
-            else
-                NSLog(@"----- Primary messages count > %d",pArray.count);
+            if([[EmailService instance] userEmailID].length > 0){
+                if([EmailService instance].primaryMessages.count < 5000 )
+                    [self getPrimaryMessages:emailStr nextPageToken:nextPageToken numberOfMaxResult:100];
+                else
+                    NSLog(@"----- Primary messages count > %d",pArray.count);
+            }
+            else{
+                NSLog(@"----- Clean Primary > %d",pArray.count);
+                [[EmailService instance].primaryMessages removeAllObjects];
+                [[NSUserDefaults standardUserDefaults] setObject:[[EmailService instance] primaryMessages] forKey: ALL_FUNNL];
+                [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"PRIMARY_PAGE_TOKEN"];
+
+            }
         }
     }];
 
 }
 
 -(void)loadHomeScreen {
-    // Krunal : Commented below line 18 aug
+    NSLog(@"*****************  In loadhomescreen ***************** ");
      [self performSelector:@selector(getUserInfo) withObject:nil afterDelay:0.2];
 
-    mainViewController = [[MainVC alloc] init];
-    UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:mainViewController];
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    // Krunal : Commented below line 26 aug
     if(appDelegate.internetAvailable){
-        [[EmailService instance] performSelectorInBackground:@selector(startLogin:) withObject:self.mainViewController.emailsTableViewController];
+//        [[EmailService instance] performSelectorInBackground:@selector(startLogin:) withObject:self.mainViewController.emailsTableViewController];
+        [[EmailService instance] startLogin:self.mainViewController.emailsTableViewController];
     }
     
-    appDelegate.menuController = [[MenuViewController alloc] init];
-    appDelegate.drawerController = [[MMDrawerController alloc] initWithCenterViewController:nav leftDrawerViewController:appDelegate.menuController];
-    [appDelegate.drawerController setRestorationIdentifier:@"MMDrawer"];
-    [appDelegate.drawerController setMaximumLeftDrawerWidth:250.0];
-    [appDelegate.drawerController setOpenDrawerGestureModeMask:MMOpenDrawerGestureModeAll];
-    [appDelegate.drawerController setCloseDrawerGestureModeMask:MMCloseDrawerGestureModeAll];
     
     //expilictly calling the view to start the background loading emails
-    [appDelegate.drawerController view];
+    //[appDelegate.drawerController view];
     //[mainViewController view];
-    [appDelegate.menuController view];
+    //[appDelegate.menuController view];
     
 //    NSURL *url = [NSURL URLWithString:@"https://singular-hub-642.appspot.com"];
 //    [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:url] queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
@@ -679,7 +697,7 @@ UIButton *loginButton;
         NSDictionary *accessTokenInfoDictionary = [NSJSONSerialization JSONObjectWithData:_receivedData options:NSJSONReadingMutableContainers error:&error];
         NSString *accessToken = [accessTokenInfoDictionary objectForKey:@"access_token"];
         if(accessToken == nil) {
-            NSLog(@"Invalid access Token");
+            NSLog(@"====> Invalid access Token");
         }
         else{
             appDelegate.isAlreadyRequestedRefreshToken  = NO;
@@ -797,19 +815,18 @@ UIButton *loginButton;
                 // This is the case where the access token has been fetched.
                 NSError *error;
                 if (error) {
-                    NSLog(@"%@", error);
+                    NSLog(@"Login error -- %@", error);
                 }
-                NSDictionary *accessTokenInfoDictionary = [NSJSONSerialization JSONObjectWithData:_receivedData options:NSJSONReadingMutableContainers error:&error];
+                NSDictionary *accessTokenInfoDictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
                 NSString *accessToken = [accessTokenInfoDictionary objectForKey:@"access_token"];
                 if(accessToken == nil) {
-                    NSLog(@"Invalid access Token");
+                    NSLog(@"Async-----Invalid access Token");
                 }
                 else{
                     appDelegate.isAlreadyRequestedRefreshToken  = NO;
                     self.emailServerModel.accessToken = [NSString stringWithFormat:@"%@",accessToken];
                     [[EmailServersService instance] updateEmailServer:self.emailServerModel];
                     //[self performSelector:@selector(getUserInfo) withObject:nil afterDelay:0.2];
-                    
                 }
                 
                 

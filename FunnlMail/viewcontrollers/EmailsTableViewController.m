@@ -353,7 +353,11 @@ UIView *greyView;
                 cell.funnlLabel2.backgroundColor = CLEAR_COLOR;
                 cell.funnlLabel3.backgroundColor = CLEAR_COLOR;
                 
-                NSMutableDictionary *funnlLabelDictionary= [self getFunnlsDictionary:(MessageModel*)[EmailService instance].filterMessages[indexPath.row]];
+                if([EmailService instance].filterMessages.count == 0){
+                    return cell;
+                }
+                MessageModel *messageModel = [EmailService instance].filterMessages[indexPath.row];
+                NSMutableDictionary *funnlLabelDictionary= [self getFunnlsDictionary:messageModel];
                 int funnlLabelCount = 0;
                 for (NSString *key in funnlLabelDictionary.allKeys) {
                     if(funnlLabelCount == 0){
@@ -991,8 +995,8 @@ UIView *greyView;
                     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
                     if(appDelegate.internetAvailable){
                         NSString *PRIMARY_PAGE_TOKEN = [[NSUserDefaults standardUserDefaults] objectForKey:@"PRIMARY_PAGE_TOKEN"];
-                        if(PRIMARY_PAGE_TOKEN)
-                            [appDelegate.loginViewController getPrimaryMessages:[EmailService instance].userEmailID nextPageToken:PRIMARY_PAGE_TOKEN numberOfMaxResult:100 ];
+                        //if(PRIMARY_PAGE_TOKEN)
+                        [appDelegate.loginViewController getPrimaryMessages:[EmailService instance].userEmailID nextPageToken:PRIMARY_PAGE_TOKEN numberOfMaxResult:100 ];
                         
                         int totalNumberOfMessage = (int)[[MessageService instance] messagesAllTopMessages].count + NUMBER_OF_MESSAGES_TO_LOAD;
                         [[EmailService instance] loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD withTableController:self withFolder:INBOX  withFetchRange:MCORangeEmpty];

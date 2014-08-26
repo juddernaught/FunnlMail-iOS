@@ -37,6 +37,29 @@ static ContactService *instance;
     return instance;
 }
 
+-(NSArray *)getAllContacts{
+    __block NSMutableArray *tempContactModel = [[NSMutableArray alloc] init];
+    __block BOOL success;
+    success = FALSE;
+    
+    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *resultSet = [db executeQuery:[NSString stringWithFormat:@"select name, email,thumbnail from contacts;"]];
+        
+        while ([resultSet next]) {
+            //            if ([resultSet stringForColumn:@"messageHTMLBody"]) {
+            //                htmlContent = [resultSet stringForColumn:@"messageHTMLBody"];
+            //            }
+            ContactModel *tempModel = [[ContactModel alloc] init];
+            tempModel.name = [resultSet stringForColumn:@"name"];
+            tempModel.email = [resultSet stringForColumn:@"email"];
+            tempModel.thumbnail = [resultSet stringForColumn:@"thumbnail"];
+            [tempContactModel addObject:tempModel];
+        }
+    }];
+
+    return tempContactModel;
+}
+
 -(BOOL) insertBulkContacts:(NSArray *)ContactModelArray{
     
     __block BOOL success = NO;

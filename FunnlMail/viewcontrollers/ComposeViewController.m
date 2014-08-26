@@ -54,7 +54,7 @@ break;\
 
 static NSString * mainStyle = @"\
 body {\
-font-family: Helvetica;\
+font-family: HelveticaNeue;\
 font-size: 14px;\
 word-wrap: break-word;\
 -webkit-text-size-adjust:none;\

@@ -1442,18 +1442,18 @@
 			children = (
 				FAAE9CE119A38ADD007FB804 /* emailDetailViewArchive.png */,
 				FAAE9CE219A38ADD007FB804 /* emailDetailViewArchive@2x.png */,
-				FAAE9CE319A38ADD007FB804 /* emailDetailViewForward.png */,
-				FAAE9CE419A38ADD007FB804 /* emailDetailViewForward@2x.png */,
 				FAAE9CE519A38ADD007FB804 /* emailDetailViewFunnel.png */,
 				FAAE9CE619A38ADD007FB804 /* emailDetailViewFunnel@2x.png */,
 				FAAE9CE719A38ADD007FB804 /* emailDetailViewMail.png */,
 				FAAE9CE819A38ADD007FB804 /* emailDetailViewMail@2x.png */,
+				FAAE9CED19A38ADD007FB804 /* emailDetailViewTrash.png */,
+				FAAE9CEE19A38ADD007FB804 /* emailDetailViewTrash@2x.png */,
 				FAAE9CE919A38ADD007FB804 /* emailDetailViewReply.png */,
 				FAAE9CEA19A38ADD007FB804 /* emailDetailViewReply@2x.png */,
 				FAAE9CEB19A38ADD007FB804 /* emailDetailViewReplyAll.png */,
 				FAAE9CEC19A38ADD007FB804 /* emailDetailViewReplyAll@2x.png */,
-				FAAE9CED19A38ADD007FB804 /* emailDetailViewTrash.png */,
-				FAAE9CEE19A38ADD007FB804 /* emailDetailViewTrash@2x.png */,
+				FAAE9CE319A38ADD007FB804 /* emailDetailViewForward.png */,
+				FAAE9CE419A38ADD007FB804 /* emailDetailViewForward@2x.png */,
 			);
 			path = EmailDetailViewImages;
 			sourceTree = "<group>";

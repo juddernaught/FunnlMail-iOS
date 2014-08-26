@@ -210,18 +210,18 @@
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     self.startDate = [NSDate date];
-    
+    isAlreadyRequestedRefreshToken = NO;
+
     NSLog(@"-----applicationDidBecomeActive-----");
     if(self.loginViewController){
         NSLog(@"-----Call Refresh Token -----");
         self.isAlreadyRequestedRefreshToken = NO;
         if(!self.didLoginIn)
             self.didLoginIn = 0;
+        
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
             [self.loginViewController refreshAccessToken];
         });
-//        [self.loginViewController performSelector:@selector(refreshAccessToken) withObject:nil afterDelay:0.1];
-//        [self.loginViewController performSelectorInBackground:@selector(refreshAccessToken) withObject:nil];
     }
 }
 
