@@ -3,3 +3,5 @@ FunnlMail.xcodeproj/project.xcworkspace/xcuserdata/*
 FunnlMail.xcodeproj/xcuserdata/*
 FunnlMail.xcworkspace/xcuserdata/*
 Pods/Pods.xcodeproj/xcuserdata/*
+mailcore2/build-mac/mailcore2.xcodeproj/project.xcworkspace/*
+mailcore2/example/ios/iOS UI Test/iOS UI Test.xcodeproj/project.xcworkspace/*
