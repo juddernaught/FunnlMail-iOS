@@ -18,6 +18,7 @@
 #import "EmailServersService.h"
 #import <Crashlytics/Crashlytics.h>
 #import "GTMOAuth2ViewControllerTouch.h"
+#import <HockeySDK/HockeySDK.h>
 
 #define MIXPANEL_TOKEN @"08b1e55d72f1b22a8e5696c2b56a6777"
 
@@ -85,6 +86,13 @@
     }
     
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge| UIRemoteNotificationTypeAlert| UIRemoteNotificationTypeSound];
+    
+    
+    // setting up HockeyApp
+    // nocommit: must change app identifier
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"50810aaf6593d6b78ce1baeaefa4887d"];
+    [[BITHockeyManager sharedHockeyManager] startManager];
+    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
 
     
     // Override point for customization after application launch.

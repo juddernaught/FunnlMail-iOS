@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/BITCrashAttachment.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/BITCrashAttachment</TokenIdentifier>
+			<Abstract type="html">Provides support to add binary attachments to crash reports</Abstract>
+			<DeclaredIn>BITCrashAttachment.h</DeclaredIn>
+            
+			
+			<NodeRef refid="15"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/BITCrashAttachment/setFilename:</TokenIdentifier>
+			<Abstract type="html">The filename the attachment should get</Abstract>
+			<DeclaredIn>BITCrashAttachment.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readonly, strong) NSString *filename</Declaration>
+			
+			
+			<Anchor>//api/name/filename</Anchor>
+            <NodeRef refid="15"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/BITCrashAttachment/filename</TokenIdentifier>
+			<Abstract type="html">The filename the attachment should get</Abstract>
+			<DeclaredIn>BITCrashAttachment.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readonly, strong) NSString *filename</Declaration>
+			
+			
+			<Anchor>//api/name/filename</Anchor>
+            <NodeRef refid="15"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/BITCrashAttachment/filename</TokenIdentifier>
+			<Abstract type="html">The filename the attachment should get</Abstract>
+			<DeclaredIn>BITCrashAttachment.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readonly, strong) NSString *filename</Declaration>
+			
+			
+			<Anchor>//api/name/filename</Anchor>
+            <NodeRef refid="15"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/BITCrashAttachment/setAttachmentData:</TokenIdentifier>
+			<Abstract type="html">The attachment data as NSData object</Abstract>
+			<DeclaredIn>BITCrashAttachment.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readonly, strong) NSData *attachmentData</Declaration>
+			
+			
+			<Anchor>//api/name/attachmentData</Anchor>
+            <NodeRef refid="15"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/BITCrashAttachment/attachmentData</TokenIdentifier>
+			<Abstract type="html">The attachment data as NSData object</Abstract>
+			<DeclaredIn>BITCrashAttachment.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readonly, strong) NSData *attachmentData</Declaration>
+			
+			
+			<Anchor>//api/name/attachmentData</Anchor>
+            <NodeRef refid="15"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/BITCrashAttachment/attachmentData</TokenIdentifier>
+			<Abstract type="html">The attachment data as NSData object</Abstract>
+			<DeclaredIn>BITCrashAttachment.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readonly, strong) NSData *attachmentData</Declaration>
+			
+			
+			<Anchor>//api/name/attachmentData</Anchor>
+            <NodeRef refid="15"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/BITCrashAttachment/setContentType:</TokenIdentifier>
+			<Abstract type="html">The content type of your data as MIME type</Abstract>
+			<DeclaredIn>BITCrashAttachment.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readonly, strong) NSString *contentType</Declaration>
+			
+			
+			<Anchor>//api/name/contentType</Anchor>
+            <NodeRef refid="15"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/BITCrashAttachment/contentType</TokenIdentifier>
+			<Abstract type="html">The content type of your data as MIME type</Abstract>
+			<DeclaredIn>BITCrashAttachment.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readonly, strong) NSString *contentType</Declaration>
+			
+			
+			<Anchor>//api/name/contentType</Anchor>
+            <NodeRef refid="15"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/BITCrashAttachment/contentType</TokenIdentifier>
+			<Abstract type="html">The content type of your data as MIME type</Abstract>
+			<DeclaredIn>BITCrashAttachment.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readonly, strong) NSString *contentType</Declaration>
+			
+			
+			<Anchor>//api/name/contentType</Anchor>
+            <NodeRef refid="15"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/BITCrashAttachment/initWithFilename:attachmentData:contentType:</TokenIdentifier>
+			<Abstract type="html">Create an BITCrashAttachment instance with a given filename and NSData object</Abstract>
+			<DeclaredIn>BITCrashAttachment.h</DeclaredIn>
+			
+			<Declaration>- (instancetype)initWithFilename:(NSString *)filename attachmentData:(NSData *)attachmentData contentType:(NSString *)contentType</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>filename</Name>
+					<Abstract type="html">The filename the attachment should get</Abstract>
+				</Parameter><Parameter>
+					<Name>attachmentData</Name>
+					<Abstract type="html">The attachment data as NSData</Abstract>
+				</Parameter><Parameter>
+					<Name>contentType</Name>
+					<Abstract type="html">The content type of your data as MIME type</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">An instsance of BITCrashAttachment</Abstract></ReturnValue>
+			<Anchor>//api/name/initWithFilename:attachmentData:contentType:</Anchor>
+            <NodeRef refid="15"/>
+		</Token>
+		
+        
+	</File>
+</Tokens>
