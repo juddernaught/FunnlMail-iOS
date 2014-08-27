@@ -353,10 +353,11 @@ UIView *greyView;
                 cell.funnlLabel2.backgroundColor = CLEAR_COLOR;
                 cell.funnlLabel3.backgroundColor = CLEAR_COLOR;
                 
-                if([EmailService instance].filterMessages.count == 0){
+                NSArray *tempMessageArray = [EmailService instance].filterMessages;
+                if(tempMessageArray.count == 0){
                     return cell;
                 }
-                MessageModel *messageModel = [EmailService instance].filterMessages[indexPath.row];
+                MessageModel *messageModel =tempMessageArray[indexPath.row];
                 NSMutableDictionary *funnlLabelDictionary= [self getFunnlsDictionary:messageModel];
                 int funnlLabelCount = 0;
                 for (NSString *key in funnlLabelDictionary.allKeys) {
@@ -998,7 +999,7 @@ UIView *greyView;
                         //if(PRIMARY_PAGE_TOKEN)
                         [appDelegate.loginViewController getPrimaryMessages:[EmailService instance].userEmailID nextPageToken:PRIMARY_PAGE_TOKEN numberOfMaxResult:100 ];
                         
-                        int totalNumberOfMessage = (int)[[MessageService instance] messagesAllTopMessages].count + NUMBER_OF_MESSAGES_TO_LOAD;
+                        //int totalNumberOfMessage = (int)[[MessageService instance] messagesAllTopMessages].count + NUMBER_OF_MESSAGES_TO_LOAD;
                         [[EmailService instance] loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD withTableController:self withFolder:INBOX  withFetchRange:MCORangeEmpty];
                         cell.accessoryView = self.loadMoreActivityView;
                         [self.loadMoreActivityView startAnimating];

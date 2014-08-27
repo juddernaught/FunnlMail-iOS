@@ -219,8 +219,6 @@
         [SQLiteDatabase sharedInstance];
         [[NSUserDefaults standardUserDefaults] setObject:[NSMutableArray new] forKey: ALL_FUNNL];
         [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"PRIMARY_PAGE_TOKEN"];
-        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"PRIMARY_PAGE_TOKEN"];
-        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"PRIMARY_PAGE_TOKEN"];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"IS_NEW_INSTALL"];
         [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"MODSEQ"];
         [[NSUserDefaults standardUserDefaults] synchronize];

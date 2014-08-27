@@ -258,8 +258,6 @@ UIButton *loginButton;
         [SQLiteDatabase sharedInstance];
         [[NSUserDefaults standardUserDefaults] setObject:[NSMutableArray new] forKey: ALL_FUNNL];
         [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"PRIMARY_PAGE_TOKEN"];
-        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"PRIMARY_PAGE_TOKEN"];
-        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"PRIMARY_PAGE_TOKEN"];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"IS_NEW_INSTALL"];
         [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"MODSEQ"];
         [[NSUserDefaults standardUserDefaults] synchronize];
@@ -592,7 +590,9 @@ UIButton *loginButton;
             NSArray* messageArray =[json objectForKey:@"messages"];
             NSString *nextPageToken = [json objectForKey:@"nextPageToken"];
             for (NSDictionary *dictionary in messageArray) {
-                [[EmailService instance].primaryMessages addObject:[dictionary objectForKey:@"id"]];
+                NSString *messageID = [dictionary objectForKey:@"id"];
+                if(![[EmailService instance].primaryMessages containsObject:messageID])
+                    [[EmailService instance].primaryMessages addObject:messageID];
             }
             NSLog(@"Message Info Count:%d      nextPageToken: %@    Total Count:%d",messageArray.count,nextPageToken,[[EmailService instance].primaryMessages count]);
 
@@ -602,7 +602,7 @@ UIButton *loginButton;
             [[NSUserDefaults standardUserDefaults] synchronize];
             
             if([[EmailService instance] userEmailID].length > 0){
-                if([EmailService instance].primaryMessages.count < 5000 )
+                if([EmailService instance].primaryMessages.count < 2000 )
                     [self getPrimaryMessages:emailStr nextPageToken:nextPageToken numberOfMaxResult:100];
                 else
                     NSLog(@"----- Primary messages count > %d",pArray.count);

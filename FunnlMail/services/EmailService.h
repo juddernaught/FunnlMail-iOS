@@ -17,7 +17,6 @@
 @interface EmailService : NSObject{
 //    NSMutableArray *filterArray;
     
-    BOOL isfetchingOperationActive;
 }
 @property (nonatomic, strong) NSMutableArray *filterArray;
 @property (nonatomic, strong) MCOIMAPOperation *imapCheckOp;
@@ -35,6 +34,8 @@
 @property (nonatomic, strong) NSMutableArray *primaryMessages;
 @property (nonatomic, strong) NSString *userEmailID,*userImageURL,*userName,*currentName;
 @property (nonatomic, strong) EmailsTableViewController *emailsTableViewController;
+@property (nonatomic, assign) BOOL isfetchingOperationActive;
+
 +(EmailService *)instance;
 +(NSArray *) getCurrentFilters;
 +(void)setNewFilterModel:(FunnelModel*)model;

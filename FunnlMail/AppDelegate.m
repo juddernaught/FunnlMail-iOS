@@ -226,7 +226,7 @@
         self.isAlreadyRequestedRefreshToken = NO;
         if(!self.didLoginIn)
             self.didLoginIn = 0;
-        
+        [[EmailService instance] setIsfetchingOperationActive:NO];
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
             [self.loginViewController refreshAccessToken];
         });

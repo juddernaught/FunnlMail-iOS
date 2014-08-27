@@ -35,7 +35,7 @@ static NSString *currentFolder;
 
 @implementation EmailService
 
-@synthesize filterArray,emailsTableViewController;
+@synthesize filterArray,emailsTableViewController,isfetchingOperationActive;
 
 - (id)init
 {
@@ -721,13 +721,14 @@ static NSString *currentFolder;
             NSArray* messageArray =[json objectForKey:@"messages"];
             NSString *nextPageToken = [json objectForKey:@"nextPageToken"];
             for (NSDictionary *dictionary in messageArray) {
-                [[EmailService instance].primaryMessages addObject:[dictionary objectForKey:@"id"]];
+                NSString *messageID = [dictionary objectForKey:@"id"];
+                if(![[EmailService instance].primaryMessages containsObject:messageID])
+                    [[EmailService instance].primaryMessages addObject:messageID];
             }
             [self loadLastNMessages:-1 withTableController:emailsTableViewController withFolder:folderName withFetchRange:newFetchRange];
 
             NSMutableArray *pArray = [[EmailService instance] primaryMessages];
             [[NSUserDefaults standardUserDefaults] setObject:pArray forKey: ALL_FUNNL];
-//            [[NSUserDefaults standardUserDefaults] setObject:nextPageToken forKey:@"PRIMARY_PAGE_TOKEN"];
             [[NSUserDefaults standardUserDefaults] synchronize];
             
         }
@@ -802,7 +803,7 @@ static NSString *currentFolder;
              if(numberOfMessagesToLoad){
                  overlay.progress = 0.5;
                  NSLog(@"checking new messages:  Range: %qu - %qu",fetchRange.location, fetchRange.length);
-                 [self getNewMessages:[EmailService instance].userEmailID nextPageToken:0 numberOfMaxResult:numberOfMessagesToLoad + 10 withFolder:inboxFolder withFetchRange:fetchRange];
+                 [self getNewMessages:[EmailService instance].userEmailID nextPageToken:@"" numberOfMaxResult:numberOfMessagesToLoad + 10 withFolder:inboxFolder withFetchRange:fetchRange];
                  if(overlay.tag == 1){
                      overlay.progress = 1;
                      [overlay postImmediateFinishMessage:@"Finished Downloading" duration:2.0 animated:YES];

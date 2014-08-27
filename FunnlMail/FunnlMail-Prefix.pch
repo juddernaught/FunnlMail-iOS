@@ -32,7 +32,7 @@
 #define HEIGHT [[UIScreen mainScreen] bounds].size.height
 #define WIDTH [[UIScreen mainScreen] bounds].size.width
 #define NUMBER_OF_MESSAGES_TO_LOAD_AT_START 500
-#define NUMBER_OF_MESSAGES_TO_LOAD 200
+#define NUMBER_OF_MESSAGES_TO_LOAD 100
 #define NUMBER_OF_MESSAGES_TO_LOAD_ON_SEARCH NUMBER_OF_MESSAGES_TO_LOAD
 
 #define SHOW_PRIMARY_INBOX 1
