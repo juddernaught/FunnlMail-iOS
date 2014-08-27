@@ -205,6 +205,7 @@ pre {\
         }
         
         if(content) {
+            NSLog(@"----HTML data callback recieved -----");
             paramDict[uidKey] = content;
             [[MessageService instance] updateMessageWithHTMLContent:paramDict];
             NSMutableString * html = [NSMutableString string];

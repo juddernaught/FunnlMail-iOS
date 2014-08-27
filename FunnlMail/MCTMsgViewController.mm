@@ -24,6 +24,21 @@
 #import "FunnlPopUpView.h"
 
 
+@interface UIBarButtonItem (NegativeSpacer)
++(UIBarButtonItem*)negativeSpacerWithWidth:(NSInteger)width;
+@end
+@implementation UIBarButtonItem (NegativeSpacer)
++(UIBarButtonItem*)negativeSpacerWithWidth:(NSInteger)width {
+    UIBarButtonItem *item = [[UIBarButtonItem alloc]
+                             initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
+                             target:nil
+                             action:nil];
+    item.width = (width >= 0 ? -width : width);
+    return item;
+}
+@end
+
+
 @interface MCTMsgViewController () <MCOMessageViewDelegate>
 
 @end
@@ -267,18 +282,18 @@
         self.navigationItem.title = @"";
     }
     
-    
     UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"backArrow.png"] style:UIBarButtonItemStylePlain target:self action:@selector(back)];
     [self.navigationItem setLeftBarButtonItem:leftButton];
 
-    UIBarButtonItem *fixedSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-    fixedSpace.width = 4;
+    UIBarButtonItem *actualfixedSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    UIBarButtonItem *fixedSpace = [UIBarButtonItem negativeSpacerWithWidth:-10];
+   // fixedSpace.width = 4;
 
     UIBarButtonItem *funnelButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"emailDetailViewFunnel.png"] style:UIBarButtonItemStylePlain target:self action:@selector(createFunnl:)];
     UIBarButtonItem *archiveButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"emailDetailViewArchive.png"] style:UIBarButtonItemStylePlain target:self action:@selector(archiveMail:)];
     UIBarButtonItem *emailButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"emailDetailViewMail.png"] style:UIBarButtonItemStylePlain target:self action:@selector(unreadMail:)];
     UIBarButtonItem *deleteButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"emailDetailViewTrash.png"] style:UIBarButtonItemStylePlain target:self action:@selector(deleteMail:)];
-    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:fixedSpace, deleteButton,fixedSpace, archiveButton,fixedSpace, emailButton,fixedSpace, funnelButton,fixedSpace, nil]];
+    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:actualfixedSpace, deleteButton,fixedSpace, archiveButton,fixedSpace, emailButton,fixedSpace, funnelButton, nil]];
     //---end of new changes
 }
 
@@ -546,7 +561,7 @@ typedef void (^DownloadCallback)(NSError * error);
                 NSString *colorString = [randomColors objectAtIndex:gradientInt];
                 UIColor *color = [UIColor colorWithHexString:colorString];
                 if(color == nil){
-                    color = [UIColor colorWithHexString:@"#F9F9F9"];
+                    color = [UIColor colorWithHexString:@"#F7F7F7"];
                 }
                 FunnelModel *funnlModel = [[FunnelModel alloc] initWithBarColor:color filterTitle:name newMessageCount:0 dateOfLastMessage:nil sendersArray:sendersArray subjectsArray:subjectsArray skipAllFlag:NO funnelColor:colorString];
                 [self performSelector:@selector(createFunnlFromShareLink:) withObject:funnlModel afterDelay:0.01];

@@ -40,7 +40,8 @@
     [Mixpanel sharedInstanceWithToken:@"08b1e55d72f1b22a8e5696c2b56a6777"];
     [[Mixpanel sharedInstance] track:@"Launched App"]; //Launched app
     // Parse setup
-    [Parse setApplicationId:@"oXAOrMLIRzLNZh50VZ3sk3LBEfUuNDXuLZVBvHdV" clientKey:@"Z5mFEsiX7xTXYlKYKXMbN2zlqqf97l39E0PzZoZg"];
+    //[Parse setApplicationId:@"oXAOrMLIRzLNZh50VZ3sk3LBEfUuNDXuLZVBvHdV" clientKey:@"Z5mFEsiX7xTXYlKYKXMbN2zlqqf97l39E0PzZoZg"];
+    [Parse setApplicationId:@"qRBmYEJxZ6xOYq2Z6UZuz3nqcuy14DxTV63gWnb4" clientKey:@"ZPCELYRnO4YOnm2nXw8J9Y34poNsMvgGuWzPw1rV"];
 
     funnelUpDated = FALSE;
     progressHUD = [[MBProgressHUD alloc] init];
@@ -90,7 +91,7 @@
     
     // setting up HockeyApp
     // nocommit: must change app identifier
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"50810aaf6593d6b78ce1baeaefa4887d"];
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"c210d26de33e613330b327e98d2bb97f"];
     [[BITHockeyManager sharedHockeyManager] startManager];
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
 

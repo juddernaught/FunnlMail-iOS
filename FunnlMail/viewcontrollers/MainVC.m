@@ -120,7 +120,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [_activityIndicator startAnimating];
     [filterLabel addSubview:_activityIndicator];
     filterLabel.textColor = [UIColor whiteColor];
-    filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#F9F9F9"]);
+    filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#F7F7F7"]);
     filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle: ALL_FUNNL);
     filterLabel.textAlignment = NSTextAlignmentCenter;
   
@@ -147,7 +147,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [centeredButtons addSubview:filterButton];
     
     [composeEmailButton addTarget:self action:@selector(composeEmailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    composeEmailButton.frame = CGRectMake(40, 0, 40, 40);
+    composeEmailButton.frame = CGRectMake(44, 0, 40, 40);
     [composeEmailButton setImage:[UIImage imageNamed:@"composeIcon.png"] forState:UIControlStateNormal];
     [composeEmailButton setContentMode:UIViewContentModeCenter];
     [centeredButtons addSubview:composeEmailButton];

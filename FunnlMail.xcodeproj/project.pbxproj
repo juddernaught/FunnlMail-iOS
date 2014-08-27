@@ -2303,8 +2303,7 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				BUNDLE_DISPLAY_NAME_SUFFIX = "";
-				"BUNDLE_DISPLAY_NAME_SUFFIX[arch=*]" = "";
+				BUNDLE_DISPLAY_NAME_SUFFIX = Beta;
 				BUNDLE_ID_SUFFIX = "";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -2387,7 +2386,7 @@
 			};
 			name = Release;
 		};
-		66F3323D199D37A8003D4F2F /* Ad Hoc */ = {
+		66F3323D199D37A8003D4F2F /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -2420,21 +2419,21 @@
 				USER_HEADER_SEARCH_PATHS = "$(BUILD_ROOT)/../IntermediateBuildFilesPath/UninstalledProducts";
 				VALIDATE_PRODUCT = YES;
 			};
-			name = "Ad Hoc";
+			name = Distribution;
 		};
-		66F3323E199D37A8003D4F2F /* Ad Hoc */ = {
+		66F3323E199D37A8003D4F2F /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2B928198F5034A5AB4B3F004 /* Pods.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				BUNDLE_DISPLAY_NAME_SUFFIX = " Beta";
-				BUNDLE_ID_SUFFIX = .adhoc;
+				BUNDLE_DISPLAY_NAME_SUFFIX = "";
+				BUNDLE_ID_SUFFIX = .distribution;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Daniel Judd (PL7ET6U94G)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Daniel Judd (PL7ET6U94G)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Funnl Labs, LLC";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Funnl Labs, LLC";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -2467,15 +2466,16 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "69e28a4d-1186-4fab-8041-73ac81f00e8b";
+				PROVISIONING_PROFILE = "ec9b83cd-923e-494e-a961-8a80d9b42c47";
 				SDKROOT = iphoneos7.1;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
-			name = "Ad Hoc";
+			name = Distribution;
 		};
-		66F3323F199D37A8003D4F2F /* Ad Hoc */ = {
+		66F3323F199D37A8003D4F2F /* Distribution */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2B928198F5034A5AB4B3F004 /* Pods.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/FunnlMail.app/FunnlMail";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2490,7 +2490,7 @@
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
-			name = "Ad Hoc";
+			name = Distribution;
 		};
 /* End XCBuildConfiguration section */
 
@@ -2500,7 +2500,7 @@
 			buildConfigurations = (
 				66F2C49618E3293F00CD593E /* Debug */,
 				66F2C49718E3293F00CD593E /* Release */,
-				66F3323D199D37A8003D4F2F /* Ad Hoc */,
+				66F3323D199D37A8003D4F2F /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2510,7 +2510,7 @@
 			buildConfigurations = (
 				66F2C49918E3293F00CD593E /* Debug */,
 				66F2C49A18E3293F00CD593E /* Release */,
-				66F3323E199D37A8003D4F2F /* Ad Hoc */,
+				66F3323E199D37A8003D4F2F /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2520,7 +2520,7 @@
 			buildConfigurations = (
 				66F2C49C18E3293F00CD593E /* Debug */,
 				66F2C49D18E3293F00CD593E /* Release */,
-				66F3323F199D37A8003D4F2F /* Ad Hoc */,
+				66F3323F199D37A8003D4F2F /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

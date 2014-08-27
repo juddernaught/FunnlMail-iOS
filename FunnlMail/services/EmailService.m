@@ -415,15 +415,13 @@ static NSString *currentFolder;
          int numberOfMessages = 40;
          MCOIndexSet *numbers = [MCOIndexSet indexSetWithRange:MCORangeMake(1, info.uidNext)];
          
-         if(![folderName isEqualToString:INBOX] && ![folderName isEqualToString:ARCHIVE]){
-             self.imapMessagesFetchOp = [self.imapSession fetchMessagesByUIDOperationWithFolder:folderName requestKind:requestKind uids:numbers];
-             NSLog(@"detected other mailbox");
-         }
-         else if([folderName isEqualToString:ARCHIVE])
-             self.imapMessagesFetchOp = [self.imapSession fetchMessagesByNumberOperationWithFolder:folderName requestKind:requestKind numbers:[MCOIndexSet indexSetWithRange:MCORangeMake(1,40)]];
-         else{
+         if([folderName isEqualToString:INBOX] == YES){
              self.imapMessagesFetchOp = [self.imapSession fetchMessagesByUIDOperationWithFolder:folderName requestKind:requestKind uids:uids];
              NSLog(@"inbox detected");
+         }
+         else{
+             self.imapMessagesFetchOp = [self.imapSession fetchMessagesByUIDOperationWithFolder:folderName requestKind:requestKind uids:numbers];
+             NSLog(@"detected other mailbox");
          }
          
 //         uint64_t location = info.uidNext;
@@ -1035,7 +1033,7 @@ static NSString *currentFolder;
 
 
 +(void)addInitialFilter{
-    defaultFilter = [[FunnelModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#F9F9F9"] filterTitle:ALL_FUNNL newMessageCount:16 dateOfLastMessage:[NSDate new]];
+    defaultFilter = [[FunnelModel alloc]initWithBarColor:[UIColor colorWithHexString:@"#F7F7F7"] filterTitle:ALL_FUNNL newMessageCount:16 dateOfLastMessage:[NSDate new]];
     [filterArray addObject:defaultFilter];
 }
 

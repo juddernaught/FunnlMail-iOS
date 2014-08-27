@@ -212,7 +212,7 @@ UIView *greyView;
     [activityIndicator startAnimating];
     [filterLabel addSubview:activityIndicator];
     filterLabel.textColor = [UIColor whiteColor];
-    filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#F9F9F9"]);
+    filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#F7F7F7"]);
     filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : ALL_FUNNL);
     filterLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:filterLabel];
@@ -283,7 +283,7 @@ UIView *greyView;
     }
     
     if(filterLabel!=nil){
-        filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#F9F9F9"]);
+        filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#F7F7F7"]);
         filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle : ALL_FUNNL);
         if([EmailService instance].filterMessages.count == 0){
             NSLog(@"Call to loadLastNMessages from setFilterModel function");
@@ -487,6 +487,7 @@ UIView *greyView;
                         }
                         cell.messageRenderingOperation = nil;
                     }];
+
                 }
                 
 //                cell.delegate = self;
