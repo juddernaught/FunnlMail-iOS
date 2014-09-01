@@ -262,7 +262,8 @@
     NSLog(@"didRegisterForRemoteNotificationsWithDeviceToken: %@",deviceToken);
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     NSString *loggedInEmail = [EmailService instance].userEmailID;
-//    [currentInstallation setChannels:@[]];
+    [currentInstallation setChannels:@[]];
+    [currentInstallation setObject:@"" forKey:@"email"];
     //[currentInstallation addUniqueObject:@"testers2" forKey:@"channels"];
     
     if ([loggedInEmail length]) {

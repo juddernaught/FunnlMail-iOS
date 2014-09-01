@@ -310,39 +310,75 @@ UIButton *loginButton;
 //
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     if(![appDelegate.contextIOAPIClient isAuthorized]){
-        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-        [params setObject:email forKey:@"email"];
-        [params setObject:name forKey:@"first_name"];
-        [params setObject:name forKey:@"last_name"];
         
-        [appDelegate.contextIOAPIClient postPath:@"lite/users" params:params success:^(NSDictionary *responseDict) {
-            NSLog(@"getContextIOWithEmail ----- %@",responseDict.description);
-            NSString *contextIO_access_token = [responseDict objectForKey:@"access_token"];
-            NSString *contextIO_access_token_secret = [responseDict objectForKey:@"access_token_secret"];
-            NSString *contextIO_account_id = [responseDict objectForKey:@"id"];
-            PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-            if (![currentInstallation channels]) {
-                //[currentInstallation setChannels:@[]];
+        NSMutableDictionary *checkParams = [[NSMutableDictionary alloc] init];
+        [checkParams setObject:email forKey:@"email"];
+        [appDelegate.contextIOAPIClient getPath:@"lite/users" params:checkParams success:^(NSDictionary *responseDict) {
+            NSLog(@"getContextIOWithEmail 1 : Check if Account already exists----- %@",responseDict.description);
+
+            NSString *accountID = @"";
+            if([responseDict isKindOfClass:[NSArray class]] && responseDict.count){
+                NSArray *newArray = (NSArray*)responseDict;
+                NSDictionary *dictionary = [newArray objectAtIndex:0];
+                accountID = [dictionary objectForKey:@"id"];
             }
-            [currentInstallation addUniqueObject:[NSString stringWithFormat:@"account_id_%@", contextIO_account_id] forKey:@"channels"];
-            NSArray *channels = [currentInstallation channels];
-            [currentInstallation setChannels:channels];
-            [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                NSInteger errCode = [error code];
-                if (kPFErrorConnectionFailed == errCode ||  kPFErrorInternalServer == errCode)
-                    [currentInstallation saveEventually];
-            }];
-            appDelegate.contextIOAPIClient = [[CIOAPIClient alloc] initWithConsumerKey:kContextIOConsumerKey consumerSecret:kContextIOConsumerSecret token:contextIO_access_token tokenSecret:contextIO_access_token_secret accountID:contextIO_account_id];
-            [appDelegate.contextIOAPIClient saveCredentials];
             
-            //fetching contacts
-            //[self performSelector:@selector(getUserContact) withObject:nil afterDelay:0.1];
-            //[self addToSourceWithAccountID:contextIO_account_id];
-            [self performSelector:@selector(addToSourceWithAccountID:) withObject:contextIO_account_id afterDelay:0.01];
+            
+            
+            if(accountID.length){
+                NSLog(@"---account found");
+                PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+                if (![currentInstallation channels]) {
+                    //[currentInstallation setChannels:@[]];
+                }
+                [currentInstallation addUniqueObject:[NSString stringWithFormat:@"account_id_%@",accountID] forKey:@"channels"];
+                [currentInstallation setObject:email forKey:@"email"];
+                [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    NSInteger errCode = [error code];
+                    if (kPFErrorConnectionFailed == errCode ||  kPFErrorInternalServer == errCode)
+                        [currentInstallation saveEventually];
+                }];
+                
+            }
+            else{
+                NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+                [params setObject:email forKey:@"email"];
+                [params setObject:name forKey:@"first_name"];
+                [params setObject:name forKey:@"last_name"];
+                
+                [appDelegate.contextIOAPIClient postPath:@"lite/users" params:params success:^(NSDictionary *responseDict) {
+                    NSLog(@"getContextIOWithEmail  2 ----- %@",responseDict.description);
+                    NSString *contextIO_access_token = [responseDict objectForKey:@"access_token"];
+                    NSString *contextIO_access_token_secret = [responseDict objectForKey:@"access_token_secret"];
+                    NSString *contextIO_account_id = [responseDict objectForKey:@"id"];
+                    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+                    [currentInstallation setObject:email forKey:@"email"];
+                    if (![currentInstallation channels]) {
+                        //[currentInstallation setChannels:@[]];
+                    }
+                    [currentInstallation addUniqueObject:[NSString stringWithFormat:@"account_id_%@", contextIO_account_id] forKey:@"channels"];
+                    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                        NSInteger errCode = [error code];
+                        if (kPFErrorConnectionFailed == errCode ||  kPFErrorInternalServer == errCode)
+                            [currentInstallation saveEventually];
+                    }];
+                    appDelegate.contextIOAPIClient = [[CIOAPIClient alloc] initWithConsumerKey:kContextIOConsumerKey consumerSecret:kContextIOConsumerSecret token:contextIO_access_token tokenSecret:contextIO_access_token_secret accountID:contextIO_account_id];
+                    [appDelegate.contextIOAPIClient saveCredentials];
+                    
+                    [self performSelector:@selector(addToSourceWithAccountID:) withObject:contextIO_account_id afterDelay:0.01];
+                    
+                } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                    NSLog(@"error getting getContextIOWithEmail: %@", error);
+                }];
+            }
+            
+            
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"error getting getContextIOWithEmail: %@", error);
         }];
+        
+        
     }
 }
 
@@ -525,8 +561,7 @@ UIButton *loginButton;
                     //[currentInstallation setChannels:@[]];
                 }
                 [currentInstallation addUniqueObject:[NSString stringWithFormat:@"account_id_%@", appDelegate.contextIOAPIClient._accountID] forKey:@"channels"];
-                NSArray *channels = [currentInstallation channels];
-                [currentInstallation setChannels:channels];
+                [currentInstallation setObject:currentEmail forKey:@"email"];
                 [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                     NSInteger errCode = [error code];
                     if (kPFErrorConnectionFailed == errCode ||  kPFErrorInternalServer == errCode)
