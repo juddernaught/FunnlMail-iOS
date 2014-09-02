@@ -35,10 +35,37 @@
 #define NUMBER_OF_MESSAGES_TO_LOAD 100
 #define NUMBER_OF_MESSAGES_TO_LOAD_ON_SEARCH NUMBER_OF_MESSAGES_TO_LOAD
 
+#define IS_NEW_CREATE_FUNNEL 1
+
 #define SHOW_PRIMARY_INBOX 1
 #define IS_AUTO_REFRESH_ENABLE 1
 #define AUTOREFRESH_DELAY 60
 #define PRIMARY_CATEGORY_NAME @"CATEGORY_PERSONAL"
+
+//email cell's #defines
+#define MAIL_READ_BLUE_COLOR [UIColor colorWithHexString:@"007aff"]
+
+#define MAIL_HEADER_TEXT_COLOR [UIColor colorWithHexString:@"2b2f32"]
+#define MAIL_HEADER_FONT [UIFont fontWithName:@"HelveticaNeue-Medium" size:15]
+
+#define MAIL_TIME_COLOR [UIColor colorWithHexString:@"7e8284"]
+#define MAIL_TIME_FONT [UIFont fontWithName:@"HelveticaNeue" size:12]
+
+#define MAIL_SUBJECT_TEXT_COLOR [UIColor colorWithHexString:@"2b2f32"]
+#define MAIL_SUBJECT_FONT [UIFont fontWithName:@"HelveticaNeue" size:13]
+
+#define MAIL_BODY_TEXT_COLOR [UIColor colorWithHexString:@"899299"]
+#define MAIL_BODY_FONT [UIFont fontWithName:@"HelveticaNeue" size:13]
+
+#define MAIL_FUNNEL_FONT [UIFont fontWithName:@"HelveticaNeue" size:12]
+
+//newly added for new create funnel ui
+#define FONT_FOR_INITIAL [UIFont systemFontOfSize:24]
+#define BUTTON_BORDER_WIDTH_VIP 3
+#define PLACEHOLDER_COLOR @"797979"
+#define BUTTON_BORDER_COLOR_SELECTED @"00BC34"
+#define DONE_BUTTON_BLUE_COLOR @"3878DE"
+#define DONE_BUTTON_BLUE @"0086DC"
 
 #define ALPHA_FOR_TOST 0.7
 #define COLOR_OF_WHITE 0.0

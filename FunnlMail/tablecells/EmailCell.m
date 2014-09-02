@@ -34,65 +34,57 @@
     tempAttributedString = nil;
     colorArray = nil;
 
-    senderLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 10, 320-108, 20)];
-    subjectLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 30, 320-108, 20)];
-    bodyLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 50, 320-108, 90-47-7+10)];
-
-//    senderLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 7, 320-105-6-60, 20)];
-    readLabel = [[UILabel alloc] initWithFrame:CGRectMake(10-1, 20, 14, 14)];
-    threadLabel = [[UILabel alloc] initWithFrame:CGRectMake(320-20-43, 35, 48-5, 20)];
-    detailDiscloser = [[UIImageView alloc] initWithFrame:CGRectMake(320-20, 35, 20, 20)];
-    
-    dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(320-70-5, 12, 70, 20)];
-    funnlLabel1 = [[UILabel alloc] initWithFrame:CGRectMake(320-70-5, 52, 70, 20)];
-    funnlLabel2 = [[UILabel alloc] initWithFrame:CGRectMake(320-70-5, 72, 70, 20)];
-//    funnlLabel3 = [[UILabel alloc] initWithFrame:CGRectMake(320-70, 70, 70, 20)];
-    
+    senderLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 13, 320-108, 20)];
+    [senderLabel setFont:MAIL_HEADER_FONT];
+    [senderLabel setTextColor:MAIL_HEADER_TEXT_COLOR];
     senderLabel.backgroundColor = [UIColor clearColor];
-    subjectLabel.backgroundColor = [UIColor clearColor];
-    bodyLabel.backgroundColor = [UIColor clearColor];
-    funnlLabel1.backgroundColor = [UIColor clearColor];
-    funnlLabel2.backgroundColor = [UIColor clearColor];
-    funnlLabel3.backgroundColor = [UIColor clearColor];
-
     
-    [detailDiscloser setImage:[UIImage imageNamed:@"arrow.png"]];
-    [threadLabel setTextAlignment:NSTextAlignmentRight];
+    subjectLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 33 + 2.25, 320-108, 17)];
+    subjectLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+    [subjectLabel setFont:MAIL_SUBJECT_FONT];
+    subjectLabel.backgroundColor = [UIColor clearColor];
+    subjectLabel.textColor = MAIL_SUBJECT_TEXT_COLOR;
+    
+    bodyLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 33 + 2.25 + 17 + 2, 320-108, 35)];
+    [bodyLabel setFont:MAIL_BODY_FONT];
+    bodyLabel.backgroundColor = [UIColor clearColor];
+    bodyLabel.numberOfLines = 2;
+    bodyLabel.textColor = MAIL_BODY_TEXT_COLOR;
+    
+    readLabel = [[UILabel alloc] initWithFrame:CGRectMake(13, 23 - 6, 12, 12)];
     readLabel.clipsToBounds = YES;
-    readLabel.layer.cornerRadius = 7;
+    readLabel.layer.cornerRadius = 6;
     readLabel.layer.borderWidth = 0.5;
     readLabel.layer.borderColor = [[UIColor blackColor] CGColor];
-    bodyLabel.numberOfLines = 3;
-    
-    dateLabel.font = [UIFont systemFontOfSize:13];
-    funnlLabel1.font = [UIFont systemFontOfSize:13];
-    funnlLabel2.font = [UIFont systemFontOfSize:13];
-    funnlLabel3.font = [UIFont systemFontOfSize:13];
-    senderLabel.font = [UIFont boldSystemFontOfSize:16];
-    subjectLabel.font = [UIFont systemFontOfSize:14];
-    bodyLabel.font = [UIFont systemFontOfSize:14];
-    readLabel.font = [UIFont systemFontOfSize:13];
-    threadLabel.font = [UIFont systemFontOfSize:13];
-    labelNameText.font = [UIFont systemFontOfSize:13];
-    
-    dateLabel.textColor = [UIColor blackColor];
-    funnlLabel1.textColor = [UIColor blackColor];
-    funnlLabel2.textColor = [UIColor blackColor];
-    funnlLabel3.textColor = [UIColor blackColor];
-    senderLabel.textColor = [UIColor blackColor];
-    subjectLabel.textColor = [UIColor blackColor];
-    bodyLabel.textColor = [UIColor lightGrayColor];
     readLabel.backgroundColor = [UIColor clearColor];
     
+    threadLabel = [[UILabel alloc] initWithFrame:CGRectMake(30 + 320-108, 33 + 2.25, 48-5, 17)];
+    [threadLabel setFont:MAIL_SUBJECT_FONT];
+    [threadLabel setTextColor:MAIL_SUBJECT_TEXT_COLOR];
+    [threadLabel setTextAlignment:NSTextAlignmentLeft];
+    
+    detailDiscloser = [[UIImageView alloc] initWithFrame:CGRectMake(320-20, 35, 20, 20)];
+    
+    dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(320-65-13, 13, 65, 20)];
+    [dateLabel setFont:MAIL_TIME_FONT];
+    [dateLabel setTextColor:MAIL_TIME_COLOR];
     dateLabel.textAlignment = NSTextAlignmentRight;
+    dateLabel.backgroundColor = [UIColor clearColor];
+    
+    funnlLabel1 = [[UILabel alloc] initWithFrame:CGRectMake(320 - 62 - 13, 33 + 2.25 + 15 + 2 + (35.0/2.0), 70 - 8, 20)];
+    funnlLabel1.lineBreakMode = NSLineBreakByTruncatingMiddle;
+    funnlLabel1.backgroundColor = [UIColor clearColor];
+    [funnlLabel1 setFont:MAIL_FUNNEL_FONT];
+    funnlLabel1.textColor = [UIColor whiteColor];
     funnlLabel1.textAlignment = NSTextAlignmentCenter;
-    funnlLabel2.textAlignment = NSTextAlignmentCenter;
-    funnlLabel3.textAlignment = NSTextAlignmentCenter;
-//    dateLabel.backgroundColor = [UIColor redColor];
-//    senderLabel.backgroundColor = [UIColor greenColor];
-//    subjectLabel.backgroundColor = [UIColor blueColor];
-//    bodyLabel.backgroundColor = [UIColor orangeColor];
-//    readLabel.backgroundColor = [UIColor redColor];
+    
+//    funnlLabel2 = [[UILabel alloc] initWithFrame:CGRectMake(320-70-5, 72, 70, 20)];
+//    funnlLabel2.backgroundColor = [UIColor clearColor];
+//    [funnlLabel2 setFont:MAIL_FUNNEL_FONT];
+//    funnlLabel2.textColor = [UIColor whiteColor];
+//    funnlLabel2.textAlignment = NSTextAlignmentCenter;
+    
+    [detailDiscloser setImage:[UIImage imageNamed:@"arrow.png"]];
     
     [self.contentView addSubview:dateLabel];
     [self.contentView addSubview:threadLabel];
@@ -100,10 +92,10 @@
     [self.contentView addSubview:subjectLabel];
     [self.contentView addSubview:bodyLabel];
     [self.contentView addSubview:readLabel];
-    [self.contentView addSubview:detailDiscloser];
+//    [self.contentView addSubview:detailDiscloser];
     [self.contentView addSubview:labelNameText];
     [self.contentView addSubview:funnlLabel1];
-    [self.contentView addSubview:funnlLabel2];
+//    [self.contentView addSubview:funnlLabel2];
     [self.contentView addSubview:funnlLabel3];
     return self;
 }

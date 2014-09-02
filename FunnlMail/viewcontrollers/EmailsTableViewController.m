@@ -110,6 +110,8 @@ UIView *greyView;
     }
     funnlArray = [[FunnelService instance] allFunnels];
     tempAppDelegate.mainVCdelegate = self.mainVCdelegate;
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
+    [_tableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning
@@ -361,19 +363,29 @@ UIView *greyView;
                 NSMutableDictionary *funnlLabelDictionary= [self getFunnlsDictionary:messageModel];
                 int funnlLabelCount = 0;
                 for (NSString *key in funnlLabelDictionary.allKeys) {
-                    if(funnlLabelCount == 0){
-                        cell.funnlLabel1.text = key;
-                        cell.funnlLabel1.backgroundColor = [UIColor colorWithHexString:[funnlLabelDictionary objectForKey:key]];
-                        cell.funnlLabel1.textColor = [UIColor whiteColor];
-                    }
-                    else if(funnlLabelCount == 1){
-                        cell.funnlLabel2.text = key;
-                        if(funnlLabelDictionary.allKeys.count > 1){
-                            cell.funnlLabel2.text = [NSString stringWithFormat:@"%@ + %d ",key,funnlLabelDictionary.allKeys.count-1];
-                            cell.funnlLabel2.backgroundColor = [UIColor colorWithHexString:[funnlLabelDictionary objectForKey:key]];
-                            cell.funnlLabel2.textColor = [UIColor whiteColor];
+                    if (funnlLabelDictionary.allKeys.count > 0) {
+                        if (funnlLabelDictionary.allKeys.count > 1) {
+                            cell.funnlLabel1.text = [NSString stringWithFormat:@"%@ + %ld",key,(long)funnlLabelDictionary.allKeys.count - 1];
+                            cell.funnlLabel1.backgroundColor = [UIColor colorWithHexString:[funnlLabelDictionary objectForKey:key]];
+                            cell.funnlLabel1.textColor = [UIColor whiteColor];
+                        }
+                        else {
+                            cell.funnlLabel1.text = key;
+                            cell.funnlLabel1.backgroundColor = [UIColor colorWithHexString:[funnlLabelDictionary objectForKey:key]];
+                            cell.funnlLabel1.textColor = [UIColor whiteColor];
                         }
                     }
+//                    if(funnlLabelCount == 0){
+//                    
+//                    }
+//                    else if(funnlLabelCount == 1){
+//                        cell.funnlLabel2.text = key;
+//                        if(funnlLabelDictionary.allKeys.count > 1){
+//                            cell.funnlLabel2.text = [NSString stringWithFormat:@"%@ + %d ",key,funnlLabelDictionary.allKeys.count-1];
+//                            cell.funnlLabel2.backgroundColor = [UIColor colorWithHexString:[funnlLabelDictionary objectForKey:key]];
+//                            cell.funnlLabel2.textColor = [UIColor whiteColor];
+//                        }
+//                    }
                     [cell.funnlLabel1 sizeThatFits:CGSizeMake(60, 20)];
                     [cell.funnlLabel2 sizeThatFits:CGSizeMake(60, 20)];
                     funnlLabelCount++;
@@ -388,20 +400,36 @@ UIView *greyView;
                     if ([self isThreadRead:[NSString stringWithFormat:@"%llul",message.gmailThreadID]]) {
                         cell.readLabel.backgroundColor = [UIColor clearColor];
                         cell.readLabel.hidden = YES;
+                        
+                        cell.senderLabel.frame = CGRectMake(30 - 17, 13, 320-108 + 17, 20);
+                        cell.subjectLabel.frame = CGRectMake(30 - 17, 33 + 2.25, 320-108 + 17, 16);
+                        cell.bodyLabel.frame = CGRectMake(30 - 17, 33 + 2.25 + 15 + 2, 320-108 + 17, 35);
                     }
                     else {
                         cell.readLabel.hidden = NO;
                         cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
+                        
+                        cell.senderLabel.frame = CGRectMake(30, 13, 320-108, 20);
+                        cell.subjectLabel.frame = CGRectMake(30 - 17, 33 + 2.25, 320-108 + 17, 16);
+                        cell.bodyLabel.frame = CGRectMake(30 - 17, 33 + 2.25 + 15 + 2, 320-108 + 17, 35);
                     }
                 }
                 else{
                     if([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] read]) {
                         cell.readLabel.backgroundColor = [UIColor clearColor];
                         cell.readLabel.hidden = YES;
+                        
+                        cell.senderLabel.frame = CGRectMake(30 - 17, 13, 320-108 + 17, 20);
+                        cell.subjectLabel.frame = CGRectMake(30 - 17, 33 + 2.25, 320-108 + 17, 16);
+                        cell.bodyLabel.frame = CGRectMake(30 - 17, 33 + 2.25 + 15 + 2, 320-108 + 17, 35);
                     }
                     else {
                         cell.readLabel.hidden = NO;
                         cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
+                        
+                        cell.senderLabel.frame = CGRectMake(30, 13, 320-108, 20);
+                        cell.subjectLabel.frame = CGRectMake(30 - 17, 33 + 2.25, 320-108 + 17, 16);
+                        cell.bodyLabel.frame = CGRectMake(30 - 17, 33 + 2.25 + 15 + 2, 320-108 + 17, 35);
                     }
                 }
                 
@@ -429,22 +457,45 @@ UIView *greyView;
                 else {
                     cell.senderLabel.text = [self removeAngularBracket:message.header.sender.mailbox];
                 }
-                
                 // Changed by Chad
+                // commented out by iauro
                 cell.subjectLabel.text = message.header.subject;
                 
-                if (cell.subjectLabel.text.length == 0) cell.subjectLabel.text = @"No Subject";
+                if (cell.subjectLabel.text.length == 0)
+                    cell.subjectLabel.text = @"No Subject";
+                else {
+                    NSString *subjectString = cell.subjectLabel.text;
+                    NSLog(@"%@",subjectString);
+                    if ([self willFitString:cell.subjectLabel.text InLabel:cell.subjectLabel]) {
+                        CGSize labelSize = [cell.subjectLabel.text sizeWithFont:MAIL_SUBJECT_FONT constrainedToSize:CGSizeMake(cell.subjectLabel.frame.size.width, cell.subjectLabel.frame.size.height) lineBreakMode:NSLineBreakByCharWrapping];
+                        cell.threadLabel.frame = CGRectMake(13 + labelSize.width, 33 + 1.5, cell.threadLabel.frame.size.width, cell.threadLabel.frame.size.height);
+                    }
+                    else {
+                        cell.threadLabel.frame = CGRectMake(13 + 320 - 108 + 17, 33 + 1.5, 48-5, 15);
+                    }
+                }
 
+                //changed by iauro
+                
+//                if ([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread] > 1) {
+//                    cell.subjectLabel.text = [NSString stringWithFormat:@"%@ (%d)",message.header.subject,[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread]];
+//                }
+//                else {
+//                    cell.subjectLabel.text = [NSString stringWithFormat:@"%@",message.header.subject];
+//                }
+                
+//                if (cell.subjectLabel.text.length == 0 || !message.header.subject)
+//                    cell.subjectLabel.text = @"No Subject";
                 
                 if([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread] > 1){
-                    cell.threadLabel.text = [NSString stringWithFormat:@"%d",[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread]];
+                    cell.threadLabel.text = [NSString stringWithFormat:@" (%d)",[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread]];
                     [cell.threadLabel setHidden:NO];
-                    [cell.detailDiscloser setHidden:NO];
+                    [cell.detailDiscloser setHidden:YES];
                 }
                 else{
                     cell.threadLabel.text = @"";
                     [cell.threadLabel setHidden:YES];
-                    [cell.detailDiscloser setHidden:NO];
+                    [cell.detailDiscloser setHidden:YES];
                 }
                 
                 
@@ -629,20 +680,36 @@ UIView *greyView;
                     if ([self isThreadRead:[NSString stringWithFormat:@"%llul",message.gmailThreadID]]) {
                         cell.readLabel.backgroundColor = [UIColor clearColor];
                         cell.readLabel.hidden = YES;
+                        
+                        cell.senderLabel.frame = CGRectMake(30 - 17, 13, 320-108 + 17, 20);
+                        cell.subjectLabel.frame = CGRectMake(30 - 17, 33 + 2.25, 320-108 + 17, 15);
+                        cell.bodyLabel.frame = CGRectMake(30 - 17, 33 + 2.25 + 15 + 2, 320-108 + 17, 35);
                     }
                     else {
                         cell.readLabel.hidden = NO;
-                        cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
+                        cell.readLabel.backgroundColor = MAIL_READ_BLUE_COLOR;
+                        
+                        cell.senderLabel.frame = CGRectMake(30, 13, 320-108, 20);
+                        cell.subjectLabel.frame = CGRectMake(30, 33 + 2.25, 320-108, 15);
+                        cell.bodyLabel.frame = CGRectMake(30, 33 + 2.25 + 15 + 2, 320-108, 35);
                     }
                 }
                 else{
                     if([(MessageModel*)searchMessages[indexPath.row] read]) {
                         cell.readLabel.backgroundColor = [UIColor clearColor];
                         cell.readLabel.hidden = YES;
+                        
+                        cell.senderLabel.frame = CGRectMake(30 - 17, 13, 320-108 + 17, 20);
+                        cell.subjectLabel.frame = CGRectMake(30 - 17, 33 + 2.25, 320-108 + 17, 15);
+                        cell.bodyLabel.frame = CGRectMake(30 - 17, 33 + 2.25 + 15 + 2, 320-108 + 17, 35);
                     }
                     else {
                         cell.readLabel.hidden = NO;
-                        cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
+                        cell.readLabel.backgroundColor = MAIL_READ_BLUE_COLOR;
+                        
+                        cell.senderLabel.frame = CGRectMake(30, 13, 320-108, 20);
+                        cell.subjectLabel.frame = CGRectMake(30, 33 + 2.25, 320-108, 15);
+                        cell.bodyLabel.frame = CGRectMake(30, 33 + 2.25 + 15 + 2, 320-108, 35);
                     }
                 }
                                 
@@ -1043,6 +1110,14 @@ UIView *greyView;
 
 #pragma mark -
 #pragma mark Helper
+- (BOOL)willFitString:(NSString *)string InLabel:(UILabel *)label {
+    CGSize labelSize = [string sizeWithFont:MAIL_SUBJECT_FONT constrainedToSize:CGSizeMake(1000, label.frame.size.height) lineBreakMode:NSLineBreakByTruncatingTail];
+    if (labelSize.width > label.frame.size.width) {
+        return NO;
+    }
+    return YES;
+}
+
 
 - (NSMutableDictionary*)getFunnlsDictionary:(MessageModel*)message {
     NSString *funnelJsonString = [message funnelJson];
@@ -1129,7 +1204,7 @@ UIView *greyView;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 98;
+    return 100.25;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
