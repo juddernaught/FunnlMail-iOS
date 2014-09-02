@@ -276,8 +276,9 @@ static NSString *currentFolder;
         tempArray = [[MessageService instance] retrieveOtherMessagesThanPrimary];
     }
     else{
-        tempArray = [[MessageService instance] retrieveAllMessages];
+        tempArray = [[MessageService instance] messagesWithFunnelId:tempAppDelegate.currentFunnelDS.funnelId top:2000];
     }
+    
     self.filterMessages = (NSMutableArray*)tempArray;
 //    dispatch_async(dispatch_get_main_queue(), ^(void){
         [self.emailsTableViewController.tableView reloadData];

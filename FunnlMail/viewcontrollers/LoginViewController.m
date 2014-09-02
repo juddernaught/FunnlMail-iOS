@@ -313,6 +313,8 @@ UIButton *loginButton;
         
         NSMutableDictionary *checkParams = [[NSMutableDictionary alloc] init];
         [checkParams setObject:email forKey:@"email"];
+    
+        
         [appDelegate.contextIOAPIClient getPath:@"lite/users" params:checkParams success:^(NSDictionary *responseDict) {
             NSLog(@"getContextIOWithEmail 1 : Check if Account already exists----- %@",responseDict.description);
 
@@ -323,22 +325,45 @@ UIButton *loginButton;
                 accountID = [dictionary objectForKey:@"id"];
             }
             
-            
-            
             if(accountID.length){
                 NSLog(@"---account found");
+    
                 PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+                [currentInstallation setObject:email forKey:@"email"];
                 if (![currentInstallation channels]) {
                     //[currentInstallation setChannels:@[]];
                 }
-                [currentInstallation addUniqueObject:[NSString stringWithFormat:@"account_id_%@",accountID] forKey:@"channels"];
-                [currentInstallation setObject:email forKey:@"email"];
+                [currentInstallation addUniqueObject:[NSString stringWithFormat:@"account_id_%@", accountID] forKey:@"channels"];
                 [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                     NSInteger errCode = [error code];
                     if (kPFErrorConnectionFailed == errCode ||  kPFErrorInternalServer == errCode)
                         [currentInstallation saveEventually];
                 }];
+
                 
+                NSMutableDictionary *newTokenParams = [[NSMutableDictionary alloc] init];
+                [newTokenParams setObject:email forKey:@"email"];
+                [newTokenParams setObject:@"cio-api-auth://" forKey:@"callback_url"];
+
+                [appDelegate.contextIOAPIClient postPath:@"lite/connect_tokens" params:newTokenParams success:^(id responseObject) {
+                    NSDictionary *newDictionary = (NSDictionary*)responseObject;
+                    NSLog(@"Getting new connect tokens success  ----- %@",newDictionary.description);
+                 
+                    NSString *contextIO_access_token = @"";
+                    NSString *contextIO_access_token_secret = @"";
+                    if([newDictionary objectForKey:@"access_token"])
+                        contextIO_access_token = [newDictionary objectForKey:@"access_token"];
+                    if([newDictionary objectForKey:@"access_token_secret"])
+                        contextIO_access_token_secret = [newDictionary objectForKey:@"access_token_secret"];
+                    
+                    appDelegate.contextIOAPIClient = [[CIOAPIClient alloc] initWithConsumerKey:kContextIOConsumerKey consumerSecret:kContextIOConsumerSecret token:contextIO_access_token tokenSecret:contextIO_access_token_secret accountID:accountID];
+                    [appDelegate.contextIOAPIClient saveCredentials];
+                    [self performSelector:@selector(addToSourceWithAccountID:) withObject:accountID afterDelay:0.01];
+
+                    
+                } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                    NSLog(@"Getting new connect tokens failed  ----- %@",error.userInfo.description);
+                }];
             }
             else{
                 NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
@@ -347,7 +372,7 @@ UIButton *loginButton;
                 [params setObject:name forKey:@"last_name"];
                 
                 [appDelegate.contextIOAPIClient postPath:@"lite/users" params:params success:^(NSDictionary *responseDict) {
-                    NSLog(@"getContextIOWithEmail  2 ----- %@",responseDict.description);
+                    NSLog(@"getContextIOWithEmail  2 - Create New UserInfo ----- %@",responseDict.description);
                     NSString *contextIO_access_token = [responseDict objectForKey:@"access_token"];
                     NSString *contextIO_access_token_secret = [responseDict objectForKey:@"access_token_secret"];
                     NSString *contextIO_account_id = [responseDict objectForKey:@"id"];
@@ -399,7 +424,7 @@ UIButton *loginButton;
         NSLog(@"-----> %@",responseDict.description);
         //[self performSelector:@selector(fetchContacts) withObject:nil afterDelay:20];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"error getting addToSourceWithAccountID: %@", error);
+        NSLog(@"-----> error getting addToSourceWithAccountID: %@", error);
     }];
 }
 
