@@ -110,6 +110,8 @@ UIView *greyView;
     }
     funnlArray = [[FunnelService instance] allFunnels];
     tempAppDelegate.mainVCdelegate = self.mainVCdelegate;
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
+    [_tableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning

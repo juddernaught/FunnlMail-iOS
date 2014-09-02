@@ -29,6 +29,7 @@ static NSString *contactCellIdentifier = @"ContactCell";
         message = messages;
         tempFunnelModel = funnelDS;
         [self setUpViews];
+        [self setUpCustomNavigationBar];
         viewController = someViewController;
     }
     return self;
@@ -45,45 +46,121 @@ static NSString *contactCellIdentifier = @"ContactCell";
     return FALSE;
 }
 
+- (void)setUpCustomNavigationBar {
+    UIView *naviGationBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, 66)];
+    [naviGationBar setBackgroundColor:[UIColor clearColor]];
+//    [naviGationBar setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.6]];
+    UIButton *sampleButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 22, 80
+                                                                        , 44)];
+    [sampleButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+    [sampleButton setTitle:@"Undo" forState:UIControlStateNormal];
+    [sampleButton addTarget:self action:@selector(closeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [sampleButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [naviGationBar addSubview:sampleButton];
+    sampleButton = nil;
+    
+    UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(110 - 25, 22, 150, 44)];
+    [sampleLabel setTextAlignment:NSTextAlignmentCenter];
+    sampleLabel.text = @"Added to Funnl";
+    [sampleLabel setFont:[UIFont boldSystemFontOfSize:18]];
+    [sampleLabel setTextColor:[UIColor whiteColor]];
+    [sampleLabel setBackgroundColor:[UIColor clearColor]];
+    [naviGationBar addSubview:sampleLabel];
+    sampleLabel = nil;
+    
+//    sampleButton = [[UIButton alloc] initWithFrame:CGRectMake(WIDTH - 100 - 10, 22, 100, 44)];
+//    [sampleButton addTarget:self action:@selector(saveButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+//    [sampleButton setTitle:@"Save" forState:UIControlStateNormal];
+//    [sampleButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+//    [sampleButton setTitleColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE] forState:UIControlStateNormal];
+//    [naviGationBar addSubview:sampleButton];
+//    sampleButton = nil;
+    
+    UIView *sampleView = [[UIView alloc] initWithFrame:CGRectMake(0, 64, WIDTH, 2)];
+    [sampleView setBackgroundColor:[UIColor whiteColor]];
+    [naviGationBar addSubview:sampleView];
+    sampleView = nil;
+    
+    [self addSubview:naviGationBar];
+}
+
 - (void)setUpViews
 {
-//    int width = 280;
+    int y = 0;
+    
+    //    int width = 280;
     UIButton *outterButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
     [outterButton addTarget:self action:@selector(outterButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:outterButton];
     self.backgroundColor = [UIColor clearColor];
     UIView *mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
-//    [mainView setBackgroundColor:[UIColor colorWithHexString:@"#E2E2E2"]];
+    //    [mainView setBackgroundColor:[UIColor colorWithHexString:@"#E2E2E2"]];
     mainView.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.93];
     
-    UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(8, 70, WIDTH - 16 - 40, 50)];
+//    userImage = [[UIImageView alloc] initWithFrame:CGRectMake((WIDTH - 75)/2.0, 66 + (95 - 75)/2, 75, 75)];
+//    userImage.clipsToBounds = YES;
+//    userImage.layer.cornerRadius = 75.0/2.0;
+//    userImage.layer.borderColor = [[UIColor clearColor] CGColor];
+//    userImage.layer.borderWidth = BUTTON_BORDER_WIDTH_VIP;
+    
+    unsigned long temp = 2 % 8;
+    NSArray *randomColors = GRADIENT_ARRAY;
+    NSString *colorString = [randomColors objectAtIndex:temp];
+    randomColors = nil;
+    UIColor *color = [UIColor colorWithHexString:colorString];
+    
+    userButton = [[UIButton alloc] initWithFrame:CGRectMake((WIDTH - 75)/2.0, 66 + (95 - 75)/2, 75, 75)];
+    userButton.clipsToBounds = YES;
+    userButton.layer.cornerRadius = 75.0/2.0;
+    userButton.layer.borderColor = [[UIColor clearColor] CGColor];
+    userButton.layer.borderWidth = BUTTON_BORDER_WIDTH_VIP;
+    [userButton setBackgroundColor:color];
+    
+    [userButton.titleLabel setFont:FONT_FOR_INITIAL];
+    
+    color = nil;
+    colorString = nil;
+    randomColors = nil;
+    
+    if (message.header.sender.displayName) {
+        [userButton setTitle:[message.header.sender.displayName substringWithRange:NSMakeRange(0, 1)] forState:UIControlStateNormal];
+//        [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[[contactInCC objectAtIndex:counter] displayName] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
+    }
+    else {
+        [userButton setTitle:[message.header.sender.mailbox substringWithRange:NSMakeRange(0, 1)] forState:UIControlStateNormal];
+    }
+//    [userButton setTitle:@"S" forState:UIControlStateNormal];
+    [mainView addSubview:userButton];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[self getUserImage:message.header.sender.mailbox]]];
+    [request setValue:@"image/*" forHTTPHeaderField:@"Accept"];
+    
+    GTMHTTPFetcher *fetcher = [GTMHTTPFetcher fetcherWithRequest:request];
+    GTMOAuth2Authentication *currentAuth = [GTMOAuth2ViewControllerTouch authForGoogleFromKeychainForName:kKeychainItemName clientID:kMyClientID clientSecret:kMyClientSecret];
+    [fetcher setAuthorizer:currentAuth];
+    [fetcher beginFetchWithDelegate:self didFinishSelector:@selector(imageFetcher:finishedWithData:error:)];
+    fetcher.comment = @"-1";
+    
+    y = 95 + 66;
+    
+    UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, y, WIDTH - 20, 50)];
     [messageLabel setBackgroundColor:[UIColor clearColor]];
     [messageLabel setTextColor:[UIColor whiteColor]];
     [messageLabel setTextAlignment:NSTextAlignmentLeft];
     messageLabel.numberOfLines = 2;
     messageLabel.lineBreakMode = NSLineBreakByWordWrapping;
     if (message.header.sender.displayName) {
-        messageLabel.text = [NSString stringWithFormat:@"Message from %@ will be funneled under %@.",message.header.sender.displayName,tempFunnelModel.funnelName];
+        messageLabel.text = [NSString stringWithFormat:@"Messages from %@ will be funneled under %@.",message.header.sender.displayName,tempFunnelModel.funnelName];
     }
     else {
-        messageLabel.text = [NSString stringWithFormat:@"Message from %@ will be funneled under %@.",message.header.sender.mailbox,tempFunnelModel.funnelName];
+        
+        messageLabel.text = [NSString stringWithFormat:@"Messages from %@ will be funneled under %@.",message.header.sender.mailbox,tempFunnelModel.funnelName];
     }
-    
+    [messageLabel setFont:[UIFont systemFontOfSize:20]];
     [mainView addSubview:messageLabel];
     messageLabel = nil;
     
-    UIView *seperator = [[UIView alloc] initWithFrame:CGRectMake(0, 140, WIDTH, 0.5)];
-    [seperator setBackgroundColor:[UIColor lightGrayColor]];
-    [mainView addSubview:seperator];
-    seperator = nil;
-    
-    alsoAddLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 150, WIDTH, 40)];
-    alsoAddLabel.textAlignment = NSTextAlignmentCenter;
-    alsoAddLabel.text = @"Also add?";
-    [alsoAddLabel setBackgroundColor:[UIColor clearColor]];
-    [alsoAddLabel setTextColor:[UIColor lightGrayColor]];
-    [alsoAddLabel setFont:[UIFont systemFontOfSize:15]];
-    [mainView addSubview:alsoAddLabel];
+    y = y + 50 + 10;
     
     contactInCC = [[NSMutableArray alloc] initWithArray:message.header.cc];
     flagArray = [[NSMutableArray alloc] init];
@@ -101,54 +178,205 @@ static NSString *contactCellIdentifier = @"ContactCell";
         }
     }
     
-//    if (![self checkForDuplicatesForEmail:[message.header.from mailbox]]) {
-//        if (!dataSourceArray) {
-//            dataSourceArray = [[NSMutableArray alloc] init];
-//        }
-//        [dataSourceArray addObject:[message.header.from mailbox]];
-//    }
+    if (contactInCC.count) {
+        UIView *seperator = [[UIView alloc] initWithFrame:CGRectMake(10, y, WIDTH - 20, 1)];
+        [seperator setBackgroundColor:[UIColor lightGrayColor]];
+        [mainView addSubview:seperator];
+        seperator = nil;
+        
+        y = y + 0.5 + 10;
+        
+        alsoAddLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, y, WIDTH - 20, 40)];
+        alsoAddLabel.textAlignment = NSTextAlignmentLeft;
+        alsoAddLabel.text = @"Also include:";
+        [alsoAddLabel setBackgroundColor:[UIColor clearColor]];
+        [alsoAddLabel setTextColor:[UIColor whiteColor]];
+        [mainView addSubview:alsoAddLabel];
+        alsoAddLabel = nil;
+        y = y + 40 + 10;
+    }
     
-    contactsTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 190, WIDTH, HEIGHT - 190 - 50)];
-    [contactsTableView setBackgroundColor:CLEAR_COLOR];
-    [contactsTableView setSeparatorInset:UIEdgeInsetsZero];
-    [contactsTableView registerClass:[ContactTableViewCell class] forCellReuseIdentifier:CONTACT_CELL];
-    [contactsTableView registerClass:[ContactTableViewCell class] forCellReuseIdentifier:contactCellIdentifier];
-    contactsTableView.delegate = self;
-    contactsTableView.dataSource = self;
-    [contactsTableView setTableFooterView:[[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)]];
-    [mainView addSubview:contactsTableView];
+    if (!IS_NEW_CREATE_FUNNEL) {
+        contactsTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, y, WIDTH, HEIGHT - y - 50)];
+        [contactsTableView setBackgroundColor:CLEAR_COLOR];
+        [contactsTableView setSeparatorInset:UIEdgeInsetsZero];
+        [contactsTableView registerClass:[ContactTableViewCell class] forCellReuseIdentifier:CONTACT_CELL];
+        [contactsTableView registerClass:[ContactTableViewCell class] forCellReuseIdentifier:contactCellIdentifier];
+        contactsTableView.delegate = self;
+        contactsTableView.dataSource = self;
+        [contactsTableView setTableFooterView:[[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)]];
+        [mainView addSubview:contactsTableView];
+    }
+    else {
+        if (buttonArray) {
+            buttonArray = nil;
+        }
+        buttonArray = [[NSMutableArray alloc] init];
+        UIFont *labelFont = [UIFont systemFontOfSize:13];
+        UIScrollView *ccScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, y, WIDTH, HEIGHT - y - 50)];
+        [ccScrollView setBackgroundColor:[UIColor clearColor]];
+        int x1 = 10;
+        int y1 = 20;
+        int buttonWidth = 75;
+        for (int counter = 0; counter < contactInCC.count; counter++) {
+            unsigned long temp = counter % 8;
+            NSArray *randomColors = GRADIENT_ARRAY;
+            NSString *colorString = [randomColors objectAtIndex:temp];
+            randomColors = nil;
+            UIColor *color = [UIColor colorWithHexString:colorString];
+            
+            if(color == nil){
+                color = [UIColor colorWithHexString:@"#F9F9F9"];
+            }
+            
+            
+            if (counter % 3 == 0) {
+                UIButton *tempButton = [[UIButton alloc] initWithFrame:CGRectMake(x1, y1, buttonWidth, buttonWidth)];
+                [tempButton.titleLabel setFont:FONT_FOR_INITIAL];
+                if ([[contactInCC objectAtIndex:counter] displayName]) {
+                    [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[[contactInCC objectAtIndex:counter] displayName] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
+                }
+                else {
+                    [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[[contactInCC objectAtIndex:counter] mailbox] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
+                }
+                tempButton.tag = counter;
+                [tempButton addTarget:self action:@selector(ccContactPressed:) forControlEvents:UIControlEventTouchUpInside];
+                tempButton.clipsToBounds = YES;
+                tempButton.layer.borderColor = [[UIColor whiteColor] CGColor];
+                tempButton.layer.borderWidth = BUTTON_BORDER_WIDTH_VIP;
+                tempButton.layer.cornerRadius = buttonWidth/2.0;
+                [ccScrollView addSubview:tempButton];
+                [tempButton setBackgroundColor:color];
+                [buttonArray addObject:tempButton];
+                
+                GTMHTTPFetcher *fetcher = [GTMHTTPFetcher fetcherWithRequest:request];
+                GTMOAuth2Authentication *currentAuth = [GTMOAuth2ViewControllerTouch authForGoogleFromKeychainForName:kKeychainItemName clientID:kMyClientID clientSecret:kMyClientSecret];
+                [fetcher setAuthorizer:currentAuth];
+                [fetcher beginFetchWithDelegate:self didFinishSelector:@selector(imageFetcher:finishedWithData:error:)];
+                fetcher.comment = [NSString stringWithFormat:@"%d",counter];
+                
+                UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(tempButton.frame.origin.x, tempButton.frame.origin.y + buttonWidth + 5, buttonWidth, 20)];
+                [sampleLabel setTextAlignment:NSTextAlignmentCenter];
+                [sampleLabel setFont:labelFont];
+                if ([[contactInCC objectAtIndex:counter] displayName]) {
+                    sampleLabel.text = [[contactInCC objectAtIndex:counter] displayName];
+                }
+                else {
+                    sampleLabel.text = [[contactInCC objectAtIndex:counter] mailbox];
+                }
+                [sampleLabel setTextColor:[UIColor whiteColor]];
+                [ccScrollView addSubview:sampleLabel];
+                sampleLabel = nil;
+                tempButton = nil;
+            }
+            else if (counter % 3 == 1) {
+                UIButton *tempButton = [[UIButton alloc] initWithFrame:CGRectMake(160 - (buttonWidth/2.0), y1, buttonWidth, buttonWidth)];
+                tempButton.clipsToBounds = YES;
+                [tempButton.titleLabel setFont:FONT_FOR_INITIAL];
+                if ([[contactInCC objectAtIndex:counter] displayName]) {
+                    [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[[contactInCC objectAtIndex:counter] displayName] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
+                }
+                else {
+                    [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[[contactInCC objectAtIndex:counter] mailbox] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
+                }
+                tempButton.tag = counter;
+                [tempButton setBackgroundColor:color];
+                [tempButton addTarget:self action:@selector(ccContactPressed:) forControlEvents:UIControlEventTouchUpInside];
+                tempButton.layer.borderColor = [[UIColor whiteColor] CGColor];
+                tempButton.layer.borderWidth = BUTTON_BORDER_WIDTH_VIP;
+                tempButton.layer.cornerRadius = buttonWidth/2.0;
+                [ccScrollView addSubview:tempButton];
+                //            tempButton = nil;
+                
+                [buttonArray addObject:tempButton];
+                
+                GTMHTTPFetcher *fetcher = [GTMHTTPFetcher fetcherWithRequest:request];
+                GTMOAuth2Authentication *currentAuth = [GTMOAuth2ViewControllerTouch authForGoogleFromKeychainForName:kKeychainItemName clientID:kMyClientID clientSecret:kMyClientSecret];
+                [fetcher setAuthorizer:currentAuth];
+                [fetcher beginFetchWithDelegate:self didFinishSelector:@selector(imageFetcher:finishedWithData:error:)];
+                fetcher.comment = [NSString stringWithFormat:@"%d",counter];
+                
+                UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(tempButton.frame.origin.x, tempButton.frame.origin.y + buttonWidth + 5, buttonWidth, 20)];
+                [sampleLabel setFont:labelFont];
+                [sampleLabel setTextAlignment:NSTextAlignmentCenter];
+                if ([[contactInCC objectAtIndex:counter] displayName]) {
+                    sampleLabel.text = [[contactInCC objectAtIndex:counter] displayName];
+                }
+                else {
+                    sampleLabel.text = [[contactInCC objectAtIndex:counter] mailbox];
+                }
+                [sampleLabel setTextColor:[UIColor whiteColor]];
+                [ccScrollView addSubview:sampleLabel];
+                sampleLabel = nil;
+                tempButton = nil;
+            }
+            else {
+                UIButton *tempButton = [[UIButton alloc] initWithFrame:CGRectMake(WIDTH - 10 - buttonWidth, y1, buttonWidth, buttonWidth)];
+                tempButton.clipsToBounds = YES;
+                [tempButton.titleLabel setFont:FONT_FOR_INITIAL];
+                if ([[contactInCC objectAtIndex:counter] displayName]) {
+                    [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[[contactInCC objectAtIndex:counter] displayName] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
+                }
+                else {
+                    [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[[contactInCC objectAtIndex:counter] mailbox] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
+                }
+                
+                tempButton.tag = counter;
+                [tempButton setBackgroundColor:color];
+                [tempButton addTarget:self action:@selector(ccContactPressed:) forControlEvents:UIControlEventTouchUpInside];
+                tempButton.layer.borderColor = [[UIColor whiteColor] CGColor];
+                tempButton.layer.borderWidth = BUTTON_BORDER_WIDTH_VIP;
+                tempButton.layer.cornerRadius = buttonWidth/2.0;
+                [ccScrollView addSubview:tempButton];
+                y1 = y1 + 100;
+                
+                [buttonArray addObject:tempButton];
+                
+                GTMHTTPFetcher *fetcher = [GTMHTTPFetcher fetcherWithRequest:request];
+                GTMOAuth2Authentication *currentAuth = [GTMOAuth2ViewControllerTouch authForGoogleFromKeychainForName:kKeychainItemName clientID:kMyClientID clientSecret:kMyClientSecret];
+                [fetcher setAuthorizer:currentAuth];
+                [fetcher beginFetchWithDelegate:self didFinishSelector:@selector(imageFetcher:finishedWithData:error:)];
+                fetcher.comment = [NSString stringWithFormat:@"%d",counter];
+                
+                UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(tempButton.frame.origin.x, tempButton.frame.origin.y + buttonWidth + 5, buttonWidth, 20)];
+                [sampleLabel setFont:labelFont];
+                [sampleLabel setTextAlignment:NSTextAlignmentCenter];
+                if ([[contactInCC objectAtIndex:counter] displayName]) {
+                    sampleLabel.text = [[contactInCC objectAtIndex:counter] displayName];
+                }
+                else {
+                    sampleLabel.text = [[contactInCC objectAtIndex:counter] mailbox];
+                }
+                [sampleLabel setTextColor:[UIColor whiteColor]];
+                [ccScrollView addSubview:sampleLabel];
+                sampleLabel = nil;
+                tempButton = nil;
+            }
+        }
+        [ccScrollView setContentSize:CGSizeMake(WIDTH, y1)];
+        
+        [mainView addSubview:ccScrollView];
+    }
     
-    
-    
-    UIButton *doneButton = [[UIButton alloc] initWithFrame:CGRectMake(60, HEIGHT - 50, WIDTH - 120, 40)];
-    [doneButton setBackgroundColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR]];
+    UIButton *doneButton = [[UIButton alloc] initWithFrame:CGRectMake(75, HEIGHT - 45, WIDTH - 150, 30)];
+    if (contactInCC.count == 0) {
+        doneButton.frame = CGRectMake(75, y + 30, WIDTH - 150, 30);
+    }
+    [doneButton setBackgroundColor:[UIColor clearColor]];
     [doneButton addTarget:self action:@selector(updateFunnel:) forControlEvents:UIControlEventTouchUpInside];
     doneButton.clipsToBounds = YES;
     doneButton.layer.cornerRadius = 2.0;
+    doneButton.layer.borderWidth = 1;
+    doneButton.layer.borderColor = [[UIColor whiteColor] CGColor];
     [doneButton setTitle:@"Done" forState:UIControlStateNormal];
     [mainView addSubview:doneButton];
     
-    if(contactInCC.count == 0){
-        alsoAddLabel.hidden = YES;
-        doneButton.frame = CGRectMake(60, 190, WIDTH - 120, 40);
-    }
-    else{
-        alsoAddLabel.hidden = NO;
-        doneButton.frame = CGRectMake(60, HEIGHT  - 50, WIDTH - 120, 40);
-    }
-    
-    UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeButton.frame = CGRectMake(WIDTH-40, 70, 40, 40);
-    //    [closeButton setBackgroundColor:[UIColor colorWithHexString:@"#1B8EEE"]];
-    //    [closeButton setTitle:@"Close" forState:UIControlStateNormal];
-    //    [closeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:16]];
-    //    [closeButton setTitleColor:WHITE_CLR forState:UIControlStateNormal];
-    //    [closeButton setTitleColor:LIGHT_GRAY_COLOR forState:UIControlStateHighlighted];
-    [closeButton setImage:[UIImage imageNamed:@"MPCloseBtn"] forState:UIControlStateNormal];
-    [closeButton addTarget:self action:@selector(closeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [mainView addSubview:closeButton];
+//    UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    closeButton.frame = CGRectMake(WIDTH-40, 70, 40, 40);
+//    [closeButton setImage:[UIImage imageNamed:@"MPCloseBtn"] forState:UIControlStateNormal];
+//    [closeButton addTarget:self action:@selector(closeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+//    [mainView addSubview:closeButton];
 
-    
     mainView.center = self.center;
     
     [self addSubview:mainView];
@@ -158,6 +386,45 @@ static NSString *contactCellIdentifier = @"ContactCell";
     [self setHidden:YES];
 }
 
+- (void)ccContactPressed:(UIButton *)sender {
+    if ([[flagArray objectAtIndex:sender.tag] isEqualToString:@"0"]) {
+        sender.layer.borderColor = [[UIColor colorWithHexString:BUTTON_BORDER_COLOR_SELECTED] CGColor];
+        [flagArray setObject:@"1" atIndexedSubscript:sender.tag];
+    }
+    else {
+        sender.layer.borderColor = [[UIColor whiteColor] CGColor];
+        [flagArray setObject:@"0" atIndexedSubscript:sender.tag];
+    }
+}
+
+- (void)imageFetcher:(GTMHTTPFetcher *)imageFetcher finishedWithData:(NSData *)imageData error:(NSError *)error {
+    if (error) {
+        
+    }
+    else {
+        if ([imageFetcher.comment isEqualToString:@"-1"]) {
+            [userImage setImage:[UIImage imageWithData:imageData]];
+        }
+        else {
+            if (buttonArray.count > [imageFetcher.comment integerValue]) {
+                [[buttonArray objectAtIndex:[imageFetcher.comment integerValue]] setBackgroundImage:[UIImage imageWithData:imageData]];
+            }
+            else {
+                
+            }
+        }
+    }
+}
+
+- (NSString *)getUserImage:(NSString *)emailAddress {
+    NSArray *contactArray = [[ContactService instance] retrieveAllContact];
+    for (ContactModel *tempContact in contactArray) {
+        if ([tempContact.email isEqualToString:emailAddress]) {
+            return tempContact.thumbnail;
+        }
+    }
+    return nil;
+}
 #pragma mark -
 #pragma mark Event Handlers
 - (void)updateFunnel:(UIButton*)sender {

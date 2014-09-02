@@ -20,6 +20,8 @@
 #import "ConfirmFunnelPopUp.h"
 #import "EmailsTableViewController.h"
 #import "FunnelPopUpForExtraRules.h"
+//new ui for create funnel
+#import "FMCreateFunnlViewController.h"
 
 static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
@@ -205,7 +207,9 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
             }
             tempArray = nil;
             FunnelPopUpForExtraRules *funnelPopUp = [[FunnelPopUpForExtraRules alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT) withMessage:message withFunnel:funnel onViewController:viewController];
-            [[(EmailsTableViewController*)viewController view] addSubview:funnelPopUp];
+//            [[(EmailsTableViewController*)viewController view] addSubview:funnelPopUp];
+            AppDelegate *tempAppDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+            [tempAppDelegate.drawerController.centerViewController.view addSubview:funnelPopUp];
         }
         else {
             FunnelModel *funnel = [filterArray objectAtIndex:indexPath.row];
@@ -259,10 +263,17 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
         [sendersDictionary setObject:[mailArray objectAtIndex:count] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
     }
     
-    CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:nil filterModel:nil];
-    creatFunnlViewController.mainVCdelegate = self.mainVCdelegate;
-    [self.mainVCdelegate pushViewController:creatFunnlViewController];
-    creatFunnlViewController = nil;
+    if (IS_NEW_CREATE_FUNNEL) {
+        FMCreateFunnlViewController *viewCOntroller = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:mailArray andSubjects:nil];
+        viewCOntroller.mainVCdelegate = self.mainVCdelegate;
+        [self.mainVCdelegate pushViewController:viewCOntroller];
+    }
+    else {
+        CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:nil filterModel:nil];
+        creatFunnlViewController.mainVCdelegate = self.mainVCdelegate;
+        [self.mainVCdelegate pushViewController:creatFunnlViewController];
+        creatFunnlViewController = nil;
+    }
 }
 
 @end

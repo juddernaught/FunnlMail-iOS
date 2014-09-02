@@ -20,6 +20,7 @@
 #import <Mixpanel/Mixpanel.h>
 #import "MBProgressHUD.h"
 #import "ShareView.h"
+#import "FMCreateFunnlViewController.h"
 
 static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
@@ -270,10 +271,17 @@ NSString *msgBody;
 }
 
 -(void)createAddFunnlView{
-  CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:nil subjects:nil filterModel:nil];
-  creatFunnlViewController.mainVCdelegate = self.mainVCdelegate;
-  [self.mainVCdelegate pushViewController:creatFunnlViewController];
-  creatFunnlViewController = nil;
+    if (IS_NEW_CREATE_FUNNEL) {
+        FMCreateFunnlViewController *viewCOntroller = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:nil andSubjects:nil];
+        viewCOntroller.mainVCdelegate = self.mainVCdelegate;
+        [self.mainVCdelegate pushViewController:viewCOntroller];
+    }
+    else {
+        CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:nil subjects:nil filterModel:nil];
+        creatFunnlViewController.mainVCdelegate = self.mainVCdelegate;
+        [self.mainVCdelegate pushViewController:creatFunnlViewController];
+        creatFunnlViewController = nil;
+    }
 }
 
 
@@ -366,38 +374,52 @@ NSString *msgBody;
 
 -(void)settingsButtonClicked:(id)sender{
     
-  [[Mixpanel sharedInstance] track:@"Pressed 'Settings' button in manage overlay"];
+    [[Mixpanel sharedInstance] track:@"Pressed 'Settings' button in manage overlay"];
     
-  UIButton *b = (UIButton*)sender;
-  FunnelModel *fm = (FunnelModel *)filterArray[b.tag];
-  if([[fm.funnelName lowercaseString]  isEqualToString:[ALL_FUNNL lowercaseString]] || [[fm.funnelName lowercaseString]  isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]){
-      PrimarySettingViewController *primarySettingController = [[PrimarySettingViewController alloc] init];
-      [self.mainVCdelegate pushViewController:primarySettingController];
-      primarySettingController = nil;
-
-  }
-  else{
-      NSMutableDictionary *sendersDictionary = [[NSMutableDictionary alloc] init];
-      int count = 0;
-      for (NSString *address in fm.sendersArray) {
-          [sendersDictionary setObject:[address lowercaseString] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
-          count ++;
-      }
-      
-      NSMutableDictionary *subjectsDictionary = [[NSMutableDictionary alloc] init];
-      count = 0;
-      for (NSString *subject in fm.subjectsArray) {
-          if (![subject isEqualToString:@""])
-          {
-              [subjectsDictionary setObject:[subject lowercaseString] forKey:[NSIndexPath indexPathForRow:count inSection:2]];
-              count ++;
-          }
-      }
-      CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:subjectsDictionary filterModel:fm];
-      creatFunnlViewController.mainVCdelegate = self.mainVCdelegate;
-      [self.mainVCdelegate pushViewController:creatFunnlViewController];
-      creatFunnlViewController = nil;
-  }
+    UIButton *b = (UIButton*)sender;
+    FunnelModel *fm = (FunnelModel *)filterArray[b.tag];
+    if([[fm.funnelName lowercaseString]  isEqualToString:[ALL_FUNNL lowercaseString]] || [[fm.funnelName lowercaseString]  isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]){
+        PrimarySettingViewController *primarySettingController = [[PrimarySettingViewController alloc] init];
+        [self.mainVCdelegate pushViewController:primarySettingController];
+        primarySettingController = nil;
+        
+    }
+    else{
+        NSMutableDictionary *sendersDictionary = [[NSMutableDictionary alloc] init];
+        int count = 0;
+        for (NSString *address in fm.sendersArray) {
+            [sendersDictionary setObject:[address lowercaseString] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
+            count ++;
+        }
+        
+        NSMutableDictionary *subjectsDictionary = [[NSMutableDictionary alloc] init];
+        count = 0;
+        for (NSString *subject in fm.subjectsArray) {
+            if (![subject isEqualToString:@""])
+            {
+                [subjectsDictionary setObject:[subject lowercaseString] forKey:[NSIndexPath indexPathForRow:count inSection:2]];
+                count ++;
+            }
+        }
+        if (IS_NEW_CREATE_FUNNEL) {
+            NSMutableArray *sender = [[NSMutableArray alloc] initWithArray:sendersDictionary.allValues];
+            NSMutableArray *subject = [[NSMutableArray alloc] initWithArray:subjectsDictionary.allValues];
+            FMCreateFunnlViewController *viewController = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:sender andSubjects:subject];
+            sender = nil;
+            subject = nil;
+            viewController.isEditFunnel = TRUE;
+            viewController.oldModel = fm;
+            viewController.mainVCdelegate = self.mainVCdelegate;
+            [self.mainVCdelegate pushViewController:viewController];
+        }
+        else {
+            CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:subjectsDictionary filterModel:fm];
+            creatFunnlViewController.mainVCdelegate = self.mainVCdelegate;
+            [self.mainVCdelegate pushViewController:creatFunnlViewController];
+            creatFunnlViewController = nil;
+        }
+    }
+    [self setHidden:YES];
 }
 
 -(void)notificationButtonClicked:(id)sender{

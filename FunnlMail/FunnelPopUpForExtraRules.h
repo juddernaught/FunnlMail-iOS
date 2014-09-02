@@ -13,6 +13,8 @@
 #import "UIColor+HexString.h"
 #import "ContactTableViewCell.h"
 #import "EmailService.h"
+#import "ContactService.h"
+#import "GTMOAuth2ViewControllerTouch.h"
 
 @interface FunnelPopUpForExtraRules : UIView<UITableViewDataSource,UITableViewDelegate>
 {
@@ -24,6 +26,9 @@
     NSMutableArray *flagArray;
     id viewController;
     UILabel *alsoAddLabel;
+    UIImageView *userImage;
+    UIButton *userButton;
+    NSMutableArray *buttonArray;
 }
 - (id)initWithFrame:(CGRect)frame withMessage:(MCOIMAPMessage*)messages withFunnel:(FunnelModel*)funnelDS onViewController:(id)someViewController;
 @end
