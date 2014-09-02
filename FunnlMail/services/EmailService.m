@@ -830,6 +830,15 @@ static NSString *currentFolder;
 }
 
 -(void)startAutoRefresh{
+    MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
+    [overlay.backgroundView setBackgroundColor:[UIColor  clearColor]];
+    [overlay postImmediateMessage:@"Downloading..." animated:YES];
+    overlay.animation = MTStatusBarOverlayAnimationFallDown;  // MTStatusBarOverlayAnimationShrink
+    overlay.detailViewMode = MTDetailViewModeHistory;         // enable automatic history-tracking and show in detail-view
+    overlay.tag = 1;
+//    overlay.delegate = self;
+    overlay.progress = 0.0;
+    
     [self loadLatestMail:NUMBER_OF_NEW_MESSAGES_TO_CHECK withTableController:emailsTableViewController withFolder:INBOX];
 }
 

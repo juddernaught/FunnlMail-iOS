@@ -60,6 +60,9 @@ static NSString *mailCellIdentifier = @"MailCell";
     dataSourceArray = [[MessageService instance] retrieveAllMessagesForThread:gmailThreadId];
     [self.view setBackgroundColor:[UIColor whiteColor]];
     emailThreadTable = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, [[UIScreen mainScreen] bounds].size.height)];
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    [emailThreadTable setTableFooterView:footerView];
+    footerView = nil;
     [self.emailThreadTable registerClass:[EmailCell class] forCellReuseIdentifier:mailCellIdentifier];
     emailThreadTable.delegate = self;
     emailThreadTable.dataSource = self;
@@ -86,7 +89,7 @@ static NSString *mailCellIdentifier = @"MailCell";
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 90;
+    return 100.25;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -97,10 +100,16 @@ static NSString *mailCellIdentifier = @"MailCell";
         cell.readLabel.backgroundColor = [UIColor clearColor];
         cell.readLabel.hidden = YES;
         
-
+        cell.senderLabel.frame = CGRectMake(30 - 17, 13, 320-108 + 17, 20);
+        cell.subjectLabel.frame = CGRectMake(30 - 17, 33 + 2.25, 320-108 + 17, 15);
+        cell.bodyLabel.frame = CGRectMake(30 - 17, 33 + 2.25 + 15 + 2, 320-108 + 17, 35);
     }else{
         cell.readLabel.hidden = NO;
-        cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
+        cell.readLabel.backgroundColor = MAIL_READ_BLUE_COLOR;
+        
+        cell.senderLabel.frame = CGRectMake(30, 13, 320-108, 20);
+        cell.subjectLabel.frame = CGRectMake(30 - 17, 33 + 2.25, 320-108 + 17, 15);
+        cell.bodyLabel.frame = CGRectMake(30 - 17, 33 + 2.25 + 15 + 2, 320-108 + 17, 35);
     }
     cell.delegate = self;
     [cell.detailDiscloser setHidden:NO];
