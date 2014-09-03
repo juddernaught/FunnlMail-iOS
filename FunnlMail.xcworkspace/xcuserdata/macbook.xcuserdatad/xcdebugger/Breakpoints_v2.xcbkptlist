@@ -35,12 +35,12 @@
                   symbolName = "__55-[CreateFunnlViewController createWebhooksAndSaveFunnl]_block_invoke663"
                   moduleName = "FunnlMail"
                   urlString = "file:///Users/macbook/Desktop/FunnlMail/git-FunnlMail-iOS/FunnlMail/viewcontrollers/CreateFunnlViewController.m"
-                  timestampString = "431367603.438613"
+                  timestampString = "431438858.35324"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "1012"
                   endingLineNumber = "1012"
-                  offsetFromSymbolStart = "38">
+                  offsetFromSymbolStart = "124">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -49,12 +49,12 @@
                   symbolName = "__55-[CreateFunnlViewController createWebhooksAndSaveFunnl]_block_invoke_2664"
                   moduleName = "FunnlMail"
                   urlString = "file:///Users/macbook/Desktop/FunnlMail/git-FunnlMail-iOS/FunnlMail/viewcontrollers/CreateFunnlViewController.m"
-                  timestampString = "431367603.439048"
+                  timestampString = "431438858.353442"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1013"
-                  endingLineNumber = "1013"
-                  offsetFromSymbolStart = "18">
+                  startingLineNumber = "1012"
+                  endingLineNumber = "1012"
+                  offsetFromSymbolStart = "30">
                </Location>
             </Locations>
          </BreakpointContent>

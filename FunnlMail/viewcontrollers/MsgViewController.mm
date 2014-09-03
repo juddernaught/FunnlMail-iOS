@@ -21,6 +21,8 @@
 #import "EmailService.h"
 #import "FunnelModel.h"
 #import "FunnlPopUpView.h"
+#import "FMCreateFunnlViewController.h"
+
 
 @interface MsgViewController () <MCOMessageViewDelegate>
 
@@ -602,10 +604,19 @@ typedef void (^DownloadCallback)(NSError * error);
         }
     }
 
-    CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:subjectsDictionary filterModel:fm];
-    creatFunnlViewController.isEdit = NO;
-    [self.navigationController pushViewController:creatFunnlViewController animated:YES];
-    creatFunnlViewController = nil;
+    if(IS_NEW_CREATE_FUNNEL){
+        FMCreateFunnlViewController *viewController = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:[sendersDictionary allValues] andSubjects:[subjectsDictionary allValues]];
+//        viewController.mainVCdelegate = self.mainVCdelegate;
+//        [self.mainVCdelegate pushViewController:viewController];
+//        viewController = nil;
+
+    }
+    else{
+        CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:subjectsDictionary filterModel:fm];
+        creatFunnlViewController.isEdit = NO;
+        [self.navigationController pushViewController:creatFunnlViewController animated:YES];
+        creatFunnlViewController = nil;
+    }
     
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 }

@@ -162,15 +162,15 @@ pre {\
         if ([_message isKindOfClass:[MCOIMAPMessage class]]) {
             content = [(MCOIMAPMessage *) _message htmlRenderingWithFolder:_folder delegate:self];
             if (content) {
-                NSArray *tempArray = [content componentsSeparatedByString:@"<head>"];
+                NSArray *tempArray = [content componentsSeparatedByString:@"<div><b>Date:<"];
                 if (tempArray.count > 1) {
-                    content = [tempArray objectAtIndex:1];
+                    NSArray *tempArray1 = [[tempArray objectAtIndex:1] componentsSeparatedByString:@"</div>"];
+                    if (tempArray1.count > 1) {
+                        NSString *body = [[[tempArray objectAtIndex:1] componentsSeparatedByString:[tempArray1 objectAtIndex:0]] objectAtIndex:1];
+                        content = body;
+                    }
                 }
                 else {
-                    tempArray = [content componentsSeparatedByString:@"Subject:"];
-                    if (tempArray.count > 1) {
-                        content = [tempArray objectAtIndex:1];
-                    }
                 }
                 paramDict[uidKey] = content;
             }

@@ -129,4 +129,21 @@ static ContactService *instance;
     return tempContactModel;
 }
 
+-(NSArray *) retrieveAllContact {
+    __block NSMutableArray *array = [[NSMutableArray alloc] init];
+     [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+         FMResultSet *resultSet ;
+         NSString *query = @"SELECT * FROM contacts;";
+         resultSet = [db executeQuery:query];
+         while ([resultSet next]) {
+             ContactModel *tempModel = [[ContactModel alloc] init];
+             tempModel.name = [resultSet stringForColumn:@"name"];
+             tempModel.email = [resultSet stringForColumn:@"email"];
+             tempModel.thumbnail = [resultSet stringForColumn:@"thumbnail"];
+             [array addObject:tempModel];
+         }
+     }];
+    return array;
+}
+
 @end

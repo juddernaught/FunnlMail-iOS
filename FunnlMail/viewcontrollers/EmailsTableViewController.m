@@ -28,6 +28,7 @@
 #import "MTStatusBarOverlay.h"
 #import "MCTMsgViewController.h"
 #import "LoginViewController.h"
+#import "FMCreateFunnlViewController.h"
 
 @implementation UILabel (Additions)
 
@@ -474,18 +475,6 @@ UIView *greyView;
                         cell.threadLabel.frame = CGRectMake(13 + 320 - 108 + 17, 33 + 1.5, 48-5, 15);
                     }
                 }
-
-                //changed by iauro
-                
-//                if ([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread] > 1) {
-//                    cell.subjectLabel.text = [NSString stringWithFormat:@"%@ (%d)",message.header.subject,[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread]];
-//                }
-//                else {
-//                    cell.subjectLabel.text = [NSString stringWithFormat:@"%@",message.header.subject];
-//                }
-                
-//                if (cell.subjectLabel.text.length == 0 || !message.header.subject)
-//                    cell.subjectLabel.text = @"No Subject";
                 
                 if([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread] > 1){
                     cell.threadLabel.text = [NSString stringWithFormat:@" (%d)",[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread]];
@@ -505,6 +494,8 @@ UIView *greyView;
                     cell.bodyLabel.text = cachedPreview;
                 }
                 else{
+  
+
                     cell.messageRenderingOperation = [[EmailService instance].imapSession plainTextBodyRenderingOperationWithMessage:message folder:self.emailFolder];
                     [cell.messageRenderingOperation start:^(NSString * plainTextBodyString, NSError * error) {
                         if (plainTextBodyString) {
@@ -536,8 +527,27 @@ UIView *greyView;
                             cell.bodyLabel.text = @"This message has no content.";
 
                         }
+                        
+                        if(FETCH_MSG_BODY_AT_MSG_LOADING == 1){
+                            dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+                                MCOIMAPFetchContentOperation * op = [[EmailService instance].imapSession fetchMessageByUIDOperationWithFolder:self.emailFolder uid:message.uid urgent:YES];
+                                [op start:^(NSError * error, NSData * data) {
+                                    if ([error code] != MCOErrorNone) {
+                                        MCOMessageParser *parser = [[MCOMessageParser alloc] initWithData:data];
+                                        NSString *strBody = [parser htmlRenderingWithDelegate:self];
+                                        NSLog(@"-----> Message body fetched %@ %@",[NSString stringWithFormat:@"%d",message.uid],strBody);
+                                    }
+                                    else{
+                                        
+                                    }
+                                }];
+                            });
+                        }
+                        
                         cell.messageRenderingOperation = nil;
                     }];
+                    
+                    
 
                 }
                 
@@ -750,6 +760,7 @@ UIView *greyView;
                     cell.bodyLabel.text = cachedPreview;
                 }
                 else{
+                    
                     cell.messageRenderingOperation = [[EmailService instance].imapSession plainTextBodyRenderingOperationWithMessage:message folder:self.emailFolder];
                     [cell.messageRenderingOperation start:^(NSString * plainTextBodyString, NSError * error) {
                         if (plainTextBodyString) {
@@ -771,6 +782,7 @@ UIView *greyView;
                         }
                         cell.messageRenderingOperation = nil;
                     }];
+                    
                 }
 
                 UIView *archiveView = [self viewWithImageName:@"swipeArchive"];
@@ -1266,12 +1278,19 @@ UIView *greyView;
             for (int count = 0 ; count < mailArray.count ; count ++) {
                 [sendersDictionary setObject:[mailArray objectAtIndex:count] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
             }
-            
-            CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:nil filterModel:nil];
-            creatFunnlViewController.mainVCdelegate = self.mainVCdelegate;
-            [self.mainVCdelegate pushViewController:creatFunnlViewController];
-            creatFunnlViewController = nil;
-            self.tableView.editing = NO;
+           
+            if(IS_NEW_CREATE_FUNNEL){
+                FMCreateFunnlViewController *createFunnlViewController = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:nil andSubjects:nil];
+                createFunnlViewController.mainVCdelegate = self.mainVCdelegate;
+                [self.mainVCdelegate pushViewController:createFunnlViewController];
+                createFunnlViewController = nil;
+            }else{
+                CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:nil filterModel:nil];
+                creatFunnlViewController.mainVCdelegate = self.mainVCdelegate;
+                [self.mainVCdelegate pushViewController:creatFunnlViewController];
+                creatFunnlViewController = nil;
+                self.tableView.editing = NO;
+            }
         }
     }
 }

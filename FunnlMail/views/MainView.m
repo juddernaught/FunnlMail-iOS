@@ -20,6 +20,7 @@
 #import <Mixpanel/Mixpanel.h>
 #import "MBProgressHUD.h"
 #import "ShareView.h"
+#import "FMCreateFunnlViewController.h"
 
 static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
@@ -270,10 +271,18 @@ NSString *msgBody;
 }
 
 -(void)createAddFunnlView{
-  CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:nil subjects:nil filterModel:nil];
-  creatFunnlViewController.mainVCdelegate = self.mainVCdelegate;
-  [self.mainVCdelegate pushViewController:creatFunnlViewController];
-  creatFunnlViewController = nil;
+    if (IS_NEW_CREATE_FUNNEL) {
+        FMCreateFunnlViewController *viewController = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:nil andSubjects:nil];
+        viewController.mainVCdelegate = self.mainVCdelegate;
+        [self.mainVCdelegate pushViewController:viewController];
+        viewController = nil;
+    }
+    else {
+        CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:nil subjects:nil filterModel:nil];
+        creatFunnlViewController.mainVCdelegate = self.mainVCdelegate;
+        [self.mainVCdelegate pushViewController:creatFunnlViewController];
+        creatFunnlViewController = nil;
+    }
 }
 
 
@@ -393,10 +402,25 @@ NSString *msgBody;
               count ++;
           }
       }
-      CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:subjectsDictionary filterModel:fm];
-      creatFunnlViewController.mainVCdelegate = self.mainVCdelegate;
-      [self.mainVCdelegate pushViewController:creatFunnlViewController];
-      creatFunnlViewController = nil;
+      if (IS_NEW_CREATE_FUNNEL) {
+          NSMutableArray *sender = [[NSMutableArray alloc] initWithArray:sendersDictionary.allValues];
+          NSMutableArray *subject = [[NSMutableArray alloc] initWithArray:subjectsDictionary.allValues];
+          FMCreateFunnlViewController *viewController = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:sender andSubjects:subject];
+          viewController.isEditFunnel = TRUE;
+          viewController.oldModel = fm;
+          viewController.mainVCdelegate = self.mainVCdelegate;
+          [self.mainVCdelegate pushViewController:viewController];
+          
+          sender = nil;
+          subject = nil;
+          viewController = nil;
+      }
+      else {
+          CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:subjectsDictionary filterModel:fm];
+          creatFunnlViewController.mainVCdelegate = self.mainVCdelegate;
+          [self.mainVCdelegate pushViewController:creatFunnlViewController];
+          creatFunnlViewController = nil;
+      }
   }
 }
 

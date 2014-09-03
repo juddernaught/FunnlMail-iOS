@@ -462,8 +462,7 @@ static NSString *currentFolder;
                           else tempMessageModel.categoryName = @"";
                           //NSLog(@"uid: %u modseqValue: %llu ",m.uid,m.modSeqValue);
                           //NSLog(@"gmailLabels: %@",m.gmailLabels.description);
-                          
-                          
+
                           for (FunnelModel *tempFunnelModel in funnels)
                           {
                               
