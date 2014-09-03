@@ -12,8 +12,11 @@
 
 @protocol MCOMessageViewDelegate;
 
-@interface MCOMessageView : UIView <UIWebViewDelegate,UIScrollViewDelegate>
-
+@interface MCOMessageView : UIView <UIWebViewDelegate,UIScrollViewDelegate,NSXMLParserDelegate>
+{
+    int divCount;
+    BOOL flagSeconDiv;
+}
 @property (nonatomic, copy) NSString * folder;
 @property (nonatomic, strong) MCOAbstractMessage * message;
 
@@ -37,7 +40,6 @@
 @property(nonatomic,assign) float actualContentWidth;
 @property(nonatomic,assign) BOOL shouldScrollToTopOnLayout;
 @property(nonatomic,retain) UIActivityIndicatorView *activityIndicator;
-
 -(void) setHeaderView:(UIView *)view;
 -(void) setFooterView:(UIView *)view;
 @end

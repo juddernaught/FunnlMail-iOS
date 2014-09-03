@@ -15,6 +15,7 @@
 #import <MessageUI/MessageUI.h>
 #import "AppDelegate.h"
 #import "ComposeViewController.h"
+#import "FMCreateFunnlViewController.h"
 #import <Mixpanel/Mixpanel.h>
 #import "CreateFunnlViewController.h"
 #import "FunnelService.h"
@@ -602,10 +603,20 @@ typedef void (^DownloadCallback)(NSError * error);
         }
     }
 
-    CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:subjectsDictionary filterModel:fm];
-    creatFunnlViewController.isEdit = NO;
-    [self.navigationController pushViewController:creatFunnlViewController animated:YES];
-    creatFunnlViewController = nil;
+    if (IS_NEW_CREATE_FUNNEL) {
+        FMCreateFunnlViewController *viewcontroller = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:(NSMutableArray *)sendersDictionary.allKeys andSubjects:(NSMutableArray *)subjectsDictionary.allKeys];
+        viewcontroller.isEditFunnel = TRUE;
+        viewcontroller.oldModel = fm;
+        viewcontroller.mainVCdelegate = nil;
+        [self.navigationController pushViewController:viewcontroller animated:YES];
+        viewcontroller = nil;
+    }
+    else {
+        CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:subjectsDictionary filterModel:fm];
+        creatFunnlViewController.isEdit = NO;
+        [self.navigationController pushViewController:creatFunnlViewController animated:YES];
+        creatFunnlViewController = nil;
+    }
     
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 }

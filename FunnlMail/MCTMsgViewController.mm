@@ -22,6 +22,7 @@
 #import "EmailService.h"
 #import "FunnelModel.h"
 #import "FunnlPopUpView.h"
+#import "FMCreateFunnlViewController.h"
 
 
 @interface UIBarButtonItem (NegativeSpacer)
@@ -80,7 +81,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
 
 - (void)viewDidLoad {
@@ -191,11 +192,13 @@
     
     UIButton *fromValue = [[UIButton alloc] initWithFrame:CGRectMake(20 + 50 - 5, padding + 10, WIDTH - 20 - 50, 16)];
     [fromValue setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-    if (_message.header.sender.displayName) {
-        [fromValue setTitle:_message.header.sender.displayName forState:UIControlStateNormal];
+    if (_message.header.from.displayName) {
+        [fromValue setTitle:_message.header.from.displayName forState:UIControlStateNormal];
     }
     else
-        [fromValue setTitle:_message.header.sender.mailbox forState:UIControlStateNormal];
+        [fromValue setTitle:_message.header.from.mailbox forState:UIControlStateNormal];
+    
+    NSLog(@"%@",fromValue.titleLabel.text);
     [fromValue setTitleColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR] forState:UIControlStateNormal];
     [fromValue.titleLabel setFont:[UIFont systemFontOfSize:16]];
     [headerView addSubview:fromValue];
@@ -579,8 +582,8 @@ typedef void (^DownloadCallback)(NSError * error);
     
     NSMutableDictionary *sendersDictionary = [[NSMutableDictionary alloc] init];
     int count = 0;
-    for (NSString *address in fm.sendersArray) {
-        [sendersDictionary setObject:[address lowercaseString] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
+    for (NSString *address1 in fm.sendersArray) {
+        [sendersDictionary setObject:[address1 lowercaseString] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
         count ++;
     }
     
@@ -593,11 +596,20 @@ typedef void (^DownloadCallback)(NSError * error);
             count ++;
         }
     }
-    
-    CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:subjectsDictionary filterModel:fm];
-    creatFunnlViewController.isEdit = NO;
-    [self.navigationController pushViewController:creatFunnlViewController animated:YES];
-    creatFunnlViewController = nil;
+    if (IS_NEW_CREATE_FUNNEL) {
+        FMCreateFunnlViewController *viewcontroller = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:(NSMutableArray *)sendersDictionary.allValues andSubjects:(NSMutableArray *)subjectsDictionary.allValues];
+        viewcontroller.isEditFunnel = FALSE;
+        viewcontroller.oldModel = fm;
+        viewcontroller.mainVCdelegate = nil;
+        [self.navigationController pushViewController:viewcontroller animated:YES];
+        viewcontroller = nil;
+    }
+    else {
+        CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:subjectsDictionary filterModel:fm];
+        creatFunnlViewController.isEdit = NO;
+        [self.navigationController pushViewController:creatFunnlViewController animated:YES];
+        creatFunnlViewController = nil;
+    }
     
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 }

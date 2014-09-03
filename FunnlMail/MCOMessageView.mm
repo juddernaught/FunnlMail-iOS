@@ -134,6 +134,8 @@ pre {\
 
 - (void) _refresh
 {
+    divCount = 0;
+    flagSeconDiv = FALSE;
     NSString *uidKey = [NSString stringWithFormat:@"%d",tempMessageModel.uid];
     NSString * content = @"";
 
@@ -162,17 +164,17 @@ pre {\
         if ([_message isKindOfClass:[MCOIMAPMessage class]]) {
             content = [(MCOIMAPMessage *) _message htmlRenderingWithFolder:_folder delegate:self];
             if (content) {
-                NSArray *tempArray = [content componentsSeparatedByString:@"<head>"];
+                NSArray *tempArray = [content componentsSeparatedByString:@"<div><b>Date:<"];
                 if (tempArray.count > 1) {
-                    content = [tempArray objectAtIndex:1];
-                }
-                else {
-                    tempArray = [content componentsSeparatedByString:@"Subject:"];
-                    if (tempArray.count > 1) {
-                        content = [tempArray objectAtIndex:1];
+                    NSArray *tempArray1 = [[tempArray objectAtIndex:1] componentsSeparatedByString:@"</div>"];
+                    if (tempArray1.count > 1) {
+                        NSString *body = [[[tempArray objectAtIndex:1] componentsSeparatedByString:[tempArray1 objectAtIndex:0]] objectAtIndex:1];
+                        content = body;
                     }
                 }
-                paramDict[uidKey] = content;
+                else {
+                    
+                }
             }
             else
                 [_webView loadHTMLString:@"Content not found 1" baseURL:nil];
@@ -221,6 +223,34 @@ pre {\
             [_webView loadHTMLString:@"" baseURL:nil];
         }
     }
+}
+
+- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
+    if ([elementName isEqualToString:@"div"] && !flagSeconDiv) {
+        divCount++;
+    }
+    else if (flagSeconDiv) {
+        NSLog(@"Required part started");
+    }
+    
+}
+
+- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
+    if ([elementName isEqualToString:@"div"]) {
+        divCount--;
+        if (divCount == 0) {
+            flagSeconDiv = TRUE;
+        }
+    }
+    NSLog(@"didEndElement");
+}
+
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
+    NSLog(@"value of element %@", string);
+}
+
+- (void)parser:(NSXMLParser *)parser parseErrorOccurred:(NSError *)parseError {
+    
 }
 
 - (void) _loadImages

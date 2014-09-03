@@ -123,11 +123,11 @@ static NSString *contactCellIdentifier = @"ContactCell";
     randomColors = nil;
     
     if (message.header.sender.displayName) {
-        [userButton setTitle:[message.header.sender.displayName substringWithRange:NSMakeRange(0, 1)] forState:UIControlStateNormal];
+        [userButton setTitle:[[message.header.sender.displayName substringWithRange:NSMakeRange(0, 1)] uppercaseString] forState:UIControlStateNormal];
 //        [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[[contactInCC objectAtIndex:counter] displayName] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
     }
     else {
-        [userButton setTitle:[message.header.sender.mailbox substringWithRange:NSMakeRange(0, 1)] forState:UIControlStateNormal];
+        [userButton setTitle:[[message.header.sender.mailbox substringWithRange:NSMakeRange(0, 1)] uppercaseString] forState:UIControlStateNormal];
     }
 //    [userButton setTitle:@"S" forState:UIControlStateNormal];
     [mainView addSubview:userButton];
@@ -161,8 +161,14 @@ static NSString *contactCellIdentifier = @"ContactCell";
     messageLabel = nil;
     
     y = y + 50 + 10;
-    
     contactInCC = [[NSMutableArray alloc] initWithArray:message.header.cc];
+    for (int count = 0; count < contactInCC.count; count++) {
+        for (int cnt = 0; cnt < tempFunnelModel.sendersArray.count; cnt ++) {
+            if ([[[contactInCC objectAtIndex:count] mailbox] isEqualToString:[[tempFunnelModel sendersArray] objectAtIndex:cnt]]) {
+                [contactInCC removeObjectAtIndex:count];
+            }
+        }
+    }
     flagArray = [[NSMutableArray alloc] init];
     for (int counter = 0; counter < contactInCC.count; counter++) {
         [flagArray setObject:@"0" atIndexedSubscript:counter];
@@ -230,6 +236,17 @@ static NSString *contactCellIdentifier = @"ContactCell";
             }
             
             
+            NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[self getUserImage:[[contactInCC objectAtIndex:counter] mailbox]]]];
+            [request setValue:@"image/*" forHTTPHeaderField:@"Accept"];
+            
+            GTMHTTPFetcher *fetcher = [GTMHTTPFetcher fetcherWithRequest:request];
+            GTMOAuth2Authentication *currentAuth = [GTMOAuth2ViewControllerTouch authForGoogleFromKeychainForName:kKeychainItemName clientID:kMyClientID clientSecret:kMyClientSecret];
+            [fetcher setAuthorizer:currentAuth];
+            fetcher.comment = [NSString stringWithFormat:@"%d",counter];
+            [fetcher beginFetchWithDelegate:self didFinishSelector:@selector(imageFetcher:finishedWithData:error:)];
+            
+            NSString *contactName = [self getUserName:[[contactInCC objectAtIndex:counter] mailbox]];
+            
             if (counter % 3 == 0) {
                 UIButton *tempButton = [[UIButton alloc] initWithFrame:CGRectMake(x1, y1, buttonWidth, buttonWidth)];
                 [tempButton.titleLabel setFont:FONT_FOR_INITIAL];
@@ -239,6 +256,7 @@ static NSString *contactCellIdentifier = @"ContactCell";
                 else {
                     [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[[contactInCC objectAtIndex:counter] mailbox] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
                 }
+                
                 tempButton.tag = counter;
                 [tempButton addTarget:self action:@selector(ccContactPressed:) forControlEvents:UIControlEventTouchUpInside];
                 tempButton.clipsToBounds = YES;
@@ -249,17 +267,19 @@ static NSString *contactCellIdentifier = @"ContactCell";
                 [tempButton setBackgroundColor:color];
                 [buttonArray addObject:tempButton];
                 
-                GTMHTTPFetcher *fetcher = [GTMHTTPFetcher fetcherWithRequest:request];
-                GTMOAuth2Authentication *currentAuth = [GTMOAuth2ViewControllerTouch authForGoogleFromKeychainForName:kKeychainItemName clientID:kMyClientID clientSecret:kMyClientSecret];
-                [fetcher setAuthorizer:currentAuth];
-                [fetcher beginFetchWithDelegate:self didFinishSelector:@selector(imageFetcher:finishedWithData:error:)];
-                fetcher.comment = [NSString stringWithFormat:@"%d",counter];
+                
                 
                 UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(tempButton.frame.origin.x, tempButton.frame.origin.y + buttonWidth + 5, buttonWidth, 20)];
                 [sampleLabel setTextAlignment:NSTextAlignmentCenter];
                 [sampleLabel setFont:labelFont];
-                if ([[contactInCC objectAtIndex:counter] displayName]) {
-                    sampleLabel.text = [[contactInCC objectAtIndex:counter] displayName];
+//                if ([[contactInCC objectAtIndex:counter] displayName]) {
+//                    sampleLabel.text = [[contactInCC objectAtIndex:counter] displayName];
+//                }
+//                else {
+//                    sampleLabel.text = [[contactInCC objectAtIndex:counter] mailbox];
+//                }
+                if (contactName) {
+                    sampleLabel.text = contactName;
                 }
                 else {
                     sampleLabel.text = [[contactInCC objectAtIndex:counter] mailbox];
@@ -290,17 +310,11 @@ static NSString *contactCellIdentifier = @"ContactCell";
                 
                 [buttonArray addObject:tempButton];
                 
-                GTMHTTPFetcher *fetcher = [GTMHTTPFetcher fetcherWithRequest:request];
-                GTMOAuth2Authentication *currentAuth = [GTMOAuth2ViewControllerTouch authForGoogleFromKeychainForName:kKeychainItemName clientID:kMyClientID clientSecret:kMyClientSecret];
-                [fetcher setAuthorizer:currentAuth];
-                [fetcher beginFetchWithDelegate:self didFinishSelector:@selector(imageFetcher:finishedWithData:error:)];
-                fetcher.comment = [NSString stringWithFormat:@"%d",counter];
-                
                 UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(tempButton.frame.origin.x, tempButton.frame.origin.y + buttonWidth + 5, buttonWidth, 20)];
                 [sampleLabel setFont:labelFont];
                 [sampleLabel setTextAlignment:NSTextAlignmentCenter];
-                if ([[contactInCC objectAtIndex:counter] displayName]) {
-                    sampleLabel.text = [[contactInCC objectAtIndex:counter] displayName];
+                if (contactName) {
+                    sampleLabel.text = contactName;
                 }
                 else {
                     sampleLabel.text = [[contactInCC objectAtIndex:counter] mailbox];
@@ -332,17 +346,11 @@ static NSString *contactCellIdentifier = @"ContactCell";
                 
                 [buttonArray addObject:tempButton];
                 
-                GTMHTTPFetcher *fetcher = [GTMHTTPFetcher fetcherWithRequest:request];
-                GTMOAuth2Authentication *currentAuth = [GTMOAuth2ViewControllerTouch authForGoogleFromKeychainForName:kKeychainItemName clientID:kMyClientID clientSecret:kMyClientSecret];
-                [fetcher setAuthorizer:currentAuth];
-                [fetcher beginFetchWithDelegate:self didFinishSelector:@selector(imageFetcher:finishedWithData:error:)];
-                fetcher.comment = [NSString stringWithFormat:@"%d",counter];
-                
                 UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(tempButton.frame.origin.x, tempButton.frame.origin.y + buttonWidth + 5, buttonWidth, 20)];
                 [sampleLabel setFont:labelFont];
                 [sampleLabel setTextAlignment:NSTextAlignmentCenter];
-                if ([[contactInCC objectAtIndex:counter] displayName]) {
-                    sampleLabel.text = [[contactInCC objectAtIndex:counter] displayName];
+                if (contactName) {
+                    sampleLabel.text = contactName;
                 }
                 else {
                     sampleLabel.text = [[contactInCC objectAtIndex:counter] mailbox];
@@ -403,11 +411,14 @@ static NSString *contactCellIdentifier = @"ContactCell";
     }
     else {
         if ([imageFetcher.comment isEqualToString:@"-1"]) {
-            [userImage setImage:[UIImage imageWithData:imageData]];
+            [userButton setImage:[UIImage imageWithData:imageData] forState:UIControlStateNormal];
         }
         else {
             if (buttonArray.count > [imageFetcher.comment integerValue]) {
-                [[buttonArray objectAtIndex:[imageFetcher.comment integerValue]] setBackgroundImage:[UIImage imageWithData:imageData]];
+                NSLog(@"----> %@",imageFetcher.comment);
+                UIButton *sampleButton = [buttonArray objectAtIndex:[imageFetcher.comment integerValue]];
+                [sampleButton setTitle:@"" forState:UIControlStateNormal];
+                [sampleButton setBackgroundImage:[UIImage imageWithData:imageData] forState:UIControlStateNormal];
             }
             else {
                 
@@ -425,6 +436,17 @@ static NSString *contactCellIdentifier = @"ContactCell";
     }
     return nil;
 }
+
+- (NSString *)getUserName:(NSString *)emailAddress {
+    NSArray *contactArray = [[ContactService instance] retrieveAllContact];
+    for (ContactModel *tempContact in contactArray) {
+        if ([tempContact.email isEqualToString:emailAddress]) {
+            return tempContact.name;
+        }
+    }
+    return nil;
+}
+
 #pragma mark -
 #pragma mark Event Handlers
 - (void)updateFunnel:(UIButton*)sender {
@@ -450,7 +472,7 @@ static NSString *contactCellIdentifier = @"ContactCell";
                 }
             }
             if ([[flagArray objectAtIndex:counter] isEqualToString:@"1"] && !duplicate) {
-                [senderString appendFormat:@"%@,",tempCell.nameLabel.text];
+                [senderString appendFormat:@"%@,",[[contactInCC objectAtIndex:counter] mailbox]];
             }
         }
     }
