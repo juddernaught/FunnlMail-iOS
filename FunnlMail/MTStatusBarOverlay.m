@@ -1190,17 +1190,19 @@ kDetailViewWidth, kHistoryTableRowHeight*kMaxHistoryTableRowCount + kStatusBarHe
 	// on iPad the Default Status Bar Style is black too
 	if (style == UIStatusBarStyleDefault && !IsIPad && !IsIPhoneEmulationMode) {
 		// choose image depending on size
-		if (self.shrinked) {
-			self.statusBarBackgroundImageView.image = [self.defaultStatusBarImageShrinked stretchableImageWithLeftCapWidth:2.0f topCapHeight:0.0f];
-		} else {
-			self.statusBarBackgroundImageView.image = [self.defaultStatusBarImage stretchableImageWithLeftCapWidth:2.0f topCapHeight:0.0f];
-		}
-		statusBarBackgroundImageView_.backgroundColor = [UIColor clearColor];
+//		if (self.shrinked) {
+//			self.statusBarBackgroundImageView.image = [self.defaultStatusBarImageShrinked stretchableImageWithLeftCapWidth:2.0f topCapHeight:0.0f];
+//		} else {
+//			self.statusBarBackgroundImageView.image = [self.defaultStatusBarImage stretchableImageWithLeftCapWidth:2.0f topCapHeight:0.0f];
+//		}
+//		statusBarBackgroundImageView_.backgroundColor = [UIColor clearColor];
+        statusBarBackgroundImageView_.backgroundColor = UIColorFromRGB(0xF7F7F7);
 	}
 	// black status bar? -> no image
 	else {
 		self.statusBarBackgroundImageView.image = nil;
-		statusBarBackgroundImageView_.backgroundColor = [UIColor blackColor];
+//		statusBarBackgroundImageView_.backgroundColor = [UIColor blackColor];
+        statusBarBackgroundImageView_.backgroundColor = UIColorFromRGB(0xF7F7F7);
 	}
 }
 

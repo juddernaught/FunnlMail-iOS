@@ -831,6 +831,7 @@ static NSString *currentFolder;
 
 -(void)startAutoRefresh{
     MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
+    
     [overlay.backgroundView setBackgroundColor:[UIColor  clearColor]];
     [overlay postImmediateMessage:@"Downloading..." animated:YES];
     overlay.animation = MTStatusBarOverlayAnimationFallDown;  // MTStatusBarOverlayAnimationShrink

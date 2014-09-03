@@ -82,7 +82,8 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     
     // Set the navigation bar to white
     [self.navigationController.navigationBar setBarTintColor:[UIColor whiteColor]];
-    [self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xCDCDCD)];
+    [self.navigationController.navigationBar setBarTintColor:[UIColor colorWithHexString:@"#F7F7F7"]];
+//    [self.navigationController.navigationBar setBarTintColor:[UIColor redColor]];
     
     
     // This is the All bar
@@ -95,12 +96,12 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     if (currentFilterModel && [currentFilterModel.funnelName isEqualToString:ALL_FUNNL]) {
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
         self.navigationItem.title = currentFilterModel.funnelName;
-        [self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xCDCDCD)];
+        [self.navigationController.navigationBar setBarTintColor:[UIColor colorWithHexString:@"#F7F7F7"]];
     }
     else if (currentFilterModel &&  [currentFilterModel.funnelName isEqualToString:ALL_OTHER_FUNNL]) {
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveOtherMessagesThanPrimary];
         self.navigationItem.title = currentFilterModel.funnelName;
-        [self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xCDCDCD)];
+        [self.navigationController.navigationBar setBarTintColor:[UIColor colorWithHexString:@"#F7F7F7"]];
         [[Mixpanel sharedInstance] track:@"Viewed 'All other' mail"];
     }
     else if(currentFilterModel)
@@ -110,10 +111,10 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:currentFilterModel.funnelId top:2000];
     }
     else{
-        [self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xCDCDCD)];
+        [self.navigationController.navigationBar setBarTintColor:[UIColor colorWithHexString:@"#F7F7F7"]];
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
     }
-
+//    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     filterLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 44+20, 320, 40)];
     _activityIndicator = tempAppDelegate.appActivityIndicator;
     [_activityIndicator setBackgroundColor:[UIColor clearColor]];
@@ -257,11 +258,11 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     //fetching from database
     if ([filterModel.funnelName isEqualToString:ALL_FUNNL]) {
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
-        [self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xCDCDCD)];
+        [self.navigationController.navigationBar setBarTintColor:[UIColor colorWithHexString:@"#F7F7F7"]];
     }
     else if ([filterModel.funnelName isEqualToString:ALL_OTHER_FUNNL]) {
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveOtherMessagesThanPrimary];
-        [self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xCDCDCD)];
+        [self.navigationController.navigationBar setBarTintColor:[UIColor colorWithHexString:@"#F7F7F7"]];
 
         [[Mixpanel sharedInstance] track:@"Viewed 'All other' mail"];
     }

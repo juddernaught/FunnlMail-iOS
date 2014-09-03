@@ -1037,18 +1037,13 @@ UIView *greyView;
                 vc.address = msg.header.from;
                 vc.message = msg;
                 vc.session = [EmailService instance].imapSession;
-//                msg.flags = msg.flags | MCOMessageFlagSeen;
-//                MCOIMAPOperation *msgOperation=[[EmailService instance].imapSession storeFlagsOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:msg.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagSeen];
-//                [msgOperation start:^(NSError * error)
-//                 {
-//                     NSLog(@"selected message flags %u UID is %u",msg.flags,msg.uid );
-//                 }];
                 if ([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread] > 1) {
                     EmailThreadTableViewController *threadViewController = [[EmailThreadTableViewController alloc] initWithGmailThreadID:[NSString stringWithFormat:@"%llu",msg.gmailThreadID]];
                     [self.navigationController pushViewController:threadViewController animated:YES];
                 }
                 else{
-                    [self setReadMessage:(MessageModel*)[EmailService instance].filterMessages[indexPath.row]];
+//                    [self setReadMessage:(MessageModel*)[EmailService instance].filterMessages[indexPath.row]];
+                    [self performSelectorInBackground:@selector(setReadMessage:) withObject:(MessageModel*)[EmailService instance].filterMessages[indexPath.row]];
                     [self.mainVCdelegate pushViewController:vc];
                 }
                 break;
