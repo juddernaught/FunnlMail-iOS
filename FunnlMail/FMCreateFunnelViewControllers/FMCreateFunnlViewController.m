@@ -1406,7 +1406,7 @@
         mainScrollView.contentSize = CGSizeMake(WIDTH, mainScrollView.contentSize.height + 35);
         
         UIView *seperatorView = [[UIView alloc] initWithFrame:CGRectMake(10, sender.frame.origin.y + 30 + 10 - 5 - 2, WIDTH - 20, 1)];
-        seperatorView.tag = sender.tag + 1;
+        seperatorView.tag = sender.tag;
         [seperatorView setBackgroundColor:[UIColor lightGrayColor]];
         [containerView addSubview:seperatorView];
         if (!seperatorViewArray) {

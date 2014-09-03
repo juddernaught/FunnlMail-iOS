@@ -191,11 +191,11 @@
     
     UIButton *fromValue = [[UIButton alloc] initWithFrame:CGRectMake(20 + 50 - 5, padding + 10, WIDTH - 20 - 50, 16)];
     [fromValue setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-    if (_message.header.sender.displayName) {
-        [fromValue setTitle:_message.header.sender.displayName forState:UIControlStateNormal];
+    if (_message.header.from.displayName) {
+        [fromValue setTitle:_message.header.from.displayName forState:UIControlStateNormal];
     }
     else
-        [fromValue setTitle:_message.header.sender.mailbox forState:UIControlStateNormal];
+        [fromValue setTitle:_message.header.from.mailbox forState:UIControlStateNormal];
     [fromValue setTitleColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR] forState:UIControlStateNormal];
     [fromValue.titleLabel setFont:[UIFont systemFontOfSize:16]];
     [headerView addSubview:fromValue];

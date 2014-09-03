@@ -546,9 +546,6 @@ UIView *greyView;
                         
                         cell.messageRenderingOperation = nil;
                     }];
-                    
-                    
-
                 }
                 
 //                cell.delegate = self;
