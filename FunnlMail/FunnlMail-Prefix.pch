@@ -1,6 +1,6 @@
 //
 //  Prefix header
-//
+//  com.Funnl.FunnlMail${BUNDLE_ID_SUFFIX}
 //  The contents of this file are implicitly included at the beginning of every source file.
 //
 
@@ -24,6 +24,7 @@
 #define kContextIOConsumerSecret  @"OcBGyTDYEdSat6fz"
 
 #define FUNNEL_NAME_REPEATED @"Funnl name is being repeated."
+#define FUNNEL_CONTACT_BLANK @"No contacts entered."
 #define FUNNEL_NAME_BLANK @"Funnl name is empty."
 #define ADD_FUNNL @"#@New@#"
 #define ALL_FUNNL @"Primary"
@@ -41,6 +42,8 @@
 #define IS_AUTO_REFRESH_ENABLE 1
 #define AUTOREFRESH_DELAY 60
 #define PRIMARY_CATEGORY_NAME @"CATEGORY_PERSONAL"
+
+#define DELETE_RED_COLOR [UIColor colorWithHexString:@"DF353C"]
 
 //email cell's #defines
 #define MAIL_READ_BLUE_COLOR [UIColor colorWithHexString:@"007aff"]

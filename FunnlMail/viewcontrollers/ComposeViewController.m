@@ -346,6 +346,7 @@ replacementString:(NSString *)string {
 
     
     toFieldView = [self createFieldViewWithFrame:CGRectMake(0, 0, WIDTH, 41)];
+    toFieldView.delegate = self;
     [self.view addSubview:toFieldView];
     [toFieldView.tokenField setPromptText:@"To:"];
 	[toFieldView.tokenField setPlaceholder:@""];
@@ -482,6 +483,9 @@ replacementString:(NSString *)string {
     else [ccFieldView becomeFirstResponder];
 }
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    NSLog(@"Scroll View Did Scrolled");
+}
 
 -(void)applyPlainBodyString{
     

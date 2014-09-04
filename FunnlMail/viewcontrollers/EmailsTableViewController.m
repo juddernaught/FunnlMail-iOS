@@ -451,11 +451,11 @@ UIView *greyView;
 //                }
 //                else
 //                    cell.dateLabel.text = [message.header.date timeAgo];
-                if(message.header.sender.displayName.length){
-                    cell.senderLabel.text = [self removeAngularBracket:message.header.sender.displayName];
+                if(message.header.from.displayName.length){
+                    cell.senderLabel.text = [self removeAngularBracket:message.header.from.displayName];
                 }
                 else {
-                    cell.senderLabel.text = [self removeAngularBracket:message.header.sender.mailbox];
+                    cell.senderLabel.text = [self removeAngularBracket:message.header.from.mailbox];
                 }
                 // Changed by Chad
                 // commented out by iauro
@@ -725,8 +725,10 @@ UIView *greyView;
                 }
                 
                 if(message.header.sender.displayName.length){
-                    if([self.navigationItem.title isEqualToString:@"Sent"]) cell.senderLabel.text = message.header.from.displayName;
-                    else cell.senderLabel.text = message.header.sender.displayName;
+                    if([self.navigationItem.title isEqualToString:@"Sent"])
+                        cell.senderLabel.text = message.header.from.displayName;
+                    else
+                        cell.senderLabel.text = message.header.from.displayName;
                 }
                 else{
                     if([self.navigationItem.title isEqualToString:@"Sent"]){

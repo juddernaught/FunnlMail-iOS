@@ -125,10 +125,10 @@ static NSString *mailCellIdentifier = @"MailCell";
     else{
         cell.dateLabel.text = [message.header.date timeAgo];
     }
-    if(message.header.sender.displayName.length)
-        cell.senderLabel.text = [self removeAngularBracket:message.header.sender.displayName];
+    if(message.header.from.displayName.length)
+        cell.senderLabel.text = [self removeAngularBracket:message.header.from.displayName];
     else
-        cell.senderLabel.text = [self removeAngularBracket:message.header.sender.mailbox];
+        cell.senderLabel.text = [self removeAngularBracket:message.header.from.mailbox];
     cell.subjectLabel.text = message.header.subject;
 //    
     NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
