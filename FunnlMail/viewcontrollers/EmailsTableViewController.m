@@ -494,7 +494,27 @@ UIView *greyView;
                     cell.bodyLabel.text = cachedPreview;
                 }
                 else{
-  
+                    // loads email body and stores in database
+                    MCOIMAPMessageRenderingOperation * op = [[EmailService instance].imapSession htmlBodyRenderingOperationWithMessage:message folder:@"INBOX"];
+                    
+                    [op start:^(NSString * htmlString, NSError * error) {
+                        NSArray *tempArray = [htmlString componentsSeparatedByString:@"<head>"];
+                        if (tempArray.count > 1) {
+                            htmlString = [tempArray objectAtIndex:1];
+                        }
+                        else {
+                            tempArray = [htmlString componentsSeparatedByString:@"Subject:"];
+                            if (tempArray.count > 1) {
+                                htmlString = [tempArray objectAtIndex:1];
+                            }
+                        }
+                        NSMutableDictionary *paramDict = [[NSMutableDictionary alloc] init];
+                        
+                        paramDict[uidKey] = htmlString;
+                        
+                        NSLog(@"----HTML data callback recieved -----");
+                        [[MessageService instance] updateMessageWithHTMLContent:paramDict];
+                    }];
 
                     cell.messageRenderingOperation = [[EmailService instance].imapSession plainTextBodyRenderingOperationWithMessage:message folder:self.emailFolder];
                     [cell.messageRenderingOperation start:^(NSString * plainTextBodyString, NSError * error) {
