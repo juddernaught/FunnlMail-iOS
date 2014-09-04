@@ -25,7 +25,8 @@
 @end
 
 @implementation MenuViewController
-@synthesize listArray,imageArray,listView;
+@synthesize listArray,imageArray,listView,userImageView,emailLabel,userNameLabel;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -35,31 +36,64 @@
     return self;
 }
 
+//- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation{
+//   return  UIStatusBarAnimationFade;
+//}
+//- (BOOL)prefersStatusBarHidden {
+//    return YES;
+//}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor colorWithHexString:@"#4C4C4C"];
+    self.view.backgroundColor = [UIColor colorWithHexString:@"#2B2F31"];
     listView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, 260, 568) style:UITableViewStyleGrouped] ;
     listView.delegate = self;
     listView.dataSource = self;
     listView.backgroundColor = [UIColor clearColor];
-    listView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    listView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:listView];
     
-    UIView *headerLine = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
-    headerLine.backgroundColor = WHITE_CLR;
-    [self.view addSubview:headerLine];
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 50)];
+    headerView.backgroundColor = CLEAR_COLOR;
+    [listView setTableHeaderView:headerView];
     
+    userImageView = [[UIImageView alloc ] initWithFrame:CGRectMake(10, 28, 44, 44)];
+    userImageView.layer.cornerRadius = 22;
+    userImageView.layer.masksToBounds = YES;
+    NSString *imageUrl = [EmailService instance].userImageURL;
+    if([imageUrl hasPrefix:@"http"]){
+        [userImageView setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"userimage-placeholder.png"] options:SDWebImageProgressiveDownload completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
+        }];
+    }
+    else
+        userImageView.image = [UIImage imageNamed:@"userimage-placeholder.png"];
+    [headerView addSubview:userImageView];
+    
+    userImageView.userInteractionEnabled = YES;
+    headerView.userInteractionEnabled = YES;
+    userNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 28, 180, 20)];
+    userNameLabel.textColor = WHITE_CLR;
+    userNameLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:14];
+    [headerView addSubview:userNameLabel];
+
+    emailLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 40, 180, 40)];
+    emailLabel.textColor = WHITE_CLR;
+    emailLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:14];
+    [headerView addSubview:emailLabel];
+
+    UILabel *sepLineLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 80, 320, 1)];
+    sepLineLabel.backgroundColor = UIColorFromRGB(0x43484A);
+    [headerView addSubview:sepLineLabel];
 
         //original
 //    listArray =[[NSMutableArray alloc] initWithObjects:@"Email Account", @"Sent Mail", @"Archive",@"Drafts", @"Trash",@"Send Feedback",@"Help",@"LogOut",nil];
 //    imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"settingListIcon",@"alertListIcon",@"shareListIcon",@"sentListIcon", @"archiveListIcon",@"archiveListIcon", @"trashListIcon",@"emailListIcon",@"helpListIcon", @"helpListLogOutIcon",nil];
     
 
-    listArray =[[NSMutableArray alloc] initWithObjects:@"Email Account",@"Send Feedback",@"Help",@"LogOut",nil];
-   
-    imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"helpListIcon",@"helpListIcon", @"trashListIcon",nil];
+    listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Send Feedback",@"Help (FAQs)",@"LogOut",nil];
+    imageArray = [[NSMutableArray alloc] initWithObjects:@"",@"sendFeedbackListIcon",@"helpListIcon", @"logoutListIcon",nil];
 
 }
 
@@ -74,6 +108,8 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;{
+    if(indexPath.row == 0)
+        return 60;
     return 44;
 }
 
@@ -98,22 +134,9 @@
     cell.contentView.backgroundColor = CLEAR_COLOR;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [cell setAccessoryType:UITableViewCellAccessoryNone];
-    
-    if(indexPath.row == 0){
-        NSString *imageUrl = [imageArray objectAtIndex:indexPath.row];
-        if([imageUrl hasPrefix:@"http"]){
-            [cell.menuImage setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"userimage-placeholder.png"] options:SDWebImageProgressiveDownload completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
-            }];
-        }
-        else
-            cell.menuImage.image = [UIImage imageNamed:[imageArray objectAtIndex:indexPath.row]];
 
-    }
-    else
-        cell.menuImage.image = [UIImage imageNamed:[imageArray objectAtIndex:indexPath.row]];
+    cell.menuImage.image = [UIImage imageNamed:[imageArray objectAtIndex:indexPath.row]];
     
-//    cell.selectedBackgroundView = [[UIView alloc] initWithFrame:CGRectZero];
-//    cell.selectedBackgroundView.backgroundColor = [UIColor clearColor];
     return cell;
 }
 
@@ -124,30 +147,30 @@
     AppDelegate *appDelegate = APPDELEGATE;
     MenuCell *cell = (MenuCell*)[tableView cellForRowAtIndexPath:indexPath];
     
-    if(indexPath.row == 0){
-        [MBProgressHUD showHUDAddedTo:appDelegate.window animated:YES];
-        AppDelegate *tempAppDelegate = APPDELEGATE;
-        NSMutableArray *filterArray = (NSMutableArray*)[[FunnelService instance] allFunnels];
-        FunnelModel *primaryFunnl = nil;
-        for (FunnelModel *f in filterArray) {
-            if([[f.funnelName lowercaseString] isEqualToString:[ALL_FUNNL lowercaseString]]){
-                primaryFunnl = f;
-                break;
-            }
-        }
-
-        if(primaryFunnl){
-            tempAppDelegate.currentFunnelString = [primaryFunnl.funnelName lowercaseString];
-            tempAppDelegate.currentFunnelDS = primaryFunnl;
-            [tempAppDelegate.mainVCdelegate filterSelected:primaryFunnl];
-            [tempAppDelegate.drawerController closeDrawerAnimated:YES completion:nil];
-        }
-
-        [MBProgressHUD hideAllHUDsForView:appDelegate.window animated:YES];
-        return;
-    }
+//    if(indexPath.row == 0){
+//        [MBProgressHUD showHUDAddedTo:appDelegate.window animated:YES];
+//        AppDelegate *tempAppDelegate = APPDELEGATE;
+//        NSMutableArray *filterArray = (NSMutableArray*)[[FunnelService instance] allFunnels];
+//        FunnelModel *primaryFunnl = nil;
+//        for (FunnelModel *f in filterArray) {
+//            if([[f.funnelName lowercaseString] isEqualToString:[ALL_FUNNL lowercaseString]]){
+//                primaryFunnl = f;
+//                break;
+//            }
+//        }
+//
+//        if(primaryFunnl){
+//            tempAppDelegate.currentFunnelString = [primaryFunnl.funnelName lowercaseString];
+//            tempAppDelegate.currentFunnelDS = primaryFunnl;
+//            [tempAppDelegate.mainVCdelegate filterSelected:primaryFunnl];
+//            [tempAppDelegate.drawerController closeDrawerAnimated:YES completion:nil];
+//        }
+//
+//        [MBProgressHUD hideAllHUDsForView:appDelegate.window animated:YES];
+//        return;
+//    }
     
-    if([cell.menuLabel.text isEqualToString:@"Help"]){
+    if([cell.menuLabel.text isEqualToString:@"Help (FAQs)"]){
         FAQVC *faq = [[FAQVC alloc]init];
         [[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationController pushViewController:faq animated:NO];
     }

@@ -196,7 +196,8 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
             NSMutableArray *tempArray = [[NSMutableArray alloc] initWithArray:funnel.sendersArray];
             BOOL flag = FALSE;
             for (NSString *email in tempArray) {
-                if ([email isEqualToString:message.header.sender.mailbox]) {
+                if ([email isEqualToString:message.header.sender.mailbox] || [email isEqualToString:[[EmailService instance] userEmailID]])
+                {
                     flag = TRUE;
                 }
             }
@@ -207,7 +208,6 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
             }
             tempArray = nil;
             FunnelPopUpForExtraRules *funnelPopUp = [[FunnelPopUpForExtraRules alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT) withMessage:message withFunnel:funnel onViewController:viewController];
-//            [[(EmailsTableViewController*)viewController view] addSubview:funnelPopUp];
             AppDelegate *tempAppDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
             [tempAppDelegate.drawerController.centerViewController.view addSubview:funnelPopUp];
         }
@@ -267,7 +267,6 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
         FMCreateFunnlViewController *viewCOntroller = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:mailArray andSubjects:nil];
         viewCOntroller.mainVCdelegate = self.mainVCdelegate;
         [self.mainVCdelegate pushViewController:viewCOntroller];
-        viewCOntroller = nil;
     }
     else {
         CreateFunnlViewController *creatFunnlViewController = [[CreateFunnlViewController alloc] initTableViewWithSenders:sendersDictionary subjects:nil filterModel:nil];

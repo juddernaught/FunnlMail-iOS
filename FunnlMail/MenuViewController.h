@@ -16,4 +16,6 @@
 @property (nonatomic,retain) NSMutableArray *listArray,*imageArray;
 @property (nonatomic,retain) UITableView *listView;
 
+@property (nonatomic,retain) UIImageView *userImageView;
+@property (nonatomic,retain) UILabel *emailLabel, *userNameLabel;
 @end

@@ -32,7 +32,7 @@
     if (self) {
         // Custom initialization
         emailTempArray = [[NSMutableArray alloc] initWithArray:contactArray];
-        subjectArray = [[NSMutableArray alloc] initWithArray:subjectArray];
+        subjectArray = [[NSMutableArray alloc] initWithArray:subjects];
     }
     return self;
 }
@@ -53,11 +53,11 @@
     [super viewDidLoad];
     randomColors = GRADIENT_ARRAY;
     subjectString = @"";
-    enableNotification = FALSE;
+    enableNotification = TRUE;
     skipPrimary = FALSE;
     isEditing = NO;
     flag = TRUE;
-    advanceFlag = TRUE;
+    advanceFlag = FALSE;
     buttonArray = [[NSMutableArray alloc] init];
     [self.view setBackgroundColor:[UIColor clearColor]];
     
@@ -69,10 +69,10 @@
     sampleBarButton = nil;
     [self setUpCustomNavigationBar];
     [self setUpViewForCreatingFunnel];
-    
+    [self advanceButtonClicked];
     [self emailContact];
     
-    autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 50 + 20, self.view.bounds.size.width, 120)];
+    autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 70, self.view.bounds.size.width, HEIGHT - 70)];
     [autocompleteTableView setBackgroundColor:[UIColor clearColor]];
     [autocompleteTableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"UITableViewCell"];
     autocompleteTableView.dataSource = self;
@@ -82,7 +82,7 @@
     autocompleteTableView.tag = 1;
     [mainScrollView addSubview:autocompleteTableView];
     
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     
 }
@@ -324,6 +324,12 @@
             tempButton.frame = CGRectMake(tempButton.frame.origin.x, tempButton.frame.origin.y - COMMON_DIFFERENCE - 5, tempButton.frame.size.width, tempButton.frame.size.height);
         }
     }
+    
+    for (UIView *seperator in seperatorViewArray) {
+        if (sender.tag < seperator.tag) {
+            seperator.frame = CGRectMake(seperator.frame.origin.x, seperator.frame.origin.y - COMMON_DIFFERENCE - 5, seperator.frame.size.width, seperator.frame.size.height);
+        }
+    }
 }
 
 - (void)setUpViewForCreatingFunnel {
@@ -420,12 +426,25 @@
             }
         }
         else {
-            ContactModel *tempModel = [[ContactModel alloc] init];
-            tempModel.name = ADD_FUNNL;
-            contactMutableArray = nil;
-            contactMutableArray = [[NSMutableArray alloc] init];
-            [contactMutableArray addObject:tempModel];
-            tempModel = nil;
+//            if ([[(ContactModel *)[contactMutableArray objectsAtIndexes:0] name] isEqualToString:ADD_FUNNL]) {
+//                
+//            }
+//            else {
+//                ContactModel *tempModel = [[ContactModel alloc] init];
+//                tempModel.name = ADD_FUNNL;
+//                contactMutableArray = nil;
+//                contactMutableArray = [[NSMutableArray alloc] init];
+//                [contactMutableArray addObject:tempModel];
+//                tempModel = nil;
+//            }
+            if (!contactMutableArray.count) {
+                ContactModel *tempModel = [[ContactModel alloc] init];
+                tempModel.name = ADD_FUNNL;
+                contactMutableArray = nil;
+                contactMutableArray = [[NSMutableArray alloc] init];
+                [contactMutableArray addObject:tempModel];
+                tempModel = nil;
+            }
         }
     }
     
@@ -491,7 +510,7 @@
             if (counter % 3 == 0) {
                 UIButton *tempButton = [[UIButton alloc] initWithFrame:CGRectMake(x, y, buttonSize, buttonSize)];
                 
-                if ([(ContactModel*)[contactMutableArray objectAtIndex:counter] name]) {
+                if ([[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] length]) {
                     [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
                 }
                 else {
@@ -516,7 +535,12 @@
                 closeButton = nil;
                 
                 UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, y + buttonSize + 5, buttonSize, label_height)];
-                sampleLabel.text = [[contactMutableArray objectAtIndex:counter] name];
+                if (![[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] isEqualToString:@""]) {
+                    sampleLabel.text = [(ContactModel *)[contactMutableArray objectAtIndex:counter] name];
+                }
+                else {
+                    sampleLabel.text = [(ContactModel *)[contactMutableArray objectAtIndex:counter] email];
+                }
                 [sampleLabel setTextColor:[UIColor whiteColor]];
                 sampleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
                 [sampleLabel setFont:labelFont];
@@ -554,7 +578,12 @@
                 [sampleLabel setTextColor:[UIColor whiteColor]];
                 //            sampleLabel.numberOfLines = 2;
                 sampleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-                sampleLabel.text = [[contactMutableArray objectAtIndex:counter] name];
+                if (![[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] isEqualToString:@""]) {
+                    sampleLabel.text = [(ContactModel *)[contactMutableArray objectAtIndex:counter] name];
+                }
+                else {
+                    sampleLabel.text = [(ContactModel *)[contactMutableArray objectAtIndex:counter] email];
+                }
                 [sampleLabel setFont:labelFont];
                 [sampleLabel setTextAlignment:NSTextAlignmentCenter];
                 [mainScrollView addSubview:sampleLabel];
@@ -590,7 +619,12 @@
                 [sampleLabel setTextColor:[UIColor whiteColor]];
                 //            sampleLabel.numberOfLines = 2;
                 sampleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-                sampleLabel.text = [[contactMutableArray objectAtIndex:counter] name];
+                if (![[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] isEqualToString:@""]) {
+                    sampleLabel.text = [(ContactModel *)[contactMutableArray objectAtIndex:counter] name];
+                }
+                else {
+                    sampleLabel.text = [(ContactModel *)[contactMutableArray objectAtIndex:counter] email];
+                }
                 [sampleLabel setFont:labelFont];
                 [sampleLabel setTextAlignment:NSTextAlignmentCenter];
                 [mainScrollView addSubview:sampleLabel];
@@ -623,7 +657,12 @@
     sampleLAbel = nil;
     
     UISwitch *notificationEnableSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(WIDTH - 10 - 50, y, 70, 40)];
-    [notificationEnableSwitch setOn:enableNotification animated:YES];
+    if (isEditFunnel) {
+        [notificationEnableSwitch setOn:oldModel.notificationsFlag animated:YES];
+        enableNotification = oldModel.notificationsFlag;
+    }
+    else
+        [notificationEnableSwitch setOn:enableNotification animated:YES];
     [notificationEnableSwitch addTarget:self action:@selector(enableNotificationChanges:) forControlEvents:UIControlEventValueChanged];
     [notificationEnableSwitch setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
     [mainScrollView addSubview:notificationEnableSwitch];
@@ -687,9 +726,9 @@
     [containerView addSubview:sampleLAbel];
     sampleLAbel = nil;
     
-    if (textFieldArray) {
-        [textFieldArray removeAllObjects];
-    }
+//    if (textFieldArray) {
+//        [textFieldArray removeAllObjects];
+//    }
     
     //    y = y + 15 + 5;
     innerY = innerY + 15 + 10;
@@ -730,6 +769,19 @@
             innerY = innerY + 25;
         }
         else {
+            if (subjectArray.count) {
+                
+            }
+            if (textFieldArray) {
+                textFieldArray = nil;
+            }
+            textFieldArray = [[NSMutableArray alloc] init];
+            
+            if (seperatorViewArray) {
+                seperatorViewArray = nil;
+            }
+            seperatorViewArray = [[NSMutableArray alloc] init];
+            
             for (int counter = 0; counter < subjectArray.count; counter++) {
                 UITextField *sampleTextField = [[UITextField alloc] initWithFrame:CGRectMake(10, innerY, WIDTH - 20 - 45, 20)];
                 sampleTextField.text = [subjectArray objectAtIndex:counter];
@@ -777,9 +829,7 @@
                 }
                 
                 [containerView addSubview:sampleTextField];
-                if (!textFieldArray) {
-                    textFieldArray = [[NSMutableArray alloc] init];
-                }
+                
                 [textFieldArray addObject:sampleTextField];
                 sampleTextField = nil;
                 innerY = innerY + 35;
@@ -819,7 +869,11 @@
         }
     }
     else {
-        if (!textFieldArray) {
+        if (textFieldArray) {
+            textFieldArray = nil;
+        }
+        textFieldArray = [[NSMutableArray alloc] init];
+        if (!textFieldArray || !textFieldArray.count) {
             textFieldArray = [[NSMutableArray alloc] init];
             subjectTextField = [[UITextField alloc] initWithFrame:CGRectMake(10, innerY, 300 - 45, 20)];
             subjectTextField.tag = 0;
@@ -854,7 +908,18 @@
                 UITextField *tempTextField = [textFieldArray objectAtIndex:counter];
                 [containerView addSubview:tempTextField];
                 [containerView addSubview:[editButtonArray objectAtIndex:counter]];
-                innerY = innerY + 35;
+//                if (counter == textFieldArray.count - 1) {
+//                    innerY = innerY + 30;
+//                }
+//                
+//                else
+                    innerY = innerY + 35;
+            }
+            for (int counter = 0; counter < seperatorViewArray.count; counter++) {
+                if (counter < seperatorViewArray.count) {
+                    UIView *tempView = [seperatorViewArray objectAtIndex:counter];
+                    [containerView addSubview:tempView];
+                }
             }
         }
     }
@@ -909,7 +974,11 @@
     sampleLAbel = nil;
     
     UISwitch *primarySkipSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(WIDTH - 10 - 50, internalY, 70, 40)];
-    [primarySkipSwitch setOn:skipPrimary animated:YES];
+    if (isEditFunnel) {
+        [primarySkipSwitch setOn:oldModel.skipFlag animated:YES];
+    }
+    else
+        [primarySkipSwitch setOn:skipPrimary animated:YES];
     [primarySkipSwitch addTarget:self action:@selector(skipPrimaryMailChange:) forControlEvents:UIControlEventValueChanged];
     [primarySkipSwitch setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
     //    [containerView addSubview:primarySkipSwitch];
@@ -919,29 +988,30 @@
     //    innerY = innerY + 40;
     internalY = internalY + 40;
     
+    if (isEditFunnel) {
+        deleteButton = [[UIButton alloc] initWithFrame:CGRectMake(10, internalY, WIDTH - 20, 30)];
+        [deleteButton setTitleColor:DELETE_RED_COLOR forState:UIControlStateNormal];
+        [deleteButton setTitle:@"Delete" forState:UIControlStateNormal];
+        [deleteButton addTarget:self action:@selector(deleteFunnel) forControlEvents:UIControlEventTouchUpInside];
+        deleteButton.clipsToBounds = YES;
+        deleteButton.layer.cornerRadius = 3;
+        deleteButton.layer.borderWidth = 1;
+        deleteButton.layer.borderColor = [DELETE_RED_COLOR CGColor];
+        [footerView addSubview:deleteButton];
+    }
+    
+    internalY = internalY + 40;
+    
     footerView.frame = CGRectMake(footerView.frame.origin.x, footerView.frame.origin.y, footerView.frame.size.width, internalY);
     
     innerY = internalY + innerY;
     
-    containerView.frame = CGRectMake(0, y, WIDTH, innerY);
+    containerView.frame = CGRectMake(0, y, WIDTH, innerY + 20);
     
     [containerView setClipsToBounds:YES];
     [containerView addSubview:footerView];
     
     [mainScrollView addSubview:containerView];
-    
-    if (isEditFunnel) {
-        sampleButton = [[UIButton alloc] initWithFrame:CGRectMake(10, y + innerY + 20, WIDTH - 20, 30)];
-        [sampleButton setTitle:@"Delete" forState:UIControlStateNormal];
-        [sampleButton addTarget:self action:@selector(deleteFunnel) forControlEvents:UIControlEventTouchUpInside];
-        [sampleButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        sampleButton.clipsToBounds = YES;
-        sampleButton.layer.cornerRadius = 3;
-        sampleButton.layer.borderWidth = 1;
-        sampleButton.layer.borderColor = [[UIColor whiteColor] CGColor];
-        [mainScrollView addSubview:sampleButton];
-        sampleButton = nil;
-    }
     
     [self.view addSubview:mainScrollView];
     if (isEditFunnel) {
@@ -1074,19 +1144,23 @@
     return cell;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 0;
+}
+
 - (void)keyboardWillShow:(NSNotification *)sender
 {
     if ([additionalTextField isFirstResponder]) {
-        CGSize kbSize = [[[sender userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
-        NSTimeInterval duration = [[[sender userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-        [UIView animateWithDuration:duration animations:^{
-            UIEdgeInsets edgeInsets = UIEdgeInsetsMake(50, 0, kbSize.height, 0);
-            [mainScrollView setContentInset:edgeInsets];
-            [mainScrollView setScrollIndicatorInsets:edgeInsets];
-        }];
+//        CGSize kbSize = [[[sender userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
+//        NSTimeInterval duration = [[[sender userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+//        [UIView animateWithDuration:duration animations:^{
+//            UIEdgeInsets edgeInsets = UIEdgeInsetsMake(50, 0, kbSize.height, 0);
+//            [mainScrollView setContentInset:edgeInsets];
+//            [mainScrollView setScrollIndicatorInsets:edgeInsets];
+//        }];
         CGRect keyboardRect = [[[sender userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
         _keyboardHeight = keyboardRect.size.height > keyboardRect.size.width ? keyboardRect.size.width : keyboardRect.size.height;
-        autocompleteTableView.frame = CGRectMake(autocompleteTableView.frame.origin.x,_keyboardHeight-150,autocompleteTableView.frame.size.width,155.0);
+        autocompleteTableView.frame = CGRectMake(autocompleteTableView.frame.origin.x,50 + 20,autocompleteTableView.frame.size.width,HEIGHT - 70 - _keyboardHeight - 66);
     }
 }
 
@@ -1113,19 +1187,26 @@
             autocompleteTableView.hidden = NO;
         else
             autocompleteTableView.hidden = YES;
+        
+        if (range.location == 0 && range.length == 1 && [string isEqualToString:@""]) {
+            [addEmailButton setHidden:YES];
+        }
+        else {
+            [addEmailButton setHidden:NO];
+        }
     }
+    
     return YES;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    
+    [mainScrollView setScrollEnabled:YES];
     if (textField == funnelNameTextField) {
         subjectString = funnelNameTextField.text;
         [textField resignFirstResponder];
         return YES;
     }
-    
-    if (additionalTextField == textField) {
+    else if (additionalTextField == textField) {
         autocompleteTableView.hidden = YES;
         [mainScrollView setScrollEnabled:YES];
         [funnelNameTextField setUserInteractionEnabled:YES];
@@ -1152,15 +1233,51 @@
             }
             else
                 addedContact.thumbnail = @"";
+            BOOL flag1 = FALSE;
+            for (ContactModel *temp in contactMutableArray) {
+                if ([temp.email isEqualToString:addedContact.email]) {
+                    addedContact = nil;
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Contact previously added." message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                    [alert show];
+                    alert = nil;
+                    additionalTextField.text = @"";
+                    flag1 = TRUE;
+//                    return NO;
+                }
+            }
+            
             isEditing = FALSE;
             [mainScrollView removeFromSuperview];
             [self setUpViewForCreatingFunnel];
-            
+            [self advanceButtonClicked];
             return YES;
+        }
+        else {
+            if ([additionalTextField.text isEqualToString:@""]) {
+                isEditing = FALSE;
+                [mainScrollView removeFromSuperview];
+                [self setUpViewForCreatingFunnel];
+                [self advanceButtonClicked];
+                return YES;
+            }
+            else {
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"You have entered an invalid email address." message:nil delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                [alertView show];
+                alertView = nil;
+            }
         }
         return NO;
     }
-    
+    else {
+        if (isEditFunnel) {
+            if (!subjectArray) {
+                subjectArray = [[NSMutableArray alloc] init];
+            }
+            if (textField.text.length) {
+                [subjectArray addObject:textField.text];
+            }
+        }
+    }
     [textField resignFirstResponder];
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:0.4];
@@ -1192,11 +1309,11 @@
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-    
+    [mainScrollView setScrollEnabled:NO];
     if (textField == funnelNameTextField || textField == additionalTextField) {
         
         if (textField == additionalTextField) {
-            [mainScrollView setScrollEnabled:NO];
+//            [mainScrollView setScrollEnabled:NO];
             [funnelNameTextField setUserInteractionEnabled:NO];
         }
         
@@ -1211,6 +1328,7 @@
     else {
         [mainScrollView setContentOffset:CGPointMake(0, textField.frame.origin.y + containerView.frame.origin.y - 150) animated:YES];
     }
+//    [mainScrollView setScrollEnabled:NO];
     [UIView commitAnimations];
     return YES;
 }
@@ -1312,18 +1430,19 @@
 }
 
 - (void)deleteContactPressed:(UIButton *)sender {
-    NSString *deletedEmailAddress = [NSString stringWithFormat:@"%@",[(ContactModel *)[contactMutableArray objectAtIndex:sender.tag] email]];
-    [contactMutableArray removeObjectAtIndex:sender.tag];
-    NSLog(@"deleteContactPressed ---> %ld\nEmail Id : %@",(long)emailTempArray.count,deletedEmailAddress);
-    for (int count = 0; count < emailTempArray.count; count++) {
-        if ([[emailTempArray objectAtIndex:count] isEqualToString:deletedEmailAddress]) {
-            [emailTempArray removeObjectAtIndex:count];
+    
+    if (!isEditing) {
+        NSString *deletedEmailAddress = [NSString stringWithFormat:@"%@",[(ContactModel *)[contactMutableArray objectAtIndex:sender.tag] email]];
+        for (ContactModel *tempModel in contactMutableArray) {
+            if ([tempModel.email isEqualToString:deletedEmailAddress]) {
+                [contactMutableArray removeObjectIdenticalTo:tempModel];
+                break;
+            }
         }
+        [self removeViewFromMainScroll];
+        [self setUpViewForCreatingFunnel];
+        [self advanceButtonClicked];
     }
-    [emailTempArray removeObjectIdenticalTo:deletedEmailAddress];
-    NSLog(@"count --> %ld",(long)emailTempArray.count);
-    [self removeViewFromMainScroll];
-    [self setUpViewForCreatingFunnel];
 }
 
 - (void)bringViewDown {
@@ -1337,10 +1456,15 @@
         }
     }
     [mainScrollView setContentSize:CGSizeMake(WIDTH, mainScrollView.contentSize.height + 30)];
+    if (additionalTextField) {
+        [additionalTextField removeFromSuperview];
+        additionalTextField = nil;
+    }
     additionalTextField = [[UITextField alloc] initWithFrame:CGRectMake(10, 50, 300, 20)];
     additionalTextField.keyboardType = UIKeyboardTypeEmailAddress;
     additionalTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [additionalTextField setTextColor:[UIColor whiteColor]];
+    [additionalTextField becomeFirstResponder];
     NSMutableAttributedString *tempString = [[NSMutableAttributedString alloc] initWithString:@"Enter the email"];
     [tempString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithHexString:PLACEHOLDER_COLOR] range:NSMakeRange(0,@"Enter the email".length)];
     [additionalTextField setAttributedPlaceholder:tempString];
@@ -1349,6 +1473,18 @@
     additionalTextField.returnKeyType = UIReturnKeyDone;
     [mainScrollView addSubview:additionalTextField];
     
+    if (addEmailButton) {
+        [addEmailButton removeFromSuperview];
+        addEmailButton = nil;
+    }
+    
+    addEmailButton = [[UIButton alloc] initWithFrame:CGRectMake(WIDTH - 10 - 45, 50 + 10 - 45.0/2.0, 45, 45)];
+    [addEmailButton setImage:[UIImage imageNamed:@"addIcon_white_22x22.png"] forState:UIControlStateNormal];
+    [mainScrollView addSubview:addEmailButton];
+    [addEmailButton addTarget:self action:@selector(addSenderDirectly:) forControlEvents:UIControlEventTouchUpInside];
+    addEmailButton.hidden = YES;
+    
+//    addIcon_white_22x22
     seperatorAdditionalTextField = nil;
     seperatorAdditionalTextField = [[UIView alloc] initWithFrame:CGRectMake(10, 50 + 25, 300, 1)];
     [seperatorAdditionalTextField setBackgroundColor:[UIColor whiteColor]];
@@ -1378,19 +1514,63 @@
     skipPrimary = !skipPrimary;
 }
 
+- (void)addSenderDirectly:(UIButton *)sender {
+    if ([self validateEmail:additionalTextField.text]) {
+        [additionalTextField resignFirstResponder];
+        if (addedContact) {
+            addedContact = nil;
+        }
+        addedContact = [[ContactModel alloc] init];
+        NSString *name = [self getUserName:additionalTextField.text];
+        if (name) {
+            addedContact.name = name;
+            name = nil;
+        }
+        else
+            addedContact.name = additionalTextField.text;
+        
+        addedContact.email = additionalTextField.text;
+        
+        NSString *url = [self getUserImage:additionalTextField.text];
+        if (url) {
+            addedContact.thumbnail = url;
+            url = nil;
+        }
+        else
+            addedContact.thumbnail = @"";
+        BOOL flag1 = FALSE;
+        for (ContactModel *temp in contactMutableArray) {
+            if ([temp.email isEqualToString:addedContact.email]) {
+                addedContact = nil;
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Contact is added." message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                [alert show];
+                alert = nil;
+                additionalTextField.text = @"";
+                flag1 = TRUE;
+            }
+        }
+        
+        isEditing = FALSE;
+        [mainScrollView removeFromSuperview];
+        [self setUpViewForCreatingFunnel];
+        [self advanceButtonClicked];
+        [self addSender:sender];
+    }
+}
+
 - (void)addSender:(UIButton *)sender {
-//    GTMOAuth2Authentication *currentAuth = [GTMOAuth2ViewControllerTouch authForGoogleFromKeychainForName:kKeychainItemName clientID:kMyClientID clientSecret:kMyClientSecret];
-//    [currentAuth stopAuthorization];
     [buttonArray removeAllObjects];
-//    [textFieldArray removeAllObjects];
-//    [editButtonArray removeAllObjects];
     NSArray *subView = [self.view subviews];
     for (UIView *tempView in subView) {
         [tempView removeFromSuperview];
     }
-    isEditing = !isEditing;
-//    [contactMutableArray removeAllObjects];
+    if ([sender isEqual:addEmailButton]) {
+        isEditing = TRUE;
+    }
+    else
+        isEditing = !isEditing;
     [self setUpViewForCreatingFunnel];
+    [self advanceButtonClicked];
     [self bringViewDown];
     [self setUpCustomNavigationBar];
 }
@@ -1442,14 +1622,41 @@
         [sender addTarget:self action:@selector(deleteSubject:) forControlEvents:UIControlEventTouchUpInside];
         [sender setImage:[UIImage imageNamed:@"close.png"] forState:UIControlStateNormal];
         [sender setBackgroundColor:[UIColor clearColor]];
+        
+        if (isEditFunnel) {
+            if (!subjectArray) {
+                subjectArray = [[NSMutableArray alloc] init];
+            }
+            if ([[self getTextFieldForButton:sender] text].length) {
+                [subjectArray addObject:[[self getTextFieldForButton:sender] text]];
+            }
+        }
     }
 }
 
 - (void)deleteSubject:(UIButton *)sender {
     
     UIView *seperatorView = [self getSeperatorViewForButton:sender];
+//    NSLog(@"tag -- > %d",sender.tag);
     if (seperatorView) {
         [seperatorView removeFromSuperview];
+        [seperatorViewArray removeObjectIdenticalTo:seperatorView];
+    }
+    
+    UITextField *tempTextField = [self getTextFieldForButton:sender];
+    if (tempTextField) {
+        [tempTextField removeFromSuperview];
+        [textFieldArray removeObjectIdenticalTo:tempTextField];
+    }
+    
+    if (isEditFunnel) {
+        NSLog(@"%@",tempTextField.text);
+        for (NSString *tempString in subjectArray) {
+            if ([tempString isEqualToString:tempTextField.text]) {
+                [subjectArray removeObjectIdenticalTo:tempString];
+                break;
+            }
+        }
     }
     
     [self resignAllTextField];
@@ -1484,6 +1691,23 @@
         advanceFlag = TRUE;
     }
 }
+
+- (void)advanceButtonClicked{
+    if (!advanceFlag) {
+        [UIView beginAnimations:nil context:nil];
+        [UIView setAnimationDuration:0.3];
+        containerView.frame = CGRectMake(0, containerView.frame.origin.y, containerView.frame.size.width, 50);
+        [UIView commitAnimations];
+    }
+    else {
+        [UIView beginAnimations:nil context:nil];
+        [UIView setAnimationDuration:0.3];
+        containerView.frame = CGRectMake(0, containerView.frame.origin.y, containerView.frame.size.width, innerY);
+        [UIView commitAnimations];
+        advanceFlag = TRUE;
+    }
+}
+
 
 - (void)cancelButtonPressed:(UIButton*)sender {
 //    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
@@ -1554,9 +1778,8 @@
             }
             return;
         }
-        
-        if(contactMutableArray.count){
-            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        if(contactMutableArray.count > 1 || (![[(ContactModel *)[contactMutableArray objectAtIndex:0] name] isEqualToString:ADD_FUNNL] && contactMutableArray.count == 1)){
+//            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             if (!enableNotification) {
                 if ([oldModel.webhookIds length]) {
                     NSString *webhookJSONString = [oldModel webhookIds];
@@ -1581,6 +1804,7 @@
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 //[self showAlertForError:error];
                                 if (reqCnt == 0) {
+                                    [self saveFunnlWithWebhookId:nil];
                                     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                                 }
                             });
@@ -1629,6 +1853,7 @@
         }else{
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Please add at least one email" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert show];
+            alert = nil;
         }
     }
     else{
@@ -1638,230 +1863,6 @@
     [appDelegate.progressHUD setHidden:YES];
     [appDelegate.progressHUD removeFromSuperview];
     [MBProgressHUD hideHUDForView:appDelegate.window animated:YES];
-//    AppDelegate *tempAppDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-//    [self performSelectorInBackground:@selector(showHUD) withObject:nil];
-//    if (isEditFunnel) {
-//        [[Mixpanel sharedInstance] track:@"Created a new Funnl or modified existing Funnl"];
-//        if (funnelNameTextField.text.length == 0) {
-//            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Please enter the Funnl name." message:nil delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-//            [alertView show];
-//            alertView = nil;
-//            [MBProgressHUD hideHUDForView:tempAppDelegate.window animated:YES];
-//            return;
-//        }
-//        if (contactMutableArray.count <= 1) {
-//            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Please email ID." message:nil delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-//            [alertView show];
-//            alertView = nil;
-//            [MBProgressHUD hideHUDForView:tempAppDelegate.window animated:YES];
-//            return;
-//        }
-//        int validCode = [self validateFunnelName:funnelNameTextField.text];
-//        if (validCode != 1 && !isEditFunnel) {
-//            if (validCode == 2) {
-//                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:FUNNEL_NAME_REPEATED message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-//                [alertView show];
-//                alertView = nil;
-//                [MBProgressHUD hideAllHUDsForView:tempAppDelegate.window animated:YES];
-//            }
-//            else if (validCode == 3) {
-//                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:FUNNEL_NAME_BLANK message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-//                [alertView show];
-//                alertView = nil;
-//                [MBProgressHUD hideAllHUDsForView:tempAppDelegate.window animated:YES];
-//            }
-//            [MBProgressHUD hideHUDForView:tempAppDelegate.window animated:YES];
-//            return;
-//        }
-//        
-//        unsigned long temp = [[FunnelService instance] allFunnels].count%8;
-//        NSString *colorString = @"#F9F9F9";
-//        UIColor *color = [UIColor colorWithHexString:colorString];
-//        if(isEditFunnel){
-//            color = oldModel.barColor;
-//            colorString = oldModel.funnelColor;
-//        }
-//        else{
-//            colorString = [randomColors objectAtIndex:temp];
-//            UIColor *color = [UIColor colorWithHexString:colorString];
-//            if(color == nil){
-//                color = [UIColor colorWithHexString:@"#F9F9F9"];
-//            }
-//        }
-//        
-//        NSMutableArray *senderArray = [[NSMutableArray alloc] init];
-//        for (ContactModel *tempContact in contactMutableArray) {
-//            if ([tempContact.name isEqualToString:ADD_FUNNL] || [tempContact.email isEqualToString:@""]) {
-//                
-//            }
-//            else {
-//                [senderArray addObject:tempContact.email];
-//            }
-//        }
-//        
-//        //    NSMutableArray *tempSubjectArray = [[NSMutableArray alloc] init];
-//        if (subjectArray) {
-//            subjectArray = nil;
-//        }
-//        subjectArray = [[NSMutableArray alloc] init];
-//        for (UITextField *tempTextField in textFieldArray) {
-//            if (tempTextField.text.length == 0) {
-//                
-//            }
-//            else {
-//                [subjectArray addObject:tempTextField.text];
-//            }
-//        }
-//
-//        FunnelModel *model;
-//        model = [[FunnelModel alloc]initWithBarColor:color filterTitle:funnelNameTextField.text newMessageCount:0 dateOfLastMessage:[NSDate new] sendersArray:senderArray subjectsArray:subjectArray skipAllFlag:skipPrimary funnelColor:colorString];
-//        model.funnelId = oldModel.funnelId;
-//        model.notificationsFlag = enableNotification;
-//        
-//        tempAppDelegate.currentFunnelString = model.funnelName.lowercaseString;
-//        tempAppDelegate.currentFunnelDS = model;
-//        model.skipFlag = skipPrimary;
-//        
-//        if (isEditFunnel) {
-//            [[MessageFilterXRefService instance] deleteXRefWithFunnelId:model.funnelId];
-//            [[FunnelService instance] updateFunnel:model];
-//            [[EmailService instance] applyingFunnel:model toMessages:[[MessageService instance] messagesAllTopMessages]];
-//            
-//            if (oldModel.skipFlag == skipPrimary) {
-//                NSLog(@"No changes had occured!!");
-//            }
-//            else {
-//                if (skipPrimary) {
-//                    [self incrementCounterAgainstTheMessage];
-//                }
-//                else {
-//                    [self decrementCounterAgainstTheMessage];
-//                }
-//                NSLog(@"Changes had occured!!");
-//            }
-//            [[MessageService instance] insertFunnelJsonForMessages];
-//        }
-//        else {
-//            [[FunnelService instance] insertFunnel:model];
-//            [[EmailService instance] applyingFunnel:model toMessages:[[MessageService instance] messagesAllTopMessages]];
-//            if (skipPrimary) {
-//                
-//            }
-//            else {
-//                
-//            }
-//            [EmailService setNewFilterModel:model];
-//        }
-//        [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:model.funnelId top:2000];
-//        [self.mainVCdelegate filterSelected:model];
-//        model = nil;
-//        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-//        [self.navigationController popViewControllerAnimated:YES];
-//    }
-//    else {
-//        AppDelegate *tempAppDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-//        [[Mixpanel sharedInstance] track:@"Created a new Funnl or modified existing Funnl"];
-//        if (funnelNameTextField.text.length == 0) {
-//            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Please enter the Funnl name." message:nil delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-//            [alertView show];
-//            alertView = nil;
-//            [MBProgressHUD hideHUDForView:tempAppDelegate.window animated:YES];
-//            return;
-//        }
-//        if (contactMutableArray.count <= 1) {
-//            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Please email ID." message:nil delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-//            [alertView show];
-//            alertView = nil;
-//            [MBProgressHUD hideHUDForView:tempAppDelegate.window animated:YES];
-//            return;
-//        }
-//        int validCode = [self validateFunnelName:funnelNameTextField.text];
-//        if (validCode != 1 && !isEditFunnel) {
-//            if (validCode == 2) {
-//                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:FUNNEL_NAME_REPEATED message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-//                [alertView show];
-//                alertView = nil;
-//                [MBProgressHUD hideAllHUDsForView:tempAppDelegate.window animated:YES];
-//            }
-//            else if (validCode == 3) {
-//                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:FUNNEL_NAME_BLANK message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-//                [alertView show];
-//                alertView = nil;
-//                [MBProgressHUD hideAllHUDsForView:tempAppDelegate.window animated:YES];
-//            }
-//            [MBProgressHUD hideHUDForView:tempAppDelegate.window animated:YES];
-//            return;
-//        }
-//        
-//        unsigned long temp = [[FunnelService instance] allFunnels].count%8;
-//        NSString *colorString = @"#F9F9F9";
-//        UIColor *color = [UIColor colorWithHexString:colorString];
-//        if(isEditFunnel){
-//            color = oldModel.barColor;
-//            colorString = oldModel.funnelColor;
-//        }
-//        else{
-//            colorString = [randomColors objectAtIndex:temp];
-//            UIColor *color = [UIColor colorWithHexString:colorString];
-//            if(color == nil){
-//                color = [UIColor colorWithHexString:@"#F9F9F9"];
-//            }
-//        }
-//        
-//        NSMutableArray *senderArray = [[NSMutableArray alloc] init];
-//        for (ContactModel *tempContact in contactMutableArray) {
-//            if ([tempContact.name isEqualToString:ADD_FUNNL] || [tempContact.email isEqualToString:@""]) {
-//                
-//            }
-//            else {
-//                [senderArray addObject:tempContact.email];
-//            }
-//        }
-//        
-//    //    NSMutableArray *tempSubjectArray = [[NSMutableArray alloc] init];
-//        if (subjectArray) {
-//            subjectArray = nil;
-//        }
-//        subjectArray = [[NSMutableArray alloc] init];
-//        for (UITextField *tempTextField in textFieldArray) {
-//            if (tempTextField.text.length == 0) {
-//                
-//            }
-//            else {
-//                [subjectArray addObject:tempTextField.text];
-//            }
-//        }
-//        
-//        FunnelModel *model;
-//        model = [[FunnelModel alloc]initWithBarColor:color filterTitle:funnelNameTextField.text newMessageCount:0 dateOfLastMessage:[NSDate new] sendersArray:senderArray subjectsArray:subjectArray skipAllFlag:skipPrimary funnelColor:colorString];
-//        model.funnelId = oldModel.funnelId;
-//        model.notificationsFlag = enableNotification;
-//        
-//        tempAppDelegate.currentFunnelString = model.funnelName.lowercaseString;
-//        tempAppDelegate.currentFunnelDS = model;
-//        model.skipFlag = skipPrimary;
-//        
-//        if (isEditFunnel) {
-//            
-//        }
-//        else {
-//            [[FunnelService instance] insertFunnel:model];
-//            [[EmailService instance] applyingFunnel:model toMessages:[[MessageService instance] messagesAllTopMessages]];
-//            if (skipPrimary) {
-//                
-//            }
-//            else {
-//                
-//            }
-//            [EmailService setNewFilterModel:model];
-//        }
-//        [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:model.funnelId top:2000];
-//        [self.mainVCdelegate filterSelected:model];
-//        model = nil;
-//        [MBProgressHUD hideAllHUDsForView:tempAppDelegate.window animated:YES];
-//        [self.navigationController popViewControllerAnimated:YES];
-//    }
-//    [MBProgressHUD hideHUDForView:tempAppDelegate.window animated:YES];
 }
 
 -(void) saveFunnlWithWebhookId:(NSString *) webhookId

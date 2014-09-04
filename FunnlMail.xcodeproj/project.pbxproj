@@ -311,6 +311,10 @@
 		FAD311B1198262E500565A90 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAD311B0198262E500565A90 /* CoreText.framework */; };
 		FAE1EB2D19B74ADA001FF334 /* addIcon_white_22x22.png in Resources */ = {isa = PBXBuildFile; fileRef = FAE1EB2B19B74ADA001FF334 /* addIcon_white_22x22.png */; };
 		FAE1EB2E19B74ADA001FF334 /* addIcon_white_22x22@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FAE1EB2C19B74ADA001FF334 /* addIcon_white_22x22@2x.png */; };
+		FAE1EB3519B87620001FF334 /* logoutListIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = FAE1EB3119B87620001FF334 /* logoutListIcon.png */; };
+		FAE1EB3619B87620001FF334 /* sendFeedbackListIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FAE1EB3219B87620001FF334 /* sendFeedbackListIcon@2x.png */; };
+		FAE1EB3719B87620001FF334 /* logoutListIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FAE1EB3319B87620001FF334 /* logoutListIcon@2x.png */; };
+		FAE1EB3819B87620001FF334 /* sendFeedbackListIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = FAE1EB3419B87620001FF334 /* sendFeedbackListIcon.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -792,6 +796,10 @@
 		FAD311B0198262E500565A90 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		FAE1EB2B19B74ADA001FF334 /* addIcon_white_22x22.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = addIcon_white_22x22.png; sourceTree = "<group>"; };
 		FAE1EB2C19B74ADA001FF334 /* addIcon_white_22x22@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "addIcon_white_22x22@2x.png"; sourceTree = "<group>"; };
+		FAE1EB3119B87620001FF334 /* logoutListIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logoutListIcon.png; sourceTree = "<group>"; };
+		FAE1EB3219B87620001FF334 /* sendFeedbackListIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sendFeedbackListIcon@2x.png"; sourceTree = "<group>"; };
+		FAE1EB3319B87620001FF334 /* logoutListIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logoutListIcon@2x.png"; sourceTree = "<group>"; };
+		FAE1EB3419B87620001FF334 /* sendFeedbackListIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sendFeedbackListIcon.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1591,6 +1599,10 @@
 		FABAF0401976507E00AA7918 /* ListIcons */ = {
 			isa = PBXGroup;
 			children = (
+				FAE1EB3119B87620001FF334 /* logoutListIcon.png */,
+				FAE1EB3219B87620001FF334 /* sendFeedbackListIcon@2x.png */,
+				FAE1EB3319B87620001FF334 /* logoutListIcon@2x.png */,
+				FAE1EB3419B87620001FF334 /* sendFeedbackListIcon.png */,
 				FABAF0411976507E00AA7918 /* alertListIcon.png */,
 				FABAF0421976507E00AA7918 /* alertListIcon@2x.png */,
 				FABAF0431976507E00AA7918 /* archiveListIcon.png */,
@@ -1835,6 +1847,7 @@
 				FA4A2E8A198A7E2C00CB9FAD /* menuIcon@2x.png in Resources */,
 				FAAE9CF219A38ADD007FB804 /* emailDetailViewForward@2x.png in Resources */,
 				FABAF0D21976629000AA7918 /* reply@2x.png in Resources */,
+				FAE1EB3719B87620001FF334 /* logoutListIcon@2x.png in Resources */,
 				FABAF0951976507E00AA7918 /* archiveListIcon.png in Resources */,
 				FABAF0921976507E00AA7918 /* Share@2x.png in Resources */,
 				FA11B2EA199908D200B4EA86 /* popoverBgSimple.png in Resources */,
@@ -1879,6 +1892,7 @@
 				FA11B2E0199908D200B4EA86 /* popoverArrowRight.png in Resources */,
 				FAE1EB2D19B74ADA001FF334 /* addIcon_white_22x22.png in Resources */,
 				FABAF0A41976507E00AA7918 /* splashScreen.png in Resources */,
+				FAE1EB3819B87620001FF334 /* sendFeedbackListIcon.png in Resources */,
 				FABAF0C11976507E00AA7918 /* swipeArchive@2x.png in Resources */,
 				FA11B2E9199908D200B4EA86 /* popoverBg@2x.png in Resources */,
 				66F2C48218E3293E00CD593E /* Images.xcassets in Resources */,
@@ -1962,11 +1976,13 @@
 				B7C940E1198D6F49008468E7 /* WHITEsliders2.png in Resources */,
 				FAAE9CF919A38ADD007FB804 /* emailDetailViewReplyAll.png in Resources */,
 				FA11B2DF199908D200B4EA86 /* popoverArrowRight-white@2x.png in Resources */,
+				FAE1EB3519B87620001FF334 /* logoutListIcon.png in Resources */,
 				FABAF0A91976507E00AA7918 /* arrow@2x.png in Resources */,
 				FABAF07A1976507E00AA7918 /* Files.png in Resources */,
 				FABAF0841976507E00AA7918 /* Done_Button.png in Resources */,
 				B75F56A6197F056F00518743 /* FunnlMail VIP logo.png in Resources */,
 				FAAE9CF519A38ADD007FB804 /* emailDetailViewMail.png in Resources */,
+				FAE1EB3619B87620001FF334 /* sendFeedbackListIcon@2x.png in Resources */,
 				FABAF0911976507E00AA7918 /* Share.png in Resources */,
 				FABAF0AD1976507E00AA7918 /* close@2x.png in Resources */,
 				FA11B2E2199908D200B4EA86 /* popoverArrowRightSimple.png in Resources */,

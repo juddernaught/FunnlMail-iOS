@@ -1,6 +1,6 @@
 //
 //  Prefix header
-//
+//  com.Funnl.FunnlMail${BUNDLE_ID_SUFFIX}
 //  The contents of this file are implicitly included at the beginning of every source file.
 //
 
@@ -24,6 +24,7 @@
 #define kContextIOConsumerSecret  @"OcBGyTDYEdSat6fz"
 
 #define FUNNEL_NAME_REPEATED @"Funnl name is being repeated."
+#define FUNNEL_CONTACT_BLANK @"No contacts entered."
 #define FUNNEL_NAME_BLANK @"Funnl name is empty."
 #define ADD_FUNNL @"#@New@#"
 #define ALL_FUNNL @"Primary"
@@ -35,13 +36,14 @@
 #define NUMBER_OF_MESSAGES_TO_LOAD 100
 #define NUMBER_OF_MESSAGES_TO_LOAD_ON_SEARCH NUMBER_OF_MESSAGES_TO_LOAD
 
-#define FETCH_MSG_BODY_AT_MSG_LOADING 0
-#define IS_NEW_CREATE_FUNNEL 1  //For New setting page UI
+#define IS_NEW_CREATE_FUNNEL 1
 
 #define SHOW_PRIMARY_INBOX 1
 #define IS_AUTO_REFRESH_ENABLE 1
 #define AUTOREFRESH_DELAY 60
 #define PRIMARY_CATEGORY_NAME @"CATEGORY_PERSONAL"
+
+#define DELETE_RED_COLOR [UIColor colorWithHexString:@"DF353C"]
 
 //email cell's #defines
 #define MAIL_READ_BLUE_COLOR [UIColor colorWithHexString:@"007aff"]
@@ -101,6 +103,8 @@
 #define BG_COLOR UIColorFromRGB(0xECF0F1)
 
 #define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000)>>16))/255.0 green:((float)((rgbValue & 0xFF00)>> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+
+#define FETCH_MSG_BODY_AT_MSG_LOADING 0
 
 #define BOLD_FONT_XXL   [UIFont fontWithName:@"HelveticaNeue-Bold" size:60]
 #define BOLD_FONT_H0    [UIFont fontWithName:@"HelveticaNeue-Bold" size:28]

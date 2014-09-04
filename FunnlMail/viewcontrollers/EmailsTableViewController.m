@@ -452,7 +452,7 @@ UIView *greyView;
 //                }
 //                else
 //                    cell.dateLabel.text = [message.header.date timeAgo];
-                if(message.header.sender.displayName.length){
+                if(message.header.from.displayName.length){
                     cell.senderLabel.text = [self removeAngularBracket:message.header.sender.displayName];
                 }
                 else {
@@ -509,11 +509,11 @@ UIView *greyView;
                             }
                         }
                         NSMutableDictionary *paramDict = [[NSMutableDictionary alloc] init];
-                        
-                        paramDict[uidKey] = htmlString;
-                        
-                        NSLog(@"----HTML data callback recieved -----");
-                        [[MessageService instance] updateMessageWithHTMLContent:paramDict];
+                        if(htmlString){
+                            paramDict[uidKey] = htmlString;
+                            NSLog(@"----ListView: HTML data callback recieved -----");
+                            [[MessageService instance] updateMessageWithHTMLContent:paramDict];
+                        }
                     }];
 
                     cell.messageRenderingOperation = [[EmailService instance].imapSession plainTextBodyRenderingOperationWithMessage:message folder:self.emailFolder];

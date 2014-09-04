@@ -150,7 +150,7 @@
     
     UITextView *thing = [[UITextView alloc]initWithFrame:CGRectMake(10, 40, WIDTH, 70)];
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    thing.text =[NSString stringWithFormat: @"Welcome %@, to your customized Primary inbox!",appDelegate.menuController.listArray.firstObject];
+    thing.text =[NSString stringWithFormat: @"Welcome %@, to your customized Primary inbox!",[EmailService instance].currentName];
     
     thing.backgroundColor = [UIColor clearColor];
     [thing setTextColor:[UIColor whiteColor]];

@@ -71,6 +71,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 - (void)viewDidLoad
 {
+
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     mainView = [[MainView alloc] initWithFrame:CGRectMake(0, 20, WIDTH, HEIGHT+40)];
@@ -84,6 +85,11 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [self.navigationController.navigationBar setBarTintColor:[UIColor whiteColor]];
     [self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xF7F7F7)];
     
+    composeEmailButton.tintColor = UIColorFromRGB(0x007AFF);
+    menuButton.tintColor = UIColorFromRGB(0x007AFF);
+    filterButton.tintColor = UIColorFromRGB(0x007AFF);
+    NSDictionary * navBarTitleTextAttributes =   @{ NSForegroundColorAttributeName : UIColorFromRGB(0x007AFF), NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:17]};
+    [self.navigationController.navigationBar setTitleTextAttributes:navBarTitleTextAttributes];
     
     // This is the All bar
     NSLog(@"viewDidLoad mainVC");
@@ -95,18 +101,24 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     if (currentFilterModel && [currentFilterModel.funnelName isEqualToString:ALL_FUNNL]) {
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
         self.navigationItem.title = currentFilterModel.funnelName;
-        [self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xF7F7F7)];
+        //[self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xF7F7F7)];
     }
     else if (currentFilterModel &&  [currentFilterModel.funnelName isEqualToString:ALL_OTHER_FUNNL]) {
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveOtherMessagesThanPrimary];
         self.navigationItem.title = currentFilterModel.funnelName;
-        [self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xF7F7F7)];
+        //[self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xF7F7F7)];
         [[Mixpanel sharedInstance] track:@"Viewed 'All other' mail"];
     }
     else if(currentFilterModel)
     {
         self.navigationItem.title = currentFilterModel.funnelName;
-        [self.navigationController.navigationBar setBarTintColor:[UIColor colorWithHexString:currentFilterModel.funnelColor]];
+//        [self.navigationController.navigationBar setBarTintColor:[UIColor colorWithHexString:currentFilterModel.funnelColor]];
+        composeEmailButton.tintColor = [UIColor colorWithHexString:currentFilterModel.funnelColor];
+        menuButton.tintColor = [UIColor colorWithHexString:currentFilterModel.funnelColor];
+        filterButton.tintColor = [UIColor colorWithHexString:currentFilterModel.funnelColor];
+        NSDictionary * navBarTitleTextAttributes =   @{ NSForegroundColorAttributeName : [UIColor colorWithHexString:currentFilterModel.funnelColor], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:17]};
+        [self.navigationController.navigationBar setTitleTextAttributes:navBarTitleTextAttributes];
+
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:currentFilterModel.funnelId top:2000];
     }
     else{
@@ -114,20 +126,22 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
     }
 
-    filterLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 44+20, 320, 40)];
-    _activityIndicator = tempAppDelegate.appActivityIndicator;
-    [_activityIndicator setBackgroundColor:[UIColor clearColor]];
-    [_activityIndicator startAnimating];
-    [filterLabel addSubview:_activityIndicator];
-    filterLabel.textColor = [UIColor whiteColor];
-    filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#F7F7F7"]);
-    filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle: ALL_FUNNL);
-    filterLabel.textAlignment = NSTextAlignmentCenter;
+//    filterLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 44+20, 320, 40)];
+//    _activityIndicator = tempAppDelegate.appActivityIndicator;
+//    [_activityIndicator setBackgroundColor:[UIColor clearColor]];
+//    [_activityIndicator startAnimating];
+//    [filterLabel addSubview:_activityIndicator];
+//    filterLabel.textColor = [UIColor whiteColor];
+//    filterLabel.backgroundColor = (self.filterModel!=nil ? self.filterModel.barColor : [UIColor colorWithHexString:@"#F7F7F7"]);
+//    filterLabel.text = (self.filterModel!=nil ? self.filterModel.filterTitle: ALL_FUNNL);
+//    filterLabel.textAlignment = NSTextAlignmentCenter;
   
-    UIButton *menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [menuButton addTarget:self action:@selector(menuButtonSelected) forControlEvents:UIControlEventTouchUpInside];
     menuButton.frame = CGRectMake(0, 0, 20, 15);
-    [menuButton setImage:[UIImage imageNamed:@"menuIcon.png"] forState:UIControlStateNormal];
+    UIImage *menuIconImg = [UIImage imageNamed:@"menuIcon.png"];
+    menuIconImg = [menuIconImg imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [menuButton setImage:menuIconImg forState:UIControlStateNormal];
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
     self.navigationItem.leftBarButtonItem = leftItem;
     
@@ -137,18 +151,22 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     self.navigationItem.rightBarButtonItem = rightItem;
   
     //UIButton *mailButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIButton *filterButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIButton *composeEmailButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    filterButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    composeEmailButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [filterButton addTarget:self action:@selector(filterButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    filterButton.frame = CGRectMake(0, 4, 40, 40);
-    [filterButton setImage:[UIImage imageNamed:@"funnlIcon.png"] forState:UIControlStateNormal];
+    filterButton.frame = CGRectMake(0, 2, 40, 40);
+    UIImage *funnlIconImg = [UIImage imageNamed:@"funnlIcon.png"];
+    funnlIconImg = [funnlIconImg imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [filterButton setImage:funnlIconImg forState:UIControlStateNormal];
     [filterButton setContentMode:UIViewContentModeCenter];
     [centeredButtons addSubview:filterButton];
     
     [composeEmailButton addTarget:self action:@selector(composeEmailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
     composeEmailButton.frame = CGRectMake(44, 0, 40, 40);
-    [composeEmailButton setImage:[UIImage imageNamed:@"composeIcon.png"] forState:UIControlStateNormal];
+    UIImage *composeIconImg = [UIImage imageNamed:@"composeIcon.png"];
+    composeIconImg = [composeIconImg imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [composeEmailButton setImage:composeIconImg forState:UIControlStateNormal];
     [composeEmailButton setContentMode:UIViewContentModeCenter];
     [centeredButtons addSubview:composeEmailButton];
     
@@ -254,20 +272,33 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     }
     mainView.hidden = YES;
     emailsTableViewController.filterModel = currentFilterModel;
+    
+    composeEmailButton.tintColor = UIColorFromRGB(0x007AFF);
+    menuButton.tintColor = UIColorFromRGB(0x007AFF);
+    filterButton.tintColor = UIColorFromRGB(0x007AFF);
+
+    NSDictionary * navBarTitleTextAttributes =   @{ NSForegroundColorAttributeName : UIColorFromRGB(0x007AFF), NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:17]};
+    [self.navigationController.navigationBar setTitleTextAttributes:navBarTitleTextAttributes];
+
     //fetching from database
     if ([filterModel.funnelName isEqualToString:ALL_FUNNL]) {
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
-        [self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xF7F7F7)];
+//        [self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xF7F7F7)];
     }
     else if ([filterModel.funnelName isEqualToString:ALL_OTHER_FUNNL]) {
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveOtherMessagesThanPrimary];
-        [self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xF7F7F7)];
-
         [[Mixpanel sharedInstance] track:@"Viewed 'All other' mail"];
+//        [self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xF7F7F7)];
     }
     else
     {
-        [self.navigationController.navigationBar setBarTintColor:[UIColor colorWithHexString:filterModel.funnelColor]];
+        composeEmailButton.tintColor = [UIColor colorWithHexString:filterModel.funnelColor];
+        menuButton.tintColor = [UIColor colorWithHexString:filterModel.funnelColor];
+        filterButton.tintColor = [UIColor colorWithHexString:filterModel.funnelColor];
+        NSDictionary * navBarTitleTextAttributes =   @{ NSForegroundColorAttributeName : [UIColor colorWithHexString:filterModel.funnelColor], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:17]};
+        [self.navigationController.navigationBar setTitleTextAttributes:navBarTitleTextAttributes];
+
+//        [self.navigationController.navigationBar setBarTintColor:[UIColor colorWithHexString:filterModel.funnelColor]];
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:filterModel.funnelId top:2000];
     }
     [self setFilterTitle:filterModel.funnelName];

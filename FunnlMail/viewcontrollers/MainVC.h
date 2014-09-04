@@ -18,8 +18,11 @@
 //  MainView *mainView;
   EmailThreadTableViewController *threadViewController;
   FunnelModel *currentFilterModel;
-  UILabel *filterLabel;
+    UILabel *filterLabel;
     UILabel *navigationBarTitleLabel;
+    UIButton *menuButton;
+    UIButton *filterButton;
+    UIButton *composeEmailButton;
 }
 @property (nonatomic, retain) MainView *mainView;
 @property (nonatomic, strong) EmailsTableViewController *emailsTableViewController;

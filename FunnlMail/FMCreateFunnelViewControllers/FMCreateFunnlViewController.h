@@ -25,7 +25,9 @@
     UITextField *funnelNameTextField;
     UITextField *subjectTextField;
     UITextField *additionalTextField;
+    UIButton *addEmailButton;
     NSMutableArray *buttonArray;
+    UIButton *deleteButton;
     BOOL advanceFlag;
     int finalHeight;
     UIView *containerView;

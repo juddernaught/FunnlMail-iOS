@@ -162,6 +162,11 @@ static NSString *contactCellIdentifier = @"ContactCell";
     
     y = y + 50 + 10;
     contactInCC = [[NSMutableArray alloc] initWithArray:message.header.cc];
+    for (MCOAddress *tempAddress in contactInCC) {
+        if ([tempAddress.mailbox isEqualToString:[[EmailService instance] userEmailID]]) {
+            [contactInCC removeObjectIdenticalTo:tempAddress];
+        }
+    }
     for (int count = 0; count < contactInCC.count; count++) {
         for (int cnt = 0; cnt < tempFunnelModel.sendersArray.count; cnt ++) {
             if ([[[contactInCC objectAtIndex:count] mailbox] isEqualToString:[[tempFunnelModel sendersArray] objectAtIndex:cnt]]) {
@@ -412,6 +417,8 @@ static NSString *contactCellIdentifier = @"ContactCell";
     else {
         if ([imageFetcher.comment isEqualToString:@"-1"]) {
             [userButton setImage:[UIImage imageWithData:imageData] forState:UIControlStateNormal];
+            [userButton setBackgroundColor:[UIColor clearColor]];
+            [userButton setTitle:@"" forState:UIControlStateNormal];
         }
         else {
             if (buttonArray.count > [imageFetcher.comment integerValue]) {

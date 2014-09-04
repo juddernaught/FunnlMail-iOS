@@ -26,6 +26,8 @@
 #import <Parse/parse.h>
 #import "SQLiteDatabase.h"
 #import "CIOAPIClient.h"
+#import "UIImageView+WebCache.h"
+
 
 #define accessTokenEndpoint @"https://accounts.google.com/o/oauth2/token"
 
@@ -126,6 +128,8 @@ UIButton *loginButton;
     [appDelegate.drawerController setMaximumLeftDrawerWidth:250.0];
     [appDelegate.drawerController setOpenDrawerGestureModeMask:MMOpenDrawerGestureModeAll];
     [appDelegate.drawerController setCloseDrawerGestureModeMask:MMCloseDrawerGestureModeAll];
+    
+
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -609,8 +613,18 @@ UIButton *loginButton;
             }
             
             
-            [appDelegate.menuController.listArray replaceObjectAtIndex:0 withObject:currentName];
-            [appDelegate.menuController.imageArray replaceObjectAtIndex:0 withObject:[EmailService instance].userImageURL];
+            NSString *imageUrl = [EmailService instance].userImageURL;
+            if([imageUrl hasPrefix:@"http"]){
+                [appDelegate.menuController.userImageView setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"userimage-placeholder.png"] options:SDWebImageProgressiveDownload completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
+                }];
+            }
+            else
+                appDelegate.menuController.userImageView.image = [UIImage imageNamed:@"userimage-placeholder.png"];
+            
+            appDelegate.menuController.userNameLabel.text = currentName;
+            appDelegate.menuController.emailLabel.text = currentEmail;
+//            [appDelegate.menuController.listArray replaceObjectAtIndex:0 withObject:currentName];
+//            [appDelegate.menuController.imageArray replaceObjectAtIndex:0 withObject:[EmailService instance].userImageURL];
             [appDelegate.menuController.listView reloadData];
             
             

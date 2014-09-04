@@ -17,19 +17,20 @@
     if (self) {
         // Initialization code
         
-        menuLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 0, 150, 44)];
-        menuLabel.font = NORMAL_FONT_L;
+        menuLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 0, 150, 44)];
+        menuLabel.font = NORMAL_FONT_M2;
         [self.contentView addSubview:menuLabel];
         menuLabel.highlightedTextColor = UIColorFromRGB(0x1B8EEE);
  
-        menuImage = [[UIImageView alloc] initWithFrame:CGRectMake(7, 7, 28, 28)];
+        menuImage = [[UIImageView alloc] initWithFrame:CGRectMake(20, 12, 20, 20)];
         menuImage.contentMode = UIViewContentModeScaleAspectFit;
+        menuImage.userInteractionEnabled = YES;
         [self.contentView addSubview:menuImage];
         
-        UILabel *sepLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 44, 320, 1)];
-        sepLabel.backgroundColor = WHITE_CLR;
-        [self.contentView addSubview:sepLabel];
-                
+//        UILabel *sepLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 44, 320, 1)];
+//        sepLabel.backgroundColor = WHITE_CLR;
+//        [self.contentView addSubview:sepLabel];
+        
     }
     return self;
 }
