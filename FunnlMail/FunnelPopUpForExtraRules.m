@@ -150,11 +150,11 @@ static NSString *contactCellIdentifier = @"ContactCell";
     messageLabel.numberOfLines = 2;
     messageLabel.lineBreakMode = NSLineBreakByWordWrapping;
     if (message.header.sender.displayName) {
-        messageLabel.text = [NSString stringWithFormat:@"Messages from %@ will be funneled under %@.",message.header.sender.displayName,tempFunnelModel.funnelName];
+        messageLabel.text = [NSString stringWithFormat:@"Messages from %@ will be funnled under %@.",message.header.sender.displayName,tempFunnelModel.funnelName];
     }
     else {
         
-        messageLabel.text = [NSString stringWithFormat:@"Messages from %@ will be funneled under %@.",message.header.sender.mailbox,tempFunnelModel.funnelName];
+        messageLabel.text = [NSString stringWithFormat:@"Messages from %@ will be funnled under %@.",message.header.sender.mailbox,tempFunnelModel.funnelName];
     }
     [messageLabel setFont:[UIFont systemFontOfSize:20]];
     [mainView addSubview:messageLabel];

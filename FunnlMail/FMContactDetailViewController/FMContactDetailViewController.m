@@ -82,7 +82,7 @@
         [contactImageView setBackgroundColor:[UIColor clearColor]];
         [self.view addSubview:contactImageView];
         
-        sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(35 + 60 + 10, y, WIDTH - 20 - 35 - 60 - 10, 30)];
+        sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(35 + 60 + 10, y + 15, WIDTH - 20 - 35 - 60 - 10, 30)];
         [sampleLabel setFont:[UIFont boldSystemFontOfSize:18]];
         if (selectedAddress.displayName) {
             sampleLabel.text = selectedAddress.displayName;
@@ -181,7 +181,7 @@
     [sampleLable setFont:[UIFont systemFontOfSize:14]];
     [sampleLable setTextColor:[UIColor whiteColor]];
     [sampleLable setBackgroundColor:[UIColor clearColor]];
-    sampleLable.text = @"Text colpied to clipboard.";
+    sampleLable.text = @"Email address copied to clipboard.";
     [returnView addSubview:sampleLable];
     sampleLable = nil;
     

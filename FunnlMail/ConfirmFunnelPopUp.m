@@ -52,7 +52,7 @@
     [messageLabel setTextAlignment:NSTextAlignmentLeft];
     messageLabel.numberOfLines = 2;
     messageLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    messageLabel.text = [NSString stringWithFormat:@"Message will be funneled under %@",tempDS.funnelName];
+    messageLabel.text = [NSString stringWithFormat:@"Message will be funnled under %@",tempDS.funnelName];
     [mainView addSubview:messageLabel];
     messageLabel = nil;
     
