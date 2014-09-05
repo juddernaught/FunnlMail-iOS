@@ -239,7 +239,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 //    mainView.alpha = 0;
 //    [UIView commitAnimations];
     [UIView animateWithDuration:ANIMATION_DURATION
-                          delay:0.0
+                          delay:2.0
                         options: UIViewAnimationOptionCurveEaseInOut
                      animations:^{
                          mainView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 2, 2);
