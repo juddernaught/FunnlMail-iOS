@@ -165,7 +165,22 @@ NSString *msgBody;
 - (void)handleSingleTap:(UITapGestureRecognizer *)recognizer {
     editOn = FALSE;
     [editButton setImage:[UIImage imageNamed:@"manage_Button"] forState:UIControlStateNormal];
-    [self setHidden:YES];
+//    [self setHidden:YES];
+    [UIView animateWithDuration:ANIMATION_DURATION
+                          delay:0.0
+                        options: UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         self.transform = CGAffineTransformScale(CGAffineTransformIdentity, 2, 2);
+                         self.alpha = 0;
+                     }
+                     completion:^(BOOL finished){
+                         if(finished)
+                         {
+                             self.hidden = YES;
+                             NSLog(@"Finished !!!!!");
+                         }
+                         // do any stuff here if you want
+                     }];
 }
 
 - (void)editButtonPressed:(UIButton*)sender {

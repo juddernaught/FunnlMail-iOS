@@ -52,4 +52,5 @@
 -(void)syncMessages;
 -(void)getDatabaseMessages:(NSString*)folderName withTableController:(EmailsTableViewController *)emailsTableViewController;
 -(void)clearData;
+-(void)startAutoRefresh;
 @end

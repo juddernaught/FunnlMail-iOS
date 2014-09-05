@@ -17,7 +17,7 @@
 #import "UIPopoverController+iPhone.h"
 
 @class FilterModel;
-@interface CreateFunnlViewController : UIViewController<UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,NSURLConnectionDataDelegate,GTMFetcherAuthorizationProtocol,GTMHTTPFetcherServiceProtocol,WEPopoverControllerDelegate, UIPopoverControllerDelegate,UIScrollViewDelegate>
+@interface CreateFunnlViewController : UIViewController<UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,NSURLConnectionDataDelegate,WEPopoverControllerDelegate, UIPopoverControllerDelegate,UIScrollViewDelegate>
 {
     WEPopoverController *popoverController;
     AppDelegate *tempAppDelegate;

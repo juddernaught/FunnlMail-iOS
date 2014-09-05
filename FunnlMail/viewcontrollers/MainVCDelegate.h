@@ -14,5 +14,4 @@
 
 -(void) filterSelected:(FunnelModel *)filterModel;
 -(void) pushViewController:(UIViewController *)viewController;
-
 @end

@@ -7,7 +7,6 @@
 //
 
 #include <MailCore/MailCore.h>
-
 #import <MessageUI/MessageUI.h>
 #import "UIColor+HexString.h"
 #import "MessageModel.h"

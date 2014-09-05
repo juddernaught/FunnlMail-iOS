@@ -140,6 +140,9 @@
     autocompleteTableView.dataSource = self;
     autocompleteTableView.scrollEnabled = YES;
     autocompleteTableView.hidden = YES;
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    [autocompleteTableView setTableFooterView:footerView];
+    footerView = nil;
     [self addSubview:autocompleteTableView];
     
     [self emailContact];
@@ -394,15 +397,22 @@ replacementString:(NSString *)string {
     // The items in this array is what will show up in the table view
     [searchArray removeAllObjects];
     if(substring.length){
-        emailArr = [[NSMutableArray alloc] initWithArray:[[ContactService instance] searchContactsWithString:substring]];
-        for(NSMutableString *curString in emailArr) {
-            
+//        emailArr = [[NSMutableArray alloc] initWithArray:[[ContactService instance] searchContactsWithString:substring]];
+//        for(NSMutableString *curString in emailArr) {
+//            
+//            substring = [substring stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+//            
+//            if ([curString rangeOfString:substring].location == 0) {
+//                [searchArray addObject:curString];
+//            }
+//            
+//        }
+        emailArr = [[NSMutableArray alloc] initWithArray:[[ContactService instance] searchContactModelWithString:substring]];
+        for(ContactModel *tempModel in emailArr) {
             substring = [substring stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-            
-            if ([curString rangeOfString:substring].location == 0) {
-                [searchArray addObject:curString];
+            if ([tempModel.email rangeOfString:substring].location == 0) {
+                [searchArray addObject:tempModel];
             }
-            
         }
     }
     if(searchArray.count <= 0){
@@ -421,7 +431,12 @@ replacementString:(NSString *)string {
     UITableViewCell *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
     if(toFieldView.tokenField.isEditing){
         NSLog(@"to is editing");
-        toFieldView.tokenField.text = selectedCell.textLabel.text;
+//        if ([selectedCell.textLabel.text isEqualToString:@"Recent"]) {
+//            toFieldView.tokenField.text = selectedCell.detailTextLabel.text;
+//        }
+//        else
+//            toFieldView.tokenField.text = selectedCell.textLabel.text;
+        toFieldView.tokenField.text = selectedCell.detailTextLabel.text;
         //[autocompleteTableView removeFromSuperview];
     }
     autocompleteTableView.hidden = YES;
@@ -436,14 +451,27 @@ replacementString:(NSString *)string {
     
     UITableViewCell *cell = nil;
     static NSString *AutoCompleteRowIdentifier = @"AutoCompleteRowIdentifier";
-    cell = [tableView dequeueReusableCellWithIdentifier:AutoCompleteRowIdentifier];
+//    cell = [tableView dequeueReusableCellWithIdentifier:AutoCompleteRowIdentifier];
+    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:AutoCompleteRowIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc]
                 initWithStyle:UITableViewCellStyleDefault reuseIdentifier:AutoCompleteRowIdentifier];
     }
-    
     if(indexPath.row <= searchArray.count){
-        cell.textLabel.text = [searchArray objectAtIndex:indexPath.row];
+        if ([(ContactModel *)[searchArray objectAtIndex:indexPath.row] name]) {
+            if ([[(ContactModel *)[searchArray objectAtIndex:indexPath.row] name] length]) {
+                cell.textLabel.text = [(ContactModel *)[searchArray objectAtIndex:indexPath.row] name];
+                [cell.textLabel setTextColor:[UIColor blackColor]];
+            }
+            else {
+                cell.textLabel.text = @"Recent";
+                [cell.textLabel setTextColor:[UIColor grayColor]];
+            }
+        }
+        else {
+            cell.textLabel.text = @"Recent";
+        }
+        cell.detailTextLabel.text = [(ContactModel *)[searchArray objectAtIndex:indexPath.row] email];
     }
     return cell;
 }

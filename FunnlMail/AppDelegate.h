@@ -36,6 +36,7 @@
 @property (strong, nonatomic) LoginViewController *loginViewController;
 @property (strong, nonatomic) CIOAPIClient *contextIOAPIClient;
 @property (assign, nonatomic) BOOL isAlreadyRequestedRefreshToken;
+@property (assign, nonatomic) BOOL isPullToRefresh;
 @property (strong, nonatomic) UIView *headerViewForMailDetailView;
 @property (weak) id<MainVCDelegate> mainVCdelegate;
 @property (strong,nonatomic) UIButton* letsGo;

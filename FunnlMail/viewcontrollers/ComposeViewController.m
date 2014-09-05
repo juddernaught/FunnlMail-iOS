@@ -168,13 +168,20 @@ replacementString:(NSString *)string {
     
     [searchArray removeAllObjects];
     if(substring.length){
-        emailArr = [[NSMutableArray alloc] initWithArray:[[ContactService instance] searchContactsWithString:substring]];
-        for(NSMutableString *curString in emailArr) {
-
+//        emailArr = [[NSMutableArray alloc] initWithArray:[[ContactService instance] searchContactsWithString:substring]];
+//        for(NSMutableString *curString in emailArr) {
+//
+//            substring = [substring stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+//
+//            if ([curString rangeOfString:substring].location == 0) {
+//                [searchArray addObject:curString];
+//            }
+//        }
+        emailArr = [[NSMutableArray alloc] initWithArray:[[ContactService instance] searchContactModelWithString:substring]];
+        for(ContactModel *tempModel in emailArr) {
             substring = [substring stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-
-            if ([curString rangeOfString:substring].location == 0) {
-                [searchArray addObject:curString];
+            if ([tempModel.email rangeOfString:substring].location == 0) {
+                [searchArray addObject:tempModel];
             }
         }
     }
@@ -197,18 +204,29 @@ replacementString:(NSString *)string {
     UITableViewCell *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
     if(toFieldView.tokenField.isEditing){
         NSLog(@"to is editing");
-        toFieldView.tokenField.text = selectedCell.textLabel.text;
+        if ([selectedCell.textLabel.text isEqualToString:@"Recent"]) {
+            toFieldView.tokenField.text = selectedCell.detailTextLabel.text;
+        }
+        else
+            toFieldView.tokenField.text = selectedCell.textLabel.text;
         //[autocompleteTableView removeFromSuperview];
     }
     else if(ccFieldView.tokenField.isEditing){
-        NSLog(@"cc is editing");
-        ccFieldView.tokenField.text = selectedCell.textLabel.text;
+        if ([selectedCell.textLabel.text isEqualToString:@"Recent"]) {
+            ccFieldView.tokenField.text = selectedCell.detailTextLabel.text;
+        }
+        else
+            ccFieldView.tokenField.text = selectedCell.textLabel.text;
         //[self.view setFrame:CGRectMake(0,25,self.view.bounds.size.width,self.view.bounds.size.height)];
         //[autocompleteTableView removeFromSuperview];
     }
     else{
         NSLog(@"bcc is editing");
-        bccFieldView.tokenField.text = selectedCell.textLabel.text;
+        if ([selectedCell.textLabel.text isEqualToString:@"Recent"]) {
+            bccFieldView.tokenField.text = selectedCell.detailTextLabel.text;
+        }
+        else
+            bccFieldView.tokenField.text = selectedCell.textLabel.text;
         //[self.view setFrame:CGRectMake(0,50,self.view.bounds.size.width,self.view.bounds.size.height)];
         //[autocompleteTableView removeFromSuperview];
     }
@@ -224,14 +242,25 @@ replacementString:(NSString *)string {
     
     UITableViewCell *cell = nil;
     static NSString *AutoCompleteRowIdentifier = @"AutoCompleteRowIdentifier";
-    cell = [tableView dequeueReusableCellWithIdentifier:AutoCompleteRowIdentifier];
+//    cell = [tableView dequeueReusableCellWithIdentifier:AutoCompleteRowIdentifier];
+    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:AutoCompleteRowIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc]
                  initWithStyle:UITableViewCellStyleDefault reuseIdentifier:AutoCompleteRowIdentifier];
     }
-    
     if(indexPath.row <= searchArray.count){
-        cell.textLabel.text = [searchArray objectAtIndex:indexPath.row];        
+        if ([(ContactModel *)[searchArray objectAtIndex:indexPath.row] name]) {
+            if ([[(ContactModel *)[searchArray objectAtIndex:indexPath.row] name] length]) {
+                cell.textLabel.text = [(ContactModel *)[searchArray objectAtIndex:indexPath.row] name];
+            }
+            else {
+                cell.textLabel.text = @"Recent";
+            }
+        }
+        else {
+            cell.textLabel.text = @"Recent";
+        }
+        cell.detailTextLabel.text = [(ContactModel *)[searchArray objectAtIndex:indexPath.row] email];
     }
     return cell;
 }
@@ -336,7 +365,11 @@ replacementString:(NSString *)string {
         self.edgesForExtendedLayout = UIRectEdgeNone;
     
     self.view.backgroundColor = [UIColor whiteColor];
-    self.navigationItem.title = @"Mail";
+    if (self.sendFeedback) {
+        self.navigationItem.title = @"Send Feedback";
+    }
+    else
+        self.navigationItem.title = @"New Message";
 
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(cancelButtonSelected)];
     self.navigationItem.leftBarButtonItem = leftItem;
@@ -449,11 +482,15 @@ replacementString:(NSString *)string {
 //        [self applyPlainBodyString
     }
     
-    autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 121, self.view.bounds.size.width, 180)];
+    autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 121, WIDTH, HEIGHT - 121 - 216 - 66)];
+    [autocompleteTableView setBackgroundColor:[UIColor whiteColor]];
     autocompleteTableView.delegate = self;
     autocompleteTableView.dataSource = self;
     autocompleteTableView.scrollEnabled = YES;
     autocompleteTableView.hidden = YES;
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    [autocompleteTableView setTableFooterView:footerView];
+    footerView = nil;
 
     [self.view addSubview:autocompleteTableView];
     
@@ -478,8 +515,10 @@ replacementString:(NSString *)string {
 	
 	// You can call this on either the view on the field.
 	// They both do the same thing.
-    if(self.sendFeedback)[messageView becomeFirstResponder];
-    else [ccFieldView becomeFirstResponder];
+    if(self.sendFeedback)
+        [messageView becomeFirstResponder];
+    else
+        [toFieldView becomeFirstResponder];
 }
 
 

@@ -121,6 +121,7 @@ UIButton *loginButton;
     
     AppDelegate *appDelegate = APPDELEGATE;
     mainViewController = [[MainVC alloc] init];
+    [mainViewController.view setBackgroundColor:[UIColor colorWithHexString:@"A7A7A7"]];
     UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:mainViewController];
     appDelegate.menuController = [[MenuViewController alloc] init];
     appDelegate.drawerController = [[MMDrawerController alloc] initWithCenterViewController:nav leftDrawerViewController:appDelegate.menuController];
@@ -168,7 +169,11 @@ UIButton *loginButton;
     loginButton.frame = CGRectMake(0, HEIGHT-43, 320, 40); // Changed from (xx, 50 to 43, ...) by Chad
     [loginButton addTarget:self action:@selector(loginButtonSelected)forControlEvents:UIControlEventTouchUpInside];
     loginButton.hidden = YES;
+    [loginButton setBackgroundColor:[UIColor clearColor]];
+    [self.pageController.view setBackgroundColor:[UIColor clearColor]];
+    [self.view setBackgroundColor:[UIColor clearColor]];
     [self.pageController.view addSubview:loginButton];
+    
 }
 
 -(void) checkCredentialsandShowLoginScreen

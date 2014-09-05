@@ -145,7 +145,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
     self.navigationItem.leftBarButtonItem = leftItem;
     
-    UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 70, 44)];
+    UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 84, 44)];
     //centeredButtons.backgroundColor = [UIColor orangeColor];
     UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:centeredButtons];
     self.navigationItem.rightBarButtonItem = rightItem;
@@ -210,18 +210,50 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
     NSLog(@"Filter button selected");
     if(mainView.hidden == YES){
+        mainView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 2, 2);
+        mainView.center = self.view.center;
         mainView.hidden = NO;
+        mainView.alpha = 0;
+        [UIView beginAnimations:nil context:nil];
+        [UIView setAnimationDuration:0.3];
+        mainView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+        mainView.frame = CGRectMake(0, 20, WIDTH, HEIGHT+40);
+        mainView.alpha = 1;
+        [UIView commitAnimations];
         if (tempAppDelegate.didLoginIn) {
             tempAppDelegate.didLoginIn = 0;
             RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Funnl Time!" message:@"Tap on any Funnl to view emails under that Funnl or press 'Manage' to view/change Funnl Settings"];
             [modal show];
         }
     }else{
-        mainView.hidden = YES;
+        [self hideMainView];
     }
     
 }
 
+- (void)hideMainView {
+    mainView.alpha = 1;
+//    [UIView beginAnimations:nil context:nil];
+//    [UIView setAnimationDuration:10];
+//    mainView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 2, 2);
+//    mainView.alpha = 0;
+//    [UIView commitAnimations];
+    [UIView animateWithDuration:ANIMATION_DURATION
+                          delay:0.0
+                        options: UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         mainView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 2, 2);
+                         mainView.alpha = 0;
+                     }
+                     completion:^(BOOL finished){
+                         if(finished)
+                         {
+                             mainView.hidden = YES;
+                             NSLog(@"Finished !!!!!");
+                         }
+                         // do any stuff here if you want
+                    }];
+}
 
 -(void) composeEmailButtonSelected{
     NSLog(@"Compose Email selected");

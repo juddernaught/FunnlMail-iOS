@@ -73,13 +73,16 @@
     [self emailContact];
     
     autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 70, self.view.bounds.size.width, HEIGHT - 70)];
-    [autocompleteTableView setBackgroundColor:[UIColor clearColor]];
+    [autocompleteTableView setBackgroundColor:[UIColor whiteColor]];
     [autocompleteTableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"UITableViewCell"];
     autocompleteTableView.dataSource = self;
     autocompleteTableView.delegate = self;
     autocompleteTableView.scrollEnabled = YES;
     autocompleteTableView.hidden = YES;
     autocompleteTableView.tag = 1;
+    UIView *footerView1 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    [autocompleteTableView setTableFooterView:footerView1];
+    footerView1 = nil;
     [mainScrollView addSubview:autocompleteTableView];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
@@ -1071,11 +1074,21 @@
     // The items in this array is what will show up in the table view
     [searchArray removeAllObjects];
     if(substring.length){
-        emailArr = [[NSMutableArray alloc] initWithArray:[[ContactService instance] searchContactsWithString:substring]];
-        for(NSMutableString *curString in emailArr) {
+        if (emailArr) {
+            emailArr = nil;
+        }
+//        emailArr = [[NSMutableArray alloc] initWithArray:[[ContactService instance] searchContactsWithString:substring]];
+        emailArr = [[NSMutableArray alloc] initWithArray:[[ContactService instance] searchContactModelWithString:substring]];
+        /*for(NSMutableString *curString in emailArr) {
             substring = [substring stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
             if ([curString rangeOfString:substring].location == 0) {
                 [searchArray addObject:curString];
+            }
+        }*/
+        for(ContactModel *tempModel in emailArr) {
+            substring = [substring stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            if ([tempModel.email rangeOfString:substring].location == 0) {
+                [searchArray addObject:tempModel];
             }
         }
     }
@@ -1104,7 +1117,7 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    additionalTextField.text = [searchArray objectAtIndex:indexPath.row];
+    additionalTextField.text = [(ContactModel *)[searchArray objectAtIndex:indexPath.row] email];
     autocompleteTableView.hidden = YES;
     [mainScrollView setScrollEnabled:YES];
     [funnelNameTextField setUserInteractionEnabled:YES];
@@ -1137,9 +1150,23 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCell" forIndexPath:indexPath];
+//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCell" forIndexPath:indexPath];
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"UITableViewCell"];
     if(indexPath.row <= searchArray.count){
-        cell.textLabel.text = [searchArray objectAtIndex:indexPath.row];
+        if ([(ContactModel *)[searchArray objectAtIndex:indexPath.row] name]) {
+            if ([[(ContactModel *)[searchArray objectAtIndex:indexPath.row] name] length]) {
+                cell.textLabel.text = [(ContactModel *)[searchArray objectAtIndex:indexPath.row] name];
+                [cell.textLabel setTextColor:[UIColor blackColor]];
+            }
+            else {
+                cell.textLabel.text = @"Recent";
+                [cell.textLabel setTextColor:[UIColor grayColor]];
+            }
+        }
+        else {
+            cell.textLabel.text = @"Recent";
+        }
+        cell.detailTextLabel.text = [(ContactModel *)[searchArray objectAtIndex:indexPath.row] email];
     }
     return cell;
 }

@@ -299,7 +299,7 @@ NSMutableArray *emailArr,*searchArray;
                             [request setValue:@"image/*" forHTTPHeaderField:@"Accept"];
                             
                             GTMHTTPFetcher *fetcher = [GTMHTTPFetcher fetcherWithRequest:request];
-                            fetcher.comment = [NSString stringWithFormat:@"%d",indexPath.row];
+                            fetcher.comment = [NSString stringWithFormat:@"%d",(int)indexPath.row];
                             GTMOAuth2Authentication *currentAuth = [GTMOAuth2ViewControllerTouch authForGoogleFromKeychainForName:kKeychainItemName clientID:kMyClientID clientSecret:kMyClientSecret];
                             [fetcher setAuthorizer:currentAuth];
                             [fetcher beginFetchWithDelegate:self didFinishSelector:@selector(imageFetcher:finishedWithData:error:)];
@@ -632,7 +632,6 @@ NSMutableArray *emailArr,*searchArray;
 	}
     
 //    TextFieldCell *tempCell = (TextFieldCell*)[Tableview cellForRowAtIndexPath:[NSIndexPath indexPathForRow:sender.tag inSection:1]];
-    NSLog(@"-----> button on %d row on section 1 clicked",sender.tag);
     
 }
 
@@ -803,7 +802,7 @@ NSMutableArray *emailArr,*searchArray;
         NSData *jsonData = [webhookJSONString dataUsingEncoding:NSUTF8StringEncoding];
         NSMutableDictionary *webhooks = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:nil]];
         NSArray *senders = [[webhooks allKeys] copy];
-        __block int reqCnt = [senders count];
+        __block int reqCnt = (int)[senders count];
         for (NSString *sender in senders) {
             NSDictionary *webhook_id_Dictionary = [webhooks objectForKey:sender];
             NSString *webhook_id = [webhook_id_Dictionary objectForKey:@"webhook_id"];
@@ -984,7 +983,7 @@ NSMutableArray *emailArr,*searchArray;
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     NSArray *senders = [dictionaryOfConversations allValues];
     NSArray *subjects = [dictionaryOfSubjects allValues];
-    __block int reqCnt = [senders count];
+    __block int reqCnt = (int)[senders count];
     if ([subjects count]) {
         reqCnt *= [subjects count];
     }
@@ -1083,7 +1082,7 @@ NSMutableArray *emailArr,*searchArray;
                     NSData *jsonData = [webhookJSONString dataUsingEncoding:NSUTF8StringEncoding];
                     NSMutableDictionary *webhooks = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:nil]];
                     NSArray *senders = [[webhooks allKeys] copy];
-                    __block int reqCnt = [senders count];
+                    __block int reqCnt = (int)[senders count];
                     for (NSString *sender in senders) {
                         NSDictionary *webhook_id_Dictionary = [webhooks objectForKey:sender];
                         NSString *webhook_id = [webhook_id_Dictionary objectForKey:@"webhook_id"];
@@ -1116,7 +1115,7 @@ NSMutableArray *emailArr,*searchArray;
                     NSData *jsonData = [webhookJSONString dataUsingEncoding:NSUTF8StringEncoding];
                     NSMutableDictionary *webhooks = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:nil]];
                     NSArray *senders = [[webhooks allKeys] copy];
-                    __block int reqCnt = [senders count];
+                    __block int reqCnt = (int)[senders count];
                     for (NSString *sender in senders) {
                         NSDictionary *webhook_id_Dictionary = [webhooks objectForKey:sender];
                         NSString *webhook_id = [webhook_id_Dictionary objectForKey:@"webhook_id"];

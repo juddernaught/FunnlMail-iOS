@@ -102,6 +102,29 @@ static ContactService *instance;
 }
 
 
+-(NSArray *) searchContactModelWithString:(NSString*)searchTerm{
+    __block NSMutableArray *array = [[NSMutableArray alloc] init];
+    
+    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *resultSet ;
+        //        NSString *query = [NSString stringWithFormat:@"SELECT email FROM contacts WHERE email  LIKE  '%@%%' ;",searchTerm];
+        NSString *query = @"SELECT * FROM contacts;";
+        resultSet = [db executeQuery:query];
+        //        resultSet = [db executeQuery:@"SELECT email FROM contacts WHERE name LIKE  '%' || ? || '%'  OR email LIKE '%' || ? || '%' ORDER BY count DESC LIMIT 5;",searchTerm,searchTerm];
+        
+        while ([resultSet next]) {
+            ContactModel *tempModel = [[ContactModel alloc] init];
+            tempModel.email = [resultSet stringForColumn:@"email"];
+            tempModel.name = [resultSet stringForColumn:@"name"];
+//            NSString *email = [resultSet stringForColumn:@"email"];
+            [array addObject:tempModel];
+        }
+    }];
+    
+    return array;
+}
+
+
 -(NSMutableArray*)retrieveContactWithEmail:(NSString*)emailID {
     __block NSMutableArray *tempContactModel = [[NSMutableArray alloc] init];
     __block NSMutableDictionary *parameterDictionary = [[NSMutableDictionary alloc] init];

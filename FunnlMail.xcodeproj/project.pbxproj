@@ -12,6 +12,10 @@
 		2522AC161998DBEC002B1207 /* WEPopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2522AC101998DBEC002B1207 /* WEPopoverController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		2522AC171998DBEC002B1207 /* WETouchableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2522AC131998DBEC002B1207 /* WETouchableView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		2522AC1E1998DCD5002B1207 /* WEPopoverContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2522AC1D1998DCD5002B1207 /* WEPopoverContentViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		259ECEE419B9BA40001D7459 /* FMContactDetailViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 259ECEE219B9BA40001D7459 /* FMContactDetailViewController.h */; };
+		259ECEE519B9BA40001D7459 /* FMContactDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259ECEE319B9BA40001D7459 /* FMContactDetailViewController.m */; };
+		259ECEE819B9F232001D7459 /* userPlaceholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 259ECEE619B9F232001D7459 /* userPlaceholder.png */; };
+		259ECEE919B9F232001D7459 /* userPlaceholder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 259ECEE719B9F232001D7459 /* userPlaceholder@2x.png */; };
 		5A1FF53D1948263B0056750F /* FunnelModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1FF53C1948263B0056750F /* FunnelModel.m */; };
 		5A59DC6E1957FF9D0094B00D /* ConfirmFunnelPopUp.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A59DC6D1957FF9D0094B00D /* ConfirmFunnelPopUp.m */; };
 		5A59DC7519582A260094B00D /* FunnelPopUpForExtraRules.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A59DC7419582A260094B00D /* FunnelPopUpForExtraRules.m */; };
@@ -381,6 +385,10 @@
 		2522AC131998DBEC002B1207 /* WETouchableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WETouchableView.m; sourceTree = "<group>"; };
 		2522AC1C1998DCD5002B1207 /* WEPopoverContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WEPopoverContentViewController.h; sourceTree = "<group>"; };
 		2522AC1D1998DCD5002B1207 /* WEPopoverContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WEPopoverContentViewController.m; sourceTree = "<group>"; };
+		259ECEE219B9BA40001D7459 /* FMContactDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMContactDetailViewController.h; sourceTree = "<group>"; };
+		259ECEE319B9BA40001D7459 /* FMContactDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMContactDetailViewController.m; sourceTree = "<group>"; };
+		259ECEE619B9F232001D7459 /* userPlaceholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = userPlaceholder.png; sourceTree = "<group>"; };
+		259ECEE719B9F232001D7459 /* userPlaceholder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "userPlaceholder@2x.png"; sourceTree = "<group>"; };
 		27D9CEE565FC46E3B3970F17 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B928198F5034A5AB4B3F004 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		5A1FF53B1948263B0056750F /* FunnelModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FunnelModel.h; path = models/FunnelModel.h; sourceTree = "<group>"; };
@@ -871,6 +879,15 @@
 			path = Popover;
 			sourceTree = "<group>";
 		};
+		259ECEE119B9BA29001D7459 /* FMContactDetailViewController */ = {
+			isa = PBXGroup;
+			children = (
+				259ECEE219B9BA40001D7459 /* FMContactDetailViewController.h */,
+				259ECEE319B9BA40001D7459 /* FMContactDetailViewController.m */,
+			);
+			path = FMContactDetailViewController;
+			sourceTree = "<group>";
+		};
 		5ACEBEA0195DA0CA00D4EAAA /* RDSwipeableTableViewCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -1123,6 +1140,7 @@
 		CC8C7EAA18E6EF8600E76AE8 /* viewcontrollers */ = {
 			isa = PBXGroup;
 			children = (
+				259ECEE119B9BA29001D7459 /* FMContactDetailViewController */,
 				FA6C493B19B6EE9500249134 /* FMCreateFunnelViewControllers */,
 				CC1AD1DC18F54BE9000E356C /* MainVCDelegate.h */,
 				CC8C7EAB18E6F1C100E76AE8 /* MainVC.h */,
@@ -1570,6 +1588,8 @@
 		FABAF02E1976507E00AA7918 /* Funnl */ = {
 			isa = PBXGroup;
 			children = (
+				259ECEE619B9F232001D7459 /* userPlaceholder.png */,
+				259ECEE719B9F232001D7459 /* userPlaceholder@2x.png */,
 				FAE1EB2B19B74ADA001FF334 /* addIcon_white_22x22.png */,
 				FAE1EB2C19B74ADA001FF334 /* addIcon_white_22x22@2x.png */,
 				FA6C494019B70B0B00249134 /* addSenderCircle.png */,
@@ -1689,6 +1709,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				259ECEE419B9BA40001D7459 /* FMContactDetailViewController.h in Headers */,
 				FA6C493E19B6EE9500249134 /* FMCreateFunnlViewController.h in Headers */,
 				B72C2FB119A196E3000E5D5B /* RNBlurModalView.h in Headers */,
 				B7F3BB0619A597F00049CEE8 /* MTStatusBarOverlay.h in Headers */,
@@ -1942,8 +1963,10 @@
 				FABAF0BC1976507E00AA7918 /* reply.png in Resources */,
 				FABAF0AB1976507E00AA7918 /* backArrow@2x.png in Resources */,
 				FABAF0971976507E00AA7918 /* helpListIcon.png in Resources */,
+				259ECEE919B9F232001D7459 /* userPlaceholder@2x.png in Resources */,
 				FA11B2E1199908D200B4EA86 /* popoverArrowRight@2x.png in Resources */,
 				FABAF0BD1976507E00AA7918 /* replyAll.png in Resources */,
+				259ECEE819B9F232001D7459 /* userPlaceholder.png in Resources */,
 				FABAF0CD1976621C00AA7918 /* mail@2x.png in Resources */,
 				FA8A4ADC193D902B004890E3 /* NSDateTimeAgo.bundle in Resources */,
 				FAAE9CF119A38ADD007FB804 /* emailDetailViewForward.png in Resources */,
@@ -2074,6 +2097,7 @@
 				CC8C7ECA18E6F38100E76AE8 /* MASConstraintMaker.m in Sources */,
 				FAAF172119863CDD00E877D4 /* SDWebImagePrefetcher.m in Sources */,
 				FA029C391993BAC50021C6B1 /* ContactModel.m in Sources */,
+				259ECEE519B9BA40001D7459 /* FMContactDetailViewController.m in Sources */,
 				FAABF1801952FA750072FFE8 /* FunnlPopUpView.m in Sources */,
 				CC8C7ED018E6F38100E76AE8 /* View+MASAdditions.m in Sources */,
 				66AEEBAF1936B5D100B6DBE5 /* GTMHTTPFetcher.m in Sources */,
@@ -2238,8 +2262,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Daniel Judd (PL7ET6U94G)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Daniel Judd (PL7ET6U94G)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2257,7 +2281,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "69e28a4d-1186-4fab-8041-73ac81f00e8b";
+				PROVISIONING_PROFILE = "14d879d8-543c-405a-8404-2d55b8918ede";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -2278,8 +2302,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Renee Migdal (4724LVRTFE)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Renee Migdal (4724LVRTFE)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -2290,7 +2314,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PROVISIONING_PROFILE = "06fa6b09-dcc5-4527-9f92-1a43f6159784";
+				PROVISIONING_PROFILE = "14d879d8-543c-405a-8404-2d55b8918ede";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2345,7 +2369,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "6a7a430a-1a1a-4c8c-a2e2-15dfaf85522c";
+				PROVISIONING_PROFILE = "14d879d8-543c-405a-8404-2d55b8918ede";
 				SDKROOT = iphoneos7.1;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
@@ -2363,8 +2387,8 @@
 				BUNDLE_ID_SUFFIX = "";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Renee Migdal (4724LVRTFE)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Renee Migdal (4724LVRTFE)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -2395,7 +2419,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "f0906a3e-4806-4970-a8cb-7c8f55b256fa";
+				PROVISIONING_PROFILE = "14d879d8-543c-405a-8404-2d55b8918ede";
 				SDKROOT = iphoneos7.1;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
@@ -2458,8 +2482,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Renee Migdal (4724LVRTFE)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Renee Migdal (4724LVRTFE)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -2470,7 +2494,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PROVISIONING_PROFILE = "06fa6b09-dcc5-4527-9f92-1a43f6159784";
+				PROVISIONING_PROFILE = "14d879d8-543c-405a-8404-2d55b8918ede";
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "$(BUILD_ROOT)/../IntermediateBuildFilesPath/UninstalledProducts";
 				VALIDATE_PRODUCT = YES;
@@ -2488,8 +2512,8 @@
 				BUNDLE_ID_SUFFIX = .distribution;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Funnl Labs, LLC";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Funnl Labs, LLC";
+				CODE_SIGN_IDENTITY = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -2522,7 +2546,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "ec9b83cd-923e-494e-a961-8a80d9b42c47";
+				PROVISIONING_PROFILE = "14d879d8-543c-405a-8404-2d55b8918ede";
 				SDKROOT = iphoneos7.1;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;

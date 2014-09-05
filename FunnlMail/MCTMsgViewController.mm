@@ -23,6 +23,7 @@
 #import "FunnelModel.h"
 #import "FunnlPopUpView.h"
 #import "FMCreateFunnlViewController.h"
+#import "FMContactDetailViewController.h"
 
 @interface UIBarButtonItem (NegativeSpacer)
 +(UIBarButtonItem*)negativeSpacerWithWidth:(NSInteger)width;
@@ -96,7 +97,6 @@
     appDelegate = APPDELEGATE;
 
     _messageView = [[MCOMessageView alloc] initWithFrame:CGRectMake(0, 64, WIDTH, HEIGHT- 64)];
-    //_messageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _messageView.tempMessageModel = _message;
     _messageView.webView.opaque = YES;
     _messageView.webView.backgroundColor = CLEAR_COLOR;
@@ -190,6 +190,8 @@
     fromLabel = nil;
     
     UIButton *fromValue = [[UIButton alloc] initWithFrame:CGRectMake(20 + 50 - 5, padding + 10, WIDTH - 20 - 50, 16)];
+    fromValue.tag = -1;
+    [fromValue addTarget:self action:@selector(contactTaped:) forControlEvents:UIControlEventTouchUpInside];
     [fromValue setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
     if (_message.header.from.displayName) {
         [fromValue setTitle:_message.header.from.displayName forState:UIControlStateNormal];
@@ -282,8 +284,10 @@
         self.navigationItem.title = @"";
     }
     
-    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"backArrow.png"] style:UIBarButtonItemStylePlain target:self action:@selector(back)];
-    [self.navigationItem setLeftBarButtonItem:leftButton];
+    /*UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"backArrow.png"] style:UIBarButtonItemStylePlain target:self action:@selector(back)];
+    [leftButton setTitle:@"Back"];
+    [self.navigationItem setLeftBarButtonItem:leftButton];*/
+
 
     UIBarButtonItem *actualfixedSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
     UIBarButtonItem *fixedSpace = [UIBarButtonItem negativeSpacerWithWidth:-10];
@@ -538,21 +542,6 @@ typedef void (^DownloadCallback)(NSError * error);
                 NSArray *sendersArray = [json objectForKey:@"senders"];
                 NSArray *subjectsArray = [json objectForKey:@"subjects"];
                 
-                
-                //                BOOL isFunnlAlreadyPresent = NO;
-                //                NSArray *exisitngfunnlsArray = [[FunnelService instance] allFunnels];
-                //                for (FunnelModel *fm in exisitngfunnlsArray) {
-                //                    if([[fm.filterTitle lowercaseString] isEqualToString:[name lowercaseString]]){
-                //                        isFunnlAlreadyPresent = YES;
-                //                        break;
-                //                    }
-                //                }
-                //
-                //                if(isFunnlAlreadyPresent){
-                //                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"FunnlMail" message:@"Funnl is already present, please rename the exisiting funnl and try again." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-                //                    [alert show];
-                //                    return;
-                //                }
                 [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                 
                 NSArray *randomColors = GRADIENT_ARRAY;
@@ -563,7 +552,7 @@ typedef void (^DownloadCallback)(NSError * error);
                 if(color == nil){
                     color = [UIColor colorWithHexString:@"#F7F7F7"];
                 }
-                FunnelModel *funnlModel = [[FunnelModel alloc] initWithBarColor:color filterTitle:name newMessageCount:0 dateOfLastMessage:nil sendersArray:sendersArray subjectsArray:subjectsArray skipAllFlag:NO funnelColor:colorString];
+                FunnelModel *funnlModel = [[FunnelModel alloc] initWithBarColor:color filterTitle:name newMessageCount:0 dateOfLastMessage:nil sendersArray:(NSMutableArray *)sendersArray subjectsArray:(NSMutableArray *)subjectsArray skipAllFlag:NO funnelColor:colorString];
                 [self performSelector:@selector(createFunnlFromShareLink:) withObject:funnlModel afterDelay:0.01];
                 
                 // save to db
@@ -579,8 +568,8 @@ typedef void (^DownloadCallback)(NSError * error);
     
     NSMutableDictionary *sendersDictionary = [[NSMutableDictionary alloc] init];
     int count = 0;
-    for (NSString *address in fm.sendersArray) {
-        [sendersDictionary setObject:[address lowercaseString] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
+    for (NSString *tempAddress in fm.sendersArray) {
+        [sendersDictionary setObject:[tempAddress lowercaseString] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
         count ++;
     }
     
@@ -635,6 +624,7 @@ typedef void (^DownloadCallback)(NSError * error);
             x = 20;
         }
         UIButton *toValue = [[UIButton alloc] initWithFrame:CGRectMake(x+3, y, expectedLength, 16)];
+        [toValue addTarget:self action:@selector(contactTaped:) forControlEvents:UIControlEventTouchUpInside];
         [toValue setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
         if (toString) {
             [toValue setTitle:[NSString stringWithFormat:@"%@",toString] forState:UIControlStateNormal];
@@ -671,6 +661,7 @@ typedef void (^DownloadCallback)(NSError * error);
             x = 20;
         }
         UIButton *toValue = [[UIButton alloc] initWithFrame:CGRectMake(x, y, expectedLength, 16)];
+        [toValue addTarget:self action:@selector(contactTaped:) forControlEvents:UIControlEventTouchUpInside];
         [toValue setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
         if (toString) {
             [toValue setTitle:[NSString stringWithFormat:@"%@",toString] forState:UIControlStateNormal];
@@ -740,10 +731,44 @@ typedef void (^DownloadCallback)(NSError * error);
 
 #pragma mark -
 #pragma mark EventHandler
+- (void)contactTaped:(UIButton *)sender {
+    NSLog(@"Sender.tag,%ld",(long)sender.tag);
+    if (sender.tag == -1) {
+        //from taped
+        FMContactDetailViewController *contactDetailViewCOntroller = [[FMContactDetailViewController alloc] initWithMessage:_message.header.sender];
+        [self.navigationController pushViewController:contactDetailViewCOntroller animated:YES];
+        contactDetailViewCOntroller = nil;
+    }
+    else if (sender.tag >= TO_TAG_STARTING && sender.tag < CC_TAG_STARTING) {
+        //to contact taped
+        int index = sender.tag % TO_TAG_STARTING;
+        if (index < _message.header.to.count) {
+            FMContactDetailViewController *contactDetailViewCOntroller = [[FMContactDetailViewController alloc] initWithMessage:[_message.header.to objectAtIndex:index]];
+            [self.navigationController pushViewController:contactDetailViewCOntroller animated:YES];
+            contactDetailViewCOntroller = nil;
+        }
+        else {
+            NSLog(@"To array out of bound");
+        }
+    }
+    else {
+        //cc contact taped
+        int index = sender.tag % CC_TAG_STARTING;
+        if (index < _message.header.cc.count) {
+            FMContactDetailViewController *contactDetailViewCOntroller = [[FMContactDetailViewController alloc] initWithMessage:[_message.header.cc objectAtIndex:index]];
+            [self.navigationController pushViewController:contactDetailViewCOntroller animated:YES];
+            contactDetailViewCOntroller = nil;
+        }
+        else {
+            NSLog(@"CC array out of bound");
+        }
+    }
+}
+
 
 -(void)updateWebView{
     CGFloat contentHeight = _messageView.webView.scrollView.contentSize.height;
-    NSLog(@"----> %d %d",_messageView.height,contentHeight);
+//    NSLog(@"----> %d %d",_messageView.height,contentHeight);
     
     CGRect frame = _messageView.webView.frame;
     frame.size.height = 1;

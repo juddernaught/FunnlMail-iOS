@@ -40,10 +40,12 @@
 
 #define SHOW_PRIMARY_INBOX 1
 #define IS_AUTO_REFRESH_ENABLE 1
-#define AUTOREFRESH_DELAY 60
+#define AUTOREFRESH_DELAY 10
 #define PRIMARY_CATEGORY_NAME @"CATEGORY_PERSONAL"
 
 #define DELETE_RED_COLOR [UIColor colorWithHexString:@"DF353C"]
+
+#define ANIMATION_DURATION 0.3
 
 //email cell's #defines
 #define MAIL_READ_BLUE_COLOR [UIColor colorWithHexString:@"007aff"]
@@ -154,5 +156,6 @@
 
 
 #define NIL_RELEASE(obj) { [obj release]; obj = nil; }
+#define NUMBER_OF_NEW_MESSAGES_TO_CHECK_AFTER_PULL_TO_REFRESH 10
 #define NUMBER_OF_NEW_MESSAGES_TO_CHECK 100
 #define kNUMBER_OF_MESSAGES_TO_DOWNLOAD_IN_BACKGROUND 10

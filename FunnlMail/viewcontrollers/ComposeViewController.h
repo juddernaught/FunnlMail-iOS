@@ -14,7 +14,7 @@
 @class MCOIMAPAsyncSession;
 @class MCOMAPMessage;
 
-@interface ComposeViewController : UIViewController <TITokenFieldDelegate, UITextViewDelegate>
+@interface ComposeViewController : UIViewController <TITokenFieldDelegate, UITextViewDelegate,UITableViewDataSource,UITableViewDelegate>
 {
     UIScrollView *scrollView;
     CGRect previousRect;

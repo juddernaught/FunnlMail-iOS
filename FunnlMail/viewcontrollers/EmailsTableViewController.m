@@ -264,15 +264,8 @@ UIView *greyView;
 
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     if(appDelegate.internetAvailable){
-        [activityIndicator startAnimating];
-        MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
-        [overlay postImmediateMessage:@"Downloading..." animated:YES];
-        overlay.animation = MTStatusBarOverlayAnimationFallDown;  // MTStatusBarOverlayAnimationShrink
-        overlay.detailViewMode = MTDetailViewModeHistory;         // enable automatic history-tracking and show in detail-view
-        overlay.tag = 1;
-        overlay.delegate = self;
-        overlay.progress = 0.0;
-        [[EmailService instance] loadLatestMail:10 withTableController:self withFolder:INBOX];
+        appDelegate.isPullToRefresh = TRUE;
+        [[EmailService instance] startAutoRefresh];
     }
     else{
         [tablecontroller.refreshControl endRefreshing];
@@ -444,19 +437,18 @@ UIView *greyView;
                 }
                 else
                     cell.dateLabel.text = [message.header.date timeAgo];
-//                if([message.header.date isToday]){
-//                    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-//                    [dateFormatter setDateFormat:@"hh:mm a"];
-//                    NSString *dateString = [dateFormatter stringFromDate:message.header.date];
-//                    cell.dateLabel.text = dateString.uppercaseString;
+//                if(message.header.from.displayName.length){
+//                    cell.senderLabel.text = [self removeAngularBracket:message.header.from.displayName];
 //                }
-//                else
-//                    cell.dateLabel.text = [message.header.date timeAgo];
-                if(message.header.from.displayName.length){
-                    cell.senderLabel.text = [self removeAngularBracket:message.header.sender.displayName];
+//                else {
+//                    cell.senderLabel.text = [self removeAngularBracket:message.header.from.mailbox];
+//                }
+                NSString *senderLabelText = [self removeAngularBracket:[self getDisplayName:message]];
+                if (senderLabelText) {
+                    cell.senderLabel.text = senderLabelText;
                 }
                 else {
-                    cell.senderLabel.text = [self removeAngularBracket:message.header.sender.mailbox];
+                    cell.senderLabel.text = @"XXX";
                 }
                 // Changed by Chad
                 // commented out by iauro
@@ -568,10 +560,6 @@ UIView *greyView;
                     }];
                 }
                 
-//                cell.delegate = self;
-//                cell.tableView = tableView;
-//                cell.revealDirection = RDSwipeableTableViewCellRevealDirectionRight | RDSwipeableTableViewCellRevealDirectionLeft;
-                
                 UIView *archiveView = [self viewWithImageName:@"swipeArchive"];
                 UIColor *yellowColor = [UIColor colorWithHexString:@"#FD814A"];
 
@@ -634,6 +622,22 @@ UIView *greyView;
                         [modal show];
                     }
                     [self.view addSubview:funnlPopUpView];
+                    /*funnlPopUpView.alpha = 0;
+                    funnlPopUpView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 2, 2);
+                    [UIView animateWithDuration:ANIMATION_DURATION
+                                          delay:0.0
+                                        options: UIViewAnimationOptionCurveEaseInOut
+                                     animations:^{
+                                         funnlPopUpView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+                                         funnlPopUpView.alpha = 1;
+                                     }
+                                     completion:^(BOOL finished){
+                                         if(finished)
+                                         {
+                                             
+                                         }
+                                         // do any stuff here if you want
+                                     }];*/
                     
                 }];
                 
@@ -838,6 +842,22 @@ UIView *greyView;
                     funnlPopUpView.mainVCdelegate = self.mainVCdelegate;
                     
                     [self.view addSubview:funnlPopUpView];
+                    funnlPopUpView.alpha = 0;
+                    funnlPopUpView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 2, 2);
+                    [UIView animateWithDuration:ANIMATION_DURATION
+                                          delay:0.0
+                                        options: UIViewAnimationOptionCurveEaseInOut
+                                     animations:^{
+                                         funnlPopUpView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+                                         funnlPopUpView.alpha = 1;
+                                     }
+                                     completion:^(BOOL finished){
+                                         if(finished)
+                                         {
+                                             
+                                         }
+                                         // do any stuff here if you want
+                                     }];
                     
                 }];
 
@@ -1139,6 +1159,25 @@ UIView *greyView;
 
 #pragma mark -
 #pragma mark Helper
+- (NSString *)getDisplayName:(MCOIMAPMessage *)message {
+    NSString *displayName = nil;
+    if (message.header.from.displayName) {
+        displayName = message.header.from.displayName;
+    }
+    else if (message.header.from.mailbox) {
+        displayName = message.header.from.mailbox;
+    }
+    else if (message.header.sender.displayName) {
+        displayName = message.header.sender.displayName;
+    }
+    else if (message.header.sender.mailbox) {
+        displayName = message.header.sender.mailbox;
+    }
+    else
+        displayName = nil;
+    return displayName;
+}
+
 - (BOOL)willFitString:(NSString *)string InLabel:(UILabel *)label {
     CGSize labelSize = [string sizeWithFont:MAIL_SUBJECT_FONT constrainedToSize:CGSizeMake(1000, label.frame.size.height) lineBreakMode:NSLineBreakByTruncatingTail];
     if (labelSize.width > label.frame.size.width) {

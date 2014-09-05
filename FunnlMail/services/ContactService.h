@@ -16,4 +16,5 @@
 -(NSMutableArray*)retrieveContactWithEmail:(NSString*)emailID;
 -(NSArray *)getAllContacts;
 -(NSArray *) retrieveAllContact;
+-(NSArray *) searchContactModelWithString:(NSString*)searchTerm;
 @end
