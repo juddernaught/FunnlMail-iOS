@@ -145,8 +145,8 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
     self.navigationItem.leftBarButtonItem = leftItem;
     
-    UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 84, 44)];
-    //centeredButtons.backgroundColor = [UIColor orangeColor];
+    UIView *centeredButtons = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 80, 44)];
+    centeredButtons.backgroundColor = [UIColor clearColor];
     UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:centeredButtons];
     self.navigationItem.rightBarButtonItem = rightItem;
   
@@ -156,6 +156,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     
     [filterButton addTarget:self action:@selector(filterButtonSelected) forControlEvents:UIControlEventTouchUpInside];
     filterButton.frame = CGRectMake(0, 2, 40, 40);
+    composeEmailButton.contentEdgeInsets = (UIEdgeInsets){.right=-4};
     UIImage *funnlIconImg = [UIImage imageNamed:@"funnlIcon.png"];
     funnlIconImg = [funnlIconImg imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     [filterButton setImage:funnlIconImg forState:UIControlStateNormal];
@@ -163,7 +164,8 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [centeredButtons addSubview:filterButton];
     
     [composeEmailButton addTarget:self action:@selector(composeEmailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    composeEmailButton.frame = CGRectMake(44, 0, 40, 40);
+    composeEmailButton.contentEdgeInsets = (UIEdgeInsets){.right=-20};
+    composeEmailButton.frame = CGRectMake(35, 0, 40, 40);
     UIImage *composeIconImg = [UIImage imageNamed:@"composeIcon.png"];
     composeIconImg = [composeIconImg imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     [composeEmailButton setImage:composeIconImg forState:UIControlStateNormal];
@@ -239,7 +241,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 //    mainView.alpha = 0;
 //    [UIView commitAnimations];
     [UIView animateWithDuration:ANIMATION_DURATION
-                          delay:2.0
+                          delay:1.0
                         options: UIViewAnimationOptionCurveEaseInOut
                      animations:^{
                          mainView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 2, 2);

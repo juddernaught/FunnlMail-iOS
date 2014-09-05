@@ -140,7 +140,7 @@
     [emailLabel setTextColor:[UIColor blackColor]];
     emailLabel.text = selectedAddress.mailbox;
     UILongPressGestureRecognizer *tempGuesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(emailLongPress:)];
-    tempGuesture.minimumPressDuration = 0.5;
+    tempGuesture.minimumPressDuration = 0.1;
     tempGuesture.numberOfTapsRequired = 0;
     [emailLabel setUserInteractionEnabled:YES];
     [emailLabel addGestureRecognizer:tempGuesture];
@@ -181,7 +181,7 @@
     [sampleLable setFont:[UIFont systemFontOfSize:14]];
     [sampleLable setTextColor:[UIColor whiteColor]];
     [sampleLable setBackgroundColor:[UIColor clearColor]];
-    sampleLable.text = @"Email address copied to clipboard.";
+    sampleLable.text = @"Email copied to clipboard.";
     [returnView addSubview:sampleLable];
     sampleLable = nil;
     

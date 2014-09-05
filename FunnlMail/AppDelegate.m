@@ -72,7 +72,7 @@
     UIPageControl *pageControl = [UIPageControl appearance];
     pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
     pageControl.currentPageIndicatorTintColor = [UIColor blackColor];
-    pageControl.backgroundColor = [UIColor whiteColor];
+    pageControl.backgroundColor = UIColorFromRGB(0xF7F7F7);
     
     Reachability * reach = [Reachability reachabilityForInternetConnection];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
