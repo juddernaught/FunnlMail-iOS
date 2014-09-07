@@ -155,7 +155,7 @@ UIButton *loginButton;
     self.view.backgroundColor = [UIColor colorWithHexString:@"F6F6F6"];
     self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
     self.pageController.dataSource = self;
-    images = @[@"WHITEsliders1nobar.png", @"WHITEsliders2.png", @"WHITEsliders3.png", @"WHITEsliders4.png",@"WHITEsliders5.png"];
+    images = @[@"intro slider 1.jpg", @"intro slider 2.jpg", @"intro slider 3.jpg", @"intro slider 4.jpg",@"intro slider 5.jpg"];
     PageContentVC *initialViewController = [self viewControllerAtIndex:0];
     NSArray *viewControllers = [NSArray arrayWithObject:initialViewController];
     self.pageController.view.frame = CGRectMake(0, 6, self.view.frame.size.width, self.view.frame.size.height); // Changed from (xx, 0 to 6, ...) by Chad

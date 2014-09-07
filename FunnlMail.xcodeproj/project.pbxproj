@@ -64,6 +64,11 @@
 		66F2C49518E3293F00CD593E /* FunnlMailTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F2C49418E3293F00CD593E /* FunnlMailTests.m */; };
 		B703C50419760E27003037FC /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B703C50319760E27003037FC /* AddressBook.framework */; };
 		B7169C84199C6D78004D8759 /* FAQVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B7169C83199C6D78004D8759 /* FAQVC.m */; };
+		B720A24519BCEAEF002C08B9 /* intro slider 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B720A24019BCEAEF002C08B9 /* intro slider 1.jpg */; };
+		B720A24619BCEAEF002C08B9 /* intro slider 2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B720A24119BCEAEF002C08B9 /* intro slider 2.jpg */; };
+		B720A24719BCEAEF002C08B9 /* intro slider 3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B720A24219BCEAEF002C08B9 /* intro slider 3.jpg */; };
+		B720A24819BCEAEF002C08B9 /* intro slider 4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B720A24319BCEAEF002C08B9 /* intro slider 4.jpg */; };
+		B720A24919BCEAEF002C08B9 /* intro slider 5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B720A24419BCEAEF002C08B9 /* intro slider 5.jpg */; };
 		B72C2FB119A196E3000E5D5B /* RNBlurModalView.h in Headers */ = {isa = PBXBuildFile; fileRef = B72C2FAF19A196E3000E5D5B /* RNBlurModalView.h */; };
 		B72C2FB219A196E3000E5D5B /* RNBlurModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = B72C2FB019A196E3000E5D5B /* RNBlurModalView.m */; };
 		B72C2FB819A19721000E5D5B /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B72C2FB719A19721000E5D5B /* Accelerate.framework */; };
@@ -461,6 +466,11 @@
 		B703C50319760E27003037FC /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		B7169C82199C6D78004D8759 /* FAQVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAQVC.h; sourceTree = "<group>"; };
 		B7169C83199C6D78004D8759 /* FAQVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FAQVC.m; sourceTree = "<group>"; };
+		B720A24019BCEAEF002C08B9 /* intro slider 1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "intro slider 1.jpg"; sourceTree = "<group>"; };
+		B720A24119BCEAEF002C08B9 /* intro slider 2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "intro slider 2.jpg"; sourceTree = "<group>"; };
+		B720A24219BCEAEF002C08B9 /* intro slider 3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "intro slider 3.jpg"; sourceTree = "<group>"; };
+		B720A24319BCEAEF002C08B9 /* intro slider 4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "intro slider 4.jpg"; sourceTree = "<group>"; };
+		B720A24419BCEAEF002C08B9 /* intro slider 5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "intro slider 5.jpg"; sourceTree = "<group>"; };
 		B72C2FAF19A196E3000E5D5B /* RNBlurModalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNBlurModalView.h; sourceTree = "<group>"; };
 		B72C2FB019A196E3000E5D5B /* RNBlurModalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNBlurModalView.m; sourceTree = "<group>"; };
 		B72C2FB719A19721000E5D5B /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
@@ -1062,6 +1072,11 @@
 		B7C940D6198D6F36008468E7 /* DemoSlides */ = {
 			isa = PBXGroup;
 			children = (
+				B720A24019BCEAEF002C08B9 /* intro slider 1.jpg */,
+				B720A24119BCEAEF002C08B9 /* intro slider 2.jpg */,
+				B720A24219BCEAEF002C08B9 /* intro slider 3.jpg */,
+				B720A24319BCEAEF002C08B9 /* intro slider 4.jpg */,
+				B720A24419BCEAEF002C08B9 /* intro slider 5.jpg */,
 				B79AFECF19A0174A00725A8D /* welcome.png */,
 				B7C940DB198D6F49008468E7 /* WHITEsliders1nobar.png */,
 				B7C940DC198D6F49008468E7 /* WHITEsliders2.png */,
@@ -1882,19 +1897,23 @@
 				FA11B2E4199908D200B4EA86 /* popoverArrowUp.png in Resources */,
 				FA6C494419B70B0B00249134 /* addSenderCircle.png in Resources */,
 				FABAF0D31976629000AA7918 /* replyAll@2x.png in Resources */,
+				B720A24719BCEAEF002C08B9 /* intro slider 3.jpg in Resources */,
 				FA11B30E1999D70900B4EA86 /* close_black@2x.png in Resources */,
 				FAAE9CFC19A38ADD007FB804 /* emailDetailViewTrash@2x.png in Resources */,
+				B720A24519BCEAEF002C08B9 /* intro slider 1.jpg in Resources */,
 				D1EFF4C719818B6F0031A1D1 /* button-provider-yahoo.png in Resources */,
 				FABAF09F1976507E00AA7918 /* trashListIcon.png in Resources */,
 				FABAF0AC1976507E00AA7918 /* close.png in Resources */,
 				FAAE9CFB19A38ADD007FB804 /* emailDetailViewTrash.png in Resources */,
 				FA11B2DE199908D200B4EA86 /* popoverArrowLeftSimple.png in Resources */,
 				FA11B2DD199908D200B4EA86 /* popoverArrowLeft@2x.png in Resources */,
+				B720A24919BCEAEF002C08B9 /* intro slider 5.jpg in Resources */,
 				FA11B2DB199908D200B4EA86 /* popoverArrowLeft-white@2x.png in Resources */,
 				FA11B2E5199908D200B4EA86 /* popoverArrowUp@2x.png in Resources */,
 				FABAF0D11976629000AA7918 /* forward@2x.png in Resources */,
 				FAAE9CF319A38ADD007FB804 /* emailDetailViewFunnel.png in Resources */,
 				D1EFF4C219818B6F0031A1D1 /* button-provider-aol@2x.png in Resources */,
+				B720A24619BCEAEF002C08B9 /* intro slider 2.jpg in Resources */,
 				FA11B2E8199908D200B4EA86 /* popoverBg.png in Resources */,
 				FABAF0771976507E00AA7918 /* Email 3.png in Resources */,
 				FA6C494619B70B0B00249134 /* expandIcon.png in Resources */,
@@ -1955,6 +1974,7 @@
 				B7C940E3198D6F49008468E7 /* WHITEsliders4.png in Resources */,
 				FABAF0C31976507E00AA7918 /* swipeFunnl@2x.png in Resources */,
 				D1EFF4C319818B6F0031A1D1 /* button-provider-bg.png in Resources */,
+				B720A24819BCEAEF002C08B9 /* intro slider 4.jpg in Resources */,
 				FAAE9CF719A38ADD007FB804 /* emailDetailViewReply.png in Resources */,
 				FA26CAF7199508C900FFD9B3 /* menuIcon_web.png in Resources */,
 				B7C940E4198D6F49008468E7 /* WHITEsliders5.png in Resources */,
