@@ -424,7 +424,7 @@
 		6644FB431974D695004B4587 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		6644FB451974D6BA004B4587 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		665B460819BD6ADD0087A9AA /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HockeySDK.framework; path = "extenal/HockeySDK-iOS/HockeySDK.embeddedframework/HockeySDK.framework"; sourceTree = "<group>"; };
-		665B460E19BD6F7A0087A9AA /* HockeySDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = HockeySDKResources.bundle; path = "FunnlMail/extenal/HockeySDK-iOS/HockeySDK.embeddedframework/HockeySDK.framework/Versions/A/Resources/HockeySDKResources.bundle"; sourceTree = "<group>"; };
+		665B460E19BD6F7A0087A9AA /* HockeySDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = HockeySDKResources.bundle; path = "extenal/HockeySDK-iOS/HockeySDK.embeddedframework/HockeySDK.framework/Versions/A/Resources/HockeySDKResources.bundle"; sourceTree = "<group>"; };
 		667787F918EF6E9400EF1962 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		667787FB18EF6E9900EF1962 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		667787FF18EF768B00EF1962 /* MsgViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MsgViewController.h; path = viewcontrollers/MsgViewController.h; sourceTree = "<group>"; };
@@ -969,7 +969,6 @@
 		66F2C45D18E3293E00CD593E = {
 			isa = PBXGroup;
 			children = (
-				665B460E19BD6F7A0087A9AA /* HockeySDKResources.bundle */,
 				66F2C46F18E3293E00CD593E /* FunnlMail */,
 				6620BA8918E3439000769C48 /* Resources */,
 				66F2C48E18E3293F00CD593E /* FunnlMailTests */,
@@ -1225,6 +1224,7 @@
 		CC8C7EB018E6F34D00E76AE8 /* external */ = {
 			isa = PBXGroup;
 			children = (
+				665B460E19BD6F7A0087A9AA /* HockeySDKResources.bundle */,
 				665B460819BD6ADD0087A9AA /* HockeySDK.framework */,
 				FAAE9CD719A354F0007FB804 /* Toast */,
 				2522AC0A1998DBEC002B1207 /* Popover */,
