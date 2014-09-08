@@ -415,7 +415,7 @@ replacementString:(NSString *)string {
 	[messageView setAutoresizingMask:UIViewAutoresizingNone];
 	[messageView setDelegate:self];
 	[messageView setFont:[UIFont systemFontOfSize:15]];
-	[messageView setText:@"\n\nSent from FunnlMail"];
+	[messageView setText:@""];
     messageView.autocorrectionType = UITextAutocorrectionTypeYes; //Added by Chad
 //    messageView.backgroundColor = [UIColor colorWithHexString:@"#"];
 	[toFieldView.contentView addSubview:messageView];
@@ -493,7 +493,7 @@ replacementString:(NSString *)string {
     
     //This adds the signature to the body of the emails sent from the app
     NSMutableString * html = [NSMutableString string];
-    [html appendFormat:@"<html><br><br><br><font color='black'><head><a href=%@>Sent From FunnlMail</a> <script>%@</script><style>%@</style></head>"
+    [html appendFormat:@"<html><br><br><br><font color='black'><head>Sent From <a href=%@>FunnlMail</a> <script>%@</script><style>%@</style></head>"
      @"<body bgColor=\"transparent;\"></body></font></html>",@"http://www.funnlmail.com/", mainJavascript, mainStyle];
     html = [[ html stringByReplacingOccurrencesOfString:@"<body bgColor=\"transparent;\">" withString:@"<body bgColor=\"transparent;\"><br/><br/>"] mutableCopy];
     

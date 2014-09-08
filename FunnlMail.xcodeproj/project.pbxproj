@@ -34,6 +34,8 @@
 		6644FB421974D27C004B4587 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6644FB411974D27C004B4587 /* FacebookSDK.framework */; };
 		6644FB441974D696004B4587 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6644FB431974D695004B4587 /* Social.framework */; };
 		6644FB461974D6BA004B4587 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6644FB451974D6BA004B4587 /* Accounts.framework */; };
+		665B460919BD6ADD0087A9AA /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 665B460819BD6ADD0087A9AA /* HockeySDK.framework */; };
+		665B460F19BD6F7A0087A9AA /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 665B460E19BD6F7A0087A9AA /* HockeySDKResources.bundle */; };
 		667787FA18EF6E9400EF1962 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 667787F918EF6E9400EF1962 /* CFNetwork.framework */; };
 		667787FC18EF6E9900EF1962 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 667787FB18EF6E9900EF1962 /* Security.framework */; };
 		6677880118EF768B00EF1962 /* MsgViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6677880018EF768B00EF1962 /* MsgViewController.mm */; };
@@ -421,6 +423,8 @@
 		6644FB411974D27C004B4587 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
 		6644FB431974D695004B4587 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		6644FB451974D6BA004B4587 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		665B460819BD6ADD0087A9AA /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HockeySDK.framework; path = "extenal/HockeySDK-iOS/HockeySDK.embeddedframework/HockeySDK.framework"; sourceTree = "<group>"; };
+		665B460E19BD6F7A0087A9AA /* HockeySDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = HockeySDKResources.bundle; path = "FunnlMail/extenal/HockeySDK-iOS/HockeySDK.embeddedframework/HockeySDK.framework/Versions/A/Resources/HockeySDKResources.bundle"; sourceTree = "<group>"; };
 		667787F918EF6E9400EF1962 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		667787FB18EF6E9900EF1962 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		667787FF18EF768B00EF1962 /* MsgViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MsgViewController.h; path = viewcontrollers/MsgViewController.h; sourceTree = "<group>"; };
@@ -845,6 +849,7 @@
 				CC4263B61934B68600F3C5EB /* libsqlite3.dylib in Frameworks */,
 				6677882518F0ADBB00EF1962 /* SystemConfiguration.framework in Frameworks */,
 				6677881C18F0797800EF1962 /* ImageIO.framework in Frameworks */,
+				665B460919BD6ADD0087A9AA /* HockeySDK.framework in Frameworks */,
 				667787FC18EF6E9900EF1962 /* Security.framework in Frameworks */,
 				6644FB2D197385ED004B4587 /* Parse.framework in Frameworks */,
 				66F2C46C18E3293E00CD593E /* CoreGraphics.framework in Frameworks */,
@@ -964,6 +969,7 @@
 		66F2C45D18E3293E00CD593E = {
 			isa = PBXGroup;
 			children = (
+				665B460E19BD6F7A0087A9AA /* HockeySDKResources.bundle */,
 				66F2C46F18E3293E00CD593E /* FunnlMail */,
 				6620BA8918E3439000769C48 /* Resources */,
 				66F2C48E18E3293F00CD593E /* FunnlMailTests */,
@@ -1219,6 +1225,7 @@
 		CC8C7EB018E6F34D00E76AE8 /* external */ = {
 			isa = PBXGroup;
 			children = (
+				665B460819BD6ADD0087A9AA /* HockeySDK.framework */,
 				FAAE9CD719A354F0007FB804 /* Toast */,
 				2522AC0A1998DBEC002B1207 /* Popover */,
 				D1EFF47219817BBF0031A1D1 /* ContextIO */,
@@ -1866,6 +1873,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				665B460F19BD6F7A0087A9AA /* HockeySDKResources.bundle in Resources */,
 				FABAF0981976507E00AA7918 /* helpListIcon@2x.png in Resources */,
 				FABAF0CA1976573400AA7918 /* funnlIcon.png in Resources */,
 				FA11B30D1999D70900B4EA86 /* close_black.png in Resources */,
