@@ -208,7 +208,8 @@ replacementString:(NSString *)string {
             toFieldView.tokenField.text = selectedCell.detailTextLabel.text;
         }
         else
-            toFieldView.tokenField.text = selectedCell.textLabel.text;
+            // MUSTFIX: show name of sender, but send to sender email address
+            toFieldView.tokenField.text = selectedCell.detailTextLabel.text;
         //[autocompleteTableView removeFromSuperview];
     }
     else if(ccFieldView.tokenField.isEditing){
@@ -216,7 +217,7 @@ replacementString:(NSString *)string {
             ccFieldView.tokenField.text = selectedCell.detailTextLabel.text;
         }
         else
-            ccFieldView.tokenField.text = selectedCell.textLabel.text;
+            ccFieldView.tokenField.text = selectedCell.detailTextLabel.text;
         //[self.view setFrame:CGRectMake(0,25,self.view.bounds.size.width,self.view.bounds.size.height)];
         //[autocompleteTableView removeFromSuperview];
     }
@@ -226,7 +227,7 @@ replacementString:(NSString *)string {
             bccFieldView.tokenField.text = selectedCell.detailTextLabel.text;
         }
         else
-            bccFieldView.tokenField.text = selectedCell.textLabel.text;
+            bccFieldView.tokenField.text = selectedCell.detailTextLabel.text;
         //[self.view setFrame:CGRectMake(0,50,self.view.bounds.size.width,self.view.bounds.size.height)];
         //[autocompleteTableView removeFromSuperview];
     }
