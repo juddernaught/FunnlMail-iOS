@@ -483,11 +483,24 @@ replacementString:(NSString *)string {
 //            [self textViewDidChange:messageView];
 //            [self resizeViews];
         }
-
+        
+        
+        
         
 //Uncomment below line for the plain body reply/replyAll/forward body
 //        [self applyPlainBodyString
     }
+    
+    //This adds the signature to the body of the emails sent from the app
+    NSMutableString * html = [NSMutableString string];
+    [html appendFormat:@"<html><br><br><br><font color='black'><head><a href=%@>Sent From FunnlMail</a> <script>%@</script><style>%@</style></head>"
+     @"<body bgColor=\"transparent;\"></body></font></html>",@"http://www.funnlmail.com/", mainJavascript, mainStyle];
+    html = [[ html stringByReplacingOccurrencesOfString:@"<body bgColor=\"transparent;\">" withString:@"<body bgColor=\"transparent;\"><br/><br/>"] mutableCopy];
+    
+    NSMutableAttributedString *temp = [messageView.attributedText mutableCopy];
+    NSMutableAttributedString *tempAtt = [[NSMutableAttributedString alloc] initWithData:[html dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
+    [tempAtt appendAttributedString: temp];
+    messageView.attributedText = tempAtt;
     
     autocompleteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 121, WIDTH, HEIGHT - 121 - 216 - 66)];
     [autocompleteTableView setBackgroundColor:[UIColor whiteColor]];
@@ -555,8 +568,8 @@ replacementString:(NSString *)string {
     
     if (![string isEqualToString:EMPTY_DELIMITER] && string && ![string isEqualToString:@""]) {
         NSMutableString * html = [NSMutableString string];
-                [html appendFormat:@"<html><br><br><br><font color='purple'><head>------------------------------------------------------------------<script>%@</script><style>%@</style></head>"
-         @"<body bgColor=\"transparent;\">%@</body></font></html>", mainJavascript, mainStyle, string];
+                [html appendFormat:@"<html><br><br><br><font color='purple'><head>written by %@ on %@\n______________________________________\n<script>%@</script><style>%@</style></head>"
+         @"<body bgColor=\"transparent;\">%@</body></font></html>",self.message.header.from.mailbox,self.message.header.date, mainJavascript, mainStyle, string];
         return html;
     }
     
