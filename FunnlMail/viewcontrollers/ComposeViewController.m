@@ -414,7 +414,7 @@ replacementString:(NSString *)string {
 	[messageView setAutoresizingMask:UIViewAutoresizingNone];
 	[messageView setDelegate:self];
 	[messageView setFont:[UIFont systemFontOfSize:15]];
-	[messageView setText:@""];
+	[messageView setText:@"\n\nSent from FunnlMail"];
     messageView.autocorrectionType = UITextAutocorrectionTypeYes; //Added by Chad
 //    messageView.backgroundColor = [UIColor colorWithHexString:@"#"];
 	[toFieldView.contentView addSubview:messageView];
@@ -454,20 +454,26 @@ replacementString:(NSString *)string {
         subjectFieldView.tokenField.text = temp;
         toFieldView.tokenField.text = @"founders@funnlmail.com";
     }
+    
+    // add Sent from FunnlMail with link
+    
+    //NSMutableAttributedString *finalAttributedString = [[NSMutableAttributedString alloc] initWithString:@"\n\nSent from FunnlMail"];
 
     if (!self.compose && !self.sendFeedback) {
         NSString *htmlString = [self getBodyData];
         htmlString = [ htmlString stringByReplacingOccurrencesOfString:@"<body bgColor=\"transparent;\">" withString:@"<body bgColor=\"transparent;\"><br/><br/>"];
         
         NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithData:[htmlString dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
-
         NSMutableAttributedString *finalAttributedString = [[NSMutableAttributedString alloc] initWithString:@""];
+        
         [finalAttributedString addAttribute:(NSString*)kCTUnderlineStyleAttributeName
                           value:[NSNumber numberWithInt:kCTUnderlineStyleSingle]
                           range:(NSRange){0,[finalAttributedString length]}];
         
         [finalAttributedString appendAttributedString:attributedString];
-        messageView.attributedText = finalAttributedString;
+         messageView.attributedText = finalAttributedString;
+        
+        //messageView.attributedText = [[[NSMutableAttributedString alloc] initWithAttributedString:messageView.attributedText] appendAttributedString:finalAttributedString];
 //        [self applyPlainBodyString];
         if(messageView.text.length){
             CGRect frame = [finalAttributedString boundingRectWithSize:CGSizeMake(WIDTH, 10000) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading | NSStringDrawingUsesDeviceMetrics context:nil];
