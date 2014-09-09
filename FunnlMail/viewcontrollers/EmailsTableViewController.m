@@ -487,26 +487,28 @@ UIView *greyView;
                 }
                 else{
                     // loads email body and stores in database
-                    MCOIMAPMessageRenderingOperation * op = [[EmailService instance].imapSession htmlBodyRenderingOperationWithMessage:message folder:@"INBOX"];
+                    if(FETCH_MSG_BODY_AT_MSG_LOADING){
+                        MCOIMAPMessageRenderingOperation * op = [[EmailService instance].imapSession htmlBodyRenderingOperationWithMessage:message folder:@"INBOX"];
                     
-                    [op start:^(NSString * htmlString, NSError * error) {
-                        NSArray *tempArray = [htmlString componentsSeparatedByString:@"<head>"];
-                        if (tempArray.count > 1) {
-                            htmlString = [tempArray objectAtIndex:1];
-                        }
-                        else {
-                            tempArray = [htmlString componentsSeparatedByString:@"Subject:"];
+                        [op start:^(NSString * htmlString, NSError * error) {
+                            NSArray *tempArray = [htmlString componentsSeparatedByString:@"<head>"];
                             if (tempArray.count > 1) {
                                 htmlString = [tempArray objectAtIndex:1];
                             }
-                        }
-                        NSMutableDictionary *paramDict = [[NSMutableDictionary alloc] init];
-                        if(htmlString){
-                            paramDict[uidKey] = htmlString;
-                            NSLog(@"----ListView: HTML data callback recieved -----");
-                            [[MessageService instance] updateMessageWithHTMLContent:paramDict];
-                        }
-                    }];
+                            else {
+                                tempArray = [htmlString componentsSeparatedByString:@"Subject:"];
+                                if (tempArray.count > 1) {
+                                    htmlString = [tempArray objectAtIndex:1];
+                                }
+                            }
+                            NSMutableDictionary *paramDict = [[NSMutableDictionary alloc] init];
+                            if(htmlString){
+                                paramDict[uidKey] = htmlString;
+                                NSLog(@"----ListView: HTML data callback recieved -----");
+                                [[MessageService instance] updateMessageWithHTMLContent:paramDict];
+                            }
+                        }];
+                    }
 
                     cell.messageRenderingOperation = [[EmailService instance].imapSession plainTextBodyRenderingOperationWithMessage:message folder:self.emailFolder];
                     [cell.messageRenderingOperation start:^(NSString * plainTextBodyString, NSError * error) {
@@ -538,22 +540,6 @@ UIView *greyView;
                         else {
                             cell.bodyLabel.text = @"This message has no content.";
 
-                        }
-                        
-                        if(FETCH_MSG_BODY_AT_MSG_LOADING == 1){
-                            dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-                                MCOIMAPFetchContentOperation * op = [[EmailService instance].imapSession fetchMessageByUIDOperationWithFolder:self.emailFolder uid:message.uid urgent:YES];
-                                [op start:^(NSError * error, NSData * data) {
-                                    if ([error code] != MCOErrorNone) {
-                                        MCOMessageParser *parser = [[MCOMessageParser alloc] initWithData:data];
-                                        NSString *strBody = [parser htmlRenderingWithDelegate:self];
-                                        NSLog(@"-----> Message body fetched %@ %@",[NSString stringWithFormat:@"%d",message.uid],strBody);
-                                    }
-                                    else{
-                                        
-                                    }
-                                }];
-                            });
                         }
                         
                         cell.messageRenderingOperation = nil;
