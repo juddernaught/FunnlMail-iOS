@@ -331,6 +331,11 @@ pre {\
         NSString *stringData = [request.URL.absoluteString stringByReplacingOccurrencesOfString:@"funnl://" withString:@""];
             [[self delegate] MCOMessageView:self getFunlShareString:stringData];
     }
+    else if([request.URL.scheme hasPrefix:@"http"] ){
+        NSLog(@"http scheme detected");
+        [[UIApplication sharedApplication] openURL:request.URL];
+        return NO;
+    }
     if(responseRequest == request) {
         return YES;
     } else {

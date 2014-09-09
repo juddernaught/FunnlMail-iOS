@@ -19,6 +19,7 @@
 #import "FAQVC.h"
 #import "SQLiteDatabase.h"
 #import <Mixpanel/Mixpanel.h>
+#import "TutorialViewController.h"
 
 @interface MenuViewController ()
 
@@ -92,8 +93,8 @@
 //    imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"settingListIcon",@"alertListIcon",@"shareListIcon",@"sentListIcon", @"archiveListIcon",@"archiveListIcon", @"trashListIcon",@"emailListIcon",@"helpListIcon", @"helpListLogOutIcon",nil];
     
 
-    listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Send Feedback",@"Help (FAQs)",@"LogOut",nil];
-    imageArray = [[NSMutableArray alloc] initWithObjects:@"",@"sendFeedbackListIcon",@"helpListIcon", @"logoutListIcon",nil];
+    listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Send Feedback",@"Tutorials",@"Help (FAQs)",@"LogOut",nil];
+    imageArray = [[NSMutableArray alloc] initWithObjects:@"",@"sendFeedbackListIcon",@"helpListIcon",@"helpListIcon", @"logoutListIcon",nil];
 
 }
 
@@ -179,6 +180,10 @@
         FunnlAlertsVC *alerts = [[FunnlAlertsVC alloc]init];
         [alerts SetUp];
         [[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationController pushViewController:alerts animated:NO];
+    }
+    else if([cell.menuLabel.text isEqualToString:@"Tutorials"]){
+        TutorialViewController *tutorialVC = [[TutorialViewController alloc]init];
+        [[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationController pushViewController:tutorialVC animated:NO];
     }
     
     else if ([cell.menuLabel.text isEqualToString:@"Sent Mail"]) {

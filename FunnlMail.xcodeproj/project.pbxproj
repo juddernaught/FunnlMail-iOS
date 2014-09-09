@@ -206,6 +206,8 @@
 		FA6C494619B70B0B00249134 /* expandIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = FA6C494219B70B0B00249134 /* expandIcon.png */; };
 		FA6C494719B70B0B00249134 /* expandIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FA6C494319B70B0B00249134 /* expandIcon@2x.png */; };
 		FA7A445C193F2FE300ABCB29 /* MenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA7A445B193F2FE300ABCB29 /* MenuCell.m */; };
+		FA83970119BEF33B00F9F529 /* TutorialViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = FA8396FF19BEF33B00F9F529 /* TutorialViewController.h */; };
+		FA83970219BEF33B00F9F529 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA83970019BEF33B00F9F529 /* TutorialViewController.m */; };
 		FA8A4ADB193D902B004890E3 /* NSDate+TimeAgo.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8A4AD9193D902B004890E3 /* NSDate+TimeAgo.m */; };
 		FA8A4ADC193D902B004890E3 /* NSDateTimeAgo.bundle in Resources */ = {isa = PBXBuildFile; fileRef = FA8A4ADA193D902B004890E3 /* NSDateTimeAgo.bundle */; };
 		FA8DDA551933A6420049F83F /* TextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8DDA541933A6420049F83F /* TextFieldCell.m */; };
@@ -680,6 +682,8 @@
 		FA6C494319B70B0B00249134 /* expandIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "expandIcon@2x.png"; sourceTree = "<group>"; };
 		FA7A445A193F2FE300ABCB29 /* MenuCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuCell.h; sourceTree = "<group>"; };
 		FA7A445B193F2FE300ABCB29 /* MenuCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuCell.m; sourceTree = "<group>"; };
+		FA8396FF19BEF33B00F9F529 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TutorialViewController.h; path = viewcontrollers/TutorialViewController.h; sourceTree = "<group>"; };
+		FA83970019BEF33B00F9F529 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TutorialViewController.m; path = viewcontrollers/TutorialViewController.m; sourceTree = "<group>"; };
 		FA8A4AD8193D902B004890E3 /* NSDate+TimeAgo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+TimeAgo.h"; sourceTree = "<group>"; };
 		FA8A4AD9193D902B004890E3 /* NSDate+TimeAgo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+TimeAgo.m"; sourceTree = "<group>"; };
 		FA8A4ADA193D902B004890E3 /* NSDateTimeAgo.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = NSDateTimeAgo.bundle; sourceTree = "<group>"; };
@@ -1160,6 +1164,8 @@
 		CC8C7EAA18E6EF8600E76AE8 /* viewcontrollers */ = {
 			isa = PBXGroup;
 			children = (
+				FA8396FF19BEF33B00F9F529 /* TutorialViewController.h */,
+				FA83970019BEF33B00F9F529 /* TutorialViewController.m */,
 				259ECEE119B9BA29001D7459 /* FMContactDetailViewController */,
 				FA6C493B19B6EE9500249134 /* FMCreateFunnelViewControllers */,
 				CC1AD1DC18F54BE9000E356C /* MainVCDelegate.h */,
@@ -1735,6 +1741,7 @@
 				FA6C493E19B6EE9500249134 /* FMCreateFunnlViewController.h in Headers */,
 				B72C2FB119A196E3000E5D5B /* RNBlurModalView.h in Headers */,
 				B7F3BB0619A597F00049CEE8 /* MTStatusBarOverlay.h in Headers */,
+				FA83970119BEF33B00F9F529 /* TutorialViewController.h in Headers */,
 				FA33E1B119A9A48100CE79B0 /* MCTMsgViewController.h in Headers */,
 				FAAE9CDA19A354F0007FB804 /* UIView+Toast.h in Headers */,
 			);
@@ -2172,6 +2179,7 @@
 				FA7A445C193F2FE300ABCB29 /* MenuCell.m in Sources */,
 				FAAF171D19863CDD00E877D4 /* SDWebImageDecoder.m in Sources */,
 				5A1FF53D1948263B0056750F /* FunnelModel.m in Sources */,
+				FA83970219BEF33B00F9F529 /* TutorialViewController.m in Sources */,
 				FA9164BE1973D162006A4726 /* ComposeViewController.m in Sources */,
 				D1EFF4AC198184C60031A1D1 /* AFJSONRequestOperation.m in Sources */,
 				FA11B2BB1999033A00B4EA86 /* UIPopoverController+iPhone.m in Sources */,

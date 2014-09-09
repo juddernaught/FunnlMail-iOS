@@ -53,16 +53,16 @@
 #define MAIL_READ_BLUE_COLOR [UIColor colorWithHexString:@"007aff"]
 
 #define MAIL_HEADER_TEXT_COLOR [UIColor colorWithHexString:@"2b2f32"]
-#define MAIL_HEADER_FONT [UIFont fontWithName:@"HelveticaNeue-Medium" size:15]
+#define MAIL_HEADER_FONT [UIFont fontWithName:@"HelveticaNeue-Medium" size:16]
 
 #define MAIL_TIME_COLOR [UIColor colorWithHexString:@"7e8284"]
-#define MAIL_TIME_FONT [UIFont fontWithName:@"HelveticaNeue" size:12]
+#define MAIL_TIME_FONT [UIFont fontWithName:@"HelveticaNeue" size:13]
 
 #define MAIL_SUBJECT_TEXT_COLOR [UIColor colorWithHexString:@"2b2f32"]
-#define MAIL_SUBJECT_FONT [UIFont fontWithName:@"HelveticaNeue" size:13]
+#define MAIL_SUBJECT_FONT [UIFont fontWithName:@"HelveticaNeue" size:14]
 
 #define MAIL_BODY_TEXT_COLOR [UIColor colorWithHexString:@"899299"]
-#define MAIL_BODY_FONT [UIFont fontWithName:@"HelveticaNeue" size:13]
+#define MAIL_BODY_FONT [UIFont fontWithName:@"HelveticaNeue" size:14]
 
 #define MAIL_FUNNEL_FONT [UIFont fontWithName:@"HelveticaNeue" size:12]
 

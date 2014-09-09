@@ -30,7 +30,8 @@ NSArray *answers;
 - (void)viewDidLoad
 {
     [[Mixpanel sharedInstance] track:@"FAQ Pressed"]; // Viewed Help/FAQS section
-    
+    self.title = @"Help (FAQs)";
+
     [super viewDidLoad];
     UITableView *faq = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT) style:UITableViewStylePlain];
     faq.dataSource = self;

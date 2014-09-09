@@ -13,8 +13,9 @@
 #import "GTMHTTPFetcher.h"
 #import "GTMOAuth2ViewControllerTouch.h"
 #import "ContactModel.h"
+
 @class MainVC;
-@interface LoginViewController : UIViewController <NSURLConnectionDataDelegate,GTMFetcherAuthorizationProtocol,GTMHTTPFetcherServiceProtocol>
+@interface LoginViewController : UIViewController <NSURLConnectionDataDelegate,GTMFetcherAuthorizationProtocol,GTMHTTPFetcherServiceProtocol,UIPageViewControllerDataSource,UIPageViewControllerDelegate>
 {
     
 }

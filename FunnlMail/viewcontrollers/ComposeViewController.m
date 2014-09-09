@@ -420,23 +420,27 @@ replacementString:(NSString *)string {
 //    messageView.backgroundColor = [UIColor colorWithHexString:@"#"];
 	[toFieldView.contentView addSubview:messageView];
 	
+    NSString *subjectString = self.message.header.subject;
+    if(subjectString == nil ){
+        subjectString = @"";
+    }
     if (self.forward) {
         NSLog(@"self.forward");
         NSMutableString *temp = [[NSMutableString alloc] initWithString:@"FWD: "];
-        [temp appendString:self.message.header.subject];
+        [temp appendString:subjectString];
         subjectFieldView.tokenField.text = temp;
     }
     else if (self.reply){
         NSLog(@"self.reply");
         NSMutableString *temp = [[NSMutableString alloc] initWithString:@"Re: "];
-        [temp appendString:self.message.header.subject];
+        [temp appendString:subjectString];
         subjectFieldView.tokenField.text = temp;
         toFieldView.tokenField.text = [self.address nonEncodedRFC822String];
     }
     else if(self.replyAll){
         NSLog(@"self.reply");
         NSMutableString *temp = [[NSMutableString alloc] initWithString:@"Re: "];
-        [temp appendString:self.message.header.subject];
+        [temp appendString:subjectString];
         subjectFieldView.tokenField.text = temp;
         
         temp = [[NSMutableString alloc] initWithString:[self.address nonEncodedRFC822String]];
@@ -444,7 +448,6 @@ replacementString:(NSString *)string {
         for (MCOAddress* address in self.addressArray) {
             [temp appendString:@", "];
             [temp appendString:[address nonEncodedRFC822String]];
-            
         }
         
         toFieldView.tokenField.text = temp;
@@ -493,7 +496,7 @@ replacementString:(NSString *)string {
     
     //This adds the signature to the body of the emails sent from the app
     NSMutableString * html = [NSMutableString string];
-    [html appendFormat:@"<html><br><br><br><font color='black'><head>Sent from <a href=%@>FunnlMail</a> <script>%@</script><style>%@</style></head>"
+    [html appendFormat:@"<html><br/><font color='black'><head>Sent from <a href=%@>FunnlMail</a> <script>%@</script><style>%@</style></head>"
      @"<body bgColor=\"transparent;\"></body></font></html>",@"http://www.funnlmail.com/", mainJavascript, mainStyle];
     html = [[ html stringByReplacingOccurrencesOfString:@"<body bgColor=\"transparent;\">" withString:@"<body bgColor=\"transparent;\">"] mutableCopy];
     
