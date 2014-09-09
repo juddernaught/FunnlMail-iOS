@@ -216,12 +216,14 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
         mainView.center = self.view.center;
         mainView.hidden = NO;
         mainView.alpha = 0;
+        
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration:0.3];
         mainView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
         mainView.frame = CGRectMake(0, 20, WIDTH, HEIGHT+40);
         mainView.alpha = 1;
         [UIView commitAnimations];
+        
         if (tempAppDelegate.didLoginIn) {
             tempAppDelegate.didLoginIn = 0;
             RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Funnl Time!" message:@"Tap on any Funnl to view emails under that Funnl or press 'Manage' to view/change Funnl Settings"];
