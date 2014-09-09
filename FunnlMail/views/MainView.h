@@ -22,7 +22,7 @@
     BOOL editOn;
     
 }
-
+@property (nonatomic, strong)UIImageView *backgroundImageView;
 @property (strong) UICollectionView *collectionView;
 @property (weak) id<MainVCDelegate> mainVCdelegate;
 

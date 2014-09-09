@@ -30,5 +30,6 @@
     UIButton *userButton;
     NSMutableArray *buttonArray;
 }
+@property (nonatomic, strong)UIImageView *backgroundImageView;
 - (id)initWithFrame:(CGRect)frame withMessage:(MCOIMAPMessage*)messages withFunnel:(FunnelModel*)funnelDS onViewController:(id)someViewController;
 @end

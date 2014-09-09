@@ -10,6 +10,7 @@
 #import "ContactService.h"
 #import <Parse/Parse.h>
 #import <AddressBook/AddressBook.h>
+#import "FXBlurView.h"
 @interface FMCreateFunnlViewController ()
 
 @end
@@ -59,8 +60,8 @@
     flag = TRUE;
     advanceFlag = FALSE;
     buttonArray = [[NSMutableArray alloc] init];
-    [self.view setBackgroundColor:[UIColor clearColor]];
     
+    [self applyBackgroundImage];
     UIBarButtonItem *sampleBarButton = [[UIBarButtonItem alloc] init];
     [sampleBarButton setTarget:self];
     [sampleBarButton setAction:@selector(saveButtonPressed:)];
@@ -93,10 +94,36 @@
 - (void)viewWillAppear:(BOOL)animated {
     //    [self.view setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.6]];
     [[self navigationController] setNavigationBarHidden:YES animated:YES];
+    [self.view setBackgroundColor:[UIColor clearColor]];
 }
 
 #pragma mark -
 #pragma mark Helper
+- (void)applyBackgroundImage {
+    AppDelegate *tempAppDelegate = APPDELEGATE;
+    UIGraphicsBeginImageContext(tempAppDelegate.window.bounds.size);
+    [tempAppDelegate.window.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    NSData * data = UIImagePNGRepresentation(image);
+    UIImageView *backgroundImageView = nil;
+    if (backgroundImageView) {
+        backgroundImageView = nil;
+    }
+    backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+    [backgroundImageView setImage:[UIImage imageWithData:data]];
+    data = nil;
+    [self.view addSubview:backgroundImageView];
+    FXBlurView *backgroundView = [[FXBlurView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+    [backgroundView setBlurEnabled:YES];
+    backgroundView.tintColor = [UIColor blackColor];
+    backgroundView.blurRadius = 10;
+    [self.view addSubview:backgroundView];
+    backgroundView = nil;
+    [backgroundView setUserInteractionEnabled:YES];
+    backgroundView = nil;
+}
+
 -(void)emailContact
 {
     emailArr = [[NSMutableArray alloc]init];
@@ -341,7 +368,7 @@
         mainScrollView = nil;
     }
     mainScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, self.navigationController.navigationBar.frame.size.height + 22, WIDTH, HEIGHT - self.navigationController.navigationBar.frame.size.height - 22)];
-    [mainScrollView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.6]];
+    [mainScrollView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.7]];
     
     UILabel *sampleLAbel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 125, 40)];
     [sampleLAbel setTextAlignment:NSTextAlignmentLeft];
@@ -991,8 +1018,16 @@
     //    innerY = innerY + 40;
     internalY = internalY + 40;
     
+    
+    
+    internalY = internalY + 40;
+    
+    footerView.frame = CGRectMake(footerView.frame.origin.x, footerView.frame.origin.y, footerView.frame.size.width, internalY);
+    
+    innerY = internalY + innerY;
+    
     if (isEditFunnel) {
-        deleteButton = [[UIButton alloc] initWithFrame:CGRectMake(10, internalY, WIDTH - 20, 30)];
+        deleteButton = [[UIButton alloc] initWithFrame:CGRectMake(10, innerY, WIDTH - 20, 30)];
         [deleteButton setTitleColor:DELETE_RED_COLOR forState:UIControlStateNormal];
         [deleteButton setTitle:@"Delete" forState:UIControlStateNormal];
         [deleteButton addTarget:self action:@selector(deleteFunnel) forControlEvents:UIControlEventTouchUpInside];
@@ -1000,14 +1035,8 @@
         deleteButton.layer.cornerRadius = 3;
         deleteButton.layer.borderWidth = 1;
         deleteButton.layer.borderColor = [DELETE_RED_COLOR CGColor];
-        [footerView addSubview:deleteButton];
+        [mainScrollView addSubview:deleteButton];
     }
-    
-    internalY = internalY + 40;
-    
-    footerView.frame = CGRectMake(footerView.frame.origin.x, footerView.frame.origin.y, footerView.frame.size.width, internalY);
-    
-    innerY = internalY + innerY;
     
     containerView.frame = CGRectMake(0, y, WIDTH, innerY + 20);
     
@@ -1028,8 +1057,8 @@
 
 - (void)setUpCustomNavigationBar {
     UIView *naviGationBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, 66)];
-    //    [naviGationBar setBackgroundColor:[UIColor clearColor]];
-    [naviGationBar setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.6]];
+//    [naviGationBar setBackgroundColor:[UIColor clearColor]];
+    [naviGationBar setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.7]];
     UIButton *sampleButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 22, 100, 44)];
     [sampleButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
     [sampleButton setTitle:@"Cancel" forState:UIControlStateNormal];
@@ -1087,7 +1116,7 @@
         }*/
         for(ContactModel *tempModel in emailArr) {
             substring = [substring stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-            if ([tempModel.email rangeOfString:substring].location == 0) {
+            if ([tempModel.email rangeOfString:substring].location == 0 && ![tempModel.email isEqualToString:[[EmailService instance] userEmailID]]) {
                 [searchArray addObject:tempModel];
             }
         }
@@ -1569,7 +1598,7 @@
         for (ContactModel *temp in contactMutableArray) {
             if ([temp.email isEqualToString:addedContact.email]) {
                 addedContact = nil;
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Contact is added." message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Contact is already present in the funnl." message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
                 [alert show];
                 alert = nil;
                 additionalTextField.text = @"";
@@ -1644,6 +1673,7 @@
         [containerView addSubview:sampleButton];
         [editButtonArray addObject:sampleButton];
         sampleButton = nil;
+        deleteButton.frame = CGRectMake(deleteButton.frame.origin.x, deleteButton.frame.origin.y + 35, deleteButton.frame.size.width, deleteButton.frame.size.height);
         [UIView commitAnimations];
         [sender removeTarget:self action:@selector(addSubject:) forControlEvents:UIControlEventTouchUpInside];
         [sender addTarget:self action:@selector(deleteSubject:) forControlEvents:UIControlEventTouchUpInside];
@@ -1662,7 +1692,6 @@
 }
 
 - (void)deleteSubject:(UIButton *)sender {
-    
     UIView *seperatorView = [self getSeperatorViewForButton:sender];
 //    NSLog(@"tag -- > %d",sender.tag);
     if (seperatorView) {
@@ -1697,6 +1726,7 @@
     footerView.frame = CGRectMake(footerView.frame.origin.x, footerView.frame.origin.y - 35, footerView.frame.size.width, footerView.frame.size.height);
     containerView.frame = CGRectMake(containerView.frame.origin.x, containerView.frame.origin.y, containerView.frame.size.width, containerView.frame.size.height - 35);
     mainScrollView.contentSize = CGSizeMake(WIDTH, mainScrollView.contentSize.height - 35);
+    deleteButton.frame = CGRectMake(deleteButton.frame.origin.x, deleteButton.frame.origin.y - 35, deleteButton.frame.size.width, deleteButton.frame.size.height);
     [UIView commitAnimations];
     [sender removeTarget:self action:@selector(deleteSubject:) forControlEvents:UIControlEventTouchUpInside];
     [sender addTarget:self action:@selector(addSubject:) forControlEvents:UIControlEventTouchUpInside];
@@ -1707,6 +1737,7 @@
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration:0.3];
         containerView.frame = CGRectMake(0, containerView.frame.origin.y, containerView.frame.size.width, 50);
+        deleteButton.frame = CGRectMake(deleteButton.frame.origin.x, containerView.frame.origin.y + 50 + 10, deleteButton.frame.size.width, deleteButton.frame.size.height);
         [UIView commitAnimations];
         advanceFlag = FALSE;
     }
@@ -1714,6 +1745,7 @@
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration:0.3];
         containerView.frame = CGRectMake(0, containerView.frame.origin.y, containerView.frame.size.width, innerY);
+        deleteButton.frame = CGRectMake(deleteButton.frame.origin.x, containerView.frame.origin.y + innerY + 10, deleteButton.frame.size.width, deleteButton.frame.size.height);
         [UIView commitAnimations];
         advanceFlag = TRUE;
     }
@@ -1724,12 +1756,14 @@
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration:0.3];
         containerView.frame = CGRectMake(0, containerView.frame.origin.y, containerView.frame.size.width, 50);
+        deleteButton.frame = CGRectMake(deleteButton.frame.origin.x, containerView.frame.origin.y + 50 + 10, deleteButton.frame.size.width, deleteButton.frame.size.height);
         [UIView commitAnimations];
     }
     else {
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration:0.3];
         containerView.frame = CGRectMake(0, containerView.frame.origin.y, containerView.frame.size.width, innerY);
+        deleteButton.frame = CGRectMake(deleteButton.frame.origin.x, containerView.frame.origin.y + innerY + 10, deleteButton.frame.size.width, deleteButton.frame.size.height);
         [UIView commitAnimations];
         advanceFlag = TRUE;
     }
@@ -1749,7 +1783,6 @@
 - (void)saveButtonPressed:(UIButton*)sender {
     
     [self performSelectorInBackground:@selector(showHUD) withObject:nil];
-    
     if (senderArray) {
         senderArray = nil;
     }
@@ -1783,7 +1816,6 @@
     [[Mixpanel sharedInstance] track:@"Created a new Funnl or modified existing Funnl"];
     
     NSString *funnlName = funnelNameTextField.text;
-    
     if(funnelNameTextField.text.length){
         int validCode = [self validateFunnelName:funnlName];
         if (validCode != 1 && !isEditFunnel) {

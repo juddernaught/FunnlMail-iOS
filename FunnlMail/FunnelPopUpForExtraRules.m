@@ -8,10 +8,11 @@
 
 #import "FunnelPopUpForExtraRules.h"
 #import <Mixpanel/Mixpanel.h>
+#import "FXBlurView.h"
 static NSString *CONTACT_CELL = @"ContactTableViewCell";
 static NSString *contactCellIdentifier = @"ContactCell";
 @implementation FunnelPopUpForExtraRules
-
+@synthesize backgroundImageView;
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -28,6 +29,29 @@ static NSString *contactCellIdentifier = @"ContactCell";
         // Initialization code
         message = messages;
         tempFunnelModel = funnelDS;
+        AppDelegate *tempAppDelegate = APPDELEGATE;
+        
+        UIGraphicsBeginImageContext(tempAppDelegate.window.bounds.size);
+        [tempAppDelegate.window.layer renderInContext:UIGraphicsGetCurrentContext()];
+        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        NSData * data = UIImagePNGRepresentation(image);
+        if (backgroundImageView) {
+            backgroundImageView = nil;
+        }
+        backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+        [backgroundImageView setImage:[UIImage imageWithData:data]];
+        data = nil;
+        [self addSubview:backgroundImageView];
+        FXBlurView *backgroundView = [[FXBlurView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+        [backgroundView setBlurEnabled:YES];
+        backgroundView.tintColor = [UIColor blackColor];
+        backgroundView.blurRadius = 10;
+        [self addSubview:backgroundView];
+        backgroundView = nil;
+        [backgroundView setUserInteractionEnabled:YES];
+        backgroundView = nil;
+        
         [self setUpViews];
         [self setUpCustomNavigationBar];
         viewController = someViewController;
@@ -49,7 +73,7 @@ static NSString *contactCellIdentifier = @"ContactCell";
 - (void)setUpCustomNavigationBar {
     UIView *naviGationBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, 66)];
     [naviGationBar setBackgroundColor:[UIColor clearColor]];
-//    [naviGationBar setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.6]];
+//    [naviGationBar setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.8]];
     UIButton *sampleButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 22, 80
                                                                         , 44)];
     [sampleButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
@@ -76,7 +100,7 @@ static NSString *contactCellIdentifier = @"ContactCell";
 //    [naviGationBar addSubview:sampleButton];
 //    sampleButton = nil;
     
-    UIView *sampleView = [[UIView alloc] initWithFrame:CGRectMake(0, 64, WIDTH, 2)];
+    UIView *sampleView = [[UIView alloc] initWithFrame:CGRectMake(0, 65, WIDTH, 1)];
     [sampleView setBackgroundColor:[UIColor whiteColor]];
     [naviGationBar addSubview:sampleView];
     sampleView = nil;
@@ -95,13 +119,7 @@ static NSString *contactCellIdentifier = @"ContactCell";
     self.backgroundColor = [UIColor clearColor];
     UIView *mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
     //    [mainView setBackgroundColor:[UIColor colorWithHexString:@"#E2E2E2"]];
-    mainView.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.93];
-    
-//    userImage = [[UIImageView alloc] initWithFrame:CGRectMake((WIDTH - 75)/2.0, 66 + (95 - 75)/2, 75, 75)];
-//    userImage.clipsToBounds = YES;
-//    userImage.layer.cornerRadius = 75.0/2.0;
-//    userImage.layer.borderColor = [[UIColor clearColor] CGColor];
-//    userImage.layer.borderWidth = BUTTON_BORDER_WIDTH_VIP;
+    mainView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
     
     unsigned long temp = 2 % 8;
     NSArray *randomColors = GRADIENT_ARRAY;
@@ -150,11 +168,11 @@ static NSString *contactCellIdentifier = @"ContactCell";
     messageLabel.numberOfLines = 2;
     messageLabel.lineBreakMode = NSLineBreakByWordWrapping;
     if (message.header.sender.displayName) {
-        messageLabel.text = [NSString stringWithFormat:@"Messages from %@ will be funnled under %@.",message.header.sender.displayName,tempFunnelModel.funnelName];
+        messageLabel.text = [NSString stringWithFormat:@"Messages from %@ will be funneled under %@.",message.header.sender.displayName,tempFunnelModel.funnelName];
     }
     else {
         
-        messageLabel.text = [NSString stringWithFormat:@"Messages from %@ will be funnled under %@.",message.header.sender.mailbox,tempFunnelModel.funnelName];
+        messageLabel.text = [NSString stringWithFormat:@"Messages from %@ will be funneled under %@.",message.header.sender.mailbox,tempFunnelModel.funnelName];
     }
     [messageLabel setFont:[UIFont systemFontOfSize:20]];
     [mainView addSubview:messageLabel];
@@ -197,14 +215,14 @@ static NSString *contactCellIdentifier = @"ContactCell";
         
         y = y + 0.5 + 10;
         
-        alsoAddLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, y, WIDTH - 20, 40)];
+        alsoAddLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, y, WIDTH - 20, 20)];
         alsoAddLabel.textAlignment = NSTextAlignmentLeft;
         alsoAddLabel.text = @"Also include:";
         [alsoAddLabel setBackgroundColor:[UIColor clearColor]];
         [alsoAddLabel setTextColor:[UIColor whiteColor]];
         [mainView addSubview:alsoAddLabel];
         alsoAddLabel = nil;
-        y = y + 40 + 10;
+        y = y + 40;
     }
     
     if (!IS_NEW_CREATE_FUNNEL) {

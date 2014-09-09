@@ -208,6 +208,8 @@
 		FA7A445C193F2FE300ABCB29 /* MenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA7A445B193F2FE300ABCB29 /* MenuCell.m */; };
 		FA83970119BEF33B00F9F529 /* TutorialViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = FA8396FF19BEF33B00F9F529 /* TutorialViewController.h */; };
 		FA83970219BEF33B00F9F529 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA83970019BEF33B00F9F529 /* TutorialViewController.m */; };
+		FA83970619BF1D0700F9F529 /* FXBlurView.h in Headers */ = {isa = PBXBuildFile; fileRef = FA83970419BF1D0700F9F529 /* FXBlurView.h */; };
+		FA83970719BF1D0700F9F529 /* FXBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA83970519BF1D0700F9F529 /* FXBlurView.m */; };
 		FA8A4ADB193D902B004890E3 /* NSDate+TimeAgo.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8A4AD9193D902B004890E3 /* NSDate+TimeAgo.m */; };
 		FA8A4ADC193D902B004890E3 /* NSDateTimeAgo.bundle in Resources */ = {isa = PBXBuildFile; fileRef = FA8A4ADA193D902B004890E3 /* NSDateTimeAgo.bundle */; };
 		FA8DDA551933A6420049F83F /* TextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8DDA541933A6420049F83F /* TextFieldCell.m */; };
@@ -684,6 +686,8 @@
 		FA7A445B193F2FE300ABCB29 /* MenuCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuCell.m; sourceTree = "<group>"; };
 		FA8396FF19BEF33B00F9F529 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TutorialViewController.h; path = viewcontrollers/TutorialViewController.h; sourceTree = "<group>"; };
 		FA83970019BEF33B00F9F529 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TutorialViewController.m; path = viewcontrollers/TutorialViewController.m; sourceTree = "<group>"; };
+		FA83970419BF1D0700F9F529 /* FXBlurView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXBlurView.h; sourceTree = "<group>"; };
+		FA83970519BF1D0700F9F529 /* FXBlurView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXBlurView.m; sourceTree = "<group>"; };
 		FA8A4AD8193D902B004890E3 /* NSDate+TimeAgo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+TimeAgo.h"; sourceTree = "<group>"; };
 		FA8A4AD9193D902B004890E3 /* NSDate+TimeAgo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+TimeAgo.m"; sourceTree = "<group>"; };
 		FA8A4ADA193D902B004890E3 /* NSDateTimeAgo.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = NSDateTimeAgo.bundle; sourceTree = "<group>"; };
@@ -1230,6 +1234,7 @@
 		CC8C7EB018E6F34D00E76AE8 /* external */ = {
 			isa = PBXGroup;
 			children = (
+				FA83970319BF1D0700F9F529 /* FXBlurView */,
 				665B460E19BD6F7A0087A9AA /* HockeySDKResources.bundle */,
 				665B460819BD6ADD0087A9AA /* HockeySDK.framework */,
 				FAAE9CD719A354F0007FB804 /* Toast */,
@@ -1490,6 +1495,15 @@
 			path = FMCreateFunnelViewControllers;
 			sourceTree = "<group>";
 		};
+		FA83970319BF1D0700F9F529 /* FXBlurView */ = {
+			isa = PBXGroup;
+			children = (
+				FA83970419BF1D0700F9F529 /* FXBlurView.h */,
+				FA83970519BF1D0700F9F529 /* FXBlurView.m */,
+			);
+			path = FXBlurView;
+			sourceTree = "<group>";
+		};
 		FA8A4AD7193D902B004890E3 /* NSDate+TimeAgo */ = {
 			isa = PBXGroup;
 			children = (
@@ -1737,6 +1751,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA83970619BF1D0700F9F529 /* FXBlurView.h in Headers */,
 				259ECEE419B9BA40001D7459 /* FMContactDetailViewController.h in Headers */,
 				FA6C493E19B6EE9500249134 /* FMCreateFunnlViewController.h in Headers */,
 				B72C2FB119A196E3000E5D5B /* RNBlurModalView.h in Headers */,
@@ -2186,6 +2201,7 @@
 				FA2C9BD1193EDFCB00866BEE /* MMDrawerBarButtonItem.m in Sources */,
 				D1EFF4AB198184C60031A1D1 /* AFImageRequestOperation.m in Sources */,
 				FA8DDA551933A6420049F83F /* TextFieldCell.m in Sources */,
+				FA83970719BF1D0700F9F529 /* FXBlurView.m in Sources */,
 				CC4263BA1934BB2000F3C5EB /* SQLiteDatabase.m in Sources */,
 				CC7F72F418E837C9008962C3 /* FilterViewCell.m in Sources */,
 				FAAF171A19863CDD00E877D4 /* NSData+ImageContentType.m in Sources */,
@@ -2582,7 +2598,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "764ce18d-57a7-4481-a456-37c77c7a5e4d";
+				PROVISIONING_PROFILE = "ec9b83cd-923e-494e-a961-8a80d9b42c47";
 				SDKROOT = iphoneos7.1;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
