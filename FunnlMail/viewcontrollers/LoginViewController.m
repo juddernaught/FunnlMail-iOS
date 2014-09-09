@@ -258,6 +258,8 @@ UIButton *loginButton;
         // Authentication failed
     } else {
         [[Mixpanel sharedInstance] track:@"Signed into email"]; // Signed into Gmail
+
+
         
         [NSObject cancelPreviousPerformRequestsWithTarget:[EmailService instance]];
         [[MessageService instance] clearAllTables];

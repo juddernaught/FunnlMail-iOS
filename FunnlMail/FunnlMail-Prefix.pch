@@ -28,7 +28,9 @@
 #define FUNNEL_NAME_BLANK @"Funnl name is empty."
 #define ADD_FUNNL @"#@New@#"
 #define ALL_FUNNL @"Primary"
-#define ALL_OTHER_FUNNL @"Secondary"
+#define ALL_OTHER_FUNNL @"All Other"
+#define ALL_OTHER_FUNNL_DISPLAY_NAME @"Secondary"
+
 #define EMPTY_DELIMITER @"#NOT#"
 #define HEIGHT [[UIScreen mainScreen] bounds].size.height
 #define WIDTH [[UIScreen mainScreen] bounds].size.width

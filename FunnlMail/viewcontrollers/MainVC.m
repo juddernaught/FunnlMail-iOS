@@ -105,7 +105,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     }
     else if (currentFilterModel &&  [currentFilterModel.funnelName isEqualToString:ALL_OTHER_FUNNL]) {
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveOtherMessagesThanPrimary];
-        self.navigationItem.title = currentFilterModel.funnelName;
+        self.navigationItem.title = ALL_OTHER_FUNNL_DISPLAY_NAME;
         //[self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xF7F7F7)];
         [[Mixpanel sharedInstance] track:@"Viewed 'All other' mail"];
     }
@@ -286,6 +286,10 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     if ([title.lowercaseString isEqualToString:[ALL_FUNNL lowercaseString]]) {
         self.navigationItem.title = ALL_FUNNL;
 //        navigationBarTitleLabel.text = @"All mails";
+    }
+    else if ([title.lowercaseString isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]) {
+        self.navigationItem.title = ALL_OTHER_FUNNL_DISPLAY_NAME;
+        //        navigationBarTitleLabel.text = @"All mails";
     }
     else {
         self.navigationItem.title = title;

@@ -20,6 +20,7 @@
 #import "MainVC.h"
 #import "RNBlurModalView.h"
 #import "MTStatusBarOverlay.h"
+#import <Mixpanel/Mixpanel.h>
 
 static EmailService *instance;
 
@@ -137,7 +138,7 @@ static NSString *currentFolder;
         [fv.tableView reloadData];
     });
 
-	
+    
     NSLog(@"checking account");
 	self.imapCheckOp = [self.imapSession checkAccountOperation];
     [self.imapSession disconnectOperation];
@@ -147,6 +148,10 @@ static NSString *currentFolder;
 		if (error == nil) {
             //[self performSelectorInBackground:@selector(checkMailsAtStart:) withObject:fv];
             [self performSelector:@selector(checkMailsAtStart:) withObject:fv afterDelay:0.3];
+            NSLog(@"--- Track Mixpanel Analytics ---");
+            AppDelegate *appDelegate = APPDELEGATE;
+            [appDelegate trackMixpanelAnalytics];
+
 		} else {
 			NSLog(@"error loading account: %@", error);
 		}

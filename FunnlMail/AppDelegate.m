@@ -162,6 +162,8 @@
     
     [[Mixpanel sharedInstance] track:@"Viewed intro overlay"];
     
+  
+    
     [showWelcomeOverlay addSubview:imageView];
     
     [showWelcomeOverlay addSubview: thing];
@@ -183,12 +185,52 @@
     
     [self.window addSubview:showWelcomeOverlay];
     [self.window bringSubviewToFront:showWelcomeOverlay];
-    
-    
+}
+
+
+-(void)trackMixpanelAnalytics{
+    EmailService *emailService = [EmailService instance];
+    if(emailService.userEmailID && emailService.userEmailID.length)
+    {
+        
+        NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjects:
+                                           [NSArray arrayWithObjects:emailService.userEmailID,emailService.currentName, nil]
+                                                                               forKeys:[NSArray arrayWithObjects:@"Email",@"Name", nil]];
+        [[Mixpanel sharedInstance] track:@"Signed In" properties:dictionary];
+        
+        NSMutableArray *allMessagesArray = (NSMutableArray*)[[MessageService instance] messagesAllTopMessages];
+        
+        if(allMessagesArray.count){
+            NSMutableArray *trackPrimaryArray = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
+            float primaryPercentage =  ((float)trackPrimaryArray.count /(float)allMessagesArray.count ) * 100;
+            NSMutableDictionary *trackPrimaryDictionary = [[NSMutableDictionary alloc] initWithObjects:
+                                                           [NSArray arrayWithObjects:emailService.userEmailID,[NSNumber numberWithInt:trackPrimaryArray.count], [NSNumber numberWithFloat:primaryPercentage], nil]
+                                                                                               forKeys:[NSArray arrayWithObjects:@"Email",@"PrimaryMailsCount",@"PrimaryPercentage", nil]];
+            [[Mixpanel sharedInstance] track:@"Total Number of Primary Mails" properties:trackPrimaryDictionary];
+            
+            
+            NSMutableArray *funnlArray  =  (NSMutableArray*)[[FunnelService instance] getFunnelsExceptAllFunnel];
+            NSMutableArray *totalNumberFunnlsArray = [[NSMutableArray alloc] init];
+            for (FunnelModel *f in funnlArray) {
+                NSMutableArray *tArray = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:f.funnelId top:20000];
+                [totalNumberFunnlsArray addObjectsFromArray:tArray];
+                
+            }
+            float funnlPercentage =   (float)( (float)totalNumberFunnlsArray.count / (float)allMessagesArray.count ) * 100;
+            NSMutableDictionary *trackFunnlDictionary = [[NSMutableDictionary alloc] initWithObjects:
+                                                         [NSArray arrayWithObjects:emailService.userEmailID,[NSNumber numberWithInt:funnlArray.count], [NSNumber numberWithInt:totalNumberFunnlsArray.count], [NSNumber numberWithFloat:funnlPercentage],nil]
+                                                                                             forKeys:[NSArray arrayWithObjects:@"Email",@"Total Funnls", @"Total Mails in Funnl",@"FunnlPercentage", nil]];
+            [[Mixpanel sharedInstance] track:@"Total Number of Funnl Mails" properties:trackFunnlDictionary];
+        }else{
+            
+        }
+        
+    }
 }
 
 -(IBAction)hideWelcomeOverlay:(id)sender{
     [showWelcomeOverlay removeFromSuperview];
+    [self trackMixpanelAnalytics];
 }
 
 
@@ -217,6 +259,7 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
+    
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     self.startDate = [NSDate date];
     isAlreadyRequestedRefreshToken = NO;
@@ -228,6 +271,13 @@
         if(!self.didLoginIn)
             self.didLoginIn = 0;
         [[EmailService instance] setIsfetchingOperationActive:NO];
+
+        EmailService *emailService = [EmailService instance];
+        if(emailService.userEmailID && emailService.userEmailID.length)
+        {
+            [self trackMixpanelAnalytics];
+        }
+            
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
             [self.loginViewController refreshAccessToken];
         });

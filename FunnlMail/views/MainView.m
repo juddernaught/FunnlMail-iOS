@@ -237,7 +237,13 @@ NSString *msgBody;
     //[cell.notificationButton addTarget:self action:@selector(notificationButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
       
       if (editOn) {
+          if( [fm.funnelName.lowercaseString isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]){
+              cell.filterTitle = ALL_OTHER_FUNNL_DISPLAY_NAME;
+          }
+          
+          
           if([fm.funnelName.lowercaseString isEqualToString:[ALL_FUNNL lowercaseString]] || [fm.funnelName.lowercaseString isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]){
+              
               [cell.notificationButton setHidden:YES];
               [cell.settingsButton setHidden:NO];
               [cell.shareButton setHidden:YES];
@@ -253,6 +259,10 @@ NSString *msgBody;
           }
       }
       else {
+          if( [fm.funnelName.lowercaseString isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]){
+              cell.filterTitle = ALL_OTHER_FUNNL_DISPLAY_NAME;
+          }
+          
           [cell.notificationButton setHidden:YES];
           [cell.settingsButton setHidden:YES];
           [cell.shareButton setHidden:YES];

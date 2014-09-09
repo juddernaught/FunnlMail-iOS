@@ -42,5 +42,6 @@
 @property (strong,nonatomic) UIButton* letsGo;
 @property BOOL funnelUpDated,internetAvailable;
 -(void)showWelcomeOverlay;
+-(void)trackMixpanelAnalytics;
 -(void)hideWelcomeOverlay:(id)sender;
 @end
