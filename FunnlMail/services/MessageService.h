@@ -42,6 +42,7 @@
 //newly added august 7. 2014. Pranav Herur
 -(NSArray *) retrieveMessages:(NSString *)folderName;
 -(NSArray *) retrieveNewestMessage:(NSString*)folderName;
-
 -(BOOL) clearAllTables;
+
+- (NSString *)latestSecondaryTT;
 @end

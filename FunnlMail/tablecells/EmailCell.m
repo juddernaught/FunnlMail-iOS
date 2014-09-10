@@ -13,9 +13,16 @@
 @implementation EmailCell
 @synthesize dateLabel,senderLabel,subjectLabel,bodyLabel,readLabel,threadLabel,detailDiscloser,labelNameText;
 @synthesize funnlLabel1,funnlLabel2,funnlLabel3;
+@synthesize backgroundImageView;
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier];
+    backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectMake(WIDTH - 120, 50 - 25, 120, 50)];
+    [backgroundImageView setBackgroundColor:[UIColor clearColor]];
+    [backgroundImageView setHidden:YES];
+    [backgroundImageView setImage:[UIImage imageNamed:@"swipeTutorial.png"]];
+    [self addSubview:backgroundImageView];
+    
     labelNameText = [[UILabel alloc] initWithFrame:CGRectMake(32, 96, 320 - 42, 20)];
     [labelNameText setBackgroundColor:[UIColor clearColor]];
     [labelNameText setTextAlignment:NSTextAlignmentRight];

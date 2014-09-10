@@ -203,6 +203,9 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [self filterSelected:(FunnelModel *)filterArray[sender.selectedSegmentIndex]];
     filterArray = nil;
     tempAppDelegate = nil;
+    if (sender.selectedSegmentIndex == 1) {
+        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"latest_tt_secondary"];
+    }
 }
 
 -(void)menuButtonSelected{
