@@ -597,6 +597,18 @@ static MessageService *instance;
     return array;
 }
 
+- (NSString *)latestSecondaryTT {
+//    SELECT messageID as maxID, date FROM messages where categoryName <> 'CATEGORY_PERSONAL' order by CAST(messageID as integer) desc LIMIT 1;
+    __block NSString *latestTTString = [[NSString alloc] init];
+    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *resultSet = [db executeQuery:@"SELECT messageID as maxID, date FROM messages where categoryName <> 'CATEGORY_PERSONAL' order by CAST(messageID as integer) desc LIMIT 1;" withParameterDictionary:nil];
+        while ([resultSet next]) {
+            latestTTString = [resultSet stringForColumn:@"date"];
+        }
+    }];
+    return latestTTString;
+}
+
 -(NSArray *) retrieveNewestMessage:(NSString*)folderName{
     NSMutableArray *array = [[NSMutableArray alloc] init];
     NSMutableDictionary *paramDict = [[NSMutableDictionary alloc] init];

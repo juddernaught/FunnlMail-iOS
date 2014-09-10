@@ -31,7 +31,7 @@
     self.view.backgroundColor = [UIColor colorWithHexString:@"F6F6F6"];
     self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
     self.pageController.dataSource = self;
-    images = @[@"intro slider 1.jpg", @"intro slider 2.jpg", @"intro slider 3.jpg", @"intro slider 4.jpg",@"intro slider 5.jpg"];
+    images = @[@"intro slider 1.jpg", @"intro slider 3.jpg", @"intro slider 4.jpg",@"intro slider 5.jpg"];
     PageContentVC *initialViewController = [self viewControllerAtIndex:0];
     NSArray *viewControllers = [NSArray arrayWithObject:initialViewController];
     self.pageController.view.frame = CGRectMake(0, 44, self.view.frame.size.width, self.view.frame.size.height-44); // Changed from (xx, 0 to 6, ...) by Chad

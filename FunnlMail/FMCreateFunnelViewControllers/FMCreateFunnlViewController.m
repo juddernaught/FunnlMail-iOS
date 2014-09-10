@@ -52,6 +52,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    suggestionArray = [[NSArray alloc] initWithObjects:@"Team", @"Clients", @"Friends & Family", @"Spam", @"Event", nil];
     randomColors = GRADIENT_ARRAY;
     subjectString = @"";
     enableNotification = TRUE;
@@ -88,7 +89,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-    
+    [funnelNameTextField becomeFirstResponder];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -99,6 +100,81 @@
 
 #pragma mark -
 #pragma mark Helper
+- (void)controllingSuggestionButton:(NSString *)buttonTitle {
+    NSArray *tempArray = [suggestionScroll subviews];
+    for (id tempView in tempArray) {
+        if ([tempView isKindOfClass:[UIButton class]]) {
+            UIButton *sampleButton = tempView;
+            if ([sampleButton.titleLabel.text.lowercaseString isEqualToString:buttonTitle.lowercaseString]) {
+                sampleButton.layer.borderColor = [[UIColor colorWithHexString:@"007AFF"] CGColor];
+                [sampleButton setTitleColor:[UIColor colorWithHexString:@"007AFF"] forState:UIControlStateNormal];
+            }
+            else {
+                sampleButton.layer.borderColor = [[UIColor whiteColor] CGColor];
+                [sampleButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            }
+        }
+    }
+}
+
+- (void)setUpSuggestionScrollView:(int)y {
+    UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, y + 5, WIDTH - 10, 20)];
+//    [sampleLabel setFont:[UIFont fontWithName:@"" size:12]];
+    [sampleLabel setFont:[UIFont systemFontOfSize:14]];
+    [sampleLabel setBackgroundColor:[UIColor clearColor]];
+    sampleLabel.tag = 30000;
+    sampleLabel.text = @"Suggestions";
+    [sampleLabel setTextColor:[UIColor whiteColor]];
+    [mainScrollView addSubview:sampleLabel];
+    sampleLabel = nil;
+    
+    int buttonx = 10;
+    suggestionScroll = [[UIScrollView alloc] initWithFrame:CGRectMake(0, y + 30, WIDTH, 70 - 25)];
+//    [sampleScrollView setBackgroundColor:[UIColor redColor]];
+    [suggestionScroll setUserInteractionEnabled:YES];
+    
+    int counter = 0;
+    
+    for (NSString *buttonTitle in suggestionArray) {
+        UIButton *sampleButton = [[UIButton alloc] initWithFrame:CGRectMake(buttonx, 5, [self getWidth:buttonTitle], 35)];
+        [sampleButton setTitle:buttonTitle forState:UIControlStateNormal];
+        sampleButton.clipsToBounds = YES;
+        [sampleButton.titleLabel setFont:[UIFont systemFontOfSize:16]];
+        sampleButton.layer.borderWidth = 1;
+        if ([funnelNameTextField.text isEqualToString:buttonTitle]) {
+            [sampleButton setTitleColor:[UIColor colorWithHexString:@"007AFF"] forState:UIControlStateNormal];
+            sampleButton.layer.borderColor = [[UIColor colorWithHexString:@"007AFF"] CGColor];
+        }
+        else {
+            [sampleButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            sampleButton.layer.borderColor = [[UIColor whiteColor] CGColor];
+        }
+        sampleButton.layer.cornerRadius = 7.0;
+        
+        sampleButton.tag = counter;
+        counter ++;
+        [sampleButton addTarget:self action:@selector(suggestionButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [suggestionScroll addSubview:sampleButton];
+        sampleButton = nil;
+        buttonx = buttonx + [self getWidth:buttonTitle] + 10;
+    }
+    //    [suggestionScroll setBounces:NO];
+    [suggestionScroll setShowsHorizontalScrollIndicator:NO];
+    [suggestionScroll setContentSize:CGSizeMake(buttonx, 70 - 25)];
+    [mainScrollView addSubview:suggestionScroll];
+}
+
+- (CGFloat)getWidth:(NSString *)buttonTitle {
+    CGSize myStringSize = [buttonTitle sizeWithFont:[UIFont systemFontOfSize:16] constrainedToSize:CGSizeMake(WIDTH, 30) lineBreakMode:NSLineBreakByWordWrapping];
+    //    CGSize maximumLabelSize = CGSizeMake(WIDTH, 30);
+    //    CGSize myStringSize = [buttonTitle boundingRectWithSize:maximumLabelSize
+    //                                                    options:NSStringDrawingUsesLineFragmentOrigin
+    //                                                 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:16]}
+    //                                                    context:nil];
+    return myStringSize.width + 20;
+}
+
 - (void)applyBackgroundImage {
     AppDelegate *tempAppDelegate = APPDELEGATE;
     UIGraphicsBeginImageContext(tempAppDelegate.window.bounds.size);
@@ -425,6 +501,10 @@
     [mainScrollView addSubview:sampleView];
     sampleView = nil;
     y = y + 40 + 1;
+    
+    [self setUpSuggestionScrollView:y];
+    
+    y = y + 70;
     
     sampleLAbel = [[UILabel alloc] initWithFrame:CGRectMake(10, y + 10, 300, 20)];
     sampleLAbel.text = @"Include People:";
@@ -1216,7 +1296,7 @@
 //        }];
         CGRect keyboardRect = [[[sender userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
         _keyboardHeight = keyboardRect.size.height > keyboardRect.size.width ? keyboardRect.size.width : keyboardRect.size.height;
-        autocompleteTableView.frame = CGRectMake(autocompleteTableView.frame.origin.x,50 + 20,autocompleteTableView.frame.size.width,HEIGHT - 70 - _keyboardHeight - 66);
+        autocompleteTableView.frame = CGRectMake(autocompleteTableView.frame.origin.x,50 + 20 + 70,autocompleteTableView.frame.size.width,HEIGHT - 70 - _keyboardHeight - 66);
     }
 }
 
@@ -1251,7 +1331,13 @@
             [addEmailButton setHidden:NO];
         }
     }
-    
+    else if (textField == funnelNameTextField) {
+        NSString *substring = [NSString stringWithString:textField.text];
+        substring = [substring stringByReplacingCharactersInRange:range withString:string];
+        [self controllingSuggestionButton:substring];
+        substring = nil;
+        
+    }
     return YES;
 }
 
@@ -1410,6 +1496,20 @@
 
 #pragma mark -
 #pragma mark Event Handler
+- (void)suggestionButtonPressed:(UIButton *)sender {
+    sender.layer.borderColor = [[UIColor colorWithHexString:@"007AFF"] CGColor];
+    [sender setTitleColor:[UIColor colorWithHexString:@"007AFF"] forState:UIControlStateNormal];
+    funnelNameTextField.text = [suggestionArray objectAtIndex:sender.tag];
+    NSArray *subView = [suggestionScroll subviews];
+    for (UIButton *tempButton in subView) {
+        if (![tempButton isEqual:sender] && [tempButton isKindOfClass:[UIButton class]]) {
+            tempButton.layer.borderColor = [[UIColor whiteColor] CGColor];
+            [tempButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        }
+    }
+}
+
+
 - (void)deleteFunnel {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Do you want to delete funnl?" message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
     [alertView show];
@@ -1504,19 +1604,19 @@
 - (void)bringViewDown {
     NSArray *subView = [mainScrollView subviews];
     for (UIView *tempView in subView) {
-        if (tempView.tag == 1000 || tempView.tag == 1001 || tempView.tag == 1002) {
+        if (tempView.tag == 1000 || tempView.tag == 1001 || tempView.tag == 1002 || [tempView isEqual:suggestionScroll] || tempView.tag == 30000) {
 
         }
         else {
             tempView.frame = CGRectMake(tempView.frame.origin.x, tempView.frame.origin.y + 30, tempView.frame.size.width, tempView.frame.size.height);
         }
     }
-    [mainScrollView setContentSize:CGSizeMake(WIDTH, mainScrollView.contentSize.height + 30)];
+    [mainScrollView setContentSize:CGSizeMake(WIDTH, mainScrollView.contentSize.height + 30 + 70)];
     if (additionalTextField) {
         [additionalTextField removeFromSuperview];
         additionalTextField = nil;
     }
-    additionalTextField = [[UITextField alloc] initWithFrame:CGRectMake(10, 50, 300, 20)];
+    additionalTextField = [[UITextField alloc] initWithFrame:CGRectMake(10, 50 + 70, 300, 20)];
     additionalTextField.keyboardType = UIKeyboardTypeEmailAddress;
     additionalTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [additionalTextField setTextColor:[UIColor whiteColor]];
@@ -1534,7 +1634,7 @@
         addEmailButton = nil;
     }
     
-    addEmailButton = [[UIButton alloc] initWithFrame:CGRectMake(WIDTH - 10 - 45, 50 + 10 - 45.0/2.0, 45, 45)];
+    addEmailButton = [[UIButton alloc] initWithFrame:CGRectMake(WIDTH - 10 - 45, 50 + 10 - 45.0/2.0 + 70, 45, 45)];
     [addEmailButton setImage:[UIImage imageNamed:@"addIcon_white_22x22.png"] forState:UIControlStateNormal];
     [mainScrollView addSubview:addEmailButton];
     [addEmailButton addTarget:self action:@selector(addSenderDirectly:) forControlEvents:UIControlEventTouchUpInside];
@@ -1542,7 +1642,7 @@
     
 //    addIcon_white_22x22
     seperatorAdditionalTextField = nil;
-    seperatorAdditionalTextField = [[UIView alloc] initWithFrame:CGRectMake(10, 50 + 25, 300, 1)];
+    seperatorAdditionalTextField = [[UIView alloc] initWithFrame:CGRectMake(10, 50 + 25 + 70, 300, 1)];
     [seperatorAdditionalTextField setBackgroundColor:[UIColor whiteColor]];
     [mainScrollView addSubview:seperatorAdditionalTextField];
 }
@@ -1826,6 +1926,7 @@
                 [appDelegate.progressHUD setHidden:YES];
                 [appDelegate.progressHUD removeFromSuperview];
                 [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                [MBProgressHUD hideAllHUDsForView:appDelegate.window animated:YES];
             }
             else if (validCode == 3) {
                 UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:FUNNEL_NAME_BLANK message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
@@ -1834,6 +1935,7 @@
                 [appDelegate.progressHUD setHidden:YES];
                 [appDelegate.progressHUD removeFromSuperview];
                 [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                [MBProgressHUD hideAllHUDsForView:appDelegate.window animated:YES];
             }
             return;
         }

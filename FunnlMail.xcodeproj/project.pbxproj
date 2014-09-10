@@ -210,6 +210,8 @@
 		FA83970219BEF33B00F9F529 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA83970019BEF33B00F9F529 /* TutorialViewController.m */; };
 		FA83970619BF1D0700F9F529 /* FXBlurView.h in Headers */ = {isa = PBXBuildFile; fileRef = FA83970419BF1D0700F9F529 /* FXBlurView.h */; };
 		FA83970719BF1D0700F9F529 /* FXBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA83970519BF1D0700F9F529 /* FXBlurView.m */; };
+		FA83971019C0804D00F9F529 /* swipeTutorial.png in Resources */ = {isa = PBXBuildFile; fileRef = FA83970E19C0804D00F9F529 /* swipeTutorial.png */; };
+		FA83971119C0804D00F9F529 /* swipeTutorial@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FA83970F19C0804D00F9F529 /* swipeTutorial@2x.png */; };
 		FA8A4ADB193D902B004890E3 /* NSDate+TimeAgo.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8A4AD9193D902B004890E3 /* NSDate+TimeAgo.m */; };
 		FA8A4ADC193D902B004890E3 /* NSDateTimeAgo.bundle in Resources */ = {isa = PBXBuildFile; fileRef = FA8A4ADA193D902B004890E3 /* NSDateTimeAgo.bundle */; };
 		FA8DDA551933A6420049F83F /* TextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8DDA541933A6420049F83F /* TextFieldCell.m */; };
@@ -688,6 +690,8 @@
 		FA83970019BEF33B00F9F529 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TutorialViewController.m; path = viewcontrollers/TutorialViewController.m; sourceTree = "<group>"; };
 		FA83970419BF1D0700F9F529 /* FXBlurView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXBlurView.h; sourceTree = "<group>"; };
 		FA83970519BF1D0700F9F529 /* FXBlurView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXBlurView.m; sourceTree = "<group>"; };
+		FA83970E19C0804D00F9F529 /* swipeTutorial.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = swipeTutorial.png; sourceTree = "<group>"; };
+		FA83970F19C0804D00F9F529 /* swipeTutorial@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipeTutorial@2x.png"; sourceTree = "<group>"; };
 		FA8A4AD8193D902B004890E3 /* NSDate+TimeAgo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+TimeAgo.h"; sourceTree = "<group>"; };
 		FA8A4AD9193D902B004890E3 /* NSDate+TimeAgo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+TimeAgo.m"; sourceTree = "<group>"; };
 		FA8A4ADA193D902B004890E3 /* NSDateTimeAgo.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = NSDateTimeAgo.bundle; sourceTree = "<group>"; };
@@ -1630,6 +1634,8 @@
 		FABAF02E1976507E00AA7918 /* Funnl */ = {
 			isa = PBXGroup;
 			children = (
+				FA83970E19C0804D00F9F529 /* swipeTutorial.png */,
+				FA83970F19C0804D00F9F529 /* swipeTutorial@2x.png */,
 				259ECEE619B9F232001D7459 /* userPlaceholder.png */,
 				259ECEE719B9F232001D7459 /* userPlaceholder@2x.png */,
 				FAE1EB2B19B74ADA001FF334 /* addIcon_white_22x22.png */,
@@ -1912,7 +1918,9 @@
 				FABAF07F1976507E00AA7918 /* Shopping.png in Resources */,
 				FA4A2E8A198A7E2C00CB9FAD /* menuIcon@2x.png in Resources */,
 				FAAE9CF219A38ADD007FB804 /* emailDetailViewForward@2x.png in Resources */,
+				FA83971119C0804D00F9F529 /* swipeTutorial@2x.png in Resources */,
 				FABAF0D21976629000AA7918 /* reply@2x.png in Resources */,
+				FA83971019C0804D00F9F529 /* swipeTutorial.png in Resources */,
 				FAE1EB3719B87620001FF334 /* logoutListIcon@2x.png in Resources */,
 				FABAF0951976507E00AA7918 /* archiveListIcon.png in Resources */,
 				FABAF0921976507E00AA7918 /* Share@2x.png in Resources */,

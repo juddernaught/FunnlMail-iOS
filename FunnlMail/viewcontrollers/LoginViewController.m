@@ -155,7 +155,7 @@ UIButton *loginButton;
     self.view.backgroundColor = [UIColor colorWithHexString:@"F6F6F6"];
     self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
     self.pageController.dataSource = self;
-    images = @[@"intro slider 1.jpg", @"intro slider 2.jpg", @"intro slider 3.jpg", @"intro slider 4.jpg",@"intro slider 5.jpg"];
+    images = @[@"intro slider 1.jpg", @"intro slider 3.jpg", @"intro slider 4.jpg",@"intro slider 5.jpg"];
     PageContentVC *initialViewController = [self viewControllerAtIndex:0];
     NSArray *viewControllers = [NSArray arrayWithObject:initialViewController];
     self.pageController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height); // Changed from (xx, 0 to 6, ...) by Chad
@@ -199,6 +199,10 @@ UIButton *loginButton;
                                                             keychainItemName:kKeychainItemName
                                                                     delegate:self
                                                             finishedSelector:@selector(viewController:finishedWithAuth:error:)];
+        //to adjust size of webview for login
+        viewController.view.frame = CGRectMake(0, 0, WIDTH, HEIGHT);
+        
+        //--end
         [self addChildViewController:viewController];
         [self.view addSubview:viewController.view];
     }

@@ -23,6 +23,7 @@
     UIButton *menuButton;
     UIButton *filterButton;
     UIButton *composeEmailButton;
+    UISegmentedControl *segmentControl;
 }
 @property (nonatomic, retain) MainView *mainView;
 @property (nonatomic, strong) EmailsTableViewController *emailsTableViewController;

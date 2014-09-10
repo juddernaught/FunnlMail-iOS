@@ -93,8 +93,8 @@
 //    imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"settingListIcon",@"alertListIcon",@"shareListIcon",@"sentListIcon", @"archiveListIcon",@"archiveListIcon", @"trashListIcon",@"emailListIcon",@"helpListIcon", @"helpListLogOutIcon",nil];
     
 
-    listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Send Feedback",@"Tutorials",@"Help (FAQs)",@"LogOut",nil];
-    imageArray = [[NSMutableArray alloc] initWithObjects:@"",@"sendFeedbackListIcon",@"helpListIcon",@"helpListIcon", @"logoutListIcon",nil];
+    listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Create Funnl",@"Send Feedback",@"Tutorials",@"Help (FAQs)",@"LogOut",nil];
+    imageArray = [[NSMutableArray alloc] initWithObjects:@"",@"funnlIcon",@"sendFeedbackListIcon",@"helpListIcon",@"helpListIcon", @"logoutListIcon",nil];
 
 }
 
@@ -115,6 +115,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)_cell forRowAtIndexPath:(NSIndexPath *)indexPath;{
+    
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -136,7 +137,15 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [cell setAccessoryType:UITableViewCellAccessoryNone];
 
-    cell.menuImage.image = [UIImage imageNamed:[imageArray objectAtIndex:indexPath.row]];
+    if ([[imageArray objectAtIndex:indexPath.row] isEqualToString:@"funnlIcon"]) {
+        UIImage *funnlIconImg = [UIImage imageNamed:@"funnlIcon.png"];
+        funnlIconImg = [funnlIconImg imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        cell.menuImage.image = funnlIconImg;
+        cell.menuImage.tintColor = [UIColor whiteColor];
+    }
+    else {
+        cell.menuImage.image = [UIImage imageNamed:[imageArray objectAtIndex:indexPath.row]];
+    }
     
     return cell;
 }
@@ -293,6 +302,11 @@
         }];
     }
 
+    else if ([cell.menuLabel.text isEqualToString:@"Create Funnl"]) {
+        appDelegate =APPDELEGATE;
+        appDelegate.loginViewController.mainViewController.emailsTableViewController.helpFlag = FALSE;
+        [appDelegate.loginViewController.mainViewController.emailsTableViewController helpButtonPressed:appDelegate.loginViewController.mainViewController.emailsTableViewController.helpButton];
+    }
     [appDelegate.drawerController closeDrawerAnimated:YES completion:nil];
 }
 

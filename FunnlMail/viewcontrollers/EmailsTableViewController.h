@@ -22,6 +22,8 @@
     UIView *filterNavigationView;
     UILabel *filterLabel;
     UISearchBar *mailSearchBar;
+    
+    
     UISearchDisplayController *searchDisplayController;
     NSArray *funnlArray;
     AppDelegate *tempAppDelegate;
@@ -37,7 +39,9 @@
 @public
     NSMutableArray *searchMessages;
 }
+@property (strong, nonatomic)UIButton *helpButton;
 @property BOOL isSearching;
+@property BOOL helpFlag;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property (nonatomic, strong) UITableViewController *tablecontroller;
 @property (nonatomic, strong) NSArray *messages;
@@ -51,4 +55,6 @@
 @property (nonatomic, strong) UIActivityIndicatorView *loadMoreActivityView;
 -(void) setFilterModel:(FunnelModel *)filterModel;
 - (void)resetSearchBar;
+- (UIView *)headerView;
+- (void)helpButtonPressed:(UIButton *)sender;
 @end

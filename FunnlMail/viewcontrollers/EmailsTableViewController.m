@@ -49,7 +49,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 @end
 
 @implementation EmailsTableViewController
-@synthesize tablecontroller,activityIndicator,isSearching;
+@synthesize tablecontroller,activityIndicator,isSearching,helpFlag,helpButton;
 UIView *greyView;
 
 #pragma mark -
@@ -183,7 +183,7 @@ UIView *greyView;
         MCOIMAPOperation *msgOperation = [[EmailService instance].imapSession storeFlagsOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:messageSelected.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagDeleted];
         [msgOperation start:^(NSError * error)
          {
-             NSLog(@"selected message flags %u UID is %u",messageSelected.flags,messageSelected.uid );
+//             NSLog(@"selected message flags %u UID is %u",messageSelected.flags,messageSelected.uid );
          }];
     }
     else {
@@ -253,7 +253,26 @@ UIView *greyView;
     mailSearchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 40)];
     mailSearchBar.delegate = self;
     mailSearchBar.placeholder = @"Search";
-    self.tableView.tableHeaderView = mailSearchBar;
+    self.tableView.tableHeaderView = [self headerView];
+}
+
+- (UIView *)headerView {
+    UIView *returnHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, 80)];
+    if (helpButton) {
+        helpButton = nil;
+    }
+    helpButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, WIDTH, 40)];
+    [helpButton setBackgroundColor:[UIColor whiteColor]];
+    [helpButton setTitle:HELP_COMMENT forState:UIControlStateNormal];
+    [helpButton setTitleColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE] forState:UIControlStateNormal];
+    [helpButton.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:18]];
+    [helpButton addTarget:self action:@selector(helpButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [returnHeaderView addSubview:helpButton];
+    
+    mailSearchBar.frame = CGRectMake(0, 40, WIDTH, 40);
+    [returnHeaderView addSubview:mailSearchBar];
+    
+    return returnHeaderView;
 }
 
 - (void)fetchLatestEmail
@@ -337,6 +356,12 @@ UIView *greyView;
         switch (indexPath.section){
             case 0:{
                 EmailCell *cell = [tableView dequeueReusableCellWithIdentifier:mailCellIdentifier forIndexPath:indexPath];
+                if (helpFlag && indexPath.row == 0) {
+                    [cell.backgroundImageView setHidden:NO];
+                }
+                else {
+                    [cell.backgroundImageView setHidden:YES];
+                }
                 if (tempCellForDisplay.tag == indexPath.row) {
                     tempCellForDisplay = nil;
                 }
@@ -596,7 +621,15 @@ UIView *greyView;
                 
                 [cell setSwipeGestureWithView:fullFunnlView color:fullFunnlColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
                     NSLog(@"Did swipe full cell, ");
-                    
+                    helpFlag = FALSE;
+                    if (indexPath.row == 0) {
+                        [[(EmailCell *)cell backgroundImageView] setHidden:YES];
+                    }
+                    else {
+                        EmailCell *tableViewCell = (EmailCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+                        [tableViewCell.backgroundImageView setHidden:YES];
+                    }
+                    self.tableView.tableHeaderView = [self headerView];
                     [[Mixpanel sharedInstance] track:@"Swiped an email right to left to add to Funnl"];
                     
                     [cell swipeToOriginWithCompletion:nil];
@@ -813,7 +846,7 @@ UIView *greyView;
                          [searchMessages removeObjectIdenticalTo:message];
                          [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
                          [tableView endUpdates];
-                         NSLog(@"selected message flags %u UID is %u",message.flags,message.uid );
+//                         NSLog(@"selected message flags %u UID is %u",message.flags,message.uid );
                      }];
                     [cell swipeToOriginWithCompletion:nil];
                 }];
@@ -974,7 +1007,7 @@ UIView *greyView;
     [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForItem:sender.tag inSection:0], nil] withRowAnimation:UITableViewRowAnimationLeft];
     [_tableView endUpdates];
     [_tableView reloadData];
-    NSLog(@"selected message flags %u UID is %u",message.flags,message.uid );
+//    NSLog(@"selected message flags %u UID is %u",message.flags,message.uid );
 }
 
 - (void)fullSwipe:(UIButton*)sender {
@@ -1040,7 +1073,7 @@ UIView *greyView;
         [[EmailService instance].messages removeObjectIdenticalTo:message];
         [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForItem:row inSection:0], nil] withRowAnimation:UITableViewRowAnimationLeft];
         [_tableView endUpdates];
-        NSLog(@"selected message flags %u UID is %u",message.flags,message.uid );
+//        NSLog(@"selected message flags %u UID is %u",message.flags,message.uid );
     }
 }
 
@@ -1345,6 +1378,42 @@ UIView *greyView;
 }
 
 #pragma mark Helpers
+- (void)helpButtonPressed:(UIButton *)sender {
+    if (sender == helpButton) {
+        if (!helpFlag) {
+            [helpButton setTitle:GUIDE_FOR_SWIPING_CELL forState:UIControlStateNormal];
+            if (isSearching == NO) {
+                if ([[[EmailService instance] filterMessages] count]) {
+                    EmailCell *tempCell = (EmailCell*)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+                    [tempCell.backgroundImageView setHidden:NO];
+                }
+            }
+            else {
+                if (searchMessages.count) {
+                    EmailCell *tempCell = (EmailCell*)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+                    [tempCell.backgroundImageView setHidden:NO];
+                }
+            }
+        }
+        else {
+            [helpButton setTitle:HELP_COMMENT forState:UIControlStateNormal];
+            if(isSearching == NO){
+                if ([[[EmailService instance] filterMessages] count]) {
+                    EmailCell *tempCell = (EmailCell*)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+                    [tempCell.backgroundImageView setHidden:YES];
+                }
+            }
+            else {
+                if ([searchMessages count]) {
+                    EmailCell *tempCell = (EmailCell*)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+                    [tempCell.backgroundImageView setHidden:YES];
+                }
+            }
+        }
+        helpFlag = !helpFlag;
+    }
+}
+
 - (UIView *)viewWithImageName:(NSString *)imageName {
     UIImage *image = [UIImage imageNamed:imageName];
     UIImageView *imageView = [[UIImageView alloc] init];
