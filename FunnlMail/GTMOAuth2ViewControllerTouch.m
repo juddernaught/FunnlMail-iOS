@@ -836,6 +836,13 @@ static Class gSignInClass = Nil;
                   kind:kGTMOAuth2WebViewFinished];
 
   NSString *title = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+
+    if([[title lowercaseString] hasPrefix:[@"Request for Permission" lowercaseString]]){
+        NSString* javascript = [NSString stringWithFormat:@"window.scrollBy(0, %d);", 1024];
+        [webView stringByEvaluatingJavaScriptFromString:javascript];
+
+    }
+    
   if ([title length] > 0) {
     [signIn_ titleChanged:title];
   } else {

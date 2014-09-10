@@ -201,6 +201,7 @@ UIButton *loginButton;
                                                             finishedSelector:@selector(viewController:finishedWithAuth:error:)];
         //to adjust size of webview for login
         viewController.view.frame = CGRectMake(0, 0, WIDTH, HEIGHT);
+        
         //--end
         [self addChildViewController:viewController];
         [self.view addSubview:viewController.view];
