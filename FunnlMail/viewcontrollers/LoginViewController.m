@@ -190,7 +190,7 @@ UIButton *loginButton;
         AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
         appDelegate.didLoginIn = @1;
 //        NSString *scope = @"https://mail.google.com/"; // scope for Gmail
-        NSString *scope = @"https://mail.google.com/ https://www.googleapis.com/auth/userinfo.profile https://www.google.com/m8/feeds https://www.googleapis.com/auth/gmail.readonly"; // scope for Gmail
+        NSString *scope = @"https://mail.google.com/ https://www.googleapis.com/auth/userinfo.profile https://www.google.com/m8/feeds "; // scope for Gmail https://www.googleapis.com/auth/gmail.readonly
 
         GTMOAuth2ViewControllerTouch *viewController;
         viewController = [[GTMOAuth2ViewControllerTouch alloc] initWithScope:scope
@@ -237,7 +237,7 @@ UIButton *loginButton;
     
     // pre-assigned by service
     
-   NSString *scope = @"https://mail.google.com/ https://www.googleapis.com/auth/userinfo.profile https://www.google.com/m8/feeds https://www.googleapis.com/auth/gmail.readonly"; // scope for Gmail
+   NSString *scope = @"https://mail.google.com/ https://www.googleapis.com/auth/userinfo.profile https://www.google.com/m8/feeds"; // scope for Gmail
     
     GTMOAuth2ViewControllerTouch *viewController;
     viewController = [[GTMOAuth2ViewControllerTouch alloc] initWithScope:scope
