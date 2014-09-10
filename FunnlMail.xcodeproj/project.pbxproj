@@ -2091,14 +2091,14 @@
 		};
 		D152BB6C1991454700058903 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
 			);
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "./Crashlytics.framework/run 44e1f44afdbcda726d1a42fdbbd770dff98bca43 18a23b6cf9f71652078f61f4882f069f5260c2fd639aafcda561fb68a4495dd5";
 		};

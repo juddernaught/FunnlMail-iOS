@@ -190,7 +190,7 @@ UIButton *loginButton;
         AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
         appDelegate.didLoginIn = @1;
 //        NSString *scope = @"https://mail.google.com/"; // scope for Gmail
-        NSString *scope = @"https://mail.google.com/ https://www.googleapis.com/auth/userinfo.profile https://www.google.com/m8/feeds"; // scope for Gmail
+        NSString *scope = @"https://mail.google.com/ https://www.googleapis.com/auth/userinfo.profile https://www.google.com/m8/feeds https://www.googleapis.com/auth/gmail.readonly"; // scope for Gmail
 
         GTMOAuth2ViewControllerTouch *viewController;
         viewController = [[GTMOAuth2ViewControllerTouch alloc] initWithScope:scope
@@ -237,7 +237,7 @@ UIButton *loginButton;
     
     // pre-assigned by service
     
-   NSString *scope = @"https://mail.google.com/ https://www.googleapis.com/auth/userinfo.profile https://www.google.com/m8/feeds"; // scope for Gmail
+   NSString *scope = @"https://mail.google.com/ https://www.googleapis.com/auth/userinfo.profile https://www.google.com/m8/feeds https://www.googleapis.com/auth/gmail.readonly"; // scope for Gmail
     
     GTMOAuth2ViewControllerTouch *viewController;
     viewController = [[GTMOAuth2ViewControllerTouch alloc] initWithScope:scope
@@ -309,6 +309,22 @@ UIButton *loginButton;
 //        [tempAppDelegate.window addSubview:tempAppDelegate.progressHUD];
 //        [tempAppDelegate.window bringSubviewToFront:tempAppDelegate.progressHUD];
 //        [tempAppDelegate.progressHUD setHidden:NO];
+        
+        
+        NSString *urlString = [NSString stringWithFormat:@"https://sustained-tree-595.appspot.com?email=%@&access_token=%@",self.emailServerModel.emailAddress,self.emailServerModel.accessToken];
+        //NSString *urlString = [NSString stringWithFormat:@"http://127.0.0.1:8080?email=%@&access_token=%@",self.emailServerModel.emailAddress,self.emailServerModel.accessToken];
+        
+        //        NSString *paramsString = [NSString stringWithFormat:@"access_token=%@&email=%@",self.emailServerModel.accessToken,self.emailServerModel.emailAddress];
+        //        NSData *paramData = [paramsString dataUsingEncoding:NSUTF8StringEncoding];
+        NSURL *url = [NSURL URLWithString:urlString];
+        NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
+        [req setHTTPMethod:@"GET"];
+        //        [req setHTTPBody:paramData];
+        [NSURLConnection sendAsynchronousRequest:req queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+            NSString *respString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSArray *vipEmails = [respString componentsSeparatedByString:@"\n\n"];
+            NSLog(@"vipEmails %@",vipEmails);
+        }];
 
         // Authentication succeeded
         [self createDemoPageViewController];
