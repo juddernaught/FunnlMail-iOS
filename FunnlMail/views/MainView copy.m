@@ -36,22 +36,20 @@ NSString *msgBody;
 {
   self = [super init];
   if (self) {
-//      UIGraphicsBeginImageContext(self.window.bounds.size);
-//      [self.window.layer renderInContext:UIGraphicsGetCurrentContext()];
-//      UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-//      UIGraphicsEndImageContext();
-//      NSData * data = UIImagePNGRepresentation(image);
-//      //[data writeToFile:@"foo.png" atomically:YES];
-//      backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
-//      [backgroundImageView setImage:[UIImage imageWithData:data]];
-//      [self addSubview:backgroundImageView];
-//
-//    FXBlurView *backgroundView = [[FXBlurView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
-//    backgroundView.blurRadius = 0.5;
-//    [self addSubview:backgroundView];
-//    [backgroundView setUserInteractionEnabled:YES];
-//    backgroundView = nil;
-
+      UIGraphicsBeginImageContext(self.window.bounds.size);
+      [self.window.layer renderInContext:UIGraphicsGetCurrentContext()];
+      UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+      UIGraphicsEndImageContext();
+      NSData * data = UIImagePNGRepresentation(image);
+      //[data writeToFile:@"foo.png" atomically:YES];
+      backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+      [backgroundImageView setImage:[UIImage imageWithData:data]];
+      [self addSubview:backgroundImageView];
+    FXBlurView *backgroundView = [[FXBlurView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+    backgroundView.blurRadius = 0.5;
+    [self addSubview:backgroundView];
+    [backgroundView setUserInteractionEnabled:YES];
+    backgroundView = nil;
     [self setup];
     [self setupViews];
     editOn = FALSE;
@@ -63,26 +61,26 @@ NSString *msgBody;
 {
     self = [super initWithFrame:frame];
     if (self) {
-//        UIGraphicsBeginImageContext(self.window.bounds.size);
-//        [self.window.layer renderInContext:UIGraphicsGetCurrentContext()];
-//        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-//        UIGraphicsEndImageContext();
-//        NSData * data = UIImagePNGRepresentation(image);
-//        if (backgroundImageView) {
-//            backgroundImageView = nil;
-//        }
-//        backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
-//        [backgroundImageView setImage:[UIImage imageWithData:data]];
-//        data = nil;
-//        [self addSubview:backgroundImageView];
-//        FXBlurView *backgroundView = [[FXBlurView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
-//        [backgroundView setBlurEnabled:YES];
-//        backgroundView.tintColor = [UIColor whiteColor];
-//        backgroundView.blurRadius = 10;
-//        [self addSubview:backgroundView];
-//        backgroundView = nil;
-//        [backgroundView setUserInteractionEnabled:YES];
-//        backgroundView = nil;
+        UIGraphicsBeginImageContext(self.window.bounds.size);
+        [self.window.layer renderInContext:UIGraphicsGetCurrentContext()];
+        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        NSData * data = UIImagePNGRepresentation(image);
+        if (backgroundImageView) {
+            backgroundImageView = nil;
+        }
+        backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+        [backgroundImageView setImage:[UIImage imageWithData:data]];
+        data = nil;
+        [self addSubview:backgroundImageView];
+        FXBlurView *backgroundView = [[FXBlurView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+        [backgroundView setBlurEnabled:YES];
+        backgroundView.tintColor = [UIColor blackColor];
+        backgroundView.blurRadius = 10;
+        [self addSubview:backgroundView];
+        backgroundView = nil;
+        [backgroundView setUserInteractionEnabled:YES];
+        backgroundView = nil;
         
         [self setup];
         [self setupViews];
@@ -100,16 +98,16 @@ NSString *msgBody;
     editOn = FALSE;
     [editButton setImage:[UIImage imageNamed:@"manage_Button"] forState:UIControlStateNormal];
     self.imapSession = [EmailService instance].imapSession;
-    filterArray = [[FunnelService instance] getFunnelsExceptAllFunnel];
+    filterArray = [[FunnelService instance] allFunnels];
     [self.collectionView reloadData];
 }
 
 - (void)setupViews
 {
-//    UIView *backGroundViewForAlpha = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
-//    [backGroundViewForAlpha setUserInteractionEnabled:YES];
-//    [backGroundViewForAlpha setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.7]];
-//    [self addSubview:backGroundViewForAlpha];
+    UIView *backGroundViewForAlpha = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+    [backGroundViewForAlpha setUserInteractionEnabled:YES];
+    [backGroundViewForAlpha setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.7]];
+    [self addSubview:backGroundViewForAlpha];
     
 	// Do any additional setup after loading the view.
     //inserting default @"All" filter
@@ -138,13 +136,13 @@ NSString *msgBody;
 //    [outterButton setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.5]];
     [outterButton setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.3]];
     [outterButton addTarget:self action:@selector(outterButtonClicked) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:outterButton];
-//    [backGroundViewForAlpha addSubview:outterButton];
+//    [self addSubview:outterButton];
+    [backGroundViewForAlpha addSubview:outterButton];
     
     UIView *headerView =[[UIView alloc] init];
     [headerView setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.3]];
-    [self addSubview:headerView];
-//    [backGroundViewForAlpha addSubview:headerView];
+//    [self addSubview:headerView];
+    [backGroundViewForAlpha addSubview:headerView];
     [headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.mas_top).with.offset(44);
         make.left.equalTo(self.mas_left).with.offset(0);
@@ -170,14 +168,14 @@ NSString *msgBody;
     layout.scrollDirection = UICollectionViewScrollDirectionVertical;
 
     self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
-//    [self.collectionView setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.3]];
+    [self.collectionView setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.3]];
     self.collectionView.backgroundColor = CLEAR_COLOR;
     self.collectionView.bounces = YES;
     self.collectionView.alwaysBounceVertical = YES;
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
-    [self addSubview:self.collectionView];
-//    [backGroundViewForAlpha addSubview:self.collectionView];
+//    [self addSubview:self.collectionView];
+    [backGroundViewForAlpha addSubview:self.collectionView];
 
     [self.collectionView registerClass:[MainFilterCell class] forCellWithReuseIdentifier:MAIN_FILTER_CELL];
     [self.collectionView registerClass:[MainFilterCell class] forCellWithReuseIdentifier:ADD_MAIN_FILTER_CELL];
@@ -196,8 +194,8 @@ NSString *msgBody;
     singleFingerTap.delegate = self;
     singleFingerTap.cancelsTouchesInView = NO;
     singleFingerTap.delaysTouchesEnded = NO;
-    [self addGestureRecognizer:singleFingerTap];
-//    [backGroundViewForAlpha addGestureRecognizer:singleFingerTap];
+//    [self addGestureRecognizer:singleFingerTap];
+    [backGroundViewForAlpha addGestureRecognizer:singleFingerTap];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
@@ -217,23 +215,23 @@ NSString *msgBody;
 - (void)handleSingleTap:(UITapGestureRecognizer *)recognizer {
     editOn = FALSE;
     [editButton setImage:[UIImage imageNamed:@"manage_Button"] forState:UIControlStateNormal];
-    [self setHidden:YES];
+//    [self setHidden:YES];
     
-//    [UIView animateWithDuration:ANIMATION_DURATION
-//                          delay:0.0
-//                        options: UIViewAnimationOptionCurveEaseInOut
-//                     animations:^{
-//                         self.transform = CGAffineTransformScale(CGAffineTransformIdentity, 2, 2);
-//                         self.alpha = 0;
-//                     }
-//                     completion:^(BOOL finished){
-//                         if(finished)
-//                         {
-//                             self.hidden = YES;
-//                             NSLog(@"Finished !!!!!");
-//                         }
-//                         // do any stuff here if you want
-//                     }];
+    [UIView animateWithDuration:ANIMATION_DURATION
+                          delay:0.0
+                        options: UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         self.transform = CGAffineTransformScale(CGAffineTransformIdentity, 2, 2);
+                         self.alpha = 0;
+                     }
+                     completion:^(BOOL finished){
+                         if(finished)
+                         {
+                             self.hidden = YES;
+                             NSLog(@"Finished !!!!!");
+                         }
+                         // do any stuff here if you want
+                     }];
 }
 
 - (void)editButtonPressed:(UIButton*)sender {
@@ -290,10 +288,6 @@ NSString *msgBody;
     //[cell.notificationButton addTarget:self action:@selector(notificationButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
       
       if (editOn) {
-          if( [fm.funnelName.lowercaseString isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]){
-              cell.filterTitle = ALL_OTHER_FUNNL_DISPLAY_NAME;
-          }
-          
           if([fm.funnelName.lowercaseString isEqualToString:[ALL_FUNNL lowercaseString]] || [fm.funnelName.lowercaseString isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]){
               [cell.notificationButton setHidden:YES];
               [cell.settingsButton setHidden:NO];
@@ -310,10 +304,6 @@ NSString *msgBody;
           }
       }
       else {
-          if( [fm.funnelName.lowercaseString isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]){
-              cell.filterTitle = ALL_OTHER_FUNNL_DISPLAY_NAME;
-          }
-          
           [cell.notificationButton setHidden:YES];
           [cell.settingsButton setHidden:YES];
           [cell.shareButton setHidden:YES];

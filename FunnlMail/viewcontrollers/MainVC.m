@@ -59,7 +59,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     emailsTableViewController.emailFolder = INBOX;
     if([app.currentFunnelString.lowercaseString isEqualToString:[ALL_FUNNL lowercaseString]])
     {
-         [self setTitle:ALL_FUNNL];
+//         [self setTitle:ALL_FUNNL];
     }
     else
     {
@@ -73,6 +73,10 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 {
 
     [super viewDidLoad];
+    segmentControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Primary", @"Secondary", nil]];
+    [segmentControl addTarget:self action:@selector(segmentControllerClicked:) forControlEvents:UIControlEventValueChanged];
+    [segmentControl setSelectedSegmentIndex:0];
+    [self.navigationItem setTitleView:segmentControl];
     self.view.backgroundColor = [UIColor whiteColor];
     mainView = [[MainView alloc] initWithFrame:CGRectMake(0, 20, WIDTH, HEIGHT+40)];
     mainView.hidden = YES;
@@ -190,6 +194,17 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 #pragma mark -
 #pragma mark Event-Handler
+
+- (void)segmentControllerClicked:(UISegmentedControl*)sender {
+    AppDelegate *tempAppDelegate = APPDELEGATE;
+    NSArray *filterArray = [[FunnelService instance] allFunnels];
+    tempAppDelegate.currentFunnelString = [[(FunnelModel *)filterArray[sender.selectedSegmentIndex] funnelName] lowercaseString];
+    tempAppDelegate.currentFunnelDS = (FunnelModel *)filterArray[sender.selectedSegmentIndex];
+    [self filterSelected:(FunnelModel *)filterArray[sender.selectedSegmentIndex]];
+    filterArray = nil;
+    tempAppDelegate = nil;
+}
+
 -(void)menuButtonSelected{
     NSLog(@"Menu button selected");
     [[Mixpanel sharedInstance] track:@"Tapped on Left menu bar button"];
@@ -199,7 +214,10 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 }
 
-
+- (void)bacButtonSelected {
+    [segmentControl setSelectedSegmentIndex:0];
+    [self segmentControllerClicked:segmentControl];
+}
 
 -(void) filterButtonSelected{
     [[Mixpanel sharedInstance] track:@"Tapped on Funnl button"];
@@ -287,15 +305,26 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 {
     if ([title.lowercaseString isEqualToString:[ALL_FUNNL lowercaseString]]) {
         self.navigationItem.title = ALL_FUNNL;
+        [self.navigationItem setTitleView:segmentControl];
 //        navigationBarTitleLabel.text = @"All mails";
+        segmentControl.hidden = NO;
     }
     else if ([title.lowercaseString isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]) {
         self.navigationItem.title = ALL_OTHER_FUNNL_DISPLAY_NAME;
         //        navigationBarTitleLabel.text = @"All mails";
+        [self.navigationItem setTitleView:segmentControl];
+        segmentControl.hidden = NO;
     }
     else {
         self.navigationItem.title = title;
-//        navigationBarTitleLabel.text = title;
+        UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 30)];
+        sampleLabel.text = title;
+        [sampleLabel setTextAlignment:NSTextAlignmentCenter];
+        [sampleLabel setTextColor:[UIColor colorWithHexString:currentFilterModel.funnelColor]];
+        [self.navigationItem setTitleView:sampleLabel];
+        sampleLabel = nil;
+        [self.navigationItem setTitle:title];
+        segmentControl.hidden = YES;
     }
 }
 
@@ -324,11 +353,34 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     if ([filterModel.funnelName isEqualToString:ALL_FUNNL]) {
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
 //        [self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xF7F7F7)];
+//        UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
+//        self.navigationItem.leftBarButtonItem = leftItem;
+//        [menuButton removeTarget:self action:@selector(bacButtonSelected) forControlEvents:UIControlEventTouchUpInside];
+//        [menuButton setTitle:@"Primary" forState:UIControlStateNormal];
+//        [menuButton addTarget:self action:@selector(menuButtonSelected) forControlEvents:UIControlEventTouchUpInside];
+        
+        menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [menuButton addTarget:self action:@selector(menuButtonSelected) forControlEvents:UIControlEventTouchUpInside];
+        menuButton.frame = CGRectMake(0, 0, 20, 15);
+        UIImage *menuIconImg = [UIImage imageNamed:@"menuIcon.png"];
+        menuIconImg = [menuIconImg imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        [menuButton setImage:menuIconImg forState:UIControlStateNormal];
+        UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
+        self.navigationItem.leftBarButtonItem = leftItem;
     }
     else if ([filterModel.funnelName isEqualToString:ALL_OTHER_FUNNL]) {
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveOtherMessagesThanPrimary];
         [[Mixpanel sharedInstance] track:@"Viewed 'All other' mail"];
 //        [self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xF7F7F7)];
+        
+        menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [menuButton addTarget:self action:@selector(menuButtonSelected) forControlEvents:UIControlEventTouchUpInside];
+        menuButton.frame = CGRectMake(0, 0, 20, 15);
+        UIImage *menuIconImg = [UIImage imageNamed:@"menuIcon.png"];
+        menuIconImg = [menuIconImg imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        [menuButton setImage:menuIconImg forState:UIControlStateNormal];
+        UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
+        self.navigationItem.leftBarButtonItem = leftItem;
     }
     else
     {
@@ -340,6 +392,20 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 //        [self.navigationController.navigationBar setBarTintColor:[UIColor colorWithHexString:filterModel.funnelColor]];
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:filterModel.funnelId top:2000];
+        
+//        [menuButton removeTarget:self action:@selector(menuButtonSelected) forControlEvents:UIControlEventTouchUpInside];
+//        [menuButton setTitle:@"Primary" forState:UIControlStateNormal];
+//        [menuButton addTarget:self action:@selector(bacButtonSelected) forControlEvents:UIControlEventTouchUpInside];
+        menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        menuButton.tintColor = [UIColor colorWithHexString:filterModel.funnelColor];
+        [menuButton addTarget:self action:@selector(bacButtonSelected) forControlEvents:UIControlEventTouchUpInside];
+        menuButton.frame = CGRectMake(10, 0, 45, 45);
+        UIImage *menuIconImg = [UIImage imageNamed:@"backArrow.png"];
+        menuIconImg = [menuIconImg imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        [menuButton setImage:menuIconImg forState:UIControlStateNormal];
+        [menuButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+        UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
+        self.navigationItem.leftBarButtonItem = leftItem;
     }
     [self setFilterTitle:filterModel.funnelName];
     [emailsTableViewController.tableView reloadData];
