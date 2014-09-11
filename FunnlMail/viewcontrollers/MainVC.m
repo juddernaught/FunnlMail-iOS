@@ -32,6 +32,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 @implementation MainVC
 @synthesize mainView,emailsTableViewController;
+@synthesize segmentControl;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -111,7 +112,9 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveOtherMessagesThanPrimary];
         self.navigationItem.title = ALL_OTHER_FUNNL_DISPLAY_NAME;
         //[self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xF7F7F7)];
+#ifdef TRACK_MIXPANEL
         [[Mixpanel sharedInstance] track:@"Viewed 'All other' mail"];
+#endif
     }
     else if(currentFilterModel)
     {
@@ -143,6 +146,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [menuButton addTarget:self action:@selector(menuButtonSelected) forControlEvents:UIControlEventTouchUpInside];
     menuButton.frame = CGRectMake(0, 0, 20, 15);
+    menuButton.contentEdgeInsets = (UIEdgeInsets){.left= 0};
     UIImage *menuIconImg = [UIImage imageNamed:@"menuIcon.png"];
     menuIconImg = [menuIconImg imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     [menuButton setImage:menuIconImg forState:UIControlStateNormal];
@@ -190,7 +194,23 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     //[[EmailService instance] startLogin:emailsTableViewController];
 }
 
+- (void)settingTitleToButton {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSMutableAttributedString *attString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@",@""]];
+        [emailsTableViewController.helpButton setAttributedTitle:attString forState:UIControlStateNormal];
+        [emailsTableViewController.helpButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentCenter];
 
+
+        if (emailsTableViewController.helpFlag) {
+            [emailsTableViewController.helpButton setTitle:GUIDE_FOR_SWIPING_CELL forState:UIControlStateNormal];
+        }
+        else {
+            [emailsTableViewController.helpButton setTitle:HELP_COMMENT forState:UIControlStateNormal];
+        }
+        [emailsTableViewController.helpButton setNeedsDisplay];
+        [emailsTableViewController.helpButton setNeedsLayout];
+    });
+}
 
 #pragma mark -
 #pragma mark Event-Handler
@@ -204,13 +224,29 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     filterArray = nil;
     tempAppDelegate = nil;
     if (sender.selectedSegmentIndex == 1) {
-        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"latest_tt_secondary"];
+        [[NSUserDefaults standardUserDefaults] setObject:[[MessageService instance] latestSecondaryTT] forKey:@"latest_tt_secondary"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            //Your main thread code goes in here
+//            [emailsTableViewController.helpButton setTitle:HELP_COMMENT forState:UIControlStateNormal];
+//        });
+        [self performSelector:@selector(settingTitleToButton) withObject:nil afterDelay:0.01];
+    }
+    else if (sender.selectedSegmentIndex == 0) {
+//        NSMutableString *tempArray1 = [[EmailService instance] retrieveSecondaryAfterStoredTT];
+//        if (tempArray1.length > 2) {
+//            NSString *displayString = [tempArray1 substringWithRange:NSMakeRange(0, tempArray1.length - 2)];
+//            NSLog(@"%@",displayString);
+//            [emailsTableViewController.helpButton setTitle:displayString forState:UIControlStateNormal];
+//        }
     }
 }
 
 -(void)menuButtonSelected{
     NSLog(@"Menu button selected");
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Tapped on Left menu bar button"];
+#endif
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 //    [appDelegate.drawerController openDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
     [appDelegate.drawerController toggleDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
@@ -223,7 +259,9 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 }
 
 -(void) filterButtonSelected{
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Tapped on Funnl button"];
+#endif
     AppDelegate *tempAppDelegate = APPDELEGATE;
 //    if (tempAppDelegate.funnelUpDated) {
 //        tempAppDelegate.funnelUpDated = FALSE;
@@ -247,8 +285,8 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
         
         if (tempAppDelegate.didLoginIn) {
             tempAppDelegate.didLoginIn = 0;
-            RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Funnl Time!" message:@"Tap on any Funnl to view emails under that Funnl or press 'Manage' to view/change Funnl Settings"];
-            [modal show];
+//            RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Funnl Time!" message:@"Tap on any Funnl to view emails under that Funnl or press 'Manage' to view/change Funnl Settings"];
+//            [modal show];
         }
     }else{
         [self hideMainView];
@@ -283,7 +321,9 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 -(void) composeEmailButtonSelected{
     NSLog(@"Compose Email selected");
     
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Tapped on compose email"];
+#endif
     
     mainView.hidden = YES;
     
@@ -364,6 +404,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
         
         menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [menuButton addTarget:self action:@selector(menuButtonSelected) forControlEvents:UIControlEventTouchUpInside];
+        menuButton.contentEdgeInsets = (UIEdgeInsets){.left= 0};
         menuButton.frame = CGRectMake(0, 0, 20, 15);
         UIImage *menuIconImg = [UIImage imageNamed:@"menuIcon.png"];
         menuIconImg = [menuIconImg imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
@@ -373,10 +414,13 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     }
     else if ([filterModel.funnelName isEqualToString:ALL_OTHER_FUNNL]) {
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveOtherMessagesThanPrimary];
+#ifdef TRACK_MIXPANEL
         [[Mixpanel sharedInstance] track:@"Viewed 'All other' mail"];
+#endif
 //        [self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xF7F7F7)];
         
         menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        menuButton.contentEdgeInsets = (UIEdgeInsets){.left= 0};
         [menuButton addTarget:self action:@selector(menuButtonSelected) forControlEvents:UIControlEventTouchUpInside];
         menuButton.frame = CGRectMake(0, 0, 20, 15);
         UIImage *menuIconImg = [UIImage imageNamed:@"menuIcon.png"];
@@ -402,10 +446,11 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
         menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
         menuButton.tintColor = [UIColor colorWithHexString:filterModel.funnelColor];
         [menuButton addTarget:self action:@selector(bacButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-        menuButton.frame = CGRectMake(10, 0, 45, 45);
-        UIImage *menuIconImg = [UIImage imageNamed:@"backArrow.png"];
+        menuButton.frame = CGRectMake(0, 0, 100, 30);
+        UIImage *menuIconImg = [UIImage imageNamed:@"primaryBackButton.png"];
         menuIconImg = [menuIconImg imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         [menuButton setImage:menuIconImg forState:UIControlStateNormal];
+        menuButton.contentEdgeInsets = (UIEdgeInsets){.left=-15};
         [menuButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
         UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
         self.navigationItem.leftBarButtonItem = leftItem;

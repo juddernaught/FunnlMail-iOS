@@ -791,7 +791,9 @@ NSMutableArray *emailArr,*searchArray;
 
 -(void)deleteButtonClicked:(id)sender{
     
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Deleted a Funnl (from settings page)"];
+#endif
     
     // if there are webhooks created, delete webhooks first
     if ([oldModel.webhookIds length]) {
@@ -835,7 +837,9 @@ NSMutableArray *emailArr,*searchArray;
             [self deleteOperation];
         });
     }
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Funnl deleteButton pressed"];
+#endif
 }
 
 - (void)deleteOperation {
@@ -1050,7 +1054,9 @@ NSMutableArray *emailArr,*searchArray;
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     NSLog(@"Save Butoon pressed");
     
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Created a new Funnl or modified existing Funnl"];
+#endif
     
     
     if(activeField){

@@ -1517,7 +1517,9 @@
 }
 
 - (void)deleteFunnel:(UIButton *)sender {
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Deleted a Funnl (from settings page)"];
+#endif
     
     // if there are webhooks created, delete webhooks first
     if ([oldModel.webhookIds length]) {
@@ -1561,7 +1563,9 @@
             [self deleteOperation];
         });
     }
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Funnl deleteButton pressed"];
+#endif
 }
 
 - (void)deleteOperation {
@@ -1913,7 +1917,9 @@
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     NSLog(@"Save Butoon pressed");
     
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Created a new Funnl or modified existing Funnl"];
+#endif
     
     NSString *funnlName = funnelNameTextField.text;
     if(funnelNameTextField.text.length){

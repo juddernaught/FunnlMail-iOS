@@ -38,7 +38,10 @@
     // MixPanel setup
     //[[CIOExampleAPIClient sharedClient] clearCredentials];
     [Mixpanel sharedInstanceWithToken:@"08b1e55d72f1b22a8e5696c2b56a6777"];
+
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Launched App"]; //Launched app
+#endif
     // Parse setup
     //[Parse setApplicationId:@"oXAOrMLIRzLNZh50VZ3sk3LBEfUuNDXuLZVBvHdV" clientKey:@"Z5mFEsiX7xTXYlKYKXMbN2zlqqf97l39E0PzZoZg"];
     [Parse setApplicationId:@"qRBmYEJxZ6xOYq2Z6UZuz3nqcuy14DxTV63gWnb4" clientKey:@"ZPCELYRnO4YOnm2nXw8J9Y34poNsMvgGuWzPw1rV"];
@@ -166,7 +169,9 @@
     UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"welcome.png"]];
     imageView.frame = CGRectMake(0, 110, WIDTH, HEIGHT-110);
     
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Viewed intro overlay"];
+#endif
     
   
     
@@ -236,7 +241,9 @@
 
 -(IBAction)hideWelcomeOverlay:(id)sender{
     [showWelcomeOverlay removeFromSuperview];
+#ifdef TRACK_MIXPANEL
     [self trackMixpanelAnalytics];
+#endif
 }
 
 
@@ -308,7 +315,9 @@
     float minutes = (ti / 60);
     float time2 = (float)(secondsInDecimal/60) + minutes;
     NSLog(@"Time: %@",[NSString stringWithFormat:@"%02f + %02f = %02f", minutes, (secondsInDecimal/60), time2]);
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Time Open" properties:@{@"Time": [NSString stringWithFormat:@"%02f", time2]}];
+#endif
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken

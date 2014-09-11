@@ -49,7 +49,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 @end
 
 @implementation EmailsTableViewController
-@synthesize tablecontroller,activityIndicator,isSearching,helpFlag,helpButton;
+@synthesize tablecontroller,activityIndicator,isSearching,helpFlag,helpButton,displayStirng,disclosureArrow;
 UIView *greyView;
 
 #pragma mark -
@@ -258,18 +258,39 @@ UIView *greyView;
 
 - (UIView *)headerView {
     UIView *returnHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, 80)];
-    if (helpButton) {
-        helpButton = nil;
+    
+    if (!helpButton) {
+        [helpButton removeFromSuperview];
+        helpButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, WIDTH, 40)];
     }
-    helpButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, WIDTH, 40)];
-    [helpButton setBackgroundColor:[UIColor whiteColor]];
-    [helpButton setTitle:HELP_COMMENT forState:UIControlStateNormal];
+    
+    UIImage *nextImage = [UIImage imageNamed:@"nextImage.png"];
+    nextImage = [nextImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    disclosureArrow = [[UIImageView alloc] initWithFrame:CGRectMake(WIDTH - 10 - 24, 20 - 12, 24, 24)];
+    [disclosureArrow setImage:nextImage];
+    disclosureArrow.tintColor = UIColorFromRGB(0x007AFF);
+    nextImage = nil;
+ 
+    
+    [helpButton setBackgroundColor:[UIColor clearColor]];
+    if (!helpFlag) {
+        disclosureArrow.hidden = NO;
+        [helpButton setTitle:HELP_COMMENT forState:UIControlStateNormal];
+    }
+    else {
+        disclosureArrow.hidden = YES;
+        [helpButton setTitle:GUIDE_FOR_SWIPING_CELL forState:UIControlStateNormal];
+    }
     [helpButton setTitleColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE] forState:UIControlStateNormal];
     [helpButton.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:18]];
     [helpButton addTarget:self action:@selector(helpButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [helpButton removeFromSuperview];
+    [returnHeaderView addSubview:disclosureArrow];
     [returnHeaderView addSubview:helpButton];
     
+    
     mailSearchBar.frame = CGRectMake(0, 40, WIDTH, 40);
+    mailSearchBar.showsScopeBar = NO;
     [returnHeaderView addSubview:mailSearchBar];
     
     return returnHeaderView;
@@ -352,6 +373,13 @@ UIView *greyView;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (helpFlag) {
+        disclosureArrow.hidden = YES;
+    }
+    else {
+        disclosureArrow.hidden = NO;
+    }
+    
     if(isSearching == NO){
         switch (indexPath.section){
             case 0:{
@@ -582,7 +610,9 @@ UIView *greyView;
                 
                 
                 [cell setSwipeGestureWithView:archiveView color:yellowColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+#ifdef TRACK_MIXPANEL
                     [[Mixpanel sharedInstance] track:@" Swiped an email left to right for Archive "];
+#endif
                     NSLog(@"Did swipe \"Archive\" cell");
                     NSIndexPath *deleteIndexPath = [tableView indexPathForCell:cell];
                     selectedIndexPath = deleteIndexPath;
@@ -601,7 +631,9 @@ UIView *greyView;
                 
                 
                 [cell setSwipeGestureWithView:trashView color:redColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState2 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+#ifdef TRACK_MIXPANEL
                     [[Mixpanel sharedInstance] track:@"Swiped an email left to right for Trash"];
+#endif
                     NSLog(@"Did swipe \"Trash\" cell");
                     NSIndexPath *deleteIndexPath = [tableView indexPathForCell:cell];
                     selectedIndexPath = deleteIndexPath;
@@ -630,15 +662,17 @@ UIView *greyView;
                         [tableViewCell.backgroundImageView setHidden:YES];
                     }
                     self.tableView.tableHeaderView = [self headerView];
+#ifdef TRACK_MIXPANEL
                     [[Mixpanel sharedInstance] track:@"Swiped an email right to left to add to Funnl"];
+#endif
                     
                     [cell swipeToOriginWithCompletion:nil];
                     MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
                     FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:YES withMessageId:uidKey withMessage:message subViewOnViewController:self];
                     funnlPopUpView.mainVCdelegate = self.mainVCdelegate;
                     if ([FunnelService instance].allFunnels.count < 4){
-                        RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Hello Funnler!" message:@"Funnls help you to filter out emails from important senders – you can add multiple senders to a Funnl (eg. team) or create a new Funnl for key senders (eg. boss)"];
-                        [modal show];
+//                        RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Hello Funnler!" message:@"Funnls help you to filter out emails from important senders – you can add multiple senders to a Funnl (eg. team) or create a new Funnl for key senders (eg. boss)"];
+//                        [modal show];
                     }
                     [self.view addSubview:funnlPopUpView];
                     /*funnlPopUpView.alpha = 0;
@@ -834,7 +868,9 @@ UIView *greyView;
                 
                 [cell setSwipeGestureWithView:archiveView color:yellowColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
                     
+#ifdef TRACK_MIXPANEL
                     [[Mixpanel sharedInstance] track:@"Swiped an email left to right for Archive"];
+#endif
                     
                     NSLog(@"Did swipe \"Archive\" cell");
                     MCOIMAPOperation *msgOperation = [[EmailService instance].imapSession storeFlagsOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:message.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagDeleted];
@@ -854,7 +890,9 @@ UIView *greyView;
                 
                 [cell setSwipeGestureWithView:fullFunnlView color:fullFunnlColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
                     NSLog(@"Did swipe full cell, -----");
+#ifdef TRACK_MIXPANEL
                     [[Mixpanel sharedInstance] track:@"Add email to Funnl"];
+#endif
                     [cell swipeToOriginWithCompletion:nil];
                     MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)searchMessages[indexPath.row] messageJSON]];
                     FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:YES withMessageId:uidKey withMessage:message subViewOnViewController:self];
@@ -997,7 +1035,9 @@ UIView *greyView;
 
 - (void)leftSwip:(UIButton*)sender {
     NSLog(@"in [leftSwip]");
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"left swipe: Archive"];
+#endif
     MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[sender.tag] messageJSON]];
     
     [_tableView beginUpdates];
@@ -1013,7 +1053,9 @@ UIView *greyView;
 - (void)fullSwipe:(UIButton*)sender {
     [_tableView reloadData];
     NSLog(@"in [fullSwipe]");
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"fullSwipe: add to funnl pressed"];
+#endif
     MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[sender.tag] messageJSON]];
     FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:YES withMessageId:[NSString stringWithFormat:@"%d",message.uid] withMessage:message subViewOnViewController:self];
     funnlPopUpView.mainVCdelegate = self.mainVCdelegate;
@@ -1023,7 +1065,9 @@ UIView *greyView;
 - (void)halfSwipe:(UIButton*)sender {
     [_tableView reloadData];
     NSLog(@"in [halfSwipe]");
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"halfSwipe"];
+#endif
     MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[sender.tag] messageJSON]];
     if ([[FunnelService instance] allFunnels].count > 1) {
         FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:NO withMessageId:[NSString stringWithFormat:@"%d",message.uid] withMessage:nil subViewOnViewController:self];
@@ -1041,7 +1085,9 @@ UIView *greyView;
 #pragma mark -
 #pragma mark didPressDelete
 - (void)didPressMore:(UIButton*)sender {
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"User Loaded more emails"];
+#endif
     MCOIMAPMessage *message = nil;
     int row = 0;
     if (sender.tag < 100000) {
@@ -1095,7 +1141,9 @@ UIView *greyView;
         {
             case 0:
             {
+#ifdef TRACK_MIXPANEL
                 [[Mixpanel sharedInstance] track:@"User Viewed Email"];
+#endif
                 MCOIMAPMessage *msg = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
                 //MsgViewController *vc = [[MsgViewController alloc] init];
                 MCTMsgViewController *vc = [[MCTMsgViewController alloc] init];
@@ -1159,7 +1207,9 @@ UIView *greyView;
             }
         }
         else {
+#ifdef TRACK_MIXPANEL
             [[Mixpanel sharedInstance] track:@"User viewed email"];
+#endif
             MCOIMAPMessage *msg = [MCOIMAPMessage importSerializable:[(MessageModel*)searchMessages[indexPath.row] messageJSON]];
             //MsgViewController *vc = [[MsgViewController alloc] init];
             MCTMsgViewController *vc = [[MCTMsgViewController alloc] init];
@@ -1379,8 +1429,10 @@ UIView *greyView;
 
 #pragma mark Helpers
 - (void)helpButtonPressed:(UIButton *)sender {
-    if (sender == helpButton) {
+    if (sender == helpButton && ([sender.titleLabel.text isEqualToString:GUIDE_FOR_SWIPING_CELL] || [sender.titleLabel.text isEqualToString:HELP_COMMENT])) {
         if (!helpFlag) {
+            disclosureArrow.hidden = YES;
+
             [helpButton setTitle:GUIDE_FOR_SWIPING_CELL forState:UIControlStateNormal];
             if (isSearching == NO) {
                 if ([[[EmailService instance] filterMessages] count]) {
@@ -1396,6 +1448,8 @@ UIView *greyView;
             }
         }
         else {
+            disclosureArrow.hidden = NO;
+            
             [helpButton setTitle:HELP_COMMENT forState:UIControlStateNormal];
             if(isSearching == NO){
                 if ([[[EmailService instance] filterMessages] count]) {
@@ -1411,6 +1465,14 @@ UIView *greyView;
             }
         }
         helpFlag = !helpFlag;
+    }
+    else {
+        disclosureArrow.hidden = NO;
+        [self.helpButton setTitle:HELP_COMMENT forState:UIControlStateNormal];
+        helpFlag = FALSE;
+        AppDelegate *tempApp = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [[(MainVC *)tempApp.mainVCControllerInstance segmentControl] setSelectedSegmentIndex:1];
+        [(MainVC *)tempApp.mainVCControllerInstance segmentControllerClicked:[(MainVC *)tempApp.mainVCControllerInstance segmentControl]];
     }
 }
 
@@ -1450,9 +1512,9 @@ UIView *greyView;
 
 #pragma mark - SearchBar delegates
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar{
-    
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Clicked in the Search bar"];
-    
+#endif
     CGRect searchBarFrame = searchBar.frame;
     searchBarFrame.size.height = 80.f;
     searchBar.frame = searchBarFrame;
@@ -1469,15 +1531,19 @@ UIView *greyView;
 }
 
 - (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar{
-    CGRect searchBarFrame = searchBar.frame;
+    //commented by iauro
+    /*CGRect searchBarFrame = searchBar.frame;
     searchBarFrame.size.height = 40.f;
     searchBar.frame = searchBarFrame;
     searchBar.showsCancelButton = NO;
     searchBar.showsScopeBar = NO;
     NSArray *scopeButtonTitles = nil;
     [searchBar setScopeButtonTitles:scopeButtonTitles];
-    self.tableView.tableHeaderView = searchBar;
+    self.tableView.tableHeaderView = searchBar;*/
+    self.tableView.tableHeaderView = nil;
+    self.tableView.tableHeaderView = [self headerView];
     greyView.hidden = YES;
+    [self.tableView reloadData];
     return YES;
 }
 
@@ -1610,12 +1676,14 @@ UIView *greyView;
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar;{
+    helpFlag = FALSE;
     filterLabel.text = self.filterModel.filterTitle;
     searchBar.text = @"";
     [searchBar resignFirstResponder];
     isSearching = NO;
     searchBar.showsCancelButton = NO;
-    [self.tableView reloadData];
+//    [self.tableView reloadData];
+//    self.tableView.tableHeaderView = [self headerView];
 }
 
 @end

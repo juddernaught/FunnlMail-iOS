@@ -23,11 +23,13 @@
     UIButton *menuButton;
     UIButton *filterButton;
     UIButton *composeEmailButton;
-    UISegmentedControl *segmentControl;
+    
 }
+@property (nonatomic, strong) UISegmentedControl *segmentControl;
 @property (nonatomic, retain) MainView *mainView;
 @property (nonatomic, strong) EmailsTableViewController *emailsTableViewController;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property (strong,nonatomic) FunnelModel *filterModel;
 @property (strong,nonatomic) NSNumber *firstTime;
+- (void)segmentControllerClicked:(UISegmentedControl*)sender;
 @end

@@ -35,10 +35,10 @@
     MessageModel *selectedMessageModel;
     UIView *returnView;
     BOOL scopeButtonPressedIndexNumber;
-    
 @public
     NSMutableArray *searchMessages;
 }
+@property (strong, nonatomic)NSString *displayStirng;
 @property (strong, nonatomic)UIButton *helpButton;
 @property BOOL isSearching;
 @property BOOL helpFlag;
@@ -53,6 +53,8 @@
 @property (nonatomic) NSInteger totalNumberOfInboxMessages;
 @property (nonatomic) BOOL isLoading;
 @property (nonatomic, strong) UIActivityIndicatorView *loadMoreActivityView;
+@property (retain,nonatomic) UIImageView *disclosureArrow;
+
 -(void) setFilterModel:(FunnelModel *)filterModel;
 - (void)resetSearchBar;
 - (UIView *)headerView;

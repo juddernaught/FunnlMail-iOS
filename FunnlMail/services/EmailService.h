@@ -16,6 +16,7 @@
 
 @interface EmailService : NSObject{
 //    NSMutableArray *filterArray;
+    int numberOfMails;
     
 }
 @property (nonatomic, strong) NSMutableArray *filterArray;
@@ -53,4 +54,5 @@
 -(void)getDatabaseMessages:(NSString*)folderName withTableController:(EmailsTableViewController *)emailsTableViewController;
 -(void)clearData;
 -(void)startAutoRefresh;
+- (NSMutableString *)retrieveSecondaryAfterStoredTT;
 @end

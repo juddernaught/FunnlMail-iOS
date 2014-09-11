@@ -84,13 +84,17 @@
 
 - (void)dismissPopUp:(UIButton*)sender {
     [self removeFromSuperview];
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Funnl Popup undo pressed"];
+#endif
     [[(EmailsTableViewController*)emailViewController tableView] reloadData];
 }
 
 -(void)createAddFunnlView{
     [[MessageFilterXRefService instance] insertMessageXRefMessageID:messageID funnelId:tempDS.funnelId];
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Funnl Popup done pressed"];
+#endif
     [self removeFromSuperview];
     [[(EmailsTableViewController*)emailViewController tableView] reloadData];
 }

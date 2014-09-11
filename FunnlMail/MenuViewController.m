@@ -93,8 +93,8 @@
 //    imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"settingListIcon",@"alertListIcon",@"shareListIcon",@"sentListIcon", @"archiveListIcon",@"archiveListIcon", @"trashListIcon",@"emailListIcon",@"helpListIcon", @"helpListLogOutIcon",nil];
     
 
-    listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Create Funnl",@"Send Feedback",@"Tutorials",@"Help (FAQs)",@"LogOut",nil];
-    imageArray = [[NSMutableArray alloc] initWithObjects:@"",@"funnlIcon",@"sendFeedbackListIcon",@"helpListIcon",@"helpListIcon", @"logoutListIcon",nil];
+    listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Create Funnl",@"Send Feedback",@"Tutorial",@"Help (FAQs)",@"LogOut",nil];
+    imageArray = [[NSMutableArray alloc] initWithObjects:@"",@"funnlIcon",@"sendFeedbackListIcon",@"tutorialListIcon@2x",@"helpListIcon", @"logoutListIcon",nil];
 
 }
 
@@ -190,7 +190,7 @@
         [alerts SetUp];
         [[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationController pushViewController:alerts animated:NO];
     }
-    else if([cell.menuLabel.text isEqualToString:@"Tutorials"]){
+    else if([cell.menuLabel.text isEqualToString:@"Tutorial"]){
         TutorialViewController *tutorialVC = [[TutorialViewController alloc]init];
         [[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationController pushViewController:tutorialVC animated:NO];
     }
@@ -198,8 +198,9 @@
     else if ([cell.menuLabel.text isEqualToString:@"Sent Mail"]) {
         NSLog(@"sent mail requested");
         [MBProgressHUD showHUDAddedTo:appDelegate.window animated:YES];
+#ifdef TRACK_MIXPANEL
         [[Mixpanel sharedInstance] track:@"Viewed sent mail"];
-        
+#endif
          //The following line is required to get to the emailTableVC in mainVC
          // [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject;
     
@@ -216,7 +217,9 @@
         NSLog(@"archive mail requested");
         [MBProgressHUD showHUDAddedTo:appDelegate.window animated:YES];
 
+#ifdef TRACK_MIXPANEL
         [[Mixpanel sharedInstance] track:@"Viewed archive mail"];
+#endif
         
         appDelegate.currentFunnelString = ARCHIVE;
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Archive";
@@ -228,7 +231,9 @@
     else if ([cell.menuLabel.text isEqualToString:@"Drafts"]){
         [MBProgressHUD showHUDAddedTo:appDelegate.window animated:YES];
 
+#ifdef TRACK_MIXPANEL
         [[Mixpanel sharedInstance] track:@"Viewed drafts"];
+#endif
         
         appDelegate.currentFunnelString = DRAFTS;
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Drafts";
@@ -242,7 +247,9 @@
         NSLog(@"trash mail requested");
         [MBProgressHUD showHUDAddedTo:appDelegate.window animated:YES];
 
+#ifdef TRACK_MIXPANEL
         [[Mixpanel sharedInstance] track:@"Viewed trash"];
+#endif
         
         appDelegate.currentFunnelString = TRASH;
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Trash";

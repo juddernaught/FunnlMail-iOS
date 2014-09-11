@@ -29,7 +29,9 @@ NSArray *answers;
 
 - (void)viewDidLoad
 {
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"FAQ Pressed"]; // Viewed Help/FAQS section
+#endif
     
     [super viewDidLoad];
     [self.navigationController setTitle:@"Help (FAQs)"];

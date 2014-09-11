@@ -692,7 +692,9 @@ typedef void (^DownloadCallback)(NSError * error);
 }
 
 -(void) replyButtonSelected{
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Reply Email Selected"];
+#endif
     NSLog(@"reply Email selected");
     ComposeViewController *viewEmail = [[ComposeViewController alloc]init];
     viewEmail.address = self.message.header.from;
@@ -704,7 +706,9 @@ typedef void (^DownloadCallback)(NSError * error);
 }
 
 -(void) replyAllButtonSelected{
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Reply All selected"];
+#endif
     NSLog(@"reply Email selected");
     ComposeViewController *viewEmail = [[ComposeViewController alloc]init];
     viewEmail.addressArray = self.message.header.to;
@@ -717,7 +721,9 @@ typedef void (^DownloadCallback)(NSError * error);
 }
 
 -(void) forwardButtonSelected{
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Forward selected"];
+#endif
     NSLog(@"reply Email selected");
     ComposeViewController *viewEmail = [[ComposeViewController alloc]init];
     viewEmail.message = _message;

@@ -45,4 +45,5 @@
 -(BOOL) clearAllTables;
 
 - (NSString *)latestSecondaryTT;
+- (NSArray *) retrieveSenderOfNewSecondary;
 @end

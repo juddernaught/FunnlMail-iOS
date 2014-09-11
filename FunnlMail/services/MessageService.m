@@ -934,4 +934,32 @@ static MessageService *instance;
     return dict;
 }
 
+- (NSArray *) retrieveSenderOfNewSecondary{
+    __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
+    
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    paramDict[@"date"] = [NSNumber numberWithDouble:[[[NSUserDefaults standardUserDefaults] objectForKey:@"latest_tt_secondary"] doubleValue]];
+    
+    __block NSMutableArray *array = [[NSMutableArray alloc] init];
+    
+    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        NSString *queryString = [NSString stringWithFormat:@"SELECT * FROM messages where date > %f and categoryName <> '%@';",[[[NSUserDefaults standardUserDefaults] objectForKey:@"latest_tt_secondary"] doubleValue],PRIMARY_CATEGORY_NAME];
+        NSLog(@"query string : %@",queryString);
+        
+        FMResultSet *resultSet = [db executeQuery:queryString withParameterDictionary:nil];
+        while ([resultSet next]) {
+            NSString *tempString = [resultSet stringForColumn:@"messageJSON"];
+            MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:tempString];
+            if (message) {
+                [array addObject:message.header.sender.mailbox];
+            }
+            tempString = nil;
+        }
+    }];
+    
+    return array;
+}
+
 @end

@@ -102,7 +102,9 @@
     filterTitleLabel.text = filterTitle;
     if([filterTitleLabel.text isEqualToString:ADD_FUNNL]){
         
+#ifdef TRACK_MIXPANEL
         [[Mixpanel sharedInstance] track:@"Pressed '+' button inside Funnl overlay"];
+#endif
         
         filterTitleLabel.text = @"";
         messageCountLabel.hidden = YES;
