@@ -496,8 +496,8 @@ replacementString:(NSString *)string {
     
     //This adds the signature to the body of the emails sent from the app
     NSMutableString * html = [NSMutableString string];
-    [html appendFormat:@"<html><br/><font color='black'><head>Sent from <a href=%@>FunnlMail</a> <script>%@</script><style>%@</style></head>"
-     @"<body bgColor=\"transparent;\"></body></font></html>",@"http://www.funnlmail.com/", mainJavascript, mainStyle];
+    [html appendFormat:@"<html><br/><font color='black'><head><br><br>Sent from <a href=%@>FunnlMail</a><script>%@</script><style>%@</style></head>"
+     @"<body bgColor=\"transparent;\"></body></font></html>",@"http://bit.do/funnlmailsite", mainJavascript, mainStyle];
     html = [[ html stringByReplacingOccurrencesOfString:@"<body bgColor=\"transparent;\">" withString:@"<body bgColor=\"transparent;\">"] mutableCopy];
     
     NSMutableAttributedString *temp = [messageView.attributedText mutableCopy];
