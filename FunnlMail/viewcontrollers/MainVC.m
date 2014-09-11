@@ -226,10 +226,6 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     if (sender.selectedSegmentIndex == 1) {
         [[NSUserDefaults standardUserDefaults] setObject:[[MessageService instance] latestSecondaryTT] forKey:@"latest_tt_secondary"];
         [[NSUserDefaults standardUserDefaults] synchronize];
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            //Your main thread code goes in here
-//            [emailsTableViewController.helpButton setTitle:HELP_COMMENT forState:UIControlStateNormal];
-//        });
         [self performSelector:@selector(settingTitleToButton) withObject:nil afterDelay:0.01];
     }
     else if (sender.selectedSegmentIndex == 0) {

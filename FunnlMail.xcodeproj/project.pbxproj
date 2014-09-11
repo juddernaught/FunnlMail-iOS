@@ -205,6 +205,7 @@
 		FA6ABD8919C197B600DB10A3 /* tutorialListIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FA6ABD8719C197B600DB10A3 /* tutorialListIcon@2x.png */; };
 		FA6ABD8C19C1A46B00DB10A3 /* nextImage.png in Resources */ = {isa = PBXBuildFile; fileRef = FA6ABD8A19C1A46B00DB10A3 /* nextImage.png */; };
 		FA6ABD8D19C1A46B00DB10A3 /* nextImage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FA6ABD8B19C1A46B00DB10A3 /* nextImage@2x.png */; };
+		FA6ABD8F19C1E7C400DB10A3 /* welcome@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FA6ABD8E19C1E7C400DB10A3 /* welcome@2x.png */; };
 		FA6C493E19B6EE9500249134 /* FMCreateFunnlViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = FA6C493C19B6EE9500249134 /* FMCreateFunnlViewController.h */; };
 		FA6C493F19B6EE9500249134 /* FMCreateFunnlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA6C493D19B6EE9500249134 /* FMCreateFunnlViewController.m */; };
 		FA6C494419B70B0B00249134 /* addSenderCircle.png in Resources */ = {isa = PBXBuildFile; fileRef = FA6C494019B70B0B00249134 /* addSenderCircle.png */; };
@@ -690,6 +691,7 @@
 		FA6ABD8719C197B600DB10A3 /* tutorialListIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tutorialListIcon@2x.png"; sourceTree = "<group>"; };
 		FA6ABD8A19C1A46B00DB10A3 /* nextImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nextImage.png; sourceTree = "<group>"; };
 		FA6ABD8B19C1A46B00DB10A3 /* nextImage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nextImage@2x.png"; sourceTree = "<group>"; };
+		FA6ABD8E19C1E7C400DB10A3 /* welcome@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "welcome@2x.png"; sourceTree = "<group>"; };
 		FA6C493C19B6EE9500249134 /* FMCreateFunnlViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMCreateFunnlViewController.h; sourceTree = "<group>"; };
 		FA6C493D19B6EE9500249134 /* FMCreateFunnlViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMCreateFunnlViewController.m; sourceTree = "<group>"; };
 		FA6C494019B70B0B00249134 /* addSenderCircle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = addSenderCircle.png; sourceTree = "<group>"; };
@@ -1101,12 +1103,13 @@
 		B7C940D6198D6F36008468E7 /* DemoSlides */ = {
 			isa = PBXGroup;
 			children = (
+				FA6ABD8E19C1E7C400DB10A3 /* welcome@2x.png */,
+				B79AFECF19A0174A00725A8D /* welcome.png */,
 				B720A24019BCEAEF002C08B9 /* intro slider 1.jpg */,
 				B720A24119BCEAEF002C08B9 /* intro slider 2.jpg */,
 				B720A24219BCEAEF002C08B9 /* intro slider 3.jpg */,
 				B720A24319BCEAEF002C08B9 /* intro slider 4.jpg */,
 				B720A24419BCEAEF002C08B9 /* intro slider 5.jpg */,
-				B79AFECF19A0174A00725A8D /* welcome.png */,
 				B7C940DB198D6F49008468E7 /* WHITEsliders1nobar.png */,
 				B7C940DC198D6F49008468E7 /* WHITEsliders2.png */,
 				B7C940DD198D6F49008468E7 /* WHITEsliders3.png */,
@@ -2018,6 +2021,7 @@
 				FABAF09B1976507E00AA7918 /* settingListIcon.png in Resources */,
 				FABAF0931976507E00AA7918 /* alertListIcon.png in Resources */,
 				FABAF09D1976507E00AA7918 /* shareListIcon.png in Resources */,
+				FA6ABD8F19C1E7C400DB10A3 /* welcome@2x.png in Resources */,
 				FABAF0781976507E00AA7918 /* Email 4.png in Resources */,
 				FABAF0801976507E00AA7918 /* Social.png in Resources */,
 				B79AFED019A0174A00725A8D /* welcome.png in Resources */,

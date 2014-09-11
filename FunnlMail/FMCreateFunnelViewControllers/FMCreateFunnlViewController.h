@@ -49,7 +49,7 @@
     UIView *seperatorAdditionalTextField;
     
     NSMutableArray *fetcherArray;
-    
+    BOOL isFunnlNameTextFieldEditing;
     //autosuggestion resource
     NSMutableArray *searchArray;
     UITableView *autocompleteTableView;

@@ -693,9 +693,8 @@ static NSString *currentFolder;
 }
 
 - (void)displayingButtonTitle {
-    emailsTableViewController.disclosureArrow.hidden = YES;
     NSMutableString *emailString = [[EmailService instance] retrieveSecondaryAfterStoredTT];
-    if (emailString) {
+    if (emailString && [[NSUserDefaults standardUserDefaults] objectForKey:@"latest_tt_secondary"]) {
         if (emailString.length > 2) {
             NSString *displayString = [emailString substringWithRange:NSMakeRange(0, emailString.length - 2)];
             emailsTableViewController.displayStirng = displayString;
@@ -714,9 +713,8 @@ static NSString *currentFolder;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [emailsTableViewController.helpButton setAttributedTitle:attString forState:UIControlStateNormal];
             });
+                emailsTableViewController.disclosureArrow.hidden = YES;
 //            [emailsTableViewController.helpButton setTitle:[NSString stringWithFormat:@"    Other : %d new conversation\n   %@",numberOfMails,displayString] forState:UIControlStateNormal];
-            emailsTableViewController.helpButton.enabled = FALSE;
-            emailsTableViewController.helpButton.enabled = TRUE;
             attString = nil;
             titleString = nil;
             subTitleString = nil;
@@ -923,20 +921,19 @@ static NSString *currentFolder;
 }
 
 -(void)startAutoRefresh{
-//    MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
-//    [overlay hide];
-//    [overlay postImmediateMessage:@"Downloading..." animated:YES];
-//    overlay.animation = MTStatusBarOverlayAnimationFallDown;  // MTStatusBarOverlayAnimationShrink
-//    overlay.detailViewMode = MTDetailViewModeHistory;         // enable automatic history-tracking and show in detail-view
-//    overlay.tag = 1;
-//    overlay.progress = 0.0;
-
     AppDelegate *tempAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     if (tempAppDelegate.isPullToRefresh) {
         tempAppDelegate.isPullToRefresh = FALSE;
         [self loadLatestMail:NUMBER_OF_NEW_MESSAGES_TO_CHECK_AFTER_PULL_TO_REFRESH withTableController:emailsTableViewController withFolder:INBOX];
     }
     else {
+        MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
+        [overlay hide];
+        [overlay postImmediateMessage:@"Downloading..." animated:YES];
+        overlay.animation = MTStatusBarOverlayAnimationFallDown;  // MTStatusBarOverlayAnimationShrink
+        overlay.detailViewMode = MTDetailViewModeHistory;         // enable automatic history-tracking and show in detail-view
+        overlay.tag = 1;
+        overlay.progress = 0.0;
         [self loadLatestMail:NUMBER_OF_NEW_MESSAGES_TO_CHECK withTableController:emailsTableViewController withFolder:INBOX];
     }
 }
@@ -1063,9 +1060,16 @@ static NSString *currentFolder;
     for (NSString *senderEmailID in funnel.sendersArray) {
         MCOAddress *emailAddress = message.header.from;
         NSString *messageSenderID = [[emailAddress mailbox] lowercaseString];
-        if ([senderEmailID.lowercaseString isEqualToString:messageSenderID]) {
+        /*changes for including the change for "Search as text"*/
+        if ([messageSenderID rangeOfString:senderEmailID].location == NSNotFound) {
+            
+        }
+        else {
             return TRUE;
         }
+//        if ([senderEmailID.lowercaseString isEqualToString:messageSenderID]) {
+//            return TRUE;
+//        }
     }
     if ([[funnel.funnelName lowercaseString] isEqualToString:[ALL_FUNNL lowercaseString]] || [[funnel.funnelName lowercaseString] isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]) {
         
