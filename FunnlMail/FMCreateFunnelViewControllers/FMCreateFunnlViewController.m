@@ -509,6 +509,11 @@
     [funnelNameTextField setTextAlignment:NSTextAlignmentLeft];
     [mainScrollView addSubview:funnelNameTextField];
     
+    if (isFunnlNameTextFieldEditing) {
+        [funnelNameTextField becomeFirstResponder];
+    }
+
+    
     UIView *sampleView = nil;
     if (isEditFunnel || !isFunnlNameTextFieldEditing || isEditing) {
         sampleView = [[UIView alloc] initWithFrame:CGRectMake(10, 40, 300, 1)];
