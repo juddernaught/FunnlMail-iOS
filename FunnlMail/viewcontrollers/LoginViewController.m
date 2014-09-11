@@ -218,7 +218,9 @@ UIButton *loginButton;
     
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     [self setDrawerControllerOnWindow];
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Viewed last slider"];
+#endif
     if(appDelegate.didLoginIn) {
         [appDelegate showWelcomeOverlay];
         if ([[[MessageService instance] retrieveAllMessages] count] > 0) {
@@ -261,7 +263,9 @@ UIButton *loginButton;
         [[self navigationController] popViewControllerAnimated:YES];
         // Authentication failed
     } else {
+#ifdef TRACK_MIXPANEL
         [[Mixpanel sharedInstance] track:@"Signed into email"]; // Signed into Gmail
+#endif
 
 
         

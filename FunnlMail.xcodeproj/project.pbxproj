@@ -199,6 +199,13 @@
 		FA4A2E8E198A837500CB9FAD /* swipeTrash@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FA4A2E8C198A837500CB9FAD /* swipeTrash@2x.png */; };
 		FA5627E61936136600238F40 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = FA5627E51936136600238F40 /* MBProgressHUD.m */; };
 		FA5627FA193C5F5200238F40 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA5627F9193C5F5200238F40 /* QuartzCore.framework */; };
+		FA6ABD8019C18C5100DB10A3 /* primaryBackButton.png in Resources */ = {isa = PBXBuildFile; fileRef = FA6ABD7E19C18C5100DB10A3 /* primaryBackButton.png */; };
+		FA6ABD8119C18C5100DB10A3 /* primaryBackButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FA6ABD7F19C18C5100DB10A3 /* primaryBackButton@2x.png */; };
+		FA6ABD8819C197B600DB10A3 /* tutorialListIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = FA6ABD8619C197B600DB10A3 /* tutorialListIcon.png */; };
+		FA6ABD8919C197B600DB10A3 /* tutorialListIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FA6ABD8719C197B600DB10A3 /* tutorialListIcon@2x.png */; };
+		FA6ABD8C19C1A46B00DB10A3 /* nextImage.png in Resources */ = {isa = PBXBuildFile; fileRef = FA6ABD8A19C1A46B00DB10A3 /* nextImage.png */; };
+		FA6ABD8D19C1A46B00DB10A3 /* nextImage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FA6ABD8B19C1A46B00DB10A3 /* nextImage@2x.png */; };
+		FA6ABD8F19C1E7C400DB10A3 /* welcome@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FA6ABD8E19C1E7C400DB10A3 /* welcome@2x.png */; };
 		FA6C493E19B6EE9500249134 /* FMCreateFunnlViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = FA6C493C19B6EE9500249134 /* FMCreateFunnlViewController.h */; };
 		FA6C493F19B6EE9500249134 /* FMCreateFunnlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA6C493D19B6EE9500249134 /* FMCreateFunnlViewController.m */; };
 		FA6C494419B70B0B00249134 /* addSenderCircle.png in Resources */ = {isa = PBXBuildFile; fileRef = FA6C494019B70B0B00249134 /* addSenderCircle.png */; };
@@ -678,6 +685,13 @@
 		FA5627E41936136600238F40 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		FA5627E51936136600238F40 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		FA5627F9193C5F5200238F40 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		FA6ABD7E19C18C5100DB10A3 /* primaryBackButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = primaryBackButton.png; sourceTree = "<group>"; };
+		FA6ABD7F19C18C5100DB10A3 /* primaryBackButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "primaryBackButton@2x.png"; sourceTree = "<group>"; };
+		FA6ABD8619C197B600DB10A3 /* tutorialListIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tutorialListIcon.png; sourceTree = "<group>"; };
+		FA6ABD8719C197B600DB10A3 /* tutorialListIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tutorialListIcon@2x.png"; sourceTree = "<group>"; };
+		FA6ABD8A19C1A46B00DB10A3 /* nextImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nextImage.png; sourceTree = "<group>"; };
+		FA6ABD8B19C1A46B00DB10A3 /* nextImage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nextImage@2x.png"; sourceTree = "<group>"; };
+		FA6ABD8E19C1E7C400DB10A3 /* welcome@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "welcome@2x.png"; sourceTree = "<group>"; };
 		FA6C493C19B6EE9500249134 /* FMCreateFunnlViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMCreateFunnlViewController.h; sourceTree = "<group>"; };
 		FA6C493D19B6EE9500249134 /* FMCreateFunnlViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMCreateFunnlViewController.m; sourceTree = "<group>"; };
 		FA6C494019B70B0B00249134 /* addSenderCircle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = addSenderCircle.png; sourceTree = "<group>"; };
@@ -1089,12 +1103,13 @@
 		B7C940D6198D6F36008468E7 /* DemoSlides */ = {
 			isa = PBXGroup;
 			children = (
+				FA6ABD8E19C1E7C400DB10A3 /* welcome@2x.png */,
+				B79AFECF19A0174A00725A8D /* welcome.png */,
 				B720A24019BCEAEF002C08B9 /* intro slider 1.jpg */,
 				B720A24119BCEAEF002C08B9 /* intro slider 2.jpg */,
 				B720A24219BCEAEF002C08B9 /* intro slider 3.jpg */,
 				B720A24319BCEAEF002C08B9 /* intro slider 4.jpg */,
 				B720A24419BCEAEF002C08B9 /* intro slider 5.jpg */,
-				B79AFECF19A0174A00725A8D /* welcome.png */,
 				B7C940DB198D6F49008468E7 /* WHITEsliders1nobar.png */,
 				B7C940DC198D6F49008468E7 /* WHITEsliders2.png */,
 				B7C940DD198D6F49008468E7 /* WHITEsliders3.png */,
@@ -1634,6 +1649,8 @@
 		FABAF02E1976507E00AA7918 /* Funnl */ = {
 			isa = PBXGroup;
 			children = (
+				FA6ABD7E19C18C5100DB10A3 /* primaryBackButton.png */,
+				FA6ABD7F19C18C5100DB10A3 /* primaryBackButton@2x.png */,
 				FA83970E19C0804D00F9F529 /* swipeTutorial.png */,
 				FA83970F19C0804D00F9F529 /* swipeTutorial@2x.png */,
 				259ECEE619B9F232001D7459 /* userPlaceholder.png */,
@@ -1667,6 +1684,8 @@
 		FABAF0401976507E00AA7918 /* ListIcons */ = {
 			isa = PBXGroup;
 			children = (
+				FA6ABD8619C197B600DB10A3 /* tutorialListIcon.png */,
+				FA6ABD8719C197B600DB10A3 /* tutorialListIcon@2x.png */,
 				FAE1EB3119B87620001FF334 /* logoutListIcon.png */,
 				FAE1EB3219B87620001FF334 /* sendFeedbackListIcon@2x.png */,
 				FAE1EB3319B87620001FF334 /* logoutListIcon@2x.png */,
@@ -1705,6 +1724,8 @@
 		FABAF0551976507E00AA7918 /* Mail */ = {
 			isa = PBXGroup;
 			children = (
+				FA6ABD8A19C1A46B00DB10A3 /* nextImage.png */,
+				FA6ABD8B19C1A46B00DB10A3 /* nextImage@2x.png */,
 				FA11B3071999D70900B4EA86 /* addIcon_white.png */,
 				FA11B3081999D70900B4EA86 /* addIcon_white@2x.png */,
 				FA11B3091999D70900B4EA86 /* close_black.png */,
@@ -1956,6 +1977,7 @@
 				FABAF0771976507E00AA7918 /* Email 3.png in Resources */,
 				FA6C494619B70B0B00249134 /* expandIcon.png in Resources */,
 				FA26CAF5199508C900FFD9B3 /* cross_web.png in Resources */,
+				FA6ABD8D19C1A46B00DB10A3 /* nextImage@2x.png in Resources */,
 				FA26CAF6199508C900FFD9B3 /* index.html in Resources */,
 				FABAF0891976507E00AA7918 /* Edit_Button@2x.png in Resources */,
 				FABAF0A01976507E00AA7918 /* trashListIcon@2x.png in Resources */,
@@ -1999,6 +2021,7 @@
 				FABAF09B1976507E00AA7918 /* settingListIcon.png in Resources */,
 				FABAF0931976507E00AA7918 /* alertListIcon.png in Resources */,
 				FABAF09D1976507E00AA7918 /* shareListIcon.png in Resources */,
+				FA6ABD8F19C1E7C400DB10A3 /* welcome@2x.png in Resources */,
 				FABAF0781976507E00AA7918 /* Email 4.png in Resources */,
 				FABAF0801976507E00AA7918 /* Social.png in Resources */,
 				B79AFED019A0174A00725A8D /* welcome.png in Resources */,
@@ -2007,6 +2030,7 @@
 				FAAE9CFA19A38ADD007FB804 /* emailDetailViewReplyAll@2x.png in Resources */,
 				FA11B2D7199908D200B4EA86 /* popoverArrowDown-white@2x.png in Resources */,
 				FABAF0B11976507E00AA7918 /* cross.png in Resources */,
+				FA6ABD8C19C1A46B00DB10A3 /* nextImage.png in Resources */,
 				FABAF0C01976507E00AA7918 /* swipeArchive.png in Resources */,
 				FA11B2C01999085700B4EA86 /* userimage-placeholder.png in Resources */,
 				B7C940E3198D6F49008468E7 /* WHITEsliders4.png in Resources */,
@@ -2014,6 +2038,7 @@
 				D1EFF4C319818B6F0031A1D1 /* button-provider-bg.png in Resources */,
 				B720A24819BCEAEF002C08B9 /* intro slider 4.jpg in Resources */,
 				FAAE9CF719A38ADD007FB804 /* emailDetailViewReply.png in Resources */,
+				FA6ABD8019C18C5100DB10A3 /* primaryBackButton.png in Resources */,
 				FA26CAF7199508C900FFD9B3 /* menuIcon_web.png in Resources */,
 				B7C940E4198D6F49008468E7 /* WHITEsliders5.png in Resources */,
 				FABAF0A81976507E00AA7918 /* arrow.png in Resources */,
@@ -2043,6 +2068,8 @@
 				FABAF0811976507E00AA7918 /* Travel.png in Resources */,
 				FAAE9CF019A38ADD007FB804 /* emailDetailViewArchive@2x.png in Resources */,
 				FABAF09A1976507E00AA7918 /* sentListIcon@2x.png in Resources */,
+				FA6ABD8119C18C5100DB10A3 /* primaryBackButton@2x.png in Resources */,
+				FA6ABD8919C197B600DB10A3 /* tutorialListIcon@2x.png in Resources */,
 				FABAF0751976507E00AA7918 /* Email 1.png in Resources */,
 				FAE1EB2E19B74ADA001FF334 /* addIcon_white_22x22@2x.png in Resources */,
 				FABAF0A61976507E00AA7918 /* addIcon.png in Resources */,
@@ -2055,6 +2082,7 @@
 				FABAF0791976507E00AA7918 /* Email 5.png in Resources */,
 				FA11B2C11999085700B4EA86 /* userimage-placeholder@2x.png in Resources */,
 				B7C940E1198D6F49008468E7 /* WHITEsliders2.png in Resources */,
+				FA6ABD8819C197B600DB10A3 /* tutorialListIcon.png in Resources */,
 				FAAE9CF919A38ADD007FB804 /* emailDetailViewReplyAll.png in Resources */,
 				FA11B2DF199908D200B4EA86 /* popoverArrowRight-white@2x.png in Resources */,
 				FAE1EB3519B87620001FF334 /* logoutListIcon.png in Resources */,
@@ -2581,6 +2609,11 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FunnlMail/FunnlMail-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"TRACK_MIXPANEL=1",
+				);
 				HEADER_SEARCH_PATHS = (
 					"\"${PODS_ROOT}/Headers\"",
 					"\"${PODS_ROOT}/Headers/Mixpanel\"",
@@ -2606,7 +2639,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "764ce18d-57a7-4481-a456-37c77c7a5e4d";
+				PROVISIONING_PROFILE = "ec9b83cd-923e-494e-a961-8a80d9b42c47";
 				SDKROOT = iphoneos7.1;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;

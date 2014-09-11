@@ -170,7 +170,9 @@
 #pragma mark - shareFunnlClicked functions
 -(void)shareFunnlClicked:(id)sender{
     
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Shared a Funnl (pressed send button successfully after entering email)"];
+#endif
     
     [toFieldView.tokenField resignFirstResponder];
     MCOMessageBuilder * builder = [[MCOMessageBuilder alloc] init];

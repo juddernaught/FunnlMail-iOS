@@ -268,7 +268,9 @@ replacementString:(NSString *)string {
 
 
 -(void)cancelButtonSelected{
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Canceled email"];
+#endif
     
 //    [self dismissViewControllerAnimated:YES completion:NULL];
     [self.navigationController popViewControllerAnimated:YES];
@@ -277,7 +279,9 @@ replacementString:(NSString *)string {
 -(void)sendButtonSelected{
 //    NSLog(@"%@, %@, ",toFieldView.tokenTitles, toFieldView.tokenField.text, toFieldView);
     
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Sent email"];
+#endif
     
     MCOMessageBuilder * builder = [[MCOMessageBuilder alloc] init];
     [[builder header] setFrom:[MCOAddress addressWithDisplayName:nil mailbox:self.imapSession.username]];
@@ -320,7 +324,9 @@ replacementString:(NSString *)string {
                   [MBProgressHUD hideHUDForView:self.view animated:YES];
         } else {
             NSLog(@"%@ Successfully sent email!", [EmailService instance].smtpSession.username);
+#ifdef TRACK_MIXPANEL
             [[Mixpanel sharedInstance] track:@"Send Button from composeVC"];
+#endif
             [MBProgressHUD hideHUDForView:self.view animated:YES];
             //[self dismissViewControllerAnimated:YES completion:NULL];
             [self.navigationController popViewControllerAnimated:YES];

@@ -38,7 +38,10 @@
     // MixPanel setup
     //[[CIOExampleAPIClient sharedClient] clearCredentials];
     [Mixpanel sharedInstanceWithToken:@"08b1e55d72f1b22a8e5696c2b56a6777"];
+
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Launched App"]; //Launched app
+#endif
     // Parse setup
     //[Parse setApplicationId:@"oXAOrMLIRzLNZh50VZ3sk3LBEfUuNDXuLZVBvHdV" clientKey:@"Z5mFEsiX7xTXYlKYKXMbN2zlqqf97l39E0PzZoZg"];
     [Parse setApplicationId:@"qRBmYEJxZ6xOYq2Z6UZuz3nqcuy14DxTV63gWnb4" clientKey:@"ZPCELYRnO4YOnm2nXw8J9Y34poNsMvgGuWzPw1rV"];
@@ -148,25 +151,31 @@
     showWelcomeOverlay = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
     showWelcomeOverlay.opaque = NO;
     
-    UITextView *thing = [[UITextView alloc]initWithFrame:CGRectMake(10, 40, WIDTH, 70)];
-    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    UITextView *thing = [[UITextView alloc]initWithFrame:CGRectMake(25, 80, WIDTH - 60, 135 - 70)];
+    if (HEIGHT == 480) {
+        thing.frame = CGRectMake(25, 70, WIDTH - 60, 135 - 70);
+    }
+//    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     if([EmailService instance].currentName){
-        thing.text =[NSString stringWithFormat: @"Welcome %@, to your customized Primary inbox!",[EmailService instance].currentName];
+        thing.text =[NSString stringWithFormat: @"Welcome %@, to your\ncustomized Primary inbox!",[EmailService instance].currentName.capitalizedString];
     }
     else{
-        thing.text =[NSString stringWithFormat: @"Welcome %@, to your customized Primary inbox!",@""];
+        thing.text =[[NSString stringWithFormat: @"Welcome %@, to your\ncustomized Primary inbox!",@""] capitalizedString];
     }
     
     
     thing.backgroundColor = [UIColor clearColor];
     [thing setTextColor:[UIColor whiteColor]];
-    thing.font = [UIFont boldSystemFontOfSize:24];
+//    thing.font = [UIFont boldSystemFontOfSize:18];
+    thing.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:17];
     thing.userInteractionEnabled = NO;
     
     UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"welcome.png"]];
-    imageView.frame = CGRectMake(0, 110, WIDTH, HEIGHT-110);
+    imageView.frame = CGRectMake(0, 0, WIDTH, HEIGHT);
     
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Viewed intro overlay"];
+#endif
     
   
     
@@ -175,7 +184,7 @@
     [showWelcomeOverlay addSubview: thing];
     [showWelcomeOverlay bringSubviewToFront:thing];
     showWelcomeOverlay.backgroundColor = CLEAR_COLOR;
-    showWelcomeOverlay.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.78];
+//    showWelcomeOverlay.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.78];
     
     letsGo = [UIButton buttonWithType:UIButtonTypeCustom];
     letsGo.frame = CGRectMake(WIDTH-40, 20, 30, 30);
@@ -184,7 +193,8 @@
     [letsGo addTarget:self action:@selector(hideWelcomeOverlay:) forControlEvents:UIControlEventTouchUpInside];
     [[letsGo layer] setBorderWidth:2.0f];
     [[letsGo layer] setBorderColor:[UIColor whiteColor].CGColor];
-    [letsGo.layer setCornerRadius:3.0];
+    letsGo.layer.cornerRadius = 15;
+//    [letsGo.layer setCornerRadius:3.0];
     [showWelcomeOverlay addSubview:letsGo];
     letsGo.hidden = YES;
     [showWelcomeOverlay bringSubviewToFront:letsGo];
@@ -236,7 +246,9 @@
 
 -(IBAction)hideWelcomeOverlay:(id)sender{
     [showWelcomeOverlay removeFromSuperview];
+#ifdef TRACK_MIXPANEL
     [self trackMixpanelAnalytics];
+#endif
 }
 
 
@@ -308,7 +320,9 @@
     float minutes = (ti / 60);
     float time2 = (float)(secondsInDecimal/60) + minutes;
     NSLog(@"Time: %@",[NSString stringWithFormat:@"%02f + %02f = %02f", minutes, (secondsInDecimal/60), time2]);
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Time Open" properties:@{@"Time": [NSString stringWithFormat:@"%02f", time2]}];
+#endif
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken

@@ -238,8 +238,9 @@ NSString *msgBody;
 
 - (void)editButtonPressed:(UIButton*)sender {
     
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Pressed 'Manage' button in Funnl Overlay"];
-    
+#endif
     if (editOn) {
         editOn = FALSE;
         
@@ -365,8 +366,9 @@ NSString *msgBody;
 
 -(void)shareButtonClicked:(id)sender{
     
+#ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Pressed 'Sharing' button in manage overlay"];
-    
+#endif
     UIButton *b = (UIButton*)sender;
     FunnelModel *fm = (FunnelModel *)filterArray[b.tag];
     ShareView *shareView = [[ShareView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT) withFunnlModel:fm];
@@ -451,8 +453,9 @@ NSString *msgBody;
 
 -(void)settingsButtonClicked:(id)sender{
     
+#ifdef TRACK_MIXPANEL
   [[Mixpanel sharedInstance] track:@"Pressed 'Settings' button in manage overlay"];
-    
+#endif
   UIButton *b = (UIButton*)sender;
   FunnelModel *fm = (FunnelModel *)filterArray[b.tag];
   if([[fm.funnelName lowercaseString]  isEqualToString:[ALL_FUNNL lowercaseString]] || [[fm.funnelName lowercaseString]  isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]){

@@ -557,7 +557,19 @@ static NSString *currentFolder;
                           tempMessageModel = nil;
                       }
                       [[MessageService instance] insertBulkMessages:messageModelArray];
-
+                      /*NSMutableString *emailString = [[EmailService instance] retrieveSecondaryAfterStoredTT];
+                      if (emailString) {
+                          if (emailString.length > 2) {
+                              NSString *displayString = [emailString substringWithRange:NSMakeRange(0, emailString.length - 2)];
+                              emailsTableViewController.displayStirng = displayString;
+                              NSString *displayString2 = [NSString stringWithFormat:@"%lu",(unsigned long)[[displayString componentsSeparatedByString:@","] count]];
+                              emailsTableViewController.helpButton.titleLabel.numberOfLines = 2;
+                              [emailsTableViewController.helpButton setTitle:[NSString stringWithFormat:@"Other : %@ new conversation\n%@",displayString2,displayString] forState:UIControlStateNormal];
+                              
+                          }
+                      }*/
+                      [self displayingButtonTitle];
+                      
                       NSLog(@"***** insert %lu message to db",(unsigned long)messages.count);
         
                       
@@ -678,6 +690,65 @@ static NSString *currentFolder;
               }];
          //});
      }];
+}
+
+- (void)displayingButtonTitle {
+    NSMutableString *emailString = [[EmailService instance] retrieveSecondaryAfterStoredTT];
+    if (emailString && [[NSUserDefaults standardUserDefaults] objectForKey:@"latest_tt_secondary"]) {
+        if (emailString.length > 2) {
+            NSString *displayString = [emailString substringWithRange:NSMakeRange(0, emailString.length - 2)];
+            emailsTableViewController.displayStirng = displayString;
+            emailsTableViewController.helpButton.titleLabel.numberOfLines = 2;
+            [emailsTableViewController.helpButton.titleLabel setTextAlignment:NSTextAlignmentLeft];
+            [emailsTableViewController.helpButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+
+            NSString *titleString = [NSString stringWithFormat:@"    Other : %d new conversations",numberOfMails];
+            NSString *subTitleString = [NSString stringWithFormat:@"     %@",displayString];
+            NSMutableAttributedString *attString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n%@",titleString,subTitleString]];
+            [attString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithHexString:DONE_BUTTON_BLUE] range:NSMakeRange(0, titleString.length)];
+            [attString addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue" size:16] range:NSMakeRange(0, titleString.length)];
+            [attString addAttribute:NSForegroundColorAttributeName value:[UIColor lightGrayColor] range:NSMakeRange(titleString.length + 1, subTitleString.length)];
+            [attString addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue" size:14] range:NSMakeRange(titleString.length + 1, subTitleString.length)];
+
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [emailsTableViewController.helpButton setAttributedTitle:attString forState:UIControlStateNormal];
+            });
+                emailsTableViewController.disclosureArrow.hidden = YES;
+//            [emailsTableViewController.helpButton setTitle:[NSString stringWithFormat:@"    Other : %d new conversation\n   %@",numberOfMails,displayString] forState:UIControlStateNormal];
+            attString = nil;
+            titleString = nil;
+            subTitleString = nil;
+        }
+    }
+}
+
+- (NSMutableString *)retrieveSecondaryAfterStoredTT {
+    NSArray *tempArray = [[MessageService instance] retrieveSenderOfNewSecondary];
+    if (tempArray.count <= SECONDARY_COUNT_FOR_DISPLAY) {
+        NSLog(@"Number of secondary after give tt -- %d",(int)tempArray.count);
+        return nil;
+    }
+    else {
+        numberOfMails = (int)tempArray.count;
+    }
+    NSMutableArray *uniqueEmailID = [[NSMutableArray alloc] init];
+    NSMutableString *emailString = [[NSMutableString alloc] init];
+    for (NSString *tempString in tempArray) {
+        BOOL flag = FALSE;
+        for (NSString *uniqueString in uniqueEmailID) {
+            if ([uniqueString isEqualToString:tempString]) {
+                flag = TRUE;
+            }
+        }
+        if (!flag) {
+            [uniqueEmailID addObject:tempString];
+            [emailString appendString:tempString];
+            [emailString appendString:@", "];
+        }
+    }
+    uniqueEmailID = nil;
+    tempArray = nil;
+    return emailString;
 }
 
 -(void) setMessages:(NSArray *)messages withTableController:(EmailsTableViewController *)fv{
@@ -807,6 +878,7 @@ static NSString *currentFolder;
                  overlay.progress = 0.5;
                  NSLog(@"checking new messages:  Range: %qu - %qu",fetchRange.location, fetchRange.length);
                  [self getNewMessages:[EmailService instance].userEmailID nextPageToken:@"" numberOfMaxResult:numberOfMessagesToLoad + 10 withFolder:inboxFolder withFetchRange:fetchRange];
+                 
                  if(overlay.tag == 1){
                      overlay.progress = 1;
                      [overlay postImmediateFinishMessage:@"Finished Downloading" duration:2.0 animated:YES];
@@ -819,6 +891,18 @@ static NSString *currentFolder;
                      [overlay postImmediateFinishMessage:@"No new emails" duration:2.0 animated:YES];
                      overlay.tag = 0;
                  }
+                 /*NSMutableString *emailString = [[EmailService instance] retrieveSecondaryAfterStoredTT];
+                 if (emailString) {
+                     if (emailString.length > 2) {
+                         NSString *displayString = [emailString substringWithRange:NSMakeRange(0, emailString.length - 2)];
+                         emailsTableViewController.displayStirng = displayString;
+                         NSString *displayString2 = [NSString stringWithFormat:@"%lu",(unsigned long)[[displayString componentsSeparatedByString:@","] count]];
+                         emailsTableViewController.helpButton.titleLabel.numberOfLines = 2;
+                         [emailsTableViewController.helpButton setTitle:[NSString stringWithFormat:@"Other : %@ new conversation\n%@",displayString2,displayString] forState:UIControlStateNormal];
+                        
+                     }
+                 }*/
+                 [self displayingButtonTitle];
                  NSLog(@"No New Message Found:  LastMessageIDSynced: %llu",self.totalNumberOfMessages);
                  AppDelegate *tempAppDelegate = APPDELEGATE;
                  [tempAppDelegate.progressHUD show:NO];
@@ -837,19 +921,19 @@ static NSString *currentFolder;
 }
 
 -(void)startAutoRefresh{
-    MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
-    [overlay hide];
-    [overlay postImmediateMessage:@"Downloading..." animated:YES];
-    overlay.animation = MTStatusBarOverlayAnimationFallDown;  // MTStatusBarOverlayAnimationShrink
-    overlay.detailViewMode = MTDetailViewModeHistory;         // enable automatic history-tracking and show in detail-view
-    overlay.tag = 1;
-    overlay.progress = 0.0;
     AppDelegate *tempAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     if (tempAppDelegate.isPullToRefresh) {
         tempAppDelegate.isPullToRefresh = FALSE;
         [self loadLatestMail:NUMBER_OF_NEW_MESSAGES_TO_CHECK_AFTER_PULL_TO_REFRESH withTableController:emailsTableViewController withFolder:INBOX];
     }
     else {
+        MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
+        [overlay hide];
+        [overlay postImmediateMessage:@"Downloading..." animated:YES];
+        overlay.animation = MTStatusBarOverlayAnimationFallDown;  // MTStatusBarOverlayAnimationShrink
+        overlay.detailViewMode = MTDetailViewModeHistory;         // enable automatic history-tracking and show in detail-view
+        overlay.tag = 1;
+        overlay.progress = 0.0;
         [self loadLatestMail:NUMBER_OF_NEW_MESSAGES_TO_CHECK withTableController:emailsTableViewController withFolder:INBOX];
     }
 }
@@ -976,9 +1060,16 @@ static NSString *currentFolder;
     for (NSString *senderEmailID in funnel.sendersArray) {
         MCOAddress *emailAddress = message.header.from;
         NSString *messageSenderID = [[emailAddress mailbox] lowercaseString];
-        if ([senderEmailID.lowercaseString isEqualToString:messageSenderID]) {
+        /*changes for including the change for "Search as text"*/
+        if ([messageSenderID rangeOfString:senderEmailID].location == NSNotFound) {
+            
+        }
+        else {
             return TRUE;
         }
+//        if ([senderEmailID.lowercaseString isEqualToString:messageSenderID]) {
+//            return TRUE;
+//        }
     }
     if ([[funnel.funnelName lowercaseString] isEqualToString:[ALL_FUNNL lowercaseString]] || [[funnel.funnelName lowercaseString] isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]) {
         
