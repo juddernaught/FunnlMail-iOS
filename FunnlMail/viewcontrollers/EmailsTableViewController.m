@@ -264,6 +264,9 @@ UIView *greyView;
     if (!helpButton) {
         [helpButton removeFromSuperview];
         helpButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 40, WIDTH, 60)];
+        [helpButton.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:18]];
+        [helpButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+        helpButton.contentEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 34);
     }
     
     UIImage *nextImage = [UIImage imageNamed:@"nextImage.png"];
@@ -278,13 +281,15 @@ UIView *greyView;
     if (!helpFlag) {
         disclosureArrow.hidden = NO;
         [helpButton setTitle:HELP_COMMENT forState:UIControlStateNormal];
+        [helpButton setTitleColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE] forState:UIControlStateNormal];
     }
     else {
         disclosureArrow.hidden = YES;
         [helpButton setTitle:GUIDE_FOR_SWIPING_CELL forState:UIControlStateNormal];
+        [helpButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     }
-    [helpButton setTitleColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE] forState:UIControlStateNormal];
-    [helpButton.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:18]];
+    
+//    [helpButton.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:18]];
     [helpButton addTarget:self action:@selector(helpButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [helpButton removeFromSuperview];
     [returnHeaderView addSubview:disclosureArrow];
@@ -1471,6 +1476,7 @@ UIView *greyView;
             disclosureArrow.hidden = YES;
 
             [helpButton setTitle:GUIDE_FOR_SWIPING_CELL forState:UIControlStateNormal];
+            [helpButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
             if (isSearching == NO) {
                 if ([[[EmailService instance] filterMessages] count]) {
                     EmailCell *tempCell = (EmailCell*)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
@@ -1488,6 +1494,7 @@ UIView *greyView;
             disclosureArrow.hidden = NO;
             
             [helpButton setTitle:HELP_COMMENT forState:UIControlStateNormal];
+            [helpButton setTitleColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE] forState:UIControlStateNormal];
             if(isSearching == NO){
                 if ([[[EmailService instance] filterMessages] count]) {
                     EmailCell *tempCell = (EmailCell*)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
@@ -1506,6 +1513,7 @@ UIView *greyView;
     else {
         disclosureArrow.hidden = NO;
         [self.helpButton setTitle:HELP_COMMENT forState:UIControlStateNormal];
+        [helpButton setTitleColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE] forState:UIControlStateNormal];
         helpFlag = FALSE;
         AppDelegate *tempApp = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         [[(MainVC *)tempApp.mainVCControllerInstance segmentControl] setSelectedSegmentIndex:1];

@@ -700,20 +700,20 @@ static NSString *currentFolder;
             emailsTableViewController.displayStirng = displayString;
             emailsTableViewController.helpButton.titleLabel.numberOfLines = 2;
             [emailsTableViewController.helpButton.titleLabel setTextAlignment:NSTextAlignmentLeft];
-            [emailsTableViewController.helpButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+//            [emailsTableViewController.helpButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
 
-            NSString *titleString = [NSString stringWithFormat:@"    Other : %d new conversations",numberOfMails];
-            NSString *subTitleString = [NSString stringWithFormat:@"     %@",displayString];
+            NSString *titleString = [NSString stringWithFormat:@"   %d new emails in Secondary",numberOfMails];
+            NSString *subTitleString = [NSString stringWithFormat:@"    %@",displayString];
             NSMutableAttributedString *attString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n%@",titleString,subTitleString]];
             [attString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithHexString:DONE_BUTTON_BLUE] range:NSMakeRange(0, titleString.length)];
-            [attString addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue" size:16] range:NSMakeRange(0, titleString.length)];
+            [attString addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-Light" size:18] range:NSMakeRange(0, titleString.length)];
             [attString addAttribute:NSForegroundColorAttributeName value:[UIColor lightGrayColor] range:NSMakeRange(titleString.length + 1, subTitleString.length)];
-            [attString addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue" size:14] range:NSMakeRange(titleString.length + 1, subTitleString.length)];
+            [attString addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-Light" size:14] range:NSMakeRange(titleString.length + 1, subTitleString.length)];
 
             dispatch_async(dispatch_get_main_queue(), ^{
                 [emailsTableViewController.helpButton setAttributedTitle:attString forState:UIControlStateNormal];
             });
-                emailsTableViewController.disclosureArrow.hidden = YES;
+                emailsTableViewController.disclosureArrow.hidden = NO;
 //            [emailsTableViewController.helpButton setTitle:[NSString stringWithFormat:@"    Other : %d new conversation\n   %@",numberOfMails,displayString] forState:UIControlStateNormal];
             attString = nil;
             titleString = nil;
@@ -760,8 +760,15 @@ static NSString *currentFolder;
         }
     }
     if (uniqueEmailID.count > NUMBER_OF_NAME_TO_DISPLAY) {
-        [emailString appendFormat:@"& %d Others",(int)tempArray.count - NUMBER_OF_NAME_TO_DISPLAY];
-        [emailString appendString:@", "];
+        if ((int)tempArray.count - NUMBER_OF_NAME_TO_DISPLAY > 1) {
+            [emailString appendFormat:@"& %d Others",(int)tempArray.count - NUMBER_OF_NAME_TO_DISPLAY];
+            [emailString appendString:@", "];
+        }
+        else if ((int)tempArray.count - NUMBER_OF_NAME_TO_DISPLAY == 1){
+            [emailString appendFormat:@"& %d Other",(int)tempArray.count - NUMBER_OF_NAME_TO_DISPLAY];
+            [emailString appendString:@", "];
+        }
+        
     }
 //    numberOfMails = (int)uniqueEmailID.count;
     uniqueEmailID = nil;
