@@ -13,7 +13,7 @@
 #import "MessageModel.h"
 #import "FunnelService.h"
 #import "MessageFilterXRefService.h"
-
+#import "ContactService.h"
 @interface EmailService : NSObject{
 //    NSMutableArray *filterArray;
     int numberOfMails;

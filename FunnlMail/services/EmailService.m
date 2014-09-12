@@ -733,6 +733,7 @@ static NSString *currentFolder;
     }
     NSMutableArray *uniqueEmailID = [[NSMutableArray alloc] init];
     NSMutableString *emailString = [[NSMutableString alloc] init];
+    int count = 0;
     for (NSString *tempString in tempArray) {
         BOOL flag = FALSE;
         for (NSString *uniqueString in uniqueEmailID) {
@@ -741,14 +742,46 @@ static NSString *currentFolder;
             }
         }
         if (!flag) {
-            [uniqueEmailID addObject:tempString];
-            [emailString appendString:tempString];
-            [emailString appendString:@", "];
+            if (count >= NUMBER_OF_NAME_TO_DISPLAY) {
+                [uniqueEmailID addObject:tempString];
+            }
+            else {
+                [uniqueEmailID addObject:tempString];
+//                NSString *display = [self getUserName:tempString];
+//                if (display) {
+//                    [emailString appendString:display];
+//                }
+//                else
+                [emailString appendString:tempString];
+                
+                [emailString appendString:@", "];
+            }
+            count ++;
         }
     }
+    if (uniqueEmailID.count > NUMBER_OF_NAME_TO_DISPLAY) {
+        [emailString appendFormat:@"& %d Others",(int)tempArray.count - NUMBER_OF_NAME_TO_DISPLAY];
+        [emailString appendString:@", "];
+    }
+//    numberOfMails = (int)uniqueEmailID.count;
     uniqueEmailID = nil;
     tempArray = nil;
     return emailString;
+}
+
+- (NSString *)getUserName:(NSString *)emailAddress {
+    NSArray *contactArray = [[ContactService instance] retrieveAllContact];
+    for (ContactModel *tempContact in contactArray) {
+        if ([tempContact.email isEqualToString:emailAddress]) {
+            if (tempContact.name && ![tempContact.name isEqualToString:@""]) {
+                return tempContact.name;
+            }
+            else {
+                return tempContact.email;
+            }
+        }
+    }
+    return nil;
 }
 
 -(void) setMessages:(NSArray *)messages withTableController:(EmailsTableViewController *)fv{

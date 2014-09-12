@@ -2430,7 +2430,7 @@
 				GCC_PREFIX_HEADER = "FunnlMail/FunnlMail-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
-					"COCOAPODS=1",
+					"IS_DAILY_BUILD=1",
 					"MIXPANEL_DEBUG=1",
 					"MIXPANEL_LOG=1",
 				);
@@ -2484,6 +2484,11 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FunnlMail/FunnlMail-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"IS_DAILY_BUILD=0",
+				);
 				HEADER_SEARCH_PATHS = (
 					"\"${PODS_ROOT}/Headers\"",
 					"\"${PODS_ROOT}/Headers/Mixpanel\"",
@@ -2611,7 +2616,7 @@
 				GCC_PREFIX_HEADER = "FunnlMail/FunnlMail-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
-					"COCOAPODS=1",
+					"IS_DAILY_BUILD=0",
 					"TRACK_MIXPANEL=1",
 				);
 				HEADER_SEARCH_PATHS = (
@@ -2722,14 +2727,12 @@
 				GCC_PREFIX_HEADER = "FunnlMail/FunnlMail-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
-					"COCOAPODS=1",
+					"IS_DAILY_BUILD=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					"\"${PODS_ROOT}/Headers\"",
 					"\"${PODS_ROOT}/Headers/Mixpanel\"",
 					"\"${PODS_ROOT}/Headers/SSKeychain\"",
-					"$(BUILD_ROOT)/../IntermediateBuildFilesPath/UninstalledProducts",
-					"\"$(BUILT_PRODUCTS_DIR)/../../include",
 				);
 				INFOPLIST_FILE = "FunnlMail/FunnlMail-Info.plist";
 				OTHER_LDFLAGS = (
@@ -2749,7 +2752,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "ec9b83cd-923e-494e-a961-8a80d9b42c47";
+				PROVISIONING_PROFILE = "a9c75f81-8b86-460e-94a8-c968af5c1bf0";
 				SDKROOT = iphoneos7.1;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;

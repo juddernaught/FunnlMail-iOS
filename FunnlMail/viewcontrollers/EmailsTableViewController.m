@@ -104,6 +104,8 @@ UIView *greyView;
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    headerViewFlag = FALSE;
+    self.tableView.tableHeaderView = [self headerView];
     NSLog(@"how often does this happen");
     NSLog(@"what is emailFolder: %@",self.emailFolder);
     if ([EmailService instance].filterMessages.count > 0) {
@@ -257,16 +259,16 @@ UIView *greyView;
 }
 
 - (UIView *)headerView {
-    UIView *returnHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, 80)];
+    UIView *returnHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, 100)];
     
     if (!helpButton) {
         [helpButton removeFromSuperview];
-        helpButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, WIDTH, 40)];
+        helpButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 40, WIDTH, 60)];
     }
     
     UIImage *nextImage = [UIImage imageNamed:@"nextImage.png"];
     nextImage = [nextImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    disclosureArrow = [[UIImageView alloc] initWithFrame:CGRectMake(WIDTH - 10 - 24, 20 - 12, 24, 24)];
+    disclosureArrow = [[UIImageView alloc] initWithFrame:CGRectMake(WIDTH - 10 - 24, 40 + 30 - 12, 24, 24)];
     [disclosureArrow setImage:nextImage];
     disclosureArrow.tintColor = UIColorFromRGB(0x007AFF);
     nextImage = nil;
@@ -289,9 +291,31 @@ UIView *greyView;
     [returnHeaderView addSubview:helpButton];
     
     
-    mailSearchBar.frame = CGRectMake(0, 40, WIDTH, 40);
+    mailSearchBar.frame = CGRectMake(0, 0, WIDTH, 40);
     mailSearchBar.showsScopeBar = NO;
-    [returnHeaderView addSubview:mailSearchBar];
+    
+    if (!headerViewFlag) {
+        returnHeaderView.frame = CGRectMake(0, 0, WIDTH, 60);
+        helpButton.frame = CGRectMake(0, 0, WIDTH, 60);
+        disclosureArrow.frame = CGRectMake(WIDTH - 10 - 24, 30 - 12, 24, 24);
+        [mailSearchBar removeFromSuperview];
+        
+        UIView *sampleView = [[UIView alloc] initWithFrame:CGRectMake(0, 59.5, WIDTH, 0.5)];
+        [sampleView setBackgroundColor:[UIColor lightGrayColor]];
+        [returnHeaderView addSubview:sampleView];
+        sampleView = nil;
+    }
+    else {
+        returnHeaderView.frame = CGRectMake(0, 0, WIDTH, 100);
+        helpButton.frame = CGRectMake(0, 40, WIDTH, 60);
+        disclosureArrow.frame = CGRectMake(WIDTH - 10 - 24, 40 + 30 - 12, 24, 24);
+        [returnHeaderView addSubview:mailSearchBar];
+        
+        UIView *sampleView = [[UIView alloc] initWithFrame:CGRectMake(0, 99.5, WIDTH, 0.5)];
+        [sampleView setBackgroundColor:[UIColor lightGrayColor]];
+        [returnHeaderView addSubview:sampleView];
+        sampleView = nil;
+    }
     
     return returnHeaderView;
 }
@@ -335,6 +359,19 @@ UIView *greyView;
 - (void)searchDisplayController:(UISearchDisplayController *)controller didLoadSearchResultsTableView:(UITableView *)tableView
 {
 	[tableView registerClass:[EmailCell class] forCellReuseIdentifier:mailCellIdentifier];
+}
+
+#pragma mark ScrollView
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (!headerViewFlag && scrollView.contentOffset.y < -5) {
+        headerViewFlag = TRUE;
+        self.tableView.tableHeaderView = nil;
+        self.tableView.tableHeaderView = [self headerView];
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+
 }
 
 #pragma mark - Table View

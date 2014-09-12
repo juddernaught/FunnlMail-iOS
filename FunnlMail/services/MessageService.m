@@ -952,7 +952,17 @@ static MessageService *instance;
         while ([resultSet next]) {
             NSString *tempString = [resultSet stringForColumn:@"messageJSON"];
             MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:tempString];
-            if (message) {
+            
+            if (message.header.from.displayName) {
+                [array addObject:message.header.from.displayName];
+            }
+            else if (message.header.from.mailbox){
+                [array addObject:message.header.from.mailbox];
+            }
+            else if (message.header.sender.displayName) {
+                [array addObject:message.header.sender.displayName];
+            }
+            else {
                 [array addObject:message.header.sender.mailbox];
             }
             tempString = nil;
