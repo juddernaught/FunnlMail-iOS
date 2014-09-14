@@ -95,6 +95,7 @@
     // setting up HockeyApp
     // nocommit: must change app identifier
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"c210d26de33e613330b327e98d2bb97f"];
+    [[BITHockeyManager sharedHockeyManager] setDisableCrashManager:YES];
     [[BITHockeyManager sharedHockeyManager] startManager];
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
 
