@@ -17,7 +17,7 @@
 #import "AppDelegate.h"
 #import <MailCore/MailCore.h>
 
-@interface EmailsTableViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate,MCSwipeTableViewCellDelegate,RDSwipeableTableViewCellDelegate> {
+@interface EmailsTableViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate,MCSwipeTableViewCellDelegate,RDSwipeableTableViewCellDelegate,UIScrollViewDelegate> {
     RDSwipeableTableViewCell *tempCellForDisplay;
     UIView *filterNavigationView;
     UILabel *filterLabel;
@@ -35,6 +35,7 @@
     MessageModel *selectedMessageModel;
     UIView *returnView;
     BOOL scopeButtonPressedIndexNumber;
+    BOOL headerViewFlag;
 @public
     NSMutableArray *searchMessages;
 }

@@ -198,14 +198,16 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     dispatch_async(dispatch_get_main_queue(), ^{
         NSMutableAttributedString *attString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@",@""]];
         [emailsTableViewController.helpButton setAttributedTitle:attString forState:UIControlStateNormal];
-        [emailsTableViewController.helpButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentCenter];
+//        [emailsTableViewController.helpButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentCenter];
 
 
         if (emailsTableViewController.helpFlag) {
             [emailsTableViewController.helpButton setTitle:GUIDE_FOR_SWIPING_CELL forState:UIControlStateNormal];
+            [emailsTableViewController.helpButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         }
         else {
             [emailsTableViewController.helpButton setTitle:HELP_COMMENT forState:UIControlStateNormal];
+            [emailsTableViewController.helpButton setTitleColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE] forState:UIControlStateNormal];
         }
         [emailsTableViewController.helpButton setNeedsDisplay];
         [emailsTableViewController.helpButton setNeedsLayout];

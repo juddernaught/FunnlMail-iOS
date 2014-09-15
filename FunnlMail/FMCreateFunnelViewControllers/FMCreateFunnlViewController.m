@@ -1840,7 +1840,7 @@
 
 - (void)addSender:(UIButton *)sender {
     [buttonArray removeAllObjects];
-    NSArray *subView = [self.view subviews];
+    NSArray *subView = [mainScrollView subviews];
     for (UIView *tempView in subView) {
         [tempView removeFromSuperview];
     }
@@ -1852,7 +1852,7 @@
     [self setUpViewForCreatingFunnel];
     [self advanceButtonClicked];
     [self bringViewDown];
-    [self setUpCustomNavigationBar];
+//    [self setUpCustomNavigationBar];
 }
 
 - (void)addSubject:(UIButton*)sender {

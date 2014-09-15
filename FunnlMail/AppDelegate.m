@@ -94,8 +94,16 @@
     
     // setting up HockeyApp
     // nocommit: must change app identifier
+#if IS_DAILY_BUILD == 1
+    //This is used for DAILY builds --- 
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"1c04170556ba64478f0ace210db67c5a"];
+#else
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"c210d26de33e613330b327e98d2bb97f"];
+#endif
+    
+    //this forces HockeyManager not to report crashes and thus, crashlytics will start crashreporting again
     [[BITHockeyManager sharedHockeyManager] setDisableCrashManager:YES];
+    
     [[BITHockeyManager sharedHockeyManager] startManager];
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
 
