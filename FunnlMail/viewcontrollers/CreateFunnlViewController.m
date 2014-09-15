@@ -1231,7 +1231,7 @@ CGRect temp;//this is necessary to reset view
         NSLog(@"this is the height: %f",height);
         //temp = self.view.frame;
         //self.view.frame = CGRectMake(0, -height, 480, self.view.bounds.size.height+height);
-        TextFieldCell *cell = [(TextFieldCell*)[textField superview] superview];
+        TextFieldCell *cell = (TextFieldCell*)[[textField superview] superview];
         NSIndexPath *indexPath = [Tableview indexPathForCell:cell];
         CGRect myRect = [Tableview rectForRowAtIndexPath:indexPath];
         //myRect = [Tableview convertRect:cell.frame toView:self.view];

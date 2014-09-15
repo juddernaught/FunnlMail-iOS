@@ -179,12 +179,16 @@ static NSString *contactCellIdentifier = @"ContactCell";
     messageLabel = nil;
     
     y = y + 50 + 10;
+    NSMutableArray *tempArray = [[NSMutableArray alloc] initWithArray:message.header.cc];
     contactInCC = [[NSMutableArray alloc] initWithArray:message.header.cc];
-    for (MCOAddress *tempAddress in contactInCC) {
+    for (int counter = 0;counter < contactInCC.count;counter ++) {
+        MCOAddress *tempAddress = [contactInCC objectAtIndex:counter];
         if ([tempAddress.mailbox isEqualToString:[[EmailService instance] userEmailID]]) {
-            [contactInCC removeObjectIdenticalTo:tempAddress];
+            [tempArray removeObjectAtIndex:counter];
         }
     }
+    contactInCC = tempArray;
+    tempArray = nil;
     for (int count = 0; count < contactInCC.count; count++) {
         for (int cnt = 0; cnt < tempFunnelModel.sendersArray.count; cnt ++) {
             if ([[[contactInCC objectAtIndex:count] mailbox] isEqualToString:[[tempFunnelModel sendersArray] objectAtIndex:cnt]]) {
@@ -268,11 +272,13 @@ static NSString *contactCellIdentifier = @"ContactCell";
             fetcher.comment = [NSString stringWithFormat:@"%d",counter];
             [fetcher beginFetchWithDelegate:self didFinishSelector:@selector(imageFetcher:finishedWithData:error:)];
             
-            NSString *contactName = [self getUserName:[[contactInCC objectAtIndex:counter] mailbox]];
+            NSString *contactName = [self getUserName:[[contactInCC objectAtIndex:counter] displayName]];
+            
             
             if (counter % 3 == 0) {
                 UIButton *tempButton = [[UIButton alloc] initWithFrame:CGRectMake(x1, y1, buttonWidth, buttonWidth)];
                 [tempButton.titleLabel setFont:FONT_FOR_INITIAL];
+                
                 if ([[contactInCC objectAtIndex:counter] displayName]) {
                     [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[[contactInCC objectAtIndex:counter] displayName] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
                 }
@@ -484,42 +490,44 @@ static NSString *contactCellIdentifier = @"ContactCell";
 -(void)updateFunnelData{
     
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"Updated Funnl"];
+  [[Mixpanel sharedInstance] track:@"Updated Funnl"];
 #endif
-    NSMutableString *senderString = [[NSMutableString alloc] init];
-    for (int counter =0 ; counter < contactInCC.count; counter++) {
-        ContactTableViewCell *tempCell = (ContactTableViewCell*)[contactsTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:counter inSection:0]];
-        NSString *selectEmail = tempCell.nameLabel.text;
-        BOOL duplicate = FALSE;
-        if ([[flagArray objectAtIndex:counter] isEqualToString:@"1"]) {
-            for (NSString *email in tempFunnelModel.sendersArray) {
-                if ([email isEqualToString:selectEmail]) {
-                    duplicate = TRUE;
-                    break;
-                }
-            }
-            if ([[flagArray objectAtIndex:counter] isEqualToString:@"1"] && !duplicate) {
-                [senderString appendFormat:@"%@,",[[contactInCC objectAtIndex:counter] mailbox]];
-            }
-        }
-    }
-    if (senderString.length > 0) {
-        senderString = (NSMutableString*)[senderString substringWithRange:NSMakeRange(0, senderString.length -1)];
-        tempFunnelModel.emailAddresses = [NSString stringWithFormat:@"%@,%@",tempFunnelModel.emailAddresses,senderString];
-    }
-    if ([tempFunnelModel.emailAddresses rangeOfString:message.header.sender.mailbox].location == NSNotFound) {
-        tempFunnelModel.emailAddresses = [NSString stringWithFormat:@"%@,%@",tempFunnelModel.emailAddresses,message.header.sender.mailbox];
-    } else {
-        
-    }
-    NSLog(@"CC %@",tempFunnelModel.emailAddresses);
-    [[FunnelService instance] updateFunnel:tempFunnelModel];
-    [[EmailService instance] applyingFunnel:tempFunnelModel toMessages:[EmailService instance].filterMessages];
-    [self removeFromSuperview];
+  NSMutableString *senderString = [[NSMutableString alloc] init];
+  for (int counter =0 ; counter < contactInCC.count; counter++) {
+      ContactTableViewCell *tempCell = (ContactTableViewCell*)[contactsTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:counter inSection:0]];
+      NSString *selectEmail = tempCell.nameLabel.text;
+      BOOL duplicate = FALSE;
+      if ([[flagArray objectAtIndex:counter] isEqualToString:@"1"]) {
+          for (NSString *email in tempFunnelModel.sendersArray) {
+              if ([email isEqualToString:selectEmail]) {
+                  duplicate = TRUE;
+                  break;
+              }
+          }
+          if ([[flagArray objectAtIndex:counter] isEqualToString:@"1"] && !duplicate) {
+              [senderString appendFormat:@"%@,",[[contactInCC objectAtIndex:counter] mailbox]];
+          }
+      }
+  }
+  if (senderString.length > 0) {
+      senderString = (NSMutableString*)[senderString substringWithRange:NSMakeRange(0, senderString.length -1)];
+      tempFunnelModel.emailAddresses = [NSString stringWithFormat:@"%@,%@",tempFunnelModel.emailAddresses,senderString];
+  }
+  if ([tempFunnelModel.emailAddresses rangeOfString:message.header.sender.mailbox].location == NSNotFound) {
+      tempFunnelModel.emailAddresses = [NSString stringWithFormat:@"%@,%@",tempFunnelModel.emailAddresses,message.header.sender.mailbox];
+  } else {
+      
+  }
+  NSLog(@"CC %@",tempFunnelModel.emailAddresses);
+  [[FunnelService instance] updateFunnel:tempFunnelModel];
+  [[EmailService instance] applyingFunnel:tempFunnelModel toMessages:[EmailService instance].filterMessages];
+  [self removeFromSuperview];
+  if ([viewController isKindOfClass:[EmailsTableViewController class]]) {
     [[(EmailsTableViewController*)viewController tableView] reloadData];
-    AppDelegate *tempAppDelegate = APPDELEGATE;
-    tempAppDelegate.funnelUpDated = TRUE;
-    [MBProgressHUD hideAllHUDsForView:tempAppDelegate.window animated:YES];
+  }
+  AppDelegate *tempAppDelegate = APPDELEGATE;
+  tempAppDelegate.funnelUpDated = TRUE;
+  [MBProgressHUD hideAllHUDsForView:tempAppDelegate.window animated:YES];
 }
 
 - (void)outterButtonClicked:(UIButton *)sender {

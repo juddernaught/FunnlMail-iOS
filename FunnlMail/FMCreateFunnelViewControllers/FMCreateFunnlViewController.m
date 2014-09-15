@@ -112,6 +112,11 @@
     [self.view setBackgroundColor:[UIColor clearColor]];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    AppDelegate *tempAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [tempAppDelegate.progressHUD removeFromSuperview];
+}
+
 #pragma mark -
 #pragma mark Helper
 - (void)controllingSuggestionButton:(NSString *)buttonTitle {
@@ -497,6 +502,9 @@
     funnelNameTextField.tag = 1001;
     funnelNameTextField.delegate = self;
     if (isEditFunnel || shareFunnl) {
+        if (shareFunnl) {
+            shareFunnl = FALSE;
+        }
         funnelNameTextField.text = oldModel.funnelName;
     }
     else {
@@ -660,7 +668,12 @@
                     [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
                 }
                 else {
-                    [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] email] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
+                    if ([[(ContactModel*)[contactMutableArray objectAtIndex:counter] email] length]) {
+                        [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] email] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
+                    }
+                    else {
+                        [tempButton setTitle:@"M" forState:UIControlStateNormal];
+                    }
                 }
                 tempButton.tag = counter;
                 
@@ -701,7 +714,12 @@
                     [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
                 }
                 else {
-                    [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] email] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
+                    if ([(ContactModel*)[contactMutableArray objectAtIndex:counter] email].length) {
+                        [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] email] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
+                    }
+                    else {
+                        [tempButton setTitle:@"M" forState:UIControlStateNormal];
+                    }
                 }
                 [tempButton.titleLabel setFont:FONT_FOR_INITIAL];
                 [tempButton setBackgroundColor:color];
@@ -743,7 +761,10 @@
                     [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
                 }
                 else {
-                    [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] email] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
+                    if ([(ContactModel*)[contactMutableArray objectAtIndex:counter] email].length)
+                        [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] email] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
+                    else
+                        [tempButton setTitle:@"M" forState:UIControlStateNormal];
                 }
                 [tempButton setBackgroundColor:color];
                 tempButton.clipsToBounds = YES;
@@ -1697,12 +1718,16 @@
     
     if (!isEditing) {
         NSString *deletedEmailAddress = [NSString stringWithFormat:@"%@",[(ContactModel *)[contactMutableArray objectAtIndex:sender.tag] email]];
-        for (ContactModel *tempModel in contactMutableArray) {
+        NSMutableArray *tempArray = [[NSMutableArray alloc] initWithArray:(NSArray *)contactMutableArray];
+        for (int counter = 0;counter < contactMutableArray.count;counter++) {
+            ContactModel *tempModel = [contactMutableArray objectAtIndex:counter];
             if ([tempModel.email isEqualToString:deletedEmailAddress]) {
-                [contactMutableArray removeObjectIdenticalTo:tempModel];
+                [tempArray removeObjectAtIndex:counter];
                 break;
             }
         }
+        contactMutableArray = tempArray;
+        tempArray = nil;
         [self removeViewFromMainScroll];
         [self setUpViewForCreatingFunnel];
         [self advanceButtonClicked];
@@ -1929,17 +1954,19 @@
         [tempTextField removeFromSuperview];
         [textFieldArray removeObjectIdenticalTo:tempTextField];
     }
-    
+    NSMutableArray *tempArray = [[NSMutableArray alloc] initWithArray:(NSArray *)subjectArray];
     if (isEditFunnel) {
         NSLog(@"%@",tempTextField.text);
-        for (NSString *tempString in subjectArray) {
+        for (int counter = 0;counter < subjectArray.count;counter++) {
+            NSString *tempString = [subjectArray objectAtIndex:counter];
             if ([tempString isEqualToString:tempTextField.text]) {
-                [subjectArray removeObjectIdenticalTo:tempString];
+                [tempArray removeObjectAtIndex:counter];
                 break;
             }
         }
     }
-    
+    subjectArray = tempArray;
+    tempArray = nil;
     [self resignAllTextField];
     [[self getTextFieldForButton:sender] removeFromSuperview];
     [sender removeFromSuperview];

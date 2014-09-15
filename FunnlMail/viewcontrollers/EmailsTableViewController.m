@@ -425,319 +425,287 @@ UIView *greyView;
     if(isSearching == NO){
         switch (indexPath.section){
             case 0:{
-                EmailCell *cell = [tableView dequeueReusableCellWithIdentifier:mailCellIdentifier forIndexPath:indexPath];
-                if (helpFlag && indexPath.row == 0) {
-                    [cell.backgroundImageView setHidden:NO];
-                }
-                else {
-                    [cell.backgroundImageView setHidden:YES];
-                }
-                if (tempCellForDisplay.tag == indexPath.row) {
-                    tempCellForDisplay = nil;
-                }
-//                else
-//                    [cell resetToOriginalState];
-                cell.funnlLabel1.text = @"";
-                cell.funnlLabel2.text = @"";
-                cell.funnlLabel3.text = @"";
-                cell.funnlLabel1.backgroundColor = CLEAR_COLOR;
-                cell.funnlLabel2.backgroundColor = CLEAR_COLOR;
-                cell.funnlLabel3.backgroundColor = CLEAR_COLOR;
-                
-                NSArray *tempMessageArray = [EmailService instance].filterMessages;
-                if(tempMessageArray.count == 0){
-                    return cell;
-                }
-                MessageModel *messageModel =tempMessageArray[indexPath.row];
-                NSMutableDictionary *funnlLabelDictionary= [self getFunnlsDictionary:messageModel];
-                int funnlLabelCount = 0;
-                for (NSString *key in funnlLabelDictionary.allKeys) {
-                    if (funnlLabelDictionary.allKeys.count > 0) {
-                        if (funnlLabelDictionary.allKeys.count > 1) {
-                            cell.funnlLabel1.text = [NSString stringWithFormat:@"%@ + %ld",key,(long)funnlLabelDictionary.allKeys.count - 1];
-                            cell.funnlLabel1.backgroundColor = [UIColor colorWithHexString:[funnlLabelDictionary objectForKey:key]];
-                            cell.funnlLabel1.textColor = [UIColor whiteColor];
-                        }
-                        else {
-                            cell.funnlLabel1.text = key;
-                            cell.funnlLabel1.backgroundColor = [UIColor colorWithHexString:[funnlLabelDictionary objectForKey:key]];
-                            cell.funnlLabel1.textColor = [UIColor whiteColor];
-                        }
-                    }
-//                    if(funnlLabelCount == 0){
-//                    
-//                    }
-//                    else if(funnlLabelCount == 1){
-//                        cell.funnlLabel2.text = key;
-//                        if(funnlLabelDictionary.allKeys.count > 1){
-//                            cell.funnlLabel2.text = [NSString stringWithFormat:@"%@ + %d ",key,funnlLabelDictionary.allKeys.count-1];
-//                            cell.funnlLabel2.backgroundColor = [UIColor colorWithHexString:[funnlLabelDictionary objectForKey:key]];
-//                            cell.funnlLabel2.textColor = [UIColor whiteColor];
-//                        }
-//                    }
-                    [cell.funnlLabel1 sizeThatFits:CGSizeMake(60, 20)];
-                    [cell.funnlLabel2 sizeThatFits:CGSizeMake(60, 20)];
-                    funnlLabelCount++;
-                }
-                
-                
-                //[cell.labelNameText setAttributedText:[self returnFunnelString:(MessageModel*)[EmailService instance].filterMessages[indexPath.row]]];
-                cell.tag = indexPath.row;
-                cell.delegate = self;
-                MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
-                if ([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread] > 1) {
-                    if ([self isThreadRead:[NSString stringWithFormat:@"%llul",message.gmailThreadID]]) {
-                        cell.readLabel.backgroundColor = [UIColor clearColor];
-                        cell.readLabel.hidden = YES;
-                        
-                        cell.senderLabel.frame = CGRectMake(30 - 17, 13, 320-108 + 17, 20);
-                        cell.subjectLabel.frame = CGRectMake(30 - 17, 33 + 2.25, 320-108 + 17, 16);
-                        cell.bodyLabel.frame = CGRectMake(30 - 17, 33 + 2.25 + 15 + 2, 320-108 + 17, 35);
+                if (indexPath.row < [EmailService instance].filterMessages.count) {
+                    EmailCell *cell = [tableView dequeueReusableCellWithIdentifier:mailCellIdentifier forIndexPath:indexPath];
+                    if (helpFlag && indexPath.row == 0) {
+                        [cell.backgroundImageView setHidden:NO];
                     }
                     else {
-                        cell.readLabel.hidden = NO;
-                        cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
-                        
-                        cell.senderLabel.frame = CGRectMake(30, 13, 320-108, 20);
-                        cell.subjectLabel.frame = CGRectMake(30 - 17, 33 + 2.25, 320-108 + 17, 16);
-                        cell.bodyLabel.frame = CGRectMake(30 - 17, 33 + 2.25 + 15 + 2, 320-108 + 17, 35);
+                        [cell.backgroundImageView setHidden:YES];
                     }
-                }
-                else{
-                    if([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] read]) {
-                        cell.readLabel.backgroundColor = [UIColor clearColor];
-                        cell.readLabel.hidden = YES;
-                        
-                        cell.senderLabel.frame = CGRectMake(30 - 17, 13, 320-108 + 17, 20);
-                        cell.subjectLabel.frame = CGRectMake(30 - 17, 33 + 2.25, 320-108 + 17, 16);
-                        cell.bodyLabel.frame = CGRectMake(30 - 17, 33 + 2.25 + 15 + 2, 320-108 + 17, 35);
+                    if (tempCellForDisplay.tag == indexPath.row) {
+                        tempCellForDisplay = nil;
                     }
-                    else {
-                        cell.readLabel.hidden = NO;
-                        cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
-                        
-                        cell.senderLabel.frame = CGRectMake(30, 13, 320-108, 20);
-                        cell.subjectLabel.frame = CGRectMake(30 - 17, 33 + 2.25, 320-108 + 17, 16);
-                        cell.bodyLabel.frame = CGRectMake(30 - 17, 33 + 2.25 + 15 + 2, 320-108 + 17, 35);
-                    }
-                }
-                
-                NSTimeInterval interval = [message.header.date timeIntervalSinceNow];
-                interval = -interval;
-                if (interval <= 24*60*60) {
-                    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-                    [dateFormatter setDateFormat:@"h:mm a"]; //Changed by Chad
-                    NSString *dateString = [dateFormatter stringFromDate:message.header.date];
-                    cell.dateLabel.text = dateString.uppercaseString;
-                }
-                else
-                    cell.dateLabel.text = [message.header.date timeAgo];
-//                if(message.header.from.displayName.length){
-//                    cell.senderLabel.text = [self removeAngularBracket:message.header.from.displayName];
-//                }
-//                else {
-//                    cell.senderLabel.text = [self removeAngularBracket:message.header.from.mailbox];
-//                }
-                NSString *senderLabelText = [self removeAngularBracket:[self getDisplayName:message]];
-                if (senderLabelText) {
-                    cell.senderLabel.text = senderLabelText;
-                }
-                else {
-                    cell.senderLabel.text = @"XXX";
-                }
-                // Changed by Chad
-                // commented out by iauro
-                cell.subjectLabel.text = message.header.subject;
-                
-                if (cell.subjectLabel.text.length == 0)
-                    cell.subjectLabel.text = @"No Subject";
-                else {
-                    NSString *subjectString = cell.subjectLabel.text;
-                    NSLog(@"%@",subjectString);
-                    if ([self willFitString:cell.subjectLabel.text InLabel:cell.subjectLabel]) {
-                        CGSize labelSize = [cell.subjectLabel.text sizeWithFont:MAIL_SUBJECT_FONT constrainedToSize:CGSizeMake(cell.subjectLabel.frame.size.width, cell.subjectLabel.frame.size.height) lineBreakMode:NSLineBreakByCharWrapping];
-                        cell.threadLabel.frame = CGRectMake(13 + labelSize.width, 33 + 1.5, cell.threadLabel.frame.size.width, cell.threadLabel.frame.size.height);
-                    }
-                    else {
-                        cell.threadLabel.frame = CGRectMake(13 + 320 - 108 + 17, 33 + 1.5, 48-5, 15);
-                    }
-                }
-                
-                if([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread] > 1){
-                    cell.threadLabel.text = [NSString stringWithFormat:@" (%d)",[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread]];
-                    [cell.threadLabel setHidden:NO];
-                    [cell.detailDiscloser setHidden:YES];
-                }
-                else{
-                    cell.threadLabel.text = @"";
-                    [cell.threadLabel setHidden:YES];
-                    [cell.detailDiscloser setHidden:YES];
-                }
-                
-                
-                NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
-                NSString *cachedPreview = [[MessageService instance] retrievePreviewContentWithID:uidKey];
-                if ( cachedPreview != nil && ![cachedPreview isEqualToString:@""]) {
-                    cell.bodyLabel.text = cachedPreview;
-                }
-                else{
-                    // loads email body and stores in database
-                    if(FETCH_MSG_BODY_AT_MSG_LOADING){
-                        MCOIMAPMessageRenderingOperation * op = [[EmailService instance].imapSession htmlBodyRenderingOperationWithMessage:message folder:@"INBOX"];
+                    //                else
+                    //                    [cell resetToOriginalState];
+                    cell.funnlLabel1.text = @"";
+                    cell.funnlLabel2.text = @"";
+                    cell.funnlLabel3.text = @"";
+                    cell.funnlLabel1.backgroundColor = CLEAR_COLOR;
+                    cell.funnlLabel2.backgroundColor = CLEAR_COLOR;
+                    cell.funnlLabel3.backgroundColor = CLEAR_COLOR;
                     
-                        [op start:^(NSString * htmlString, NSError * error) {
-                            NSArray *tempArray = [htmlString componentsSeparatedByString:@"<head>"];
-                            if (tempArray.count > 1) {
-                                htmlString = [tempArray objectAtIndex:1];
+                    NSArray *tempMessageArray = [EmailService instance].filterMessages;
+                    if(tempMessageArray.count == 0){
+                        return cell;
+                    }
+                    MessageModel *messageModel =tempMessageArray[indexPath.row];
+                    NSMutableDictionary *funnlLabelDictionary= [self getFunnlsDictionary:messageModel];
+                    int funnlLabelCount = 0;
+                    for (NSString *key in funnlLabelDictionary.allKeys) {
+                        if (funnlLabelDictionary.allKeys.count > 0) {
+                            if (funnlLabelDictionary.allKeys.count > 1) {
+                                cell.funnlLabel1.text = [NSString stringWithFormat:@"%@ + %ld",key,(long)funnlLabelDictionary.allKeys.count - 1];
+                                cell.funnlLabel1.backgroundColor = [UIColor colorWithHexString:[funnlLabelDictionary objectForKey:key]];
+                                cell.funnlLabel1.textColor = [UIColor whiteColor];
                             }
                             else {
-                                tempArray = [htmlString componentsSeparatedByString:@"Subject:"];
+                                cell.funnlLabel1.text = key;
+                                cell.funnlLabel1.backgroundColor = [UIColor colorWithHexString:[funnlLabelDictionary objectForKey:key]];
+                                cell.funnlLabel1.textColor = [UIColor whiteColor];
+                            }
+                        }
+                        [cell.funnlLabel1 sizeThatFits:CGSizeMake(60, 20)];
+                        [cell.funnlLabel2 sizeThatFits:CGSizeMake(60, 20)];
+                        funnlLabelCount++;
+                    }
+                    
+                    cell.tag = indexPath.row;
+                    cell.delegate = self;
+                    MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
+                    if ([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread] > 1) {
+                        if ([self isThreadRead:[NSString stringWithFormat:@"%llul",message.gmailThreadID]]) {
+                            cell.readLabel.backgroundColor = [UIColor clearColor];
+                            cell.readLabel.hidden = YES;
+                            
+                            cell.senderLabel.frame = CGRectMake(30 - 17, 13, 320-108 + 17, 20);
+                            cell.subjectLabel.frame = CGRectMake(30 - 17, 33 + 2.25, 320-108 + 17, 16);
+                            cell.bodyLabel.frame = CGRectMake(30 - 17, 33 + 2.25 + 15 + 2, 320-108 + 17, 35);
+                        }
+                        else {
+                            cell.readLabel.hidden = NO;
+                            cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
+                            
+                            cell.senderLabel.frame = CGRectMake(30, 13, 320-108, 20);
+                            cell.subjectLabel.frame = CGRectMake(30 - 17, 33 + 2.25, 320-108 + 17, 16);
+                            cell.bodyLabel.frame = CGRectMake(30 - 17, 33 + 2.25 + 15 + 2, 320-108 + 17, 35);
+                        }
+                    }
+                    else{
+                        if([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] read]) {
+                            cell.readLabel.backgroundColor = [UIColor clearColor];
+                            cell.readLabel.hidden = YES;
+                            
+                            cell.senderLabel.frame = CGRectMake(30 - 17, 13, 320-108 + 17, 20);
+                            cell.subjectLabel.frame = CGRectMake(30 - 17, 33 + 2.25, 320-108 + 17, 16);
+                            cell.bodyLabel.frame = CGRectMake(30 - 17, 33 + 2.25 + 15 + 2, 320-108 + 17, 35);
+                        }
+                        else {
+                            cell.readLabel.hidden = NO;
+                            cell.readLabel.backgroundColor = [UIColor colorWithHexString:@"#007AFF"];
+                            
+                            cell.senderLabel.frame = CGRectMake(30, 13, 320-108, 20);
+                            cell.subjectLabel.frame = CGRectMake(30 - 17, 33 + 2.25, 320-108 + 17, 16);
+                            cell.bodyLabel.frame = CGRectMake(30 - 17, 33 + 2.25 + 15 + 2, 320-108 + 17, 35);
+                        }
+                    }
+                    
+                    NSTimeInterval interval = [message.header.date timeIntervalSinceNow];
+                    interval = -interval;
+                    if (interval <= 24*60*60) {
+                        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                        [dateFormatter setDateFormat:@"h:mm a"]; //Changed by Chad
+                        NSString *dateString = [dateFormatter stringFromDate:message.header.date];
+                        cell.dateLabel.text = dateString.uppercaseString;
+                    }
+                    else
+                        cell.dateLabel.text = [message.header.date timeAgo];
+                    
+                    NSString *senderLabelText = [self removeAngularBracket:[self getDisplayName:message]];
+                    if (senderLabelText) {
+                        cell.senderLabel.text = senderLabelText;
+                    }
+                    else {
+                        cell.senderLabel.text = @"XXX";
+                    }
+                    // Changed by Chad
+                    // commented out by iauro
+                    cell.subjectLabel.text = message.header.subject;
+                    
+                    if (cell.subjectLabel.text.length == 0)
+                        cell.subjectLabel.text = @"No Subject";
+                    else {
+                        NSString *subjectString = cell.subjectLabel.text;
+                        NSLog(@"%@",subjectString);
+                        if ([self willFitString:cell.subjectLabel.text InLabel:cell.subjectLabel]) {
+                            CGSize labelSize = [cell.subjectLabel.text sizeWithFont:MAIL_SUBJECT_FONT constrainedToSize:CGSizeMake(cell.subjectLabel.frame.size.width, cell.subjectLabel.frame.size.height) lineBreakMode:NSLineBreakByCharWrapping];
+                            cell.threadLabel.frame = CGRectMake(13 + labelSize.width, 33 + 1.5, cell.threadLabel.frame.size.width, cell.threadLabel.frame.size.height);
+                        }
+                        else {
+                            cell.threadLabel.frame = CGRectMake(13 + 320 - 108 + 17, 33 + 1.5, 48-5, 15);
+                        }
+                    }
+                    
+                    if([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread] > 1){
+                        cell.threadLabel.text = [NSString stringWithFormat:@" (%d)",[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread]];
+                        [cell.threadLabel setHidden:NO];
+                        [cell.detailDiscloser setHidden:YES];
+                    }
+                    else{
+                        cell.threadLabel.text = @"";
+                        [cell.threadLabel setHidden:YES];
+                        [cell.detailDiscloser setHidden:YES];
+                    }
+                    
+                    
+                    NSString *uidKey = [NSString stringWithFormat:@"%d", message.uid];
+                    NSString *cachedPreview = [[MessageService instance] retrievePreviewContentWithID:uidKey];
+                    if ( cachedPreview != nil && ![cachedPreview isEqualToString:@""]) {
+                        cell.bodyLabel.text = cachedPreview;
+                    }
+                    else{
+                        // loads email body and stores in database
+                        if(FETCH_MSG_BODY_AT_MSG_LOADING){
+                            MCOIMAPMessageRenderingOperation * op = [[EmailService instance].imapSession htmlBodyRenderingOperationWithMessage:message folder:@"INBOX"];
+                            
+                            [op start:^(NSString * htmlString, NSError * error) {
+                                NSArray *tempArray = [htmlString componentsSeparatedByString:@"<head>"];
                                 if (tempArray.count > 1) {
                                     htmlString = [tempArray objectAtIndex:1];
                                 }
-                            }
-                            NSMutableDictionary *paramDict = [[NSMutableDictionary alloc] init];
-                            if(htmlString){
-                                paramDict[uidKey] = htmlString;
-                                NSLog(@"----ListView: HTML data callback recieved -----");
-                                [[MessageService instance] updateMessageWithHTMLContent:paramDict];
-                            }
-                        }];
-                    }
-
-                    cell.messageRenderingOperation = [[EmailService instance].imapSession plainTextBodyRenderingOperationWithMessage:message folder:self.emailFolder];
-                    [cell.messageRenderingOperation start:^(NSString * plainTextBodyString, NSError * error) {
-                        if (plainTextBodyString) {
-                            if (plainTextBodyString.length > 0) {
-                         
-                                if ([[plainTextBodyString substringWithRange:NSMakeRange(0, 1)] isEqualToString:@" "]) {
-                                    plainTextBodyString= [plainTextBodyString substringWithRange:NSMakeRange(1, plainTextBodyString.length - 1)];
+                                else {
+                                    tempArray = [htmlString componentsSeparatedByString:@"Subject:"];
+                                    if (tempArray.count > 1) {
+                                        htmlString = [tempArray objectAtIndex:1];
+                                    }
                                 }
-
-                                if(plainTextBodyString.length > 150){
-                                    NSRange stringRange = {0,150};
-                                    plainTextBodyString = [plainTextBodyString substringWithRange:stringRange];
-                                }
-                                
-                                //if (plainTextBodyString.length == 0)
-                                
                                 NSMutableDictionary *paramDict = [[NSMutableDictionary alloc] init];
-                                paramDict[uidKey] = [self removeStartingSpaceFromString:plainTextBodyString];
-                                [[MessageService instance] updateMessageWithDictionary:paramDict];
-                                cell.bodyLabel.text = [[MessageService instance] retrievePreviewContentWithID:uidKey];
-                                
-                            }
-                            else {
-                                cell.bodyLabel.text = @"This message has no content.";
-                            }
-                        }
-                        // message body is empty
-                        else {
-                            cell.bodyLabel.text = @"This message has no content.";
-
+                                if(htmlString){
+                                    paramDict[uidKey] = htmlString;
+                                    NSLog(@"----ListView: HTML data callback recieved -----");
+                                    [[MessageService instance] updateMessageWithHTMLContent:paramDict];
+                                }
+                            }];
                         }
                         
-                        cell.messageRenderingOperation = nil;
-                    }];
-                }
-                
-                UIView *archiveView = [self viewWithImageName:@"swipeArchive"];
-                UIColor *yellowColor = [UIColor colorWithHexString:@"#FD814A"];
-
-                UIView *trashView = [self viewWithImageName:@"swipeTrash"];
-                UIColor *redColor = [UIColor colorWithHexString:@"#FD4747"];
-
-                UIView *fullFunnlView = [self viewWithImageName:@"swipeFunnl"];
-                UIColor *fullFunnlColor = [UIColor colorWithHexString:@"#57DB7F"];
-                
-                
-                [cell setSwipeGestureWithView:archiveView color:yellowColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
-#ifdef TRACK_MIXPANEL
-                    [[Mixpanel sharedInstance] track:@" Swiped an email left to right for Archive "];
-#endif
-                    NSLog(@"Did swipe \"Archive\" cell");
-                    NSIndexPath *deleteIndexPath = [tableView indexPathForCell:cell];
-                    selectedIndexPath = deleteIndexPath;
-                    [tableView beginUpdates];
-                    selectedMessageModel = [[EmailService instance].filterMessages objectAtIndex:deleteIndexPath.row];
-                    [[EmailService instance].filterMessages removeObjectAtIndex:deleteIndexPath.row];
-                    [[EmailService instance].messages removeObjectIdenticalTo:message];
-                    [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:deleteIndexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
-                    [tableView endUpdates];
-                    [cell swipeToOriginWithCompletion:nil];
-                    [self.view showToast:[self tostViewForOperation:1] duration:TOST_DISPLAY_DURATION position:@"bottom"];
-                    messageSelected = message;
-                    [self performSelector:@selector(deleteMessageAfterOperation:) withObject:@"1" afterDelay:TOST_DISPLAY_DURATION];
-                }];
-                
-                
-                
-                [cell setSwipeGestureWithView:trashView color:redColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState2 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
-#ifdef TRACK_MIXPANEL
-                    [[Mixpanel sharedInstance] track:@"Swiped an email left to right for Trash"];
-#endif
-                    NSLog(@"Did swipe \"Trash\" cell");
-                    NSIndexPath *deleteIndexPath = [tableView indexPathForCell:cell];
-                    selectedIndexPath = deleteIndexPath;
-                    selectedMessageModel = [[EmailService instance].filterMessages objectAtIndex:deleteIndexPath.row];
-                    [tableView beginUpdates];
-                    [[EmailService instance].filterMessagePreviews removeObjectForKey:uidKey];
-                    [[EmailService instance].filterMessages removeObjectAtIndex:deleteIndexPath.row];
-                    [[EmailService instance].messages removeObjectIdenticalTo:message];
-                    [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:deleteIndexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
-                    [tableView endUpdates];
-                    [self performSelector:@selector(deleteMessageAfterOperation:) withObject:@"2" afterDelay:TOST_DISPLAY_DURATION];
-                    [cell swipeToOriginWithCompletion:nil];
-                    [self.view showToast:[self tostViewForOperation:2] duration:TOST_DISPLAY_DURATION position:@"bottom"];
-                    messageSelected = message;
-                }];
-                
-                
-                [cell setSwipeGestureWithView:fullFunnlView color:fullFunnlColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
-                    NSLog(@"Did swipe full cell, ");
-                    helpFlag = FALSE;
-                    if (indexPath.row == 0) {
-                        [[(EmailCell *)cell backgroundImageView] setHidden:YES];
+                        cell.messageRenderingOperation = [[EmailService instance].imapSession plainTextBodyRenderingOperationWithMessage:message folder:self.emailFolder];
+                        [cell.messageRenderingOperation start:^(NSString * plainTextBodyString, NSError * error) {
+                            if (plainTextBodyString) {
+                                if (plainTextBodyString.length > 0) {
+                                    
+                                    if ([[plainTextBodyString substringWithRange:NSMakeRange(0, 1)] isEqualToString:@" "]) {
+                                        plainTextBodyString= [plainTextBodyString substringWithRange:NSMakeRange(1, plainTextBodyString.length - 1)];
+                                    }
+                                    
+                                    if(plainTextBodyString.length > 150){
+                                        NSRange stringRange = {0,150};
+                                        plainTextBodyString = [plainTextBodyString substringWithRange:stringRange];
+                                    }
+                                    
+                                    //if (plainTextBodyString.length == 0)
+                                    
+                                    NSMutableDictionary *paramDict = [[NSMutableDictionary alloc] init];
+                                    paramDict[uidKey] = [self removeStartingSpaceFromString:plainTextBodyString];
+                                    [[MessageService instance] updateMessageWithDictionary:paramDict];
+                                    cell.bodyLabel.text = [[MessageService instance] retrievePreviewContentWithID:uidKey];
+                                    
+                                }
+                                else {
+                                    cell.bodyLabel.text = @"This message has no content.";
+                                }
+                            }
+                            // message body is empty
+                            else {
+                                cell.bodyLabel.text = @"This message has no content.";
+                                
+                            }
+                            
+                            cell.messageRenderingOperation = nil;
+                        }];
                     }
-                    else {
-                        EmailCell *tableViewCell = (EmailCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-                        [tableViewCell.backgroundImageView setHidden:YES];
-                    }
-                    self.tableView.tableHeaderView = [self headerView];
-#ifdef TRACK_MIXPANEL
-                    [[Mixpanel sharedInstance] track:@"Swiped an email right to left to add to Funnl"];
-#endif
                     
-                    [cell swipeToOriginWithCompletion:nil];
-                    MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
-                    FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:YES withMessageId:uidKey withMessage:message subViewOnViewController:self];
-                    funnlPopUpView.mainVCdelegate = self.mainVCdelegate;
-                    if ([FunnelService instance].allFunnels.count < 4){
+                    UIView *archiveView = [self viewWithImageName:@"swipeArchive"];
+                    UIColor *yellowColor = [UIColor colorWithHexString:@"#FD814A"];
+                    
+                    UIView *trashView = [self viewWithImageName:@"swipeTrash"];
+                    UIColor *redColor = [UIColor colorWithHexString:@"#FD4747"];
+                    
+                    UIView *fullFunnlView = [self viewWithImageName:@"swipeFunnl"];
+                    UIColor *fullFunnlColor = [UIColor colorWithHexString:@"#57DB7F"];
+                    
+                    
+                    [cell setSwipeGestureWithView:archiveView color:yellowColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+#ifdef TRACK_MIXPANEL
+                        [[Mixpanel sharedInstance] track:@" Swiped an email left to right for Archive "];
+#endif
+                        NSLog(@"Did swipe \"Archive\" cell");
+                        NSIndexPath *deleteIndexPath = [tableView indexPathForCell:cell];
+                        selectedIndexPath = deleteIndexPath;
+                        [tableView beginUpdates];
+                        selectedMessageModel = [[EmailService instance].filterMessages objectAtIndex:deleteIndexPath.row];
+                        [[EmailService instance].filterMessages removeObjectAtIndex:deleteIndexPath.row];
+                        [[EmailService instance].messages removeObjectIdenticalTo:message];
+                        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:deleteIndexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
+                        [tableView endUpdates];
+                        [cell swipeToOriginWithCompletion:nil];
+                        [self.view showToast:[self tostViewForOperation:1] duration:TOST_DISPLAY_DURATION position:@"bottom"];
+                        messageSelected = message;
+                        [self performSelector:@selector(deleteMessageAfterOperation:) withObject:@"1" afterDelay:TOST_DISPLAY_DURATION];
+                    }];
+                    
+                    
+                    
+                    [cell setSwipeGestureWithView:trashView color:redColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState2 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+#ifdef TRACK_MIXPANEL
+                        [[Mixpanel sharedInstance] track:@"Swiped an email left to right for Trash"];
+#endif
+                        NSLog(@"Did swipe \"Trash\" cell");
+                        NSIndexPath *deleteIndexPath = [tableView indexPathForCell:cell];
+                        selectedIndexPath = deleteIndexPath;
+                        selectedMessageModel = [[EmailService instance].filterMessages objectAtIndex:deleteIndexPath.row];
+                        [tableView beginUpdates];
+                        [[EmailService instance].filterMessagePreviews removeObjectForKey:uidKey];
+                        [[EmailService instance].filterMessages removeObjectAtIndex:deleteIndexPath.row];
+                        [[EmailService instance].messages removeObjectIdenticalTo:message];
+                        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:deleteIndexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
+                        [tableView endUpdates];
+                        [self performSelector:@selector(deleteMessageAfterOperation:) withObject:@"2" afterDelay:TOST_DISPLAY_DURATION];
+                        [cell swipeToOriginWithCompletion:nil];
+                        [self.view showToast:[self tostViewForOperation:2] duration:TOST_DISPLAY_DURATION position:@"bottom"];
+                        messageSelected = message;
+                    }];
+                    
+                    
+                    [cell setSwipeGestureWithView:fullFunnlView color:fullFunnlColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+                        NSLog(@"Did swipe full cell, ");
+                        helpFlag = FALSE;
+                        if (indexPath.row == 0) {
+                            [[(EmailCell *)cell backgroundImageView] setHidden:YES];
+                        }
+                        else {
+                            EmailCell *tableViewCell = (EmailCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+                            [tableViewCell.backgroundImageView setHidden:YES];
+                        }
+                        self.tableView.tableHeaderView = [self headerView];
+#ifdef TRACK_MIXPANEL
+                        [[Mixpanel sharedInstance] track:@"Swiped an email right to left to add to Funnl"];
+#endif
+                        
+                        [cell swipeToOriginWithCompletion:nil];
+                        MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
+                        FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:YES withMessageId:uidKey withMessage:message subViewOnViewController:self];
+                        funnlPopUpView.mainVCdelegate = self.mainVCdelegate;
+                        if ([FunnelService instance].allFunnels.count < 4){
 //                        RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Hello Funnler!" message:@"Funnls help you to filter out emails from important senders – you can add multiple senders to a Funnl (eg. team) or create a new Funnl for key senders (eg. boss)"];
 //                        [modal show];
-                    }
-                    [self.view addSubview:funnlPopUpView];
-                    /*funnlPopUpView.alpha = 0;
-                    funnlPopUpView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 2, 2);
-                    [UIView animateWithDuration:ANIMATION_DURATION
-                                          delay:0.0
-                                        options: UIViewAnimationOptionCurveEaseInOut
-                                     animations:^{
-                                         funnlPopUpView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
-                                         funnlPopUpView.alpha = 1;
-                                     }
-                                     completion:^(BOOL finished){
-                                         if(finished)
-                                         {
-                                             
-                                         }
-                                         // do any stuff here if you want
-                                     }];*/
+                        }
+                        [self.view addSubview:funnlPopUpView];
+    
+                    }];
                     
-                }];
-                
-                return cell;
-                break;
+                    return cell;
+                    break;
+                }
             }
                 
             case 1:

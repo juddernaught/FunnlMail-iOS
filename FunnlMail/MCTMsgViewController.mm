@@ -196,8 +196,11 @@
     if (_message.header.from.displayName) {
         [fromValue setTitle:_message.header.from.displayName forState:UIControlStateNormal];
     }
-    else
-        [fromValue setTitle:_message.header.from.mailbox forState:UIControlStateNormal];
+    else if (_message.header.sender.displayName)
+        [fromValue setTitle:_message.header.sender.displayName forState:UIControlStateNormal];
+    else if (_message.header.sender.mailbox)
+        [fromValue setTitle:_message.header.sender.mailbox forState:UIControlStateNormal];
+    
     [fromValue setTitleColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE_COLOR] forState:UIControlStateNormal];
     [fromValue.titleLabel setFont:[UIFont systemFontOfSize:16]];
     [headerView addSubview:fromValue];
@@ -774,7 +777,7 @@ typedef void (^DownloadCallback)(NSError * error);
 
 
 -(void)updateWebView{
-    CGFloat contentHeight = _messageView.webView.scrollView.contentSize.height;
+//    CGFloat contentHeight = _messageView.webView.scrollView.contentSize.height;
 //    NSLog(@"----> %d %d",_messageView.height,contentHeight);
     
     CGRect frame = _messageView.webView.frame;
@@ -850,7 +853,7 @@ typedef void (^DownloadCallback)(NSError * error);
 }
 
 -(void)createFunnl:(UIButton*)sender{
-    AppDelegate *appDelegate = APPDELEGATE;
+//    AppDelegate *appDelegate = APPDELEGATE;
     NSString *uidKey = [NSString stringWithFormat:@"%d",_message.uid];
     FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:YES withMessageId:uidKey withMessage:_message subViewOnViewController:self];
     funnlPopUpView.mainVCdelegate = appDelegate.mainVCdelegate;
