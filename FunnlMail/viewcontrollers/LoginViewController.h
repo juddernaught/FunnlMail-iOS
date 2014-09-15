@@ -17,7 +17,7 @@
 @class MainVC;
 @interface LoginViewController : UIViewController <NSURLConnectionDataDelegate,GTMFetcherAuthorizationProtocol,GTMHTTPFetcherServiceProtocol,UIPageViewControllerDataSource,UIPageViewControllerDelegate>
 {
-    
+    UIView *introlView;
 }
 @property (nonatomic, retain) UITextField *username;
 @property (nonatomic, retain) UITextField *password;

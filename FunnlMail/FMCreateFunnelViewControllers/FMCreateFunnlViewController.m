@@ -19,6 +19,7 @@
 @synthesize isEditFunnel;
 @synthesize oldModel;
 @synthesize mainVCdelegate;
+@synthesize shareFunnl;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -495,7 +496,7 @@
     }
     funnelNameTextField.tag = 1001;
     funnelNameTextField.delegate = self;
-    if (isEditFunnel) {
+    if (isEditFunnel || shareFunnl) {
         funnelNameTextField.text = oldModel.funnelName;
     }
     else {

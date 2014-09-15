@@ -185,7 +185,7 @@ UIView *greyView;
         MCOIMAPOperation *msgOperation = [[EmailService instance].imapSession storeFlagsOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:messageSelected.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagDeleted];
         [msgOperation start:^(NSError * error)
          {
-//             NSLog(@"selected message flags %u UID is %u",messageSelected.flags,messageSelected.uid );
+             NSLog(@"selected message flags %u UID is %u",messageSelected.flags,messageSelected.uid );
          }];
     }
     else {

@@ -59,6 +59,7 @@
 @property (weak) id<MainVCDelegate> mainVCdelegate;
 @property (strong, nonatomic)FunnelModel *oldModel;
 @property BOOL isEditFunnel;
+@property BOOL shareFunnl;
 - (id)initWithSelectedContactArray:(NSMutableArray *)contactArray;
 - (id)initWithSelectedContactArray:(NSMutableArray *)contactArray andSubjects:(NSMutableArray *)subjects;
 @end

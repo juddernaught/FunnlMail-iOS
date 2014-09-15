@@ -187,7 +187,7 @@
     [ccArray addObject:newAddress];
     [[builder header] setCc:ccArray];
     
-    NSMutableDictionary *dataDictionary = [NSMutableDictionary dictionaryWithObjects:[NSArray arrayWithObjects:funnelModel.filterTitle,funnelModel.sendersArray,funnelModel.subjectsArray,nil] forKeys:[NSArray arrayWithObjects:@"name",@"senders",@"subjects", nil]];
+    NSMutableDictionary *dataDictionary = [NSMutableDictionary dictionaryWithObjects:[NSArray arrayWithObjects:funnelModel.funnelName,funnelModel.sendersArray,funnelModel.subjectsArray,nil] forKeys:[NSArray arrayWithObjects:@"name",@"senders",@"subjects", nil]];
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dataDictionary options:NSJSONWritingPrettyPrinted error:&error];
     NSString *jsonString;

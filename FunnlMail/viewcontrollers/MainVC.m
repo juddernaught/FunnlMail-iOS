@@ -269,6 +269,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
     NSLog(@"Filter button selected");
     if(mainView.hidden == YES){
+        [self.navigationController setNavigationBarHidden:YES animated:YES];
         mainView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 2, 2);
         mainView.center = self.view.center;
         mainView.hidden = NO;
@@ -311,9 +312,14 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
                          {
                              mainView.hidden = YES;
                              NSLog(@"Finished !!!!!");
+                             [self.navigationController setNavigationBarHidden:NO animated:YES];
                          }
                          // do any stuff here if you want
                     }];
+}
+
+- (void)unHideNavigationBar {
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
 
 -(void) composeEmailButtonSelected{

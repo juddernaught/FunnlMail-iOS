@@ -155,7 +155,8 @@ UIButton *loginButton;
     self.view.backgroundColor = [UIColor colorWithHexString:@"F6F6F6"];
     self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
     self.pageController.dataSource = self;
-    images = @[@"intro slider 1.jpg", @"intro slider 3.jpg", @"intro slider 4.jpg",@"intro slider 5.jpg"];
+    images = @[@"intro slider 3.jpg", @"intro slider 4.jpg",@"intro slider 5.jpg"];
+//    images = @[@"intro slider 1.jpg", @"intro slider 3.jpg", @"intro slider 4.jpg",@"intro slider 5.jpg"];
     PageContentVC *initialViewController = [self viewControllerAtIndex:0];
     NSArray *viewControllers = [NSArray arrayWithObject:initialViewController];
     self.pageController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height); // Changed from (xx, 0 to 6, ...) by Chad
@@ -205,7 +206,27 @@ UIButton *loginButton;
         //--end
         [self addChildViewController:viewController];
         [self.view addSubview:viewController.view];
+        //newly added by iauro
+        introlView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+        [imageView setImage:[UIImage imageNamed:@"intro slider 1.jpg"]];
+        [introlView addSubview:imageView];
+        imageView = nil;
+        UIButton *nextButton = [[UIButton alloc] initWithFrame:CGRectMake(0, HEIGHT - 43, WIDTH, 43)];
+        UIImage *loginImage = [UIImage imageNamed:@"continue.png"];
+        [nextButton setImage:loginImage forState:UIControlStateNormal];
+        loginImage = nil;
+        nextButton.backgroundColor = [UIColor clearColor];
+        [nextButton addTarget:self action:@selector(removeIntoPage:) forControlEvents:UIControlEventTouchUpInside];
+        [introlView addSubview:nextButton];
+        nextButton = nil;
+        [self.view addSubview:introlView];
     }
+}
+
+- (void)removeIntoPage:(UIButton *)sender {
+    [introlView removeFromSuperview];
+    introlView = nil;
 }
 
 -(void) setDrawerControllerOnWindow

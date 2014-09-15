@@ -136,7 +136,7 @@ NSString *msgBody;
     
     UIButton *outterButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
 //    [outterButton setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.5]];
-    [outterButton setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.3]];
+    [outterButton setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.5]];
     [outterButton addTarget:self action:@selector(outterButtonClicked) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:outterButton];
 //    [backGroundViewForAlpha addSubview:outterButton];
@@ -218,7 +218,8 @@ NSString *msgBody;
     editOn = FALSE;
     [editButton setImage:[UIImage imageNamed:@"manage_Button"] forState:UIControlStateNormal];
     [self setHidden:YES];
-    
+    AppDelegate *tempAppDelegate = APPDELEGATE;
+    [tempAppDelegate.mainVCControllerInstance unHideNavigationBar];
 //    [UIView animateWithDuration:ANIMATION_DURATION
 //                          delay:0.0
 //                        options: UIViewAnimationOptionCurveEaseInOut

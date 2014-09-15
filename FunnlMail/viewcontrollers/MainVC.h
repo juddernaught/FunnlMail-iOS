@@ -32,4 +32,6 @@
 @property (strong,nonatomic) FunnelModel *filterModel;
 @property (strong,nonatomic) NSNumber *firstTime;
 - (void)segmentControllerClicked:(UISegmentedControl*)sender;
+- (void)hideMainView;
+- (void)unHideNavigationBar;
 @end

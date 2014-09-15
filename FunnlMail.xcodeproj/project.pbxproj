@@ -16,6 +16,7 @@
 		259ECEE519B9BA40001D7459 /* FMContactDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259ECEE319B9BA40001D7459 /* FMContactDetailViewController.m */; };
 		259ECEE819B9F232001D7459 /* userPlaceholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 259ECEE619B9F232001D7459 /* userPlaceholder.png */; };
 		259ECEE919B9F232001D7459 /* userPlaceholder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 259ECEE719B9F232001D7459 /* userPlaceholder@2x.png */; };
+		25A1642A19C6EC1200FCBE0B /* continue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25A1642919C6EC1200FCBE0B /* continue@2x.png */; };
 		5A1FF53D1948263B0056750F /* FunnelModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1FF53C1948263B0056750F /* FunnelModel.m */; };
 		5A59DC6E1957FF9D0094B00D /* ConfirmFunnelPopUp.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A59DC6D1957FF9D0094B00D /* ConfirmFunnelPopUp.m */; };
 		5A59DC7519582A260094B00D /* FunnelPopUpForExtraRules.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A59DC7419582A260094B00D /* FunnelPopUpForExtraRules.m */; };
@@ -409,6 +410,7 @@
 		259ECEE319B9BA40001D7459 /* FMContactDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMContactDetailViewController.m; sourceTree = "<group>"; };
 		259ECEE619B9F232001D7459 /* userPlaceholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = userPlaceholder.png; sourceTree = "<group>"; };
 		259ECEE719B9F232001D7459 /* userPlaceholder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "userPlaceholder@2x.png"; sourceTree = "<group>"; };
+		25A1642919C6EC1200FCBE0B /* continue@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "continue@2x.png"; sourceTree = "<group>"; };
 		27D9CEE565FC46E3B3970F17 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B928198F5034A5AB4B3F004 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		5A1FF53B1948263B0056750F /* FunnelModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FunnelModel.h; path = models/FunnelModel.h; sourceTree = "<group>"; };
@@ -1711,6 +1713,7 @@
 		FABAF04F1976507E00AA7918 /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				25A1642919C6EC1200FCBE0B /* continue@2x.png */,
 				B7701DC31985F58C001CA2DC /* mail2.png */,
 				FABAF0501976507E00AA7918 /* getStarted@2x.png */,
 				FABAF0511976507E00AA7918 /* intro.png */,
@@ -2040,6 +2043,7 @@
 				FAAE9CF719A38ADD007FB804 /* emailDetailViewReply.png in Resources */,
 				FA6ABD8019C18C5100DB10A3 /* primaryBackButton.png in Resources */,
 				FA26CAF7199508C900FFD9B3 /* menuIcon_web.png in Resources */,
+				25A1642A19C6EC1200FCBE0B /* continue@2x.png in Resources */,
 				B7C940E4198D6F49008468E7 /* WHITEsliders5.png in Resources */,
 				FABAF0A81976507E00AA7918 /* arrow.png in Resources */,
 				B7701DC41985F58C001CA2DC /* mail2.png in Resources */,
@@ -2350,8 +2354,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Funnl Labs, LLC";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Funnl Labs, LLC";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2369,7 +2373,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "14d879d8-543c-405a-8404-2d55b8918ede";
+				PROVISIONING_PROFILE = "764ce18d-57a7-4481-a456-37c77c7a5e4d";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -2390,8 +2394,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Funnl Labs, LLC";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Funnl Labs, LLC";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -2402,7 +2406,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PROVISIONING_PROFILE = "14d879d8-543c-405a-8404-2d55b8918ede";
+				PROVISIONING_PROFILE = "764ce18d-57a7-4481-a456-37c77c7a5e4d";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2575,8 +2579,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Funnl Labs, LLC";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Funnl Labs, LLC";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -2587,7 +2591,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PROVISIONING_PROFILE = "14d879d8-543c-405a-8404-2d55b8918ede";
+				PROVISIONING_PROFILE = "764ce18d-57a7-4481-a456-37c77c7a5e4d";
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "$(BUILD_ROOT)/../IntermediateBuildFilesPath/UninstalledProducts";
 				VALIDATE_PRODUCT = YES;
@@ -2686,8 +2690,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Funnl Labs, LLC";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Funnl Labs, LLC";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -2698,7 +2702,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PROVISIONING_PROFILE = "14d879d8-543c-405a-8404-2d55b8918ede";
+				PROVISIONING_PROFILE = "764ce18d-57a7-4481-a456-37c77c7a5e4d";
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "$(BUILD_ROOT)/../IntermediateBuildFilesPath/UninstalledProducts";
 				VALIDATE_PRODUCT = YES;
