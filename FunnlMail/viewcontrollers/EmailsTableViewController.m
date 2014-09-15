@@ -1447,7 +1447,7 @@ UIView *greyView;
             }
            
             if(IS_NEW_CREATE_FUNNEL){
-                FMCreateFunnlViewController *createFunnlViewController = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:nil andSubjects:nil];
+                FMCreateFunnlViewController *createFunnlViewController = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:nil name:nil andSubjects:nil];
                 createFunnlViewController.mainVCdelegate = self.mainVCdelegate;
                 [self.mainVCdelegate pushViewController:createFunnlViewController];
                 createFunnlViewController = nil;

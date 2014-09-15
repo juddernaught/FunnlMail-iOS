@@ -28,12 +28,13 @@
     return self;
 }
 
-- (id)initWithSelectedContactArray:(NSMutableArray *)contactArray andSubjects:(NSMutableArray *)subjects {
+- (id)initWithSelectedContactArray:(NSMutableArray *)contactArray name:(NSString *)name andSubjects:(NSMutableArray *)subjects {
     self = [super init];
     if (self) {
         // Custom initialization
         emailTempArray = [[NSMutableArray alloc] initWithArray:contactArray];
         subjectArray = [[NSMutableArray alloc] initWithArray:subjects];
+        subjectString = name;
     }
     return self;
 }
@@ -62,7 +63,9 @@
     
     suggestionArray = [[NSArray alloc] initWithObjects:@"Team", @"Clients", @"Friends & Family", @"Spam", @"Event", nil];
     randomColors = GRADIENT_ARRAY;
-    subjectString = @"";
+    if (!subjectString) {
+        subjectString = @"";
+    }
     enableNotification = TRUE;
     skipPrimary = FALSE;
     isEditing = NO;

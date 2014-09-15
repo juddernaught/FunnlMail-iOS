@@ -60,5 +60,5 @@
 @property (strong, nonatomic)FunnelModel *oldModel;
 @property BOOL isEditFunnel;
 - (id)initWithSelectedContactArray:(NSMutableArray *)contactArray;
-- (id)initWithSelectedContactArray:(NSMutableArray *)contactArray andSubjects:(NSMutableArray *)subjects;
+- (id)initWithSelectedContactArray:(NSMutableArray *)contactArray name:(NSString *)name andSubjects:(NSMutableArray *)subjects;
 @end

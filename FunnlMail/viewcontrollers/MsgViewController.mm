@@ -605,7 +605,7 @@ typedef void (^DownloadCallback)(NSError * error);
     }
 
     if(IS_NEW_CREATE_FUNNEL){
-        FMCreateFunnlViewController *viewController = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:[sendersDictionary allValues] andSubjects:[subjectsDictionary allValues]];
+        FMCreateFunnlViewController *viewController = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:[sendersDictionary allValues] name:nil andSubjects:[subjectsDictionary allValues]];
 //        viewController.mainVCdelegate = self.mainVCdelegate;
 //        [self.mainVCdelegate pushViewController:viewController];
 //        viewController = nil;

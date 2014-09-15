@@ -264,7 +264,7 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
     }
     
     if (IS_NEW_CREATE_FUNNEL) {
-        FMCreateFunnlViewController *viewCOntroller = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:mailArray andSubjects:nil];
+        FMCreateFunnlViewController *viewCOntroller = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:mailArray name:nil andSubjects:nil];
         viewCOntroller.mainVCdelegate = self.mainVCdelegate;
         [self.mainVCdelegate pushViewController:viewCOntroller];
     }

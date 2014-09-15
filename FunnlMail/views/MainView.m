@@ -349,7 +349,7 @@ NSString *msgBody;
 
 -(void)createAddFunnlView{
     if (IS_NEW_CREATE_FUNNEL) {
-        FMCreateFunnlViewController *viewController = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:nil andSubjects:nil];
+        FMCreateFunnlViewController *viewController = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:nil name:nil andSubjects:nil];
         viewController.mainVCdelegate = self.mainVCdelegate;
         [self.mainVCdelegate pushViewController:viewController];
         viewController = nil;
@@ -484,7 +484,7 @@ NSString *msgBody;
       if (IS_NEW_CREATE_FUNNEL) {
           NSMutableArray *sender = [[NSMutableArray alloc] initWithArray:sendersDictionary.allValues];
           NSMutableArray *subject = [[NSMutableArray alloc] initWithArray:subjectsDictionary.allValues];
-          FMCreateFunnlViewController *viewController = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:sender andSubjects:subject];
+          FMCreateFunnlViewController *viewController = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:sender name:nil andSubjects:subject];
           viewController.isEditFunnel = TRUE;
           viewController.oldModel = fm;
           viewController.mainVCdelegate = self.mainVCdelegate;

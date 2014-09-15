@@ -225,7 +225,7 @@
                             <p class=\"p1\"><span class=\"s1\">\
                             Hi,<br/><br/>\
                             I have  been using Funnl Mail (iOS) to organize my inbox and wanted share Funnl '%@' to help you organize. <br/><br/>%@</span></p>\
-                            </body></html>",funnelModel.filterTitle,funnlLinkStr];
+                            </body></html>",funnelModel.funnelName,funnlLinkStr];
     [builder setHTMLBody:htmlString];
     rfc822Data = [builder data];
     
