@@ -582,7 +582,7 @@ typedef void (^DownloadCallback)(NSError * error);
             count ++;
         }
     }
-    
+    [[Mixpanel sharedInstance] track:@"user clicked get funnl"];
     if (IS_NEW_CREATE_FUNNEL) {
         FMCreateFunnlViewController *viewcontroller = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:(NSMutableArray *)sendersDictionary.allValues name:fm.funnelName andSubjects:(NSMutableArray *)subjectsDictionary.allValues];
         viewcontroller.isEditFunnel = FALSE;
