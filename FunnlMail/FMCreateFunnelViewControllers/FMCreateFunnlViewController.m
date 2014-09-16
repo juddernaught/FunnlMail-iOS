@@ -54,7 +54,7 @@
 {
     [super viewDidLoad];
     
-    if (isEditFunnel || subjectString) {
+    if (isEditFunnel) {
         isFunnlNameTextFieldEditing = FALSE;
     }
     else {
@@ -513,7 +513,7 @@
     [mainScrollView addSubview:funnelNameTextField];
     
     
-    if (isFunnlNameTextFieldEditing || subjectString == nil) {
+    if (isFunnlNameTextFieldEditing) {
         [funnelNameTextField becomeFirstResponder];
     }
 
