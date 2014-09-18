@@ -201,13 +201,12 @@
     
     //     NSLog(@"%@",jsonString);
     NSString *base64EncodedString = [[jsonString dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0];
-    
-    
-    NSString *subjectString = [NSString stringWithFormat:@"FunnlMail - Makes Email Simpler, '%@' has shared '%@' Funnl with you.",self.imapSession.username,funnelModel.filterTitle];
+
+    NSString *subjectString = [NSString stringWithFormat:@"Stay on top of %@ emails with FunnlMail.",funnelModel.filterTitle];
     [[builder header] setSubject:subjectString];
     
     //    NSString *funnlLinkStr = [NSString stringWithFormat:@"<a href=funnl://name=%@&from=%@&subject=%@> Get Funnl </a>",fm.filterTitle,[fm.sendersArray componentsJoinedByString:@","],[fm.subjectsArray componentsJoinedByString:@","]];
-    NSString *funnlLinkStr = [NSString stringWithFormat:@"<a href=funnl://%@> Get Funnl </a>",base64EncodedString];
+    NSString *funnlLinkStr = [NSString stringWithFormat:@"<a href=funnl://%@> View & import Funnl   </a>",base64EncodedString];
     NSString *htmlString = [[NSString alloc] initWithFormat:
                             @"<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\
                             <html>\
@@ -223,9 +222,19 @@
                             </head>\
                             <body>\
                             <p class=\"p1\"><span class=\"s1\">\
-                            Hi,<br/><br/>\
-                            I have  been using Funnl Mail (iOS) to organize my inbox and wanted share Funnl '%@' to help you organize. <br/><br/>%@</span></p>\
-                            </body></html>",funnelModel.funnelName,funnlLinkStr];
+                            <a href=\"http://bit.do/funnlmailsite\">FunnlMail</a>\
+                            for iOS helps me stay on top of important emails on-the-go!<br/><br/>\
+                            I am sharing my custom Funnl for %@ with you - with just one tap below, you can get my filter settings and custom alerts for %@, so that you dont miss these important emails among the clutter in your inbox.<br/><br/>\
+                            You can also edit/ delete these settings anytime later if you dont need them anymore.<br/><br/>\
+                            %@<br/>\
+                            (works only within FunnlMail iOS app)\
+                            <br/><br/>\
+                            Or, if you don't have FunnlMail, \
+                            <a href=\"http://bit.do/funnlmailsite\">Download the FunnlMail iOS app</a>\
+                            <br/>\
+                            (Limited Alpha Release)\
+                            </span></p>\
+                            </body></html>",funnelModel.funnelName,funnelModel.funnelName, funnlLinkStr];
     [builder setHTMLBody:htmlString];
     rfc822Data = [builder data];
     
