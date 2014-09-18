@@ -1110,6 +1110,18 @@ static NSString *currentFolder;
 //        if ([senderEmailID.lowercaseString isEqualToString:messageSenderID]) {
 //            return TRUE;
 //        }
+        // apply filtering check against email in case that it is from list serv
+        if (message.header.sender.mailbox) {
+            MCOAddress *emailAddress2 = message.header.sender;
+            NSString *messageSenderID2 = [[emailAddress2 mailbox] lowercaseString];
+            /*changes for including the change for "Search as text"*/
+            if ([messageSenderID2 rangeOfString:senderEmailID].location == NSNotFound) {
+                
+            }
+            else {
+                return TRUE;
+            }
+        }
     }
     if ([[funnel.funnelName lowercaseString] isEqualToString:[ALL_FUNNL lowercaseString]] || [[funnel.funnelName lowercaseString] isEqualToString:[ALL_OTHER_FUNNL lowercaseString]]) {
         

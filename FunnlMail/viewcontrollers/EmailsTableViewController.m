@@ -850,6 +850,11 @@ UIView *greyView;
                     [cell.detailDiscloser setHidden:NO];
                 }
                 
+                //nocommit
+                /*NSString *x = message.header.sender.displayName;
+                NSString *y = message.header.from.displayName;
+                NSString *z = message.header.sender.mailbox*/
+                
                 if(message.header.sender.displayName.length){
                     if([self.navigationItem.title isEqualToString:@"Sent"]) cell.senderLabel.text = message.header.from.displayName;
                     else cell.senderLabel.text = message.header.sender.displayName;
