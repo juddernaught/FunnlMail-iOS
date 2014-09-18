@@ -319,7 +319,7 @@ UIButton *loginButton;
 //        [tempAppDelegate.progressHUD setHidden:NO];
         
         
-        NSString *urlString = [NSString stringWithFormat:@"https://sustained-tree-595.appspot.com?email=%@&access_token=%@",self.emailServerModel.emailAddress,self.emailServerModel.accessToken];
+        /*NSString *urlString = [NSString stringWithFormat:@"https://sustained-tree-595.appspot.com?email=%@&access_token=%@",self.emailServerModel.emailAddress,self.emailServerModel.accessToken];
         //NSString *urlString = [NSString stringWithFormat:@"http://127.0.0.1:8080?email=%@&access_token=%@",self.emailServerModel.emailAddress,self.emailServerModel.accessToken];
         
         //        NSString *paramsString = [NSString stringWithFormat:@"access_token=%@&email=%@",self.emailServerModel.accessToken,self.emailServerModel.emailAddress];
@@ -332,7 +332,22 @@ UIButton *loginButton;
             NSString *respString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
             NSArray *vipEmails = [respString componentsSeparatedByString:@"\n\n"];
             NSLog(@"vipEmails %@",vipEmails);
+        }];*/
+        NSString *post = [NSString stringWithFormat:@"refresh_token=%@", refreshToken];
+        NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+        NSString *postLength = [NSString stringWithFormat:@"%lu",(unsigned long)[postData length]];
+        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+        [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://lit-citadel-5624.herokuapp.com/vip"]]];
+        [request setHTTPMethod:@"POST"];
+        [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        [request setHTTPBody:postData];
+        [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+            NSString *respString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            //NSArray *vipEmails = [respString componentsSeparatedByString:@"\n\n"];
+            //NSLog(@"vipEmails %@",vipEmails);
         }];
+        
 
         // Authentication succeeded
         [self createDemoPageViewController];
