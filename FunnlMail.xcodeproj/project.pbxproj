@@ -16,6 +16,12 @@
 		259ECEE519B9BA40001D7459 /* FMContactDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259ECEE319B9BA40001D7459 /* FMContactDetailViewController.m */; };
 		259ECEE819B9F232001D7459 /* userPlaceholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 259ECEE619B9F232001D7459 /* userPlaceholder.png */; };
 		259ECEE919B9F232001D7459 /* userPlaceholder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 259ECEE719B9F232001D7459 /* userPlaceholder@2x.png */; };
+		25F87F5019CC031400237CD7 /* VIPCreateFunnelViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 25F87F4A19CC031400237CD7 /* VIPCreateFunnelViewController.h */; };
+		25F87F5119CC031400237CD7 /* VIPCreateFunnelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25F87F4B19CC031400237CD7 /* VIPCreateFunnelViewController.m */; };
+		25F87F5219CC031400237CD7 /* VIPFunnelCreationConfirmationController.h in Headers */ = {isa = PBXBuildFile; fileRef = 25F87F4C19CC031400237CD7 /* VIPFunnelCreationConfirmationController.h */; };
+		25F87F5319CC031400237CD7 /* VIPFunnelCreationConfirmationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25F87F4D19CC031400237CD7 /* VIPFunnelCreationConfirmationController.m */; };
+		25F87F5419CC031400237CD7 /* VIPViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 25F87F4E19CC031400237CD7 /* VIPViewController.h */; };
+		25F87F5519CC031400237CD7 /* VIPViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25F87F4F19CC031400237CD7 /* VIPViewController.m */; };
 		5A1FF53D1948263B0056750F /* FunnelModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1FF53C1948263B0056750F /* FunnelModel.m */; };
 		5A59DC6E1957FF9D0094B00D /* ConfirmFunnelPopUp.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A59DC6D1957FF9D0094B00D /* ConfirmFunnelPopUp.m */; };
 		5A59DC7519582A260094B00D /* FunnelPopUpForExtraRules.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A59DC7419582A260094B00D /* FunnelPopUpForExtraRules.m */; };
@@ -408,6 +414,12 @@
 		259ECEE319B9BA40001D7459 /* FMContactDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMContactDetailViewController.m; sourceTree = "<group>"; };
 		259ECEE619B9F232001D7459 /* userPlaceholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = userPlaceholder.png; sourceTree = "<group>"; };
 		259ECEE719B9F232001D7459 /* userPlaceholder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "userPlaceholder@2x.png"; sourceTree = "<group>"; };
+		25F87F4A19CC031400237CD7 /* VIPCreateFunnelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VIPCreateFunnelViewController.h; sourceTree = "<group>"; };
+		25F87F4B19CC031400237CD7 /* VIPCreateFunnelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VIPCreateFunnelViewController.m; sourceTree = "<group>"; };
+		25F87F4C19CC031400237CD7 /* VIPFunnelCreationConfirmationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VIPFunnelCreationConfirmationController.h; sourceTree = "<group>"; };
+		25F87F4D19CC031400237CD7 /* VIPFunnelCreationConfirmationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VIPFunnelCreationConfirmationController.m; sourceTree = "<group>"; };
+		25F87F4E19CC031400237CD7 /* VIPViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VIPViewController.h; sourceTree = "<group>"; };
+		25F87F4F19CC031400237CD7 /* VIPViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VIPViewController.m; sourceTree = "<group>"; };
 		27D9CEE565FC46E3B3970F17 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B928198F5034A5AB4B3F004 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		5A1FF53B1948263B0056750F /* FunnelModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FunnelModel.h; path = models/FunnelModel.h; sourceTree = "<group>"; };
@@ -927,6 +939,19 @@
 			path = FMContactDetailViewController;
 			sourceTree = "<group>";
 		};
+		25F87F4919CC031400237CD7 /* VIPFunnelViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				25F87F4A19CC031400237CD7 /* VIPCreateFunnelViewController.h */,
+				25F87F4B19CC031400237CD7 /* VIPCreateFunnelViewController.m */,
+				25F87F4C19CC031400237CD7 /* VIPFunnelCreationConfirmationController.h */,
+				25F87F4D19CC031400237CD7 /* VIPFunnelCreationConfirmationController.m */,
+				25F87F4E19CC031400237CD7 /* VIPViewController.h */,
+				25F87F4F19CC031400237CD7 /* VIPViewController.m */,
+			);
+			path = VIPFunnelViewControllers;
+			sourceTree = "<group>";
+		};
 		5ACEBEA0195DA0CA00D4EAAA /* RDSwipeableTableViewCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -1185,10 +1210,11 @@
 		CC8C7EAA18E6EF8600E76AE8 /* viewcontrollers */ = {
 			isa = PBXGroup;
 			children = (
-				FA8396FF19BEF33B00F9F529 /* TutorialViewController.h */,
-				FA83970019BEF33B00F9F529 /* TutorialViewController.m */,
+				25F87F4919CC031400237CD7 /* VIPFunnelViewControllers */,
 				259ECEE119B9BA29001D7459 /* FMContactDetailViewController */,
 				FA6C493B19B6EE9500249134 /* FMCreateFunnelViewControllers */,
+				FA8396FF19BEF33B00F9F529 /* TutorialViewController.h */,
+				FA83970019BEF33B00F9F529 /* TutorialViewController.m */,
 				CC1AD1DC18F54BE9000E356C /* MainVCDelegate.h */,
 				CC8C7EAB18E6F1C100E76AE8 /* MainVC.h */,
 				CC8C7EAC18E6F1C100E76AE8 /* MainVC.m */,
@@ -1776,6 +1802,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				25F87F5219CC031400237CD7 /* VIPFunnelCreationConfirmationController.h in Headers */,
 				FA83970619BF1D0700F9F529 /* FXBlurView.h in Headers */,
 				259ECEE419B9BA40001D7459 /* FMContactDetailViewController.h in Headers */,
 				FA6C493E19B6EE9500249134 /* FMCreateFunnlViewController.h in Headers */,
@@ -1783,6 +1810,8 @@
 				B7F3BB0619A597F00049CEE8 /* MTStatusBarOverlay.h in Headers */,
 				FA83970119BEF33B00F9F529 /* TutorialViewController.h in Headers */,
 				FA33E1B119A9A48100CE79B0 /* MCTMsgViewController.h in Headers */,
+				25F87F5019CC031400237CD7 /* VIPCreateFunnelViewController.h in Headers */,
+				25F87F5419CC031400237CD7 /* VIPViewController.h in Headers */,
 				FAAE9CDA19A354F0007FB804 /* UIView+Toast.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2237,6 +2266,7 @@
 				CC7F72F418E837C9008962C3 /* FilterViewCell.m in Sources */,
 				FAAF171A19863CDD00E877D4 /* NSData+ImageContentType.m in Sources */,
 				FAAF172319863CDD00E877D4 /* UIImage+GIF.m in Sources */,
+				25F87F5119CC031400237CD7 /* VIPCreateFunnelViewController.m in Sources */,
 				CC8C7ECB18E6F38100E76AE8 /* MASLayoutConstraint.m in Sources */,
 				CCC9E416193D5CDF0028DC84 /* EmailServerModel.m in Sources */,
 				CC4263B11934B67A00F3C5EB /* FMDatabaseAdditions.m in Sources */,
@@ -2244,9 +2274,11 @@
 				D1EFF48B19817BBF0031A1D1 /* OAuth.m in Sources */,
 				66AEEB811933002D00B6DBE5 /* EmailsTableViewController.m in Sources */,
 				2522AC141998DBEC002B1207 /* UIBarButtonItem+WEPopover.m in Sources */,
+				25F87F5519CC031400237CD7 /* VIPViewController.m in Sources */,
 				D1EFF4B0198184C60031A1D1 /* AFXMLRequestOperation.m in Sources */,
 				CCC9E41C193DF5E80028DC84 /* FunnelService.m in Sources */,
 				2522AC171998DBEC002B1207 /* WETouchableView.m in Sources */,
+				25F87F5319CC031400237CD7 /* VIPFunnelCreationConfirmationController.m in Sources */,
 				D1EFF4AF198184C60031A1D1 /* AFURLConnectionOperation.m in Sources */,
 				D1EFF48819817BBF0031A1D1 /* OAHMAC_SHA1SignatureProvider.m in Sources */,
 				D1EFF48A19817BBF0031A1D1 /* NSString+URLEncoding.m in Sources */,

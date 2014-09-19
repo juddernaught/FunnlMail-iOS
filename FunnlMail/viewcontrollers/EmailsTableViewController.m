@@ -115,6 +115,10 @@ UIView *greyView;
     tempAppDelegate.mainVCdelegate = self.mainVCdelegate;
     [self.navigationController setNavigationBarHidden:NO animated:YES];
     [_tableView reloadData];
+    //newly added for VIP funnl
+    if (IS_VIP_ENABLED) {
+        [tempAppDelegate performSelector:@selector(loadVIPFunnelViewController) withObject:nil afterDelay:kVIP_FUNNEL_POP_UP_DISPLY_INTERVAL];
+    }
 }
 
 - (void)didReceiveMemoryWarning

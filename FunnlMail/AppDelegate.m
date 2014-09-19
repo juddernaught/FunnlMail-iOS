@@ -19,11 +19,12 @@
 #import <Crashlytics/Crashlytics.h>
 #import "GTMOAuth2ViewControllerTouch.h"
 #import <HockeySDK/HockeySDK.h>
+#import "VIPViewController.h"
 
 #define MIXPANEL_TOKEN @"08b1e55d72f1b22a8e5696c2b56a6777"
 
 @implementation AppDelegate
-@synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable,contextIOAPIClient,isAlreadyRequestedRefreshToken,currentSelectedFunnlModel,isPullToRefresh;
+@synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable,contextIOAPIClient,isAlreadyRequestedRefreshToken,currentSelectedFunnlModel,isPullToRefresh,navControllerForCentralView;
 @synthesize mainVCdelegate,letsGo;
 
 #pragma mark - didFinishLaunching
@@ -229,7 +230,7 @@
             NSMutableArray *trackPrimaryArray = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
             float primaryPercentage =  ((float)trackPrimaryArray.count /(float)allMessagesArray.count ) * 100;
             NSMutableDictionary *trackPrimaryDictionary = [[NSMutableDictionary alloc] initWithObjects:
-                                                           [NSArray arrayWithObjects:emailService.userEmailID,[NSNumber numberWithInt:trackPrimaryArray.count], [NSNumber numberWithFloat:primaryPercentage], nil]
+                                                           [NSArray arrayWithObjects:emailService.userEmailID,[NSNumber numberWithInt:(int)trackPrimaryArray.count], [NSNumber numberWithFloat:primaryPercentage], nil]
                                                                                                forKeys:[NSArray arrayWithObjects:@"Email",@"PrimaryMailsCount",@"PrimaryPercentage", nil]];
             [[Mixpanel sharedInstance] track:@"Total Number of Primary Mails" properties:trackPrimaryDictionary];
             
@@ -243,7 +244,7 @@
             }
             float funnlPercentage =   (float)( (float)totalNumberFunnlsArray.count / (float)allMessagesArray.count ) * 100;
             NSMutableDictionary *trackFunnlDictionary = [[NSMutableDictionary alloc] initWithObjects:
-                                                         [NSArray arrayWithObjects:emailService.userEmailID,[NSNumber numberWithInt:funnlArray.count], [NSNumber numberWithInt:totalNumberFunnlsArray.count], [NSNumber numberWithFloat:funnlPercentage],nil]
+                                                         [NSArray arrayWithObjects:emailService.userEmailID,[NSNumber numberWithInt:(int)funnlArray.count], [NSNumber numberWithInt:(int)totalNumberFunnlsArray.count], [NSNumber numberWithFloat:funnlPercentage],nil]
                                                                                              forKeys:[NSArray arrayWithObjects:@"Email",@"Total Funnls", @"Total Mails in Funnl",@"FunnlPercentage", nil]];
             [[Mixpanel sharedInstance] track:@"Total Number of Funnl Mails" properties:trackFunnlDictionary];
         }else{
@@ -258,8 +259,32 @@
 #ifdef TRACK_MIXPANEL
     [self trackMixpanelAnalytics];
 #endif
+    //newly added line for VIP funnl
+    if (IS_VIP_ENABLED) {
+        [self performSelector:@selector(loadVIPFunnelViewController) withObject:nil afterDelay:kVIP_FUNNEL_POP_UP_DISPLY_INTERVAL];
+    }
 }
 
+//loading VIP funnl
+- (void)loadVIPFunnelViewController {
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"VIP_FUNNL_APPERANCE"])
+    {
+        if (navControllerForCentralView) {
+            VIPViewController *viewController = [[VIPViewController alloc] init];
+            UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
+            [navController.view setBackgroundColor:[UIColor clearColor]];
+            [navControllerForCentralView presentViewController:navController animated:YES completion:nil];
+        }
+        else {
+            if (IS_VIP_ENABLED) {
+                [self performSelector:@selector(loadVIPFunnelViewController) withObject:nil afterDelay:kVIP_FUNNEL_POP_UP_DISPLY_INTERVAL];
+            }
+        }
+    }
+    else {
+        
+    }
+}
 
 #pragma mark - applicationWillResignActive
 

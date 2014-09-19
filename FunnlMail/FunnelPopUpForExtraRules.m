@@ -180,12 +180,15 @@ static NSString *contactCellIdentifier = @"ContactCell";
     
     y = y + 50 + 10;
     contactInCC = [[NSMutableArray alloc] initWithArray:message.header.cc];
-    for (MCOAddress *tempAddress in contactInCC) {
+    NSArray *tempArray = message.header.cc;
+    for (MCOAddress *tempAddress in tempArray) {
         if ([tempAddress.mailbox isEqualToString:[[EmailService instance] userEmailID]]) {
             [contactInCC removeObjectIdenticalTo:tempAddress];
         }
     }
-    for (int count = 0; count < contactInCC.count; count++) {
+    tempArray = nil;
+    tempArray = contactInCC;
+    for (int count = 0; count < tempArray.count; count++) {
         for (int cnt = 0; cnt < tempFunnelModel.sendersArray.count; cnt ++) {
             if ([[[contactInCC objectAtIndex:count] mailbox] isEqualToString:[[tempFunnelModel sendersArray] objectAtIndex:cnt]]) {
                 [contactInCC removeObjectAtIndex:count];

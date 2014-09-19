@@ -1999,8 +1999,12 @@
 
 
 - (void)cancelButtonPressed:(UIButton*)sender {
-//    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
     [self.navigationController popViewControllerAnimated:YES];
+    //newly added for VIP funnl
+    AppDelegate *tempAppDelegate = [[UIApplication sharedApplication] delegate];
+    if (IS_VIP_ENABLED) {
+        [tempAppDelegate performSelector:@selector(loadVIPFunnelViewController) withObject:nil afterDelay:kVIP_FUNNEL_POP_UP_DISPLY_INTERVAL];
+    }
 }
 
 - (void)showHUD {
