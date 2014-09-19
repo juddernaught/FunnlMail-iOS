@@ -123,6 +123,7 @@ UIButton *loginButton;
     mainViewController = [[MainVC alloc] init];
     [mainViewController.view setBackgroundColor:[UIColor colorWithHexString:@"A7A7A7"]];
     UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:mainViewController];
+    appDelegate.navControllerForCentralView = nav;
     appDelegate.menuController = [[MenuViewController alloc] init];
     appDelegate.drawerController = [[MMDrawerController alloc] initWithCenterViewController:nav leftDrawerViewController:appDelegate.menuController];
     [appDelegate.drawerController setRestorationIdentifier:@"MMDrawer"];
@@ -344,8 +345,9 @@ UIButton *loginButton;
         [request setHTTPBody:postData];
         [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
             NSString *respString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            //NSArray *vipEmails = [respString componentsSeparatedByString:@"\n\n"];
-            //NSLog(@"vipEmails %@",vipEmails);
+            //storing contact string onto persistance storage.
+            [[NSUserDefaults standardUserDefaults] setObject:respString forKey:@"contact_string"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
         }];
         
 

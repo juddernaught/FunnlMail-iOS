@@ -468,8 +468,10 @@ NSString *msgBody;
       NSMutableDictionary *sendersDictionary = [[NSMutableDictionary alloc] init];
       int count = 0;
       for (NSString *address in fm.sendersArray) {
-          [sendersDictionary setObject:[address lowercaseString] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
-          count ++;
+          if (![address isEqualToString:@""]) {
+              [sendersDictionary setObject:[address lowercaseString] forKey:[NSIndexPath indexPathForRow:count inSection:1]];
+              count ++;
+          }
       }
       
       NSMutableDictionary *subjectsDictionary = [[NSMutableDictionary alloc] init];
