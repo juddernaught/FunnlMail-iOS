@@ -8,6 +8,7 @@
 
 #import "VIPFunnelCreationConfirmationController.h"
 #import "AppDelegate.h"
+#import "FXBlurView.h"
 
 @interface VIPFunnelCreationConfirmationController ()
 
@@ -43,6 +44,7 @@
 //    [self.view setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.6]];
     [self.view setBackgroundColor:[UIColor blackColor]];
 //    [self setView];
+    [self applyBackgroundImage];
     [self performSelectorInBackground:@selector(setView) withObject:nil];
 }
 
@@ -53,7 +55,36 @@
 
 #pragma mark -
 #pragma mark Helper
+- (void)applyBackgroundImage {
+    AppDelegate *tempAppDelegate = APPDELEGATE;
+    UIGraphicsBeginImageContext(tempAppDelegate.window.bounds.size);
+    [tempAppDelegate.window.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    NSData * data = UIImagePNGRepresentation(image);
+    UIImageView *backgroundImageView = nil;
+    if (backgroundImageView) {
+        backgroundImageView = nil;
+    }
+    backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+    [backgroundImageView setImage:[UIImage imageWithData:data]];
+    data = nil;
+    [self.view addSubview:backgroundImageView];
+    FXBlurView *backgroundView = [[FXBlurView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+    [backgroundView setBlurEnabled:YES];
+    backgroundView.tintColor = [UIColor blackColor];
+    backgroundView.blurRadius = 10;
+    [self.view addSubview:backgroundView];
+    backgroundView = nil;
+    [backgroundView setUserInteractionEnabled:YES];
+    backgroundView = nil;
+}
+
 - (void)setView {
+    UIView *backGroundView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+    [backGroundView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.7]];
+    [self.view addSubview:backGroundView];
+    backGroundView = nil;
     UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 22, WIDTH, 44)];
     [sampleLabel setTextAlignment:NSTextAlignmentCenter];
     sampleLabel.text = @"Funnl successfully Created!";
@@ -91,6 +122,10 @@
     for (int counter = 0; counter < 9 && counter < contactMutableArray.count; counter++) {
         if (counter > 0)
             color = 255/(counter*2);
+        unsigned long temp = counter % 8;
+        NSArray *randomColors = GRADIENT_ARRAY;
+        NSString *colorString = [randomColors objectAtIndex:temp];
+        UIColor *color = [UIColor colorWithHexString:colorString];
         
         NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[(ContactModel*)[contactMutableArray objectAtIndex:counter] thumbnail]]];
         [request setValue:@"image/*" forHTTPHeaderField:@"Accept"];
@@ -107,10 +142,10 @@
             [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] substringWithRange:NSMakeRange(0, 1)] uppercaseString
                                                                    ]] forState:UIControlStateNormal];
             tempButton.tag = counter;
-            NSArray *randomColors = GRADIENT_ARRAY;
-            NSInteger gradientInt = randomColors.count - 1;
-            NSString *colorString = [randomColors objectAtIndex:gradientInt];
-            UIColor *color = [UIColor colorWithHexString:colorString];
+//            NSArray *randomColors = GRADIENT_ARRAY;
+//            NSInteger gradientInt = randomColors.count - 1;
+//            NSString *colorString = [randomColors objectAtIndex:gradientInt];
+//            UIColor *color = [UIColor colorWithHexString:colorString];
             
             [tempButton setBackgroundColor:color];
             tempButton.clipsToBounds = YES;
@@ -134,10 +169,10 @@
             UIButton *tempButton = [[UIButton alloc] initWithFrame:CGRectMake((WIDTH / 2) - buttonSize / 2, y, buttonSize, buttonSize)];
             tempButton.tag = counter;
             [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
-            NSArray *randomColors = GRADIENT_ARRAY;
-            NSInteger gradientInt = randomColors.count - 1;
-            NSString *colorString = [randomColors objectAtIndex:gradientInt];
-            UIColor *color = [UIColor colorWithHexString:colorString];
+//            NSArray *randomColors = GRADIENT_ARRAY;
+//            NSInteger gradientInt = randomColors.count - 1;
+//            NSString *colorString = [randomColors objectAtIndex:gradientInt];
+//            UIColor *color = [UIColor colorWithHexString:colorString];
             
             [tempButton setBackgroundColor:color];
             tempButton.clipsToBounds = YES;
@@ -161,12 +196,12 @@
             UIButton *tempButton = [[UIButton alloc] initWithFrame:CGRectMake(WIDTH - 10 - buttonSize, y, buttonSize, buttonSize)];
             tempButton.tag = counter;
             [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
-            NSArray *randomColors = GRADIENT_ARRAY;
-            NSInteger gradientInt = randomColors.count - 1;
-            NSString *colorString = [randomColors objectAtIndex:gradientInt];
-            UIColor *color = [UIColor colorWithHexString:colorString];
-            [tempButton setBackgroundColor:color];
+//            NSArray *randomColors = GRADIENT_ARRAY;
+//            NSInteger gradientInt = randomColors.count - 1;
+//            NSString *colorString = [randomColors objectAtIndex:gradientInt];
+//            UIColor *color = [UIColor colorWithHexString:colorString];
             
+            [tempButton setBackgroundColor:color];
             tempButton.clipsToBounds = YES;
             tempButton.layer.cornerRadius = buttonSize/2.0;
             tempButton.layer.borderColor = [[UIColor clearColor] CGColor];

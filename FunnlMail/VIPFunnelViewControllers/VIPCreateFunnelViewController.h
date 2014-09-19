@@ -14,6 +14,7 @@
 #define COMMON_DIFFERENCE 30
 @interface VIPCreateFunnelViewController : UIViewController<UITextFieldDelegate>
 {
+    NSArray *randomColors;
     UIScrollView *mainScrollView;
     NSMutableArray *contactMutableArray;
     UITextField *funnelNameTextField;
@@ -27,6 +28,11 @@
     NSMutableArray *editButtonArray;
     NSMutableArray *textFieldArray;
     BOOL flag;
+    //newly added for saving funnl
+    NSMutableArray *senderArray;
+    NSMutableArray *subjectArray;
+    BOOL enableNotification;
+    BOOL skipPrimary;
 }
 - (id)initWithSelectedContactArray:(NSMutableArray *)contactArray;
 @end

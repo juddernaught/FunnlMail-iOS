@@ -2027,8 +2027,7 @@
             [senderArray addObject:tempContact.email];
         }
     }
-    
-    //    NSMutableArray *tempSubjectArray = [[NSMutableArray alloc] init];
+
     if (subjectArray) {
         subjectArray = nil;
     }
@@ -2073,7 +2072,7 @@
             }
             return;
         }
-        if(contactMutableArray.count > 1 || (![[(ContactModel *)[contactMutableArray objectAtIndex:0] name] isEqualToString:ADD_FUNNL] && contactMutableArray.count == 1)){
+        if((contactMutableArray.count > 1 || (![[(ContactModel *)[contactMutableArray objectAtIndex:0] name] isEqualToString:ADD_FUNNL] && contactMutableArray.count == 1)) || subjectArray.count){
 //            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             if (!enableNotification) {
                 if ([oldModel.webhookIds length]) {
@@ -2141,12 +2140,17 @@
                         }];
                     }
                 } else {
-                    [self createWebhooksAndSaveFunnl];
+                    if (senderArray.count) {
+                        [self createWebhooksAndSaveFunnl];
+                    }
+                    else {
+                        [self saveFunnlWithWebhookId:nil];
+                    }
                 }
                 
             }
         }else{
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Please add at least one email" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Please add at least one email or subject" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert show];
             alert = nil;
         }
@@ -2262,7 +2266,7 @@
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     NSArray *senders = senderArray;
     NSArray *subjects = subjectArray;
-    __block int reqCnt = [senders count];
+    __block int reqCnt = (int)[senders count];
     if ([subjects count]) {
         reqCnt *= [subjects count];
     }

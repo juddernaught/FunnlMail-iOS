@@ -261,6 +261,7 @@
 #endif
     //newly added line for VIP funnl
     if (IS_VIP_ENABLED) {
+        
         [self performSelector:@selector(loadVIPFunnelViewController) withObject:nil afterDelay:kVIP_FUNNEL_POP_UP_DISPLY_INTERVAL];
     }
 }

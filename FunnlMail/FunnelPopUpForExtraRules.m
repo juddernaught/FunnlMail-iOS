@@ -171,7 +171,6 @@ static NSString *contactCellIdentifier = @"ContactCell";
         messageLabel.text = [NSString stringWithFormat:@"Messages from %@ will be funneled under %@.",message.header.sender.displayName,tempFunnelModel.funnelName];
     }
     else {
-        
         messageLabel.text = [NSString stringWithFormat:@"Messages from %@ will be funneled under %@.",message.header.sender.mailbox,tempFunnelModel.funnelName];
     }
     [messageLabel setFont:[UIFont systemFontOfSize:20]];

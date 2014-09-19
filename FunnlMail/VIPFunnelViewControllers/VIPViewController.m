@@ -34,6 +34,9 @@
 - (void)viewWillAppear:(BOOL)animated {
     if (selectedContact) {
         [selectedContact removeAllObjects];
+        if (contactMutableArray) {
+            [contactMutableArray removeAllObjects];
+        }
     }
     [self.view setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.6]];
     [[self navigationController] setNavigationBarHidden:YES animated:YES];
@@ -72,45 +75,49 @@
     //new logic
     [[NSUserDefaults standardUserDefaults] synchronize];
     NSString *VIPContactString = [[NSUserDefaults standardUserDefaults] objectForKey:@"contact_string"];
-    NSData *data = [VIPContactString dataUsingEncoding:NSUTF8StringEncoding];
-    id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-    NSArray *temp = [json objectForKey:@"results"];
-    if (temp.count) {
-        NSArray *contactArray = [[ContactService instance] retrieveAllContact];
-        for (int counter = 0; counter < temp.count; counter++) {
-            BOOL flagForDuplicates = FALSE;
-            for (ContactModel *tempContact in contactArray) {
-                if ([tempContact.email isEqualToString:[temp objectAtIndex:counter]]) {
-                    if (!contactMutableArray) {
-                        contactMutableArray = [[NSMutableArray alloc] init];
+    if (VIPContactString) {
+        NSData *data = [VIPContactString dataUsingEncoding:NSUTF8StringEncoding];
+        id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+        NSArray *temp = [json objectForKey:@"results"];
+        if (temp.count) {
+            NSArray *contactArray = [[ContactService instance] retrieveAllContact];
+            for (int counter = 0; counter < temp.count; counter++) {
+                BOOL flagForDuplicates = FALSE;
+                for (ContactModel *tempContact in contactArray) {
+                    if ([tempContact.email isEqualToString:[temp objectAtIndex:counter]]) {
+                        if (!contactMutableArray) {
+                            contactMutableArray = [[NSMutableArray alloc] init];
+                        }
+                        [contactMutableArray addObject:tempContact];
+                        flagForDuplicates = TRUE;
                     }
-                    [contactMutableArray addObject:tempContact];
-                    flagForDuplicates = TRUE;
                 }
-            }
-            if (!flagForDuplicates) {
-                ContactModel *tempModel = [[ContactModel alloc] init];
-                tempModel.email = [temp objectAtIndex:counter];
-                tempModel.name = [temp objectAtIndex:counter];
-                tempModel.thumbnail = [temp objectAtIndex:counter];
-                [contactMutableArray addObject:tempModel];
-                tempModel = nil;
+                if (!flagForDuplicates) {
+                    ContactModel *tempModel = [[ContactModel alloc] init];
+                    tempModel.email = [temp objectAtIndex:counter];
+                    tempModel.name = [temp objectAtIndex:counter];
+                    tempModel.thumbnail = [temp objectAtIndex:counter];
+                    [contactMutableArray addObject:tempModel];
+                    tempModel = nil;
+                }
             }
         }
     }
+    else {
     //old logic
-    /*NSArray *contactArray = [[ContactService instance] retrieveAllContact];
-     if (contactMutableArray) {
-     [contactMutableArray removeAllObjects];
-     }
-     for (ContactModel *tempContact in contactArray) {
-     if (tempContact.name && tempContact.email && ![tempContact.name isEqualToString:@""]) {
-     if (!contactMutableArray) {
-     contactMutableArray = [[NSMutableArray alloc] init];
-     }
-     [contactMutableArray addObject:tempContact];
-     }
-     }*/
+        NSArray *contactArray = [[ContactService instance] retrieveAllContact];
+        if (contactMutableArray) {
+            [contactMutableArray removeAllObjects];
+        }
+        for (ContactModel *tempContact in contactArray) {
+            if (tempContact.name && tempContact.email && ![tempContact.name isEqualToString:@""]) {
+                if (!contactMutableArray) {
+                    contactMutableArray = [[NSMutableArray alloc] init];
+                }
+                [contactMutableArray addObject:tempContact];
+            }
+         }
+    }
 }
 
 - (void)setUpView {
@@ -320,6 +327,7 @@
     }
     else {
         VIPCreateFunnelViewController *viewControllerToBePushed = [[VIPCreateFunnelViewController alloc] initWithSelectedContactArray:selectedContact];
+//        FMCreateFunnlViewController *viewControllerToBePushed = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:selectedContact];
 //        [self.navigationController.view setBackgroundColor:[UIColor whiteColor]];
 //        [viewControllerToBePushed.view setBackgroundColor:[UIColor whiteColor]];
         [self.navigationController pushViewController:viewControllerToBePushed animated:YES];

@@ -82,7 +82,7 @@
 #define DELETE_TEXT @"Conversation Deleted"
 #define TOST_DISPLAY_DURATION 3.0
 
-#define kVIP_FUNNEL_POP_UP_DISPLY_INTERVAL 300
+#define kVIP_FUNNEL_POP_UP_DISPLY_INTERVAL 60
 #define IS_VIP_ENABLED 1
 
 #define INBOX @"INBOX"
