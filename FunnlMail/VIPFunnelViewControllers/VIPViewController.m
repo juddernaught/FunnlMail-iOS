@@ -21,12 +21,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self applyBackgroundImage];
     selectedContact = [[NSMutableArray alloc] init];
 	// Do any additional setup after loading the view, typically from a nib.
     [[self navigationController] setNavigationBarHidden:YES animated:YES];
-//    [self.view setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.6]];
-    [self.view setBackgroundColor:[UIColor blackColor]];
+//    [self.view setBackgroundColor:[UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.6]];
+//    [self performSelectorOnMainThread:@selector(applyBackgroundImage) withObject:nil waitUntilDone:YES];
+
+//    [self.view setBackgroundColor:[UIColor blackColor]];
 //    [self retrieveContact];
 //    [self setUpView];
 }
@@ -38,7 +39,9 @@
             [contactMutableArray removeAllObjects];
         }
     }
-    [self.view setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.6]];
+    [self performSelectorOnMainThread:@selector(applyBackgroundImage) withObject:nil waitUntilDone:YES];
+    [self.view setBackgroundColor:[UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7]];
+
     [[self navigationController] setNavigationBarHidden:YES animated:YES];
     [self retrieveContact];
     [self setUpView];
@@ -63,7 +66,7 @@
     [self.view addSubview:backgroundImageView];
     FXBlurView *backgroundView = [[FXBlurView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
     [backgroundView setBlurEnabled:YES];
-    backgroundView.tintColor = [UIColor blackColor];
+    backgroundView.tintColor = [UIColor lightGrayColor];
     backgroundView.blurRadius = 10;
     [self.view addSubview:backgroundView];
     backgroundView = nil;
@@ -122,7 +125,7 @@
 
 - (void)setUpView {
     UIView *backGroungView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
-    [backGroungView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.7]];
+    [backGroungView setBackgroundColor:[UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.7]];
     [self.view addSubview:backGroungView];
     UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 35, WIDTH - 20, 95 - 30)];
     [sampleLabel setBackgroundColor:[UIColor clearColor]];
@@ -147,10 +150,10 @@
     int x = 10;
 //    int yMargine = 10;
     int y = 10;
-    int label_height = 25;
+    int label_height = 40;
     float color = 255;
     
-    UIFont *labelFont = [UIFont boldSystemFontOfSize:15];
+    UIFont *labelFont = REGULAR_FONT_12;
     
     for (int counter = 0; counter < 9 && counter < contactMutableArray.count; counter++) {
         if (counter > 0)
@@ -190,10 +193,10 @@
             [sampleScrollView addSubview:tempButton];
             [buttonArray addObject:tempButton];
             
-            UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, y + buttonSize + 5, buttonSize, label_height)];
+            UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, y + buttonSize + 0, buttonSize, label_height)];
             sampleLabel.text = [[contactMutableArray objectAtIndex:counter] name];
             [sampleLabel setTextColor:[UIColor whiteColor]];
-//            sampleLabel.numberOfLines = 2;
+            sampleLabel.numberOfLines = 2;
             sampleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
             [sampleLabel setFont:labelFont];
             [sampleLabel setTextAlignment:NSTextAlignmentCenter];
@@ -218,9 +221,9 @@
             [sampleScrollView addSubview:tempButton];
             [buttonArray addObject:tempButton];
             
-            UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake((WIDTH / 2) - buttonSize / 2, y + buttonSize + 5, buttonSize, label_height)];
+            UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake((WIDTH / 2) - buttonSize / 2, y + buttonSize + 0, buttonSize, label_height)];
             [sampleLabel setTextColor:[UIColor whiteColor]];
-//            sampleLabel.numberOfLines = 2;
+            sampleLabel.numberOfLines = 2;
             sampleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
             sampleLabel.text = [[contactMutableArray objectAtIndex:counter] name];
             [sampleLabel setFont:labelFont];
@@ -247,9 +250,9 @@
             [sampleScrollView addSubview:tempButton];
             [buttonArray addObject:tempButton];
             
-            UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(WIDTH - 10 - buttonSize, y + buttonSize + 5, buttonSize, label_height)];
+            UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(WIDTH - 10 - buttonSize, y + buttonSize + 0, buttonSize, label_height)];
             [sampleLabel setTextColor:[UIColor whiteColor]];
-//            sampleLabel.numberOfLines = 2;
+            sampleLabel.numberOfLines = 2;
             sampleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
             sampleLabel.text = [[contactMutableArray objectAtIndex:counter] name];
             [sampleLabel setFont:labelFont];

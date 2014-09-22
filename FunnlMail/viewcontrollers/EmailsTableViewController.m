@@ -1475,8 +1475,10 @@ UIView *greyView;
 
 #pragma mark Helpers
 - (void)helpButtonPressed:(UIButton *)sender {
+    
+
     if (sender == helpButton && ([sender.titleLabel.text isEqualToString:GUIDE_FOR_SWIPING_CELL] || [sender.titleLabel.text isEqualToString:HELP_COMMENT])) {
-        if (!helpFlag) {
+        /*if (!helpFlag) {
             disclosureArrow.hidden = YES;
 
             [helpButton setTitle:GUIDE_FOR_SWIPING_CELL forState:UIControlStateNormal];
@@ -1512,7 +1514,9 @@ UIView *greyView;
                 }
             }
         }
-        helpFlag = !helpFlag;
+        helpFlag = !helpFlag;*/
+        AppDelegate *appDelegate = APPDELEGATE;
+        [appDelegate performSelector:@selector(loadVIPFunnelViewController) withObject:nil afterDelay:0];
     }
     else {
         disclosureArrow.hidden = NO;

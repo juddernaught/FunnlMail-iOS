@@ -172,8 +172,8 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [centeredButtons addSubview:filterButton];
     
     [composeEmailButton addTarget:self action:@selector(composeEmailButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-    composeEmailButton.contentEdgeInsets = (UIEdgeInsets){.right=-20};
-    composeEmailButton.frame = CGRectMake(35, 0, 40, 40);
+//    composeEmailButton.contentEdgeInsets = (UIEdgeInsets){.right=0};
+    composeEmailButton.frame = CGRectMake(35, -5, 50, 50);
     UIImage *composeIconImg = [UIImage imageNamed:@"composeIcon.png"];
     composeIconImg = [composeIconImg imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     [composeEmailButton setImage:composeIconImg forState:UIControlStateNormal];

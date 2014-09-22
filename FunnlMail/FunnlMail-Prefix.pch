@@ -68,6 +68,8 @@
 
 #define MAIL_FUNNEL_FONT [UIFont fontWithName:@"HelveticaNeue" size:12]
 
+#define REGULAR_FONT_12 [UIFont fontWithName:@"HelveticaNeue" size:13]
+
 //newly added for new create funnel ui
 #define FONT_FOR_INITIAL [UIFont systemFontOfSize:24]
 #define BUTTON_BORDER_WIDTH_VIP 3
@@ -83,7 +85,7 @@
 #define TOST_DISPLAY_DURATION 3.0
 
 #define kVIP_FUNNEL_POP_UP_DISPLY_INTERVAL 60
-#define IS_VIP_ENABLED 1
+#define IS_VIP_ENABLED 0
 
 #define INBOX @"INBOX"
 #define SENT @"[Gmail]/Sent Mail"
@@ -95,7 +97,9 @@
 #define CLIENT_SECRET @"the-client-secret"
 #define KEYCHAIN_ITEM_NAME @"MailCore OAuth 2.0 Token"
 
-#define GRADIENT_ARRAY [NSArray arrayWithObjects:@"#A1A1AC",@"#46EEA5",@"#B48FD3",@"#598FC8",@"#FF605D",@"#48D4D1",@"#FDDC74",@"#82D9F9",@"#FF8194",@"#FF815E",nil];
+#define GRADIENT_ARRAY [NSArray arrayWithObjects:@"#A1A1AC",@"#46EEA5",@"#B48FD3",@"#598FC8",@"#FF605D",@"#48D4D1",@"#FF8194",@"#FF815E",nil];
+// removed these colors from palette: @"#FDDC74",@"#82D9F9"
+
 #define DONE_BUTTON_BLUE_COLOR @"3878DE"
 #define UNDO_BUTTON_RED_COLOR @"C5000D"
 

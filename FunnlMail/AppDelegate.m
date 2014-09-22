@@ -25,7 +25,7 @@
 
 @implementation AppDelegate
 @synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable,contextIOAPIClient,isAlreadyRequestedRefreshToken,currentSelectedFunnlModel,isPullToRefresh,navControllerForCentralView;
-@synthesize mainVCdelegate,letsGo;
+@synthesize mainVCdelegate,letsGo,activityIndicator;
 
 #pragma mark - didFinishLaunching
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -211,6 +211,11 @@
     
     [self.window addSubview:showWelcomeOverlay];
     [self.window bringSubviewToFront:showWelcomeOverlay];
+    
+    activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+    [activityIndicator setFrame:CGRectMake(WIDTH-50, 95, 25, 25)];
+    [showWelcomeOverlay addSubview:activityIndicator];
+    [activityIndicator startAnimating];
 }
 
 
@@ -255,6 +260,7 @@
 }
 
 -(IBAction)hideWelcomeOverlay:(id)sender{
+    [activityIndicator stopAnimating];
     [showWelcomeOverlay removeFromSuperview];
 #ifdef TRACK_MIXPANEL
     [self trackMixpanelAnalytics];
@@ -268,7 +274,7 @@
 
 //loading VIP funnl
 - (void)loadVIPFunnelViewController {
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"VIP_FUNNL_APPERANCE"])
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"VIP_FUNNL_APPERANCE"] == NO)
     {
         if (navControllerForCentralView) {
             VIPViewController *viewController = [[VIPViewController alloc] init];

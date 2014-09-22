@@ -226,6 +226,8 @@ UIButton *loginButton;
         [appDelegate showWelcomeOverlay];
         if ([[[MessageService instance] retrieveAllMessages] count] > 0) {
             [appDelegate.letsGo setHidden:NO];
+            [appDelegate.activityIndicator stopAnimating];
+            [appDelegate.activityIndicator hidesWhenStopped];
         }
     }
     //[self oauthLogin];

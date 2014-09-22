@@ -42,14 +42,15 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 //    [self.view setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.6]];
-    [self.view setBackgroundColor:[UIColor blackColor]];
-//    [self setView];
+    [self.view setBackgroundColor:[UIColor colorWithWhite:0.8 alpha:0.5]];
     [self applyBackgroundImage];
-    [self performSelectorInBackground:@selector(setView) withObject:nil];
+    [self setView];
+//    [self performSelectorInBackground:@selector(setView) withObject:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    [self.view setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.6]];
+
+    [self.view setBackgroundColor:[UIColor colorWithWhite:0.8 alpha:0.5]];
 //    [self.view setBackgroundColor:[UIColor blackColor]];
 }
 
@@ -72,7 +73,7 @@
     [self.view addSubview:backgroundImageView];
     FXBlurView *backgroundView = [[FXBlurView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
     [backgroundView setBlurEnabled:YES];
-    backgroundView.tintColor = [UIColor blackColor];
+    backgroundView.tintColor = [UIColor grayColor];
     backgroundView.blurRadius = 10;
     [self.view addSubview:backgroundView];
     backgroundView = nil;
@@ -82,8 +83,9 @@
 
 - (void)setView {
     UIView *backGroundView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
-    [backGroundView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.7]];
+    [backGroundView setBackgroundColor:[UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.5]];
     [self.view addSubview:backGroundView];
+    
     backGroundView = nil;
     UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 22, WIDTH, 44)];
     [sampleLabel setTextAlignment:NSTextAlignmentCenter];
@@ -112,10 +114,10 @@
     int margin = 40;
     int x = 10;
     int y = 10;
-    int label_height = 25;
+    int label_height = 40;
     float color = 255;
     
-    UIFont *labelFont = [UIFont boldSystemFontOfSize:15];
+    UIFont *labelFont = REGULAR_FONT_12;
     
     UIScrollView *mainScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, y1, WIDTH, HEIGHT - y1 - 100)];
     [mainScrollView setBackgroundColor:[UIColor clearColor]];
@@ -155,10 +157,10 @@
             [mainScrollView addSubview:tempButton];
             [buttonArray addObject:tempButton];
             
-            UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, y + buttonSize + 5, buttonSize, label_height)];
+            UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, y + buttonSize + 0, buttonSize, label_height)];
             sampleLabel.text = [[contactMutableArray objectAtIndex:counter] name];
             [sampleLabel setTextColor:[UIColor whiteColor]];
-            //            sampleLabel.numberOfLines = 2;
+            sampleLabel.numberOfLines = 2;
             sampleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
             [sampleLabel setFont:labelFont];
             [sampleLabel setTextAlignment:NSTextAlignmentCenter];
@@ -182,9 +184,9 @@
             [mainScrollView addSubview:tempButton];
             [buttonArray addObject:tempButton];
             
-            UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake((WIDTH / 2) - buttonSize / 2, y + buttonSize + 5, buttonSize, label_height)];
+            UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake((WIDTH / 2) - buttonSize / 2, y + buttonSize + 0, buttonSize, label_height)];
             [sampleLabel setTextColor:[UIColor whiteColor]];
-            //            sampleLabel.numberOfLines = 2;
+            sampleLabel.numberOfLines = 2;
             sampleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
             sampleLabel.text = [[contactMutableArray objectAtIndex:counter] name];
             [sampleLabel setFont:labelFont];
@@ -209,9 +211,9 @@
             [mainScrollView addSubview:tempButton];
             [buttonArray addObject:tempButton];
             
-            UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(WIDTH - 10 - buttonSize, y + buttonSize + 5, buttonSize, label_height)];
+            UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(WIDTH - 10 - buttonSize, y + buttonSize + 0, buttonSize, label_height)];
             [sampleLabel setTextColor:[UIColor whiteColor]];
-            //            sampleLabel.numberOfLines = 2;
+            sampleLabel.numberOfLines = 2;
             sampleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
             sampleLabel.text = [[contactMutableArray objectAtIndex:counter] name];
             [sampleLabel setFont:labelFont];
@@ -296,7 +298,7 @@
 #pragma mark Event Handler 
 - (void)remindMeLaterPressed:(UIButton *)sender {
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"VIP_FUNNL_APPERANCE"];
+    //[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"VIP_FUNNL_APPERANCE"];
     AppDelegate *tempAppDelegate = [[UIApplication sharedApplication] delegate];
     if (IS_VIP_ENABLED) {
         [tempAppDelegate performSelector:@selector(loadVIPFunnelViewController) withObject:nil afterDelay:kVIP_FUNNEL_POP_UP_DISPLY_INTERVAL];

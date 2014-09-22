@@ -2072,7 +2072,7 @@
             }
             return;
         }
-        if((contactMutableArray.count > 1 || (![[(ContactModel *)[contactMutableArray objectAtIndex:0] name] isEqualToString:ADD_FUNNL] && contactMutableArray.count == 1)) || subjectArray.count){
+        if((contactMutableArray.count > 0 || (![[(ContactModel *)[contactMutableArray objectAtIndex:0] name] isEqualToString:ADD_FUNNL] && contactMutableArray.count == 1)) || subjectArray.count){
 //            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             if (!enableNotification) {
                 if ([oldModel.webhookIds length]) {

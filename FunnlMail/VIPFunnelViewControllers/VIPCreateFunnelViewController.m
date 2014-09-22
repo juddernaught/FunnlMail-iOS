@@ -48,7 +48,7 @@
     advanceFlag = TRUE;
     buttonArray = [[NSMutableArray alloc] init];
 //    [self.view setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.6]];
-    [self.view setBackgroundColor:[UIColor clearColor]];
+    [self.view setBackgroundColor:[UIColor whiteColor]];
     // Do any additional setup after loading the view.
     UIBarButtonItem *sampleBarButton = [[UIBarButtonItem alloc] init];
     [sampleBarButton setTitle:@"Cancel"];
@@ -59,7 +59,7 @@
     [sampleBarButton setTitle:@"Save"];
     [self.navigationItem setLeftBarButtonItem:sampleBarButton];
     sampleBarButton = nil;
-    [self applyBackgroundImage];
+    [self performSelectorOnMainThread:@selector(applyBackgroundImage) withObject:nil waitUntilDone:YES];
     [self setUpCustomNavigationBar];
     [self setUpViewForCreatingFunnel];
 }
@@ -228,7 +228,7 @@
     [self.view addSubview:backgroundImageView];
     FXBlurView *backgroundView = [[FXBlurView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
     [backgroundView setBlurEnabled:YES];
-    backgroundView.tintColor = [UIColor blackColor];
+    backgroundView.tintColor = [UIColor lightGrayColor];
     backgroundView.blurRadius = 10;
     [self.view addSubview:backgroundView];
     backgroundView = nil;
@@ -268,22 +268,23 @@
 - (void)setUpViewForCreatingFunnel {
     int y = 0;
     mainScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, self.navigationController.navigationBar.frame.size.height + 22, WIDTH, HEIGHT - self.navigationController.navigationBar.frame.size.height - 22)];
-    [mainScrollView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.6]];
+    [mainScrollView setBackgroundColor:[UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.6]];
     
     UILabel *sampleLAbel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 125, 40)];
     [sampleLAbel setTextAlignment:NSTextAlignmentLeft];
     [sampleLAbel setTextColor:[UIColor whiteColor]];
-    sampleLAbel.text = @"Funnel Name";
+    sampleLAbel.text = @"Funnl Name";
     [mainScrollView addSubview:sampleLAbel];
     sampleLAbel = nil;
     
     funnelNameTextField = [[UITextField alloc] initWithFrame:CGRectMake(125, 0, WIDTH - 125 - 10, 40)];
     if (![[NSUserDefaults standardUserDefaults] boolForKey:@"IS_VIP_CREATED"]) {
-        funnelNameTextField.text = @"VIP";
+        funnelNameTextField.text = @""; //REMOVE this DEFAULT NAME
     }
     else {
         funnelNameTextField.text = @"";
     }
+    [funnelNameTextField becomeFirstResponder];
     
     [funnelNameTextField setFont:[UIFont boldSystemFontOfSize:18]];
     [funnelNameTextField setTextColor:[UIColor whiteColor]];
@@ -312,10 +313,10 @@
     //    int xMargine = 10;
     int x = 10;
     //    int yMargine = 10;
-    int label_height = 25;
+    int label_height = 40;
     float color = 255;
     
-    UIFont *labelFont = [UIFont boldSystemFontOfSize:15];
+    UIFont *labelFont = REGULAR_FONT_12;
     
     for (int counter = 0; counter < 9 && counter < contactMutableArray.count; counter++) {
         if (counter > 0)
@@ -350,10 +351,10 @@
             [mainScrollView addSubview:tempButton];
             [buttonArray addObject:tempButton];
             
-            UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, y + buttonSize + 5, buttonSize, label_height)];
+            UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, y + buttonSize + 0, buttonSize, label_height)];
             sampleLabel.text = [[contactMutableArray objectAtIndex:counter] name];
             [sampleLabel setTextColor:[UIColor whiteColor]];
-            //            sampleLabel.numberOfLines = 2;
+            sampleLabel.numberOfLines = 2;
             sampleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
             [sampleLabel setFont:labelFont];
             [sampleLabel setTextAlignment:NSTextAlignmentCenter];
@@ -377,9 +378,9 @@
             [mainScrollView addSubview:tempButton];
             [buttonArray addObject:tempButton];
             
-            UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake((WIDTH / 2) - buttonSize / 2, y + buttonSize + 5, buttonSize, label_height)];
+            UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake((WIDTH / 2) - buttonSize / 2, y + buttonSize + 0, buttonSize, label_height)];
             [sampleLabel setTextColor:[UIColor whiteColor]];
-            //            sampleLabel.numberOfLines = 2;
+            sampleLabel.numberOfLines = 2;
             sampleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
             sampleLabel.text = [[contactMutableArray objectAtIndex:counter] name];
             [sampleLabel setFont:labelFont];
@@ -404,9 +405,9 @@
             [mainScrollView addSubview:tempButton];
             [buttonArray addObject:tempButton];
             
-            UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(WIDTH - 10 - buttonSize, y + buttonSize + 5, buttonSize, label_height)];
+            UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(WIDTH - 10 - buttonSize, y + buttonSize + 0, buttonSize, label_height)];
             [sampleLabel setTextColor:[UIColor whiteColor]];
-            //            sampleLabel.numberOfLines = 2;
+            sampleLabel.numberOfLines = 2;
             sampleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
             sampleLabel.text = [[contactMutableArray objectAtIndex:counter] name];
             [sampleLabel setFont:labelFont];
