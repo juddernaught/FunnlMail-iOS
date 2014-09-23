@@ -273,7 +273,7 @@
     UILabel *sampleLAbel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 125, 40)];
     [sampleLAbel setTextAlignment:NSTextAlignmentLeft];
     [sampleLAbel setTextColor:[UIColor whiteColor]];
-    sampleLAbel.text = @"Funnl Name";
+    sampleLAbel.text = @"Funnel Name";
     [mainScrollView addSubview:sampleLAbel];
     sampleLAbel = nil;
     
@@ -285,7 +285,8 @@
         funnelNameTextField.text = @"";
     }
     [funnelNameTextField becomeFirstResponder];
-    
+    funnelNameTextField.returnKeyType = UIReturnKeyDone;
+    funnelNameTextField.delegate = self;
     [funnelNameTextField setFont:[UIFont boldSystemFontOfSize:18]];
     [funnelNameTextField setTextColor:[UIColor whiteColor]];
     [funnelNameTextField setTextAlignment:NSTextAlignmentLeft];
@@ -625,9 +626,9 @@
     [naviGationBar addSubview:sampleButton];
     sampleButton = nil;
     
-    UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 22, 100, 44)];
+    UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(106, 22, 108, 44)];
     [sampleLabel setTextAlignment:NSTextAlignmentCenter];
-    sampleLabel.text = @"Create Funnl";
+    sampleLabel.text = @"Create Funnel";
     [sampleLabel setTextColor:[UIColor whiteColor]];
     [sampleLabel setBackgroundColor:[UIColor clearColor]];
     [naviGationBar addSubview:sampleLabel];
@@ -849,13 +850,13 @@
                 }
             }
         }else{
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Please add at least one email or subject" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnel" message:@"Please add at least one email or subject" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert show];
             alert = nil;
         }
     }
     else{
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Please add name for Funnl" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnel" message:@"Please add name for Funnel" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert show];
     }
     [appDelegate.progressHUD setHidden:YES];

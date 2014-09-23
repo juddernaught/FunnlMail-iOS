@@ -87,7 +87,7 @@ NSMutableArray *emailArr,*searchArray;
             UIButton *deleteButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 300, 40)];
             [deleteButton setTitleColor:[UIColor colorWithHexString:@"#448DEC"] forState:UIControlStateNormal];
             [deleteButton setTitleColor:[UIColor colorWithHexString:@"#6F7683"] forState:UIControlStateHighlighted];
-            [deleteButton setTitle:@"Delete Funnl" forState:UIControlStateNormal];
+            [deleteButton setTitle:@"Delete Funnel" forState:UIControlStateNormal];
             [deleteButton.layer setBorderColor:[UIColor colorWithHexString:@"#448DEC"].CGColor];
             [deleteButton.layer setBorderWidth:1];
             [footerView addSubview:deleteButton];
@@ -110,7 +110,7 @@ NSMutableArray *emailArr,*searchArray;
     isSkipAll = oldModel.skipFlag;
     areNotificationsEnabled = oldModel.notificationsFlag;
     randomColors = GRADIENT_ARRAY;
-    self.title = @"Create Funnl";
+    self.title = @"Create Funnel";
 //    [self.view setBackgroundColor:[UIColor whiteColor]];
     [self.view setBackgroundColor:[UIColor blackColor]];
 
@@ -1152,12 +1152,12 @@ NSMutableArray *emailArr,*searchArray;
                 
             }
         }else{
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Please add at least one email" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnel" message:@"Please add at least one email" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert show];
         }
     }
     else{
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Please add name for Funnl" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnel" message:@"Please add name for Funnel" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert show];
     }
     [tempAppDelegate.progressHUD setHidden:YES];

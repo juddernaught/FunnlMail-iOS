@@ -11,6 +11,7 @@
 #include <MailCore/MailCore.h>
 #import <MessageUI/MessageUI.h>
 #import "TITokenField.h"
+#import "FXBlurView.h"
 @class MCOMessageView;
 @class MCOIMAPAsyncSession;
 @class MCOMAPMessage;

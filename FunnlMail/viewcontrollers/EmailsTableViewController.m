@@ -208,7 +208,7 @@ UIView *greyView;
 {
     
 	// Do any additional setup after loading the view.
-    self.view.backgroundColor= [UIColor grayColor];
+    self.view.backgroundColor= [UIColor whiteColor];
     // This is the green or purple All bar
     
     filterLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 44+20, 320, 40)];
@@ -1392,7 +1392,7 @@ UIView *greyView;
 
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return @"Create Funnl";
+    return @"Create Funnel";
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -1573,7 +1573,7 @@ UIView *greyView;
     searchBar.frame = searchBarFrame;
     searchBar.showsCancelButton = YES;
     searchBar.showsScopeBar = YES;
-    NSArray *scopeButtonTitles = @[@"All Mail",@"Current Funnl"];
+    NSArray *scopeButtonTitles = @[@"All Mail",@"Current Funnel"];
     [searchBar setScopeButtonTitles:scopeButtonTitles];
     searchBar.selectedScopeButtonIndex = 1;
     scopeButtonPressedIndexNumber = YES;

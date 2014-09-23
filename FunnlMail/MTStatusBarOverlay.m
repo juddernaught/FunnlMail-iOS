@@ -82,7 +82,7 @@ MAX([UIApplication sharedApplication].statusBarFrame.size.width, [UIApplication 
 #define kDarkThemeErrorMessageTextColor             [UIColor colorWithRed:0.749f green:0.749f blue:0.749f alpha:1.0f] // [UIColor colorWithRed:0.918367f green:0.48385f blue:0.423895f alpha:1.0f]
 #define kDarkThemeFinishedMessageTextColor          [UIColor colorWithRed:0.749f green:0.749f blue:0.749f alpha:1.0f] // [UIColor colorWithRed:0.681767f green:0.918367f blue:0.726814f alpha:1.0f]
 #define kDarkThemeActivityIndicatorViewStyle		UIActivityIndicatorViewStyleWhite
-#define kDarkThemeDetailViewBackgroundColor			[UIColor colorWithRed:0.3f green:0.3f blue:0.3f alpha:1.0f]
+#define kDarkThemeDetailViewBackgroundColor			[UIColor whiteColor]
 #define kDarkThemeDetailViewBorderColor				[UIColor whiteColor]
 #define kDarkThemeHistoryTextColor					[UIColor whiteColor]
 
@@ -350,6 +350,8 @@ kDetailViewWidth, kHistoryTableRowHeight*kMaxHistoryTableRowCount + kStatusBarHe
         CGRect backgroundFrame = [self backgroundViewFrameForStatusBarInterfaceOrientation];
         backgroundView_ = [[UIView alloc] initWithFrame:backgroundFrame];
 		backgroundView_.clipsToBounds = YES;
+        backgroundView_.backgroundColor = WHITE_CLR;
+        
 		backgroundView_.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         oldBackgroundViewFrame_ = backgroundView_.frame;
         
@@ -367,7 +369,7 @@ kDetailViewWidth, kHistoryTableRowHeight*kMaxHistoryTableRowCount + kStatusBarHe
         
 		// Images used as background when status bar style is Default
 		defaultStatusBarImage_ = [UIImage imageWithData:MTStatusBarBackgroundImageData(NO)];
-		defaultStatusBarImageShrinked_ = [UIImage imageWithData:MTStatusBarBackgroundImageData(YES)];
+		defaultStatusBarImageShrinked_ = [UIImage imageWithData:MTStatusBarBackgroundImageData(NO)];
         
 		// Background-Image of the Content View
 		statusBarBackgroundImageView_ = [[UIImageView alloc] initWithFrame:backgroundView_.frame];
@@ -589,6 +591,7 @@ kDetailViewWidth, kHistoryTableRowHeight*kMaxHistoryTableRowCount + kStatusBarHe
 
 - (void)postMessage:(NSString *)message type:(MTMessageType)messageType duration:(NSTimeInterval)duration animated:(BOOL)animated immediate:(BOOL)immediate {
     mt_dispatch_sync_on_main_thread(^{
+        self.backgroundColor = WHITE_CLR;
         // don't add to queue when message is empty
         if (message.length == 0) {
             return;
@@ -1196,16 +1199,20 @@ kDetailViewWidth, kHistoryTableRowHeight*kMaxHistoryTableRowCount + kStatusBarHe
 			self.statusBarBackgroundImageView.image = [self.defaultStatusBarImage stretchableImageWithLeftCapWidth:2.0f topCapHeight:0.0f];
 		}
 		statusBarBackgroundImageView_.backgroundColor = [UIColor clearColor];*/
-        statusBarBackgroundImageView_.backgroundColor = UIColorFromRGB(0xEFEFEF);
+        statusBarBackgroundImageView_.backgroundColor = UIColorFromRGB(0xFFFFFF);
 	}
 	// black status bar? -> no image
 	else {
 		self.statusBarBackgroundImageView.image = nil;
 		statusBarBackgroundImageView_.backgroundColor = [UIColor blackColor];
 	}
+    self.statusBarBackgroundImageView.image = nil;
+    statusBarBackgroundImageView_.backgroundColor = UIColorFromRGB(0xFFFFFF);
+
 }
 
 - (void)setColorSchemeForStatusBarStyle:(UIStatusBarStyle)style messageType:(MTMessageType)messageType {
+    
 	// gray status bar?
 	// on iPad the Default Status Bar Style is black too
 	if (style == UIStatusBarStyleDefault && !IsIPad && !IsIPhoneEmulationMode) {
@@ -1287,6 +1294,23 @@ kDetailViewWidth, kHistoryTableRowHeight*kMaxHistoryTableRowCount + kStatusBarHe
         self.progressView.backgroundColor = kProgressViewBackgroundColor;
         self.progressView.image = nil;
 	}
+    
+    
+//    self.statusLabel1.textColor = [UIColor blackColor];
+//    self.statusLabel2.textColor = [UIColor blackColor];
+//    self.finishedLabel.textColor = [UIColor blackColor];
+//    self.statusLabel1.shadowColor = [UIColor blackColor];
+//    self.statusLabel2.shadowColor = [UIColor blackColor];
+//    self.finishedLabel.shadowColor = [UIColor blackColor];
+//    self.activityIndicator.activityIndicatorViewStyle = kLightThemeActivityIndicatorViewStyle;
+//    self.detailView.backgroundColor = WHITE_CLR;
+//    self.detailView.layer.borderColor = [WHITE_CLR CGColor];
+//    self.historyTableView.separatorColor = kLightThemeDetailViewBorderColor;
+//    self.detailTextView.textColor = [UIColor blackColor];
+    
+    self.progressView.backgroundColor = UIColorFromRGB(0xF7F7F7);
+    self.progressView.image = nil;
+    
 }
 
 - (void)updateUIForMessageType:(MTMessageType)messageType duration:(NSTimeInterval)duration {

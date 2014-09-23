@@ -293,11 +293,12 @@
     UIBarButtonItem *fixedSpace = [UIBarButtonItem negativeSpacerWithWidth:-10];
    // fixedSpace.width = 4;
 
-    UIBarButtonItem *funnelButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"emailDetailViewFunnel.png"] style:UIBarButtonItemStylePlain target:self action:@selector(createFunnl:)];
+//    UIBarButtonItem *funnelButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"emailDetailViewFunnel.png"] style:UIBarButtonItemStylePlain target:self action:@selector(createFunnl:)];
     UIBarButtonItem *archiveButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"emailDetailViewArchive.png"] style:UIBarButtonItemStylePlain target:self action:@selector(archiveMail:)];
-    UIBarButtonItem *emailButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"emailDetailViewMail.png"] style:UIBarButtonItemStylePlain target:self action:@selector(unreadMail:)];
+//    UIBarButtonItem *emailButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"emailDetailViewMail.png"] style:UIBarButtonItemStylePlain target:self action:@selector(unreadMail:)];
     UIBarButtonItem *deleteButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"emailDetailViewTrash.png"] style:UIBarButtonItemStylePlain target:self action:@selector(deleteMail:)];
-    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:actualfixedSpace, deleteButton,fixedSpace, archiveButton,fixedSpace, emailButton,fixedSpace, funnelButton, nil]];
+//    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:actualfixedSpace, deleteButton,fixedSpace, archiveButton,fixedSpace, emailButton,fixedSpace, funnelButton, nil]];
+    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:actualfixedSpace, deleteButton,fixedSpace, archiveButton,fixedSpace, nil]];
     //---end of new changes
 }
 

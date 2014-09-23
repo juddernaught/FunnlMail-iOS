@@ -462,12 +462,22 @@
     }
     mainScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, self.navigationController.navigationBar.frame.size.height + 22, WIDTH, HEIGHT - self.navigationController.navigationBar.frame.size.height - 22)];
     [mainScrollView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.7]];
+    mainScrollView.delegate = self;
+//    UISwipeGestureRecognizer *tempGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewDidGetSwipedDown)];
+//    [self.view addGestureRecognizer:tempGestureRecognizer];
+//    tempGestureRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
+//    tempGestureRecognizer = nil;
+//    
+//    tempGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewDidGetSwipedUp)];
+//    [self.view addGestureRecognizer:tempGestureRecognizer];
+//    tempGestureRecognizer.direction = UISwipeGestureRecognizerDirectionUp;
+//    tempGestureRecognizer = nil;
     
     UILabel *sampleLAbel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 125, 40)];
     [sampleLAbel setTextAlignment:NSTextAlignmentLeft];
     [sampleLAbel setTextColor:[UIColor whiteColor]];
     sampleLAbel.tag = 1000;
-    sampleLAbel.text = @"Funnl Name:";
+    sampleLAbel.text = @"Funnel Name:";
     [mainScrollView addSubview:sampleLAbel];
     sampleLAbel = nil;
     
@@ -484,15 +494,15 @@
             funnelNameTextField.text = tempFunnelNameString;
         }
         else {
-            NSMutableAttributedString *tempString = [[NSMutableAttributedString alloc] initWithString:@"Enter Funnl name"];
-            [tempString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithHexString:PLACEHOLDER_COLOR] range:NSMakeRange(0,@"Enter Funnl name".length)];
+            NSMutableAttributedString *tempString = [[NSMutableAttributedString alloc] initWithString:@"Enter Funnel name"];
+            [tempString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithHexString:PLACEHOLDER_COLOR] range:NSMakeRange(0,@"Enter Funnel name".length)];
             [funnelNameTextField setAttributedPlaceholder:tempString];
             tempString = nil;
         }
     }
     else {
-        NSMutableAttributedString *tempString = [[NSMutableAttributedString alloc] initWithString:@"Enter Funnl name"];
-        [tempString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithHexString:PLACEHOLDER_COLOR] range:NSMakeRange(0,@"Enter Funnl name".length)];
+        NSMutableAttributedString *tempString = [[NSMutableAttributedString alloc] initWithString:@"Enter Funnel name"];
+        [tempString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithHexString:PLACEHOLDER_COLOR] range:NSMakeRange(0,@"Enter Funnel name".length)];
         [funnelNameTextField setAttributedPlaceholder:tempString];
         tempString = nil;
     }
@@ -1119,23 +1129,23 @@
     [sampleLAbel setTextColor:[UIColor whiteColor]];
     sampleLAbel.text = @"Skip Primary Inbox";
     //    [containerView addSubview:sampleLAbel];
-    [footerView addSubview:sampleLAbel];
+//    [footerView addSubview:sampleLAbel];
     sampleLAbel = nil;
     
-    UISwitch *primarySkipSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(WIDTH - 10 - 50, internalY, 70, 40)];
-    if (isEditFunnel) {
-        [primarySkipSwitch setOn:oldModel.skipFlag animated:YES];
-    }
-    else
-        [primarySkipSwitch setOn:skipPrimary animated:YES];
-    [primarySkipSwitch addTarget:self action:@selector(skipPrimaryMailChange:) forControlEvents:UIControlEventValueChanged];
-    [primarySkipSwitch setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
-    //    [containerView addSubview:primarySkipSwitch];
-    [footerView addSubview:primarySkipSwitch];
-    primarySkipSwitch = nil;
+//    UISwitch *primarySkipSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(WIDTH - 10 - 50, internalY, 70, 40)];
+//    if (isEditFunnel) {
+//        [primarySkipSwitch setOn:oldModel.skipFlag animated:YES];
+//    }
+//    else
+//        [primarySkipSwitch setOn:skipPrimary animated:YES];
+//    [primarySkipSwitch addTarget:self action:@selector(skipPrimaryMailChange:) forControlEvents:UIControlEventValueChanged];
+//    [primarySkipSwitch setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+//    //    [containerView addSubview:primarySkipSwitch];
+//    [footerView addSubview:primarySkipSwitch];
+//    primarySkipSwitch = nil;
     
     //    innerY = innerY + 40;
-    internalY = internalY + 40;
+//    internalY = internalY + 40;
     
     
     
@@ -1187,9 +1197,9 @@
     [naviGationBar addSubview:sampleButton];
     sampleButton = nil;
     
-    UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 22, 100, 44)];
+    UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(106, 22, 108, 44)];
     [sampleLabel setTextAlignment:NSTextAlignmentCenter];
-    sampleLabel.text = @"Create Funnl";
+    sampleLabel.text = @"Create Funnel";
     [sampleLabel setTextColor:[UIColor whiteColor]];
     [sampleLabel setBackgroundColor:[UIColor clearColor]];
     [naviGationBar addSubview:sampleLabel];
@@ -1256,6 +1266,30 @@
 
 #pragma mark -
 #pragma mark Delegate
+- (void)scrollViewDidGetSwipedDown {
+    //[self.view endEditing:YES];
+    //[self setUpViewForCreatingFunnel];
+}
+
+- (void)scrollViewDidGetSwipedUp {
+    //[self.view endEditing:YES];
+    //[self setUpViewForCreatingFunnel];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    //NSLog(@"scrollViewDidScroll");
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    NSLog(@"scrollViewWillBeginDragging");
+//    [self.view endEditing:YES];
+//    if(activeTextField){
+//        [activeTextField resignFirstResponder];
+//    }
+    //[self setUpViewForCreatingFunnel];
+}
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (alertView.tag == 0) {
         if (buttonIndex == 0) {
@@ -1527,6 +1561,7 @@
         [mainScrollView setContentOffset:CGPointMake(0, mainScrollView.contentSize.height - HEIGHT + 66) animated:YES];
     }
     [UIView commitAnimations];
+    activeTextField = nil;
     return YES;
 }
 
@@ -1551,6 +1586,7 @@
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+    activeTextField = textField;
     [mainScrollView setScrollEnabled:NO];
     if (textField == funnelNameTextField || textField == additionalTextField) {
         
@@ -2150,13 +2186,13 @@
                 
             }
         }else{
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Please add at least one email or subject" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnel" message:@"Please add at least one email or subject" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert show];
             alert = nil;
         }
     }
     else{
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Please add name for Funnl" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnel" message:@"Please add name for Funnel" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert show];
     }
     [appDelegate.progressHUD setHidden:YES];

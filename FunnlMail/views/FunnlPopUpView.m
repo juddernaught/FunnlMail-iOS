@@ -10,6 +10,7 @@
 #import "MASConstraintMaker.h"
 #import "View+MASAdditions.h"
 #import "FunnlPopupViewCell.h"
+#import "MainFilterCell.h"
 //#import "FilterModel.h"
 #import "FunnelModel.h"
 //newly added by iauro001 on 10th June 2014
@@ -75,7 +76,7 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
     }
     else
     {
-        messageStr = @"Move to Funnl";
+        messageStr = @"Move to Funnel";
     }
     UIView *mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
     [mainView setBackgroundColor:[UIColor colorWithWhite:0.2 alpha:0.93]];
@@ -114,8 +115,11 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
     [self addSubview:self.collectionView];
 //    [mainView addSubview:self.collectionView];
     
-    [self.collectionView registerClass:[FunnlPopupViewCell class] forCellWithReuseIdentifier:MAIN_FILTER_CELL];
-    [self.collectionView registerClass:[FunnlPopupViewCell class] forCellWithReuseIdentifier:ADD_MAIN_FILTER_CELL];
+//    [self.collectionView registerClass:[FunnlPopupViewCell class] forCellWithReuseIdentifier:MAIN_FILTER_CELL];
+//    [self.collectionView registerClass:[FunnlPopupViewCell class] forCellWithReuseIdentifier:ADD_MAIN_FILTER_CELL];
+    
+    [self.collectionView registerClass:[MainFilterCell class] forCellWithReuseIdentifier:MAIN_FILTER_CELL];
+    [self.collectionView registerClass:[MainFilterCell class] forCellWithReuseIdentifier:ADD_MAIN_FILTER_CELL];
     
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.mas_top).with.offset(130);
@@ -156,15 +160,16 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    FunnlPopupViewCell *cell;
+//    FunnlPopupViewCell *cell;
+    MainFilterCell *cell;
     
     if(indexPath.row == filterArray.count){
-        cell = (FunnlPopupViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:ADD_MAIN_FILTER_CELL forIndexPath:indexPath];
+        cell = (MainFilterCell *)[collectionView dequeueReusableCellWithReuseIdentifier:ADD_MAIN_FILTER_CELL forIndexPath:indexPath];
         cell.barColor = [UIColor colorWithHexString:@"#636466"];
         cell.filterTitle = ADD_FUNNL;
     }
     else{
-        cell = (FunnlPopupViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:MAIN_FILTER_CELL forIndexPath:indexPath];
+        cell = (MainFilterCell *)[collectionView dequeueReusableCellWithReuseIdentifier:MAIN_FILTER_CELL forIndexPath:indexPath];
         FunnelModel *fm = (FunnelModel *)filterArray[indexPath.row];
         cell.barColor = [UIColor colorWithHexString:fm.funnelColor];
         cell.filterTitle = fm.filterTitle;
@@ -173,7 +178,9 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
         
         //[cell.notificationButton addTarget:self action:@selector(notificationButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     }
-    cell.contentView.backgroundColor = [UIColor whiteColor];
+    cell.contentView.backgroundColor = [UIColor clearColor];
+    cell.settingsButton.hidden = YES;
+    cell.shareButton.hidden = YES;
     return cell;
 }
 

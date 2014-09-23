@@ -20,7 +20,7 @@
 #import "GTMOAuth2ViewControllerTouch.h"
 #import <HockeySDK/HockeySDK.h>
 #import "VIPViewController.h"
-
+#import "MTStatusBarOverlay.h"
 #define MIXPANEL_TOKEN @"08b1e55d72f1b22a8e5696c2b56a6777"
 
 @implementation AppDelegate
@@ -123,7 +123,7 @@
     if([reach.currentReachabilityString isEqualToString:@"No Connection"])
     {
         NSLog(@"------------- Internet is OFF ---------------");
-        //[[[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Internet is not available." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
+        //[[[UIAlertView alloc] initWithTitle:@"Funnel" message:@"Internet is not available." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil] show];
         self.internetAvailable = NO;
         self.isAlreadyRequestedRefreshToken = NO;
         [self.loginViewController callOffline];
@@ -318,7 +318,22 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    
+//    NSLog(@"%@",[[EmailService instance] userEmailID]);
+    if ([[EmailService instance] userEmailID] && ![[[EmailService instance] userEmailID] isEqualToString:@""]) {
+        MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
+        [overlay hide];
+        [overlay postImmediateMessage:@"Downloading..." animated:YES];
+        [overlay setDefaultStatusBarImage:[UIImage imageNamed:@""]];
+        overlay.animation = MTStatusBarOverlayAnimationShrink;  // MTStatusBarOverlayAnimationShrink
+        overlay.detailViewMode = MTDetailViewModeHistory;         // enable automatic history-tracking and show in detail-view
+        overlay.tag = 1;
+        overlay.progress = 0.0;
+        UIImageView *statusBarBackgroundImageView_ = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, 20)];
+		statusBarBackgroundImageView_.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+		[overlay addSubviewToBackgroundView:statusBarBackgroundImageView_];
+
+        [self performSelector:@selector(dismissStatusBar) withObject:nil afterDelay:10];
+    }
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     self.startDate = [NSDate date];
     isAlreadyRequestedRefreshToken = NO;
@@ -348,6 +363,11 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     [self endInterval];
 
+}
+
+- (void)dismissStatusBar {
+    MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
+    [overlay hide];
 }
 
 //saves the amount of time spent in app

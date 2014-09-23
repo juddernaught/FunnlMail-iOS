@@ -89,7 +89,7 @@
     backGroundView = nil;
     UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 22, WIDTH, 44)];
     [sampleLabel setTextAlignment:NSTextAlignmentCenter];
-    sampleLabel.text = @"Funnl successfully Created!";
+    sampleLabel.text = @"Funnel successfully Created!";
     [sampleLabel setFont:[UIFont boldSystemFontOfSize:18]];
     [sampleLabel setTextColor:[UIColor whiteColor]];
     [self.view addSubview:sampleLabel];
@@ -236,7 +236,7 @@
     sampleView = nil;
     
     UIButton *sampleButton = [[UIButton alloc] initWithFrame:CGRectMake((WIDTH - 165.0) / 2.0, HEIGHT - 100 + 15, 165, 25)];
-    [sampleButton setTitle:@"Create another Funnl" forState:UIControlStateNormal];
+    [sampleButton setTitle:@"Create another Funnel" forState:UIControlStateNormal];
     [sampleButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [sampleButton.titleLabel setFont:[UIFont systemFontOfSize:16]];
     sampleButton.clipsToBounds = YES;

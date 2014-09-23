@@ -85,7 +85,7 @@ static NSString *contactCellIdentifier = @"ContactCell";
     
     UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(110 - 25, 22, 150, 44)];
     [sampleLabel setTextAlignment:NSTextAlignmentCenter];
-    sampleLabel.text = @"Added to Funnl";
+    sampleLabel.text = @"Added to Funnel";
     [sampleLabel setFont:[UIFont boldSystemFontOfSize:18]];
     [sampleLabel setTextColor:[UIColor whiteColor]];
     [sampleLabel setBackgroundColor:[UIColor clearColor]];
@@ -173,7 +173,8 @@ static NSString *contactCellIdentifier = @"ContactCell";
     else {
         messageLabel.text = [NSString stringWithFormat:@"Messages from %@ will be funneled under %@.",message.header.sender.mailbox,tempFunnelModel.funnelName];
     }
-    [messageLabel setFont:[UIFont systemFontOfSize:20]];
+//    [messageLabel setFont:[UIFont systemFontOfSize:20]];
+    [messageLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:20]];
     [mainView addSubview:messageLabel];
     messageLabel = nil;
     

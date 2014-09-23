@@ -33,7 +33,7 @@
     if (self) {
         
         // Initialization code
-        self.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.93];
+        self.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.97];
         self.imapSession = [EmailService instance].imapSession;
         funnelModel = fm;
         [self setupView];
@@ -96,6 +96,20 @@
     toFieldView.backgroundColor=  CLEAR_COLOR;
     toFieldView.tokenField.backgroundColor = CLEAR_COLOR;
     
+    UIButton *closeButton = [[UIButton alloc] initWithFrame:CGRectMake(240, 23, 40, 40)];
+    [closeButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentCenter];
+    [closeButton setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
+    [closeButton setContentMode:UIViewContentModeCenter];
+    UIImage *sampleImage = [UIImage imageNamed:@"close"];
+    sampleImage = [sampleImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [closeButton setImage:sampleImage forState:UIControlStateNormal];
+    closeButton.tintColor = [UIColor whiteColor];
+    sampleImage = nil;
+    [closeButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+    [closeButton addTarget:self action:@selector(closeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    //    [headerView addSubview:editButton];
+    [self addSubview:closeButton];
+
     
     _messageView = [[UITextView alloc] initWithFrame:CGRectMake(8, 0, WIDTH-16, toFieldView.frame.size.height)];
 	[_messageView setScrollEnabled:NO];
@@ -118,16 +132,16 @@
     [sendButton addTarget:self action:@selector(shareFunnlClicked:) forControlEvents:UIControlEventTouchUpInside];
     [_messageView addSubview:sendButton];
     
-    UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeButton.frame = CGRectMake(320-40, 70, 40, 40);
+//    UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    closeButton.frame = CGRectMake(320-40, 70, 40, 40);
 //    [closeButton setBackgroundColor:[UIColor colorWithHexString:@"#1B8EEE"]];
 //    [closeButton setTitle:@"Close" forState:UIControlStateNormal];
 //    [closeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:16]];
 //    [closeButton setTitleColor:WHITE_CLR forState:UIControlStateNormal];
 //    [closeButton setTitleColor:LIGHT_GRAY_COLOR forState:UIControlStateHighlighted];
-    [closeButton setImage:[UIImage imageNamed:@"MPCloseBtn"] forState:UIControlStateNormal];
-    [closeButton addTarget:self action:@selector(closeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:closeButton];
+//    [closeButton setImage:[UIImage imageNamed:@"MPCloseBtn"] forState:UIControlStateNormal];
+//    [closeButton addTarget:self action:@selector(closeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+//    [self addSubview:closeButton];
     
     UITapGestureRecognizer *singleFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
     singleFingerTap.delegate = self;

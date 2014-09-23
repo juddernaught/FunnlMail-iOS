@@ -93,7 +93,7 @@
 //    imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"settingListIcon",@"alertListIcon",@"shareListIcon",@"sentListIcon", @"archiveListIcon",@"archiveListIcon", @"trashListIcon",@"emailListIcon",@"helpListIcon", @"helpListLogOutIcon",nil];
     
 
-    listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Create Funnl",@"Send Feedback",@"Tutorial",@"Help (FAQs)",@"LogOut",nil];
+    listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Create Funnel",@"Send Feedback",@"Tutorial",@"Help (FAQs)",@"LogOut",nil];
     imageArray = [[NSMutableArray alloc] initWithObjects:@"",@"funnlIcon",@"sendFeedbackListIcon",@"tutorialListIcon@2x",@"helpListIcon", @"logoutListIcon",nil];
 
 }
@@ -311,7 +311,7 @@
         }];
     }
 
-    else if ([cell.menuLabel.text isEqualToString:@"Create Funnl"]) {
+    else if ([cell.menuLabel.text isEqualToString:@"Create Funnel"]) {
         appDelegate =APPDELEGATE;
         appDelegate.loginViewController.mainViewController.emailsTableViewController.helpFlag = FALSE;
         [appDelegate.loginViewController.mainViewController.emailsTableViewController helpButtonPressed:appDelegate.loginViewController.mainViewController.emailsTableViewController.helpButton];

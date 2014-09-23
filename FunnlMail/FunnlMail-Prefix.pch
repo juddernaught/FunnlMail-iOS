@@ -23,9 +23,9 @@
 #define  kContextIOConsumerKey  @"npe4azak"
 #define kContextIOConsumerSecret  @"OcBGyTDYEdSat6fz"
 
-#define FUNNEL_NAME_REPEATED @"Funnl name is being repeated."
+#define FUNNEL_NAME_REPEATED @"Funnel name is being repeated."
 #define FUNNEL_CONTACT_BLANK @"No contacts entered."
-#define FUNNEL_NAME_BLANK @"Funnl name is empty."
+#define FUNNEL_NAME_BLANK @"Funnel name is empty."
 #define ADD_FUNNL @"#@New@#"
 #define ALL_FUNNL @"Primary"
 #define ALL_OTHER_FUNNL @"All Other"
@@ -38,7 +38,7 @@
 #define NUMBER_OF_MESSAGES_TO_LOAD 100
 #define NUMBER_OF_MESSAGES_TO_LOAD_ON_SEARCH NUMBER_OF_MESSAGES_TO_LOAD
 #define HELP_COMMENT @"   Help me organize my Inbox"
-#define GUIDE_FOR_SWIPING_CELL @"   Swipe any email to Funnl"
+#define GUIDE_FOR_SWIPING_CELL @"   Swipe any email to Funnel"
 #define IS_NEW_CREATE_FUNNEL 1
 #define SECONDARY_COUNT_FOR_DISPLAY 0
 #define SHOW_PRIMARY_INBOX 1
@@ -72,7 +72,7 @@
 
 //newly added for new create funnel ui
 #define FONT_FOR_INITIAL [UIFont systemFontOfSize:24]
-#define BUTTON_BORDER_WIDTH_VIP 3
+#define BUTTON_BORDER_WIDTH_VIP 3.5
 #define PLACEHOLDER_COLOR @"797979"
 #define BUTTON_BORDER_COLOR_SELECTED @"00BC34"
 #define DONE_BUTTON_BLUE_COLOR @"3878DE"
