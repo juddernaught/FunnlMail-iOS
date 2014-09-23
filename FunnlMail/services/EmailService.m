@@ -67,12 +67,15 @@ static NSString *currentFolder;
 
 - (void) startLogin : (EmailsTableViewController *) fv
 {
-    KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"UserLoginInfo" accessGroup:nil];
-    NSString *username = [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
-	NSString *password = [keychainItem objectForKey:(__bridge id)(kSecAttrService)];
-	NSString *hostname = @"imap.gmail.com";
-    emailsTableViewController = fv;
-    [self loadAccountWithUsername:username password:password hostname:hostname oauth2Token:nil filterview: fv withBackgroundActivity:NO];
+    if (((AppDelegate*)[[UIApplication sharedApplication] delegate]).hasStartLoginAlreadyOccured == NO) {
+        ((AppDelegate*)[[UIApplication sharedApplication] delegate]).hasStartLoginAlreadyOccured = YES;
+        KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"UserLoginInfo" accessGroup:nil];
+        NSString *username = [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
+        NSString *password = [keychainItem objectForKey:(__bridge id)(kSecAttrService)];
+        NSString *hostname = @"imap.gmail.com";
+        emailsTableViewController = fv;
+        [self loadAccountWithUsername:username password:password hostname:hostname oauth2Token:nil filterview: fv withBackgroundActivity:NO];
+    }
 }
 
 - (void)loadAccountWithUsername:(NSString *)username

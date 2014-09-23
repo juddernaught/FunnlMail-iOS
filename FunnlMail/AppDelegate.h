@@ -20,9 +20,11 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 {
     UIView *showWelcomeOverlay;
+    BOOL hasStartLoginAlreadyOccured;
 
 }
 @property (nonatomic,strong)  NSNumber *didLoginIn;
+@property (nonatomic, assign) BOOL hasStartLoginAlreadyOccured;
 @property (strong, nonatomic)id mainVCControllerInstance;
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) MenuViewController *menuController;

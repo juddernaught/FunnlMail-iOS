@@ -24,15 +24,15 @@
 #define MIXPANEL_TOKEN @"08b1e55d72f1b22a8e5696c2b56a6777"
 
 @implementation AppDelegate
-@synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable,contextIOAPIClient,isAlreadyRequestedRefreshToken,currentSelectedFunnlModel,isPullToRefresh,navControllerForCentralView;
+@synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable,contextIOAPIClient,isAlreadyRequestedRefreshToken,currentSelectedFunnlModel,isPullToRefresh,navControllerForCentralView, hasStartLoginAlreadyOccured;
 @synthesize mainVCdelegate,letsGo,activityIndicator;
 
-#pragma mark - didFinishLaunching
+#pragma mark - didFinishLaunchingx
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {   //[[UIApplication sharedApplication] setApplicationIconBadgeNumber:99]; //added by Chad
     
 
-    
+     
     self.internetAvailable = YES;
     isAlreadyRequestedRefreshToken = NO;
     [Crashlytics startWithAPIKey:@"44e1f44afdbcda726d1a42fdbbd770dff98bca43"];

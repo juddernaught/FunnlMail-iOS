@@ -59,7 +59,6 @@ UIButton *loginButton;
 
 #pragma mark - refresh token
 -(void)refreshAccessToken{
-    
     AppDelegate *appDelegate = APPDELEGATE;
     if(appDelegate.isAlreadyRequestedRefreshToken == NO){
         NSArray *allServers = [[EmailServersService instance] allEmailServers];
@@ -916,7 +915,7 @@ UIButton *loginButton;
 }
 
 
-#pragma mark - unused function - Async Request
+#pragma mark - Async Request
 
 -(void)makeAsyncRequest:(NSMutableURLRequest*)request{
     [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
@@ -985,6 +984,8 @@ UIButton *loginButton;
             smtpSession.connectionType = MCOConnectionTypeTLS;
             [EmailService instance].smtpSession = smtpSession;
 
+            // SHOULD WE GET HERE???
+            NSLog(@"startLogin from makeAsyncRequest");
             [[EmailService instance] startLogin:self.mainViewController.emailsTableViewController];
 
             
