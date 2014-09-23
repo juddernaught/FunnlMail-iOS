@@ -103,7 +103,7 @@
 #endif
     
     //this forces HockeyManager not to report crashes and thus, crashlytics will start crashreporting again
-    [[BITHockeyManager sharedHockeyManager] setDisableCrashManager:YES];
+    //[[BITHockeyManager sharedHockeyManager] setDisableCrashManager:YES];
     
     [[BITHockeyManager sharedHockeyManager] startManager];
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
