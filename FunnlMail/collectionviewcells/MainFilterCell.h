@@ -15,6 +15,7 @@
 //  UIImageView *mailImageView;
   UILabel *dateOfLastMessageLabel;
   UILabel *typeLabel;
+    float heightOfBackgroundView;
 }
 @property (strong, nonatomic) UILabel *messageCountLabel;
 @property (strong, nonatomic) UIImageView *mailImageView;
@@ -23,5 +24,5 @@
 @property (assign,nonatomic) NSInteger newMessageCount;
 @property (copy,nonatomic) NSDate *dateOfLastMessage;
 @property (copy,nonatomic) UIButton *notificationButton,*settingsButton,*shareButton;
-
+@property (strong, nonatomic) UIView *backgroundView;
 @end

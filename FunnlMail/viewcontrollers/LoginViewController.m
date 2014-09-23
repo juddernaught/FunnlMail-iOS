@@ -718,7 +718,7 @@ UIButton *loginButton;
                 if(![[EmailService instance].primaryMessages containsObject:messageID])
                     [[EmailService instance].primaryMessages addObject:messageID];
             }
-            NSLog(@"Message Info Count:%d      nextPageToken: %@    Total Count:%d",messageArray.count,nextPageToken,[[EmailService instance].primaryMessages count]);
+            //NSLog(@"Message Info Count:%d      nextPageToken: %@    Total Count:%d",messageArray.count,nextPageToken,[[EmailService instance].primaryMessages count]);
 
             NSMutableArray *pArray = [[EmailService instance] primaryMessages];
             [[NSUserDefaults standardUserDefaults] setObject:pArray forKey: ALL_FUNNL];

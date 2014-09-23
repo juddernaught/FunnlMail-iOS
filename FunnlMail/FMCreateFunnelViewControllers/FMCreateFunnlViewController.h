@@ -16,8 +16,9 @@
 #import "EmailService.h"
 
 #define COMMON_DIFFERENCE 30
-@interface FMCreateFunnlViewController : UIViewController<UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>
+@interface FMCreateFunnlViewController : UIViewController<UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate,UIScrollViewDelegate>
 {
+    BOOL isTextFieldEditing;
     UIScrollView *suggestionScroll;
     NSArray *suggestionArray;
     NSMutableArray *senderArray;
@@ -48,6 +49,8 @@
     NSMutableArray *subjectArray;
     UIView *seperatorAdditionalTextField;
     
+    id activeTextField;
+    BOOL keyboardFlag;
     NSMutableArray *fetcherArray;
     BOOL isFunnlNameTextFieldEditing;
     //autosuggestion resource

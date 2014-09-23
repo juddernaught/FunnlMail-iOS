@@ -52,6 +52,11 @@
     return self;
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    [self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xF7F7F7)];
+
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor whiteColor]];

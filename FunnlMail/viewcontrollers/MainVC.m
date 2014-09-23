@@ -79,13 +79,14 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     [segmentControl setSelectedSegmentIndex:0];
     [self.navigationItem setTitleView:segmentControl];
     self.view.backgroundColor = [UIColor whiteColor];
-    mainView = [[MainView alloc] initWithFrame:CGRectMake(0, 20, WIDTH, HEIGHT+40)];
+    mainView = [[MainView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
     mainView.hidden = YES;
     mainView.mainVCdelegate = self;
     mainView.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.93];
+//    [self.view addSubview:mainView];
     
-    [self.view addSubview:mainView];
-    
+    AppDelegate *tempAppDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [tempAppDelegate.window addSubview:mainView];
     // Set the navigation bar to white
     [self.navigationController.navigationBar setBarTintColor:[UIColor whiteColor]];
     [self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xF7F7F7)];
@@ -98,7 +99,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     
     // This is the All bar
     NSLog(@"viewDidLoad mainVC");
-    AppDelegate *tempAppDelegate = APPDELEGATE;
+//    AppDelegate *tempAppDelegate = APPDELEGATE;
     tempAppDelegate.mainVCControllerInstance = self;
     currentFilterModel =  tempAppDelegate.currentSelectedFunnlModel;
     
@@ -277,7 +278,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration:0.3];
         mainView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
-        mainView.frame = CGRectMake(0, 20, WIDTH, HEIGHT+40);
+        mainView.frame = CGRectMake(0, 0, WIDTH, HEIGHT);
         mainView.alpha = 1;
         [UIView commitAnimations];
         
@@ -286,6 +287,8 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 //            RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Funnl Time!" message:@"Tap on any Funnl to view emails under that Funnl or press 'Manage' to view/change Funnl Settings"];
 //            [modal show];
         }
+        [tempAppDelegate.window bringSubviewToFront:mainView];
+//        [self.navigationController setNavigationBarHidden:YES animated:YES];
     }else{
         [self hideMainView];
     }
@@ -294,26 +297,8 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 - (void)hideMainView {
     mainView.alpha = 1;
-//    [UIView beginAnimations:nil context:nil];
-//    [UIView setAnimationDuration:10];
-//    mainView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 2, 2);
-//    mainView.alpha = 0;
-//    [UIView commitAnimations];
-    [UIView animateWithDuration:ANIMATION_DURATION
-                          delay:1.0
-                        options: UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         mainView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 2, 2);
-                         mainView.alpha = 0;
-                     }
-                     completion:^(BOOL finished){
-                         if(finished)
-                         {
-                             mainView.hidden = YES;
-                             NSLog(@"Finished !!!!!");
-                         }
-                         // do any stuff here if you want
-                    }];
+    mainView.hidden = YES;
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
 
 -(void) composeEmailButtonSelected{

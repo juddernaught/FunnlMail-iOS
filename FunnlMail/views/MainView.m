@@ -98,7 +98,12 @@ NSString *msgBody;
 
 -(void)reloadView{
     editOn = FALSE;
-    [editButton setImage:[UIImage imageNamed:@"manage_Button"] forState:UIControlStateNormal];
+//    [editButton setImage:[UIImage imageNamed:@"manage_Button"] forState:UIControlStateNormal];
+    UIImage *sampleImage = [UIImage imageNamed:@"settingIcon-FunnlOverlay.png"];
+    sampleImage = [sampleImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [editButton setImage:sampleImage forState:UIControlStateNormal];
+    editButton.tintColor = [UIColor whiteColor];
+    sampleImage = nil;
     self.imapSession = [EmailService instance].imapSession;
     filterArray = [[FunnelService instance] getFunnelsExceptAllFunnel];
     [self.collectionView reloadData];
@@ -106,6 +111,15 @@ NSString *msgBody;
 
 - (void)setupViews
 {
+    UIImage *funnlIconImage = [UIImage imageNamed:@"funnlIcon-FunnlOverlay.png"];
+    funnlIconImage = [funnlIconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    UIImageView *funnlImageView = [[UIImageView alloc] initWithFrame:CGRectMake(228, 23, 30, 30)];
+    [funnlImageView setImage:funnlIconImage];
+    funnlImageView.tintColor = [UIColor whiteColor];
+    [funnlImageView setUserInteractionEnabled:YES];
+    [self addSubview:funnlImageView];
+    funnlImageView = nil;
+    
 //    UIView *backGroundViewForAlpha = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
 //    [backGroundViewForAlpha setUserInteractionEnabled:YES];
 //    [backGroundViewForAlpha setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.7]];
@@ -153,18 +167,26 @@ NSString *msgBody;
     }];
    
     UILabel *funnelLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 100, 30)];
-    funnelLabel.text = @"Funnls";
+    funnelLabel.text = @"Funnels";
     [funnelLabel setTextAlignment:NSTextAlignmentLeft];
     [funnelLabel setFont:[UIFont boldSystemFontOfSize:20]];
     funnelLabel.textColor = WHITE_CLR;
-    [headerView addSubview:funnelLabel];
+//    [headerView addSubview:funnelLabel];
     headerView.backgroundColor = CLEAR_COLOR;
 
-    editButton = [[UIButton alloc] initWithFrame:CGRectMake(320  - 85 - 10, 10, 85, 30)];
-    [editButton setImage:[UIImage imageNamed:@"manage_Button"] forState:UIControlStateNormal];
+    editButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 22, 40, 40)];
+    [editButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentCenter];
+    [editButton setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
+    [editButton setContentMode:UIViewContentModeCenter];
+    UIImage *sampleImage = [UIImage imageNamed:@"settingIcon-FunnlOverlay.png"];
+    sampleImage = [sampleImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [editButton setImage:sampleImage forState:UIControlStateNormal];
+    editButton.tintColor = [UIColor whiteColor];
+    sampleImage = nil;
     [editButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
     [editButton addTarget:self action:@selector(editButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [headerView addSubview:editButton];
+//    [headerView addSubview:editButton];
+    [self addSubview:editButton];
 
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     layout.scrollDirection = UICollectionViewScrollDirectionVertical;
@@ -181,12 +203,13 @@ NSString *msgBody;
 
     [self.collectionView registerClass:[MainFilterCell class] forCellWithReuseIdentifier:MAIN_FILTER_CELL];
     [self.collectionView registerClass:[MainFilterCell class] forCellWithReuseIdentifier:ADD_MAIN_FILTER_CELL];
+    
   
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.mas_top).with.offset(100);
-        make.left.equalTo(self.mas_left).with.offset(0);
-        make.right.equalTo(self.mas_right).with.offset(0);
-        make.bottom.equalTo(self.mas_bottom).with.offset(-80);
+        make.left.equalTo(self.mas_left).with.offset(22);
+        make.right.equalTo(self.mas_right).with.offset(-22);
+        make.bottom.equalTo(self.mas_bottom).with.offset(-100);
     }];
   
 //    self.collectionView.backgroundColor = [UIColor colorWithHexString:@"#CDCDCD"];
@@ -209,16 +232,30 @@ NSString *msgBody;
 }
 
 - (void)outterButtonClicked {
+    AppDelegate *tempAppDelegate = APPDELEGATE;
+    [tempAppDelegate.mainVCControllerInstance hideMainView];
     editOn = FALSE;
-    [editButton setImage:[UIImage imageNamed:@"manage_Button"] forState:UIControlStateNormal];
-    [self setHidden:YES];
+//    [editButton setImage:[UIImage imageNamed:@"manage_Button"] forState:UIControlStateNormal];
+    UIImage *sampleImage = [UIImage imageNamed:@"settingIcon-FunnlOverlay.png"];
+    sampleImage = [sampleImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [editButton setImage:sampleImage forState:UIControlStateNormal];
+    editButton.tintColor = [UIColor whiteColor];
+    sampleImage = nil;
+    
+//    [self setHidden:YES];
 }
 
 - (void)handleSingleTap:(UITapGestureRecognizer *)recognizer {
+    AppDelegate *tempAppDelegate = APPDELEGATE;
+    [tempAppDelegate.mainVCControllerInstance hideMainView];
     editOn = FALSE;
-    [editButton setImage:[UIImage imageNamed:@"manage_Button"] forState:UIControlStateNormal];
-    [self setHidden:YES];
-    
+//    [editButton setImage:[UIImage imageNamed:@"manage_Button"] forState:UIControlStateNormal];
+    UIImage *sampleImage = [UIImage imageNamed:@"settingIcon-FunnlOverlay.png"];
+    sampleImage = [sampleImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [editButton setImage:sampleImage forState:UIControlStateNormal];
+    editButton.tintColor = [UIColor whiteColor];
+    sampleImage = nil;
+//    [self setHidden:YES];
 //    [UIView animateWithDuration:ANIMATION_DURATION
 //                          delay:0.0
 //                        options: UIViewAnimationOptionCurveEaseInOut
@@ -244,11 +281,21 @@ NSString *msgBody;
     if (editOn) {
         editOn = FALSE;
         
-        [editButton setImage:[UIImage imageNamed:@"manage_Button"] forState:UIControlStateNormal];
+//        [editButton setImage:[UIImage imageNamed:@"manage_Button"] forState:UIControlStateNormal];
+        UIImage *sampleImage = [UIImage imageNamed:@"settingIcon-FunnlOverlay.png"];
+        sampleImage = [sampleImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        [editButton setImage:sampleImage forState:UIControlStateNormal];
+        editButton.tintColor = [UIColor whiteColor];
+        sampleImage = nil;
     }
     else {
         editOn = TRUE;
-        [editButton setImage:[UIImage imageNamed:@"Done_Button"] forState:UIControlStateNormal];
+//        [editButton setImage:[UIImage imageNamed:@"Done_Button"] forState:UIControlStateNormal];
+        UIImage *sampleImage = [UIImage imageNamed:@"doneIcon-FunnlOverlay.png"];
+        sampleImage = [sampleImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        [editButton setImage:sampleImage forState:UIControlStateNormal];
+        editButton.tintColor = [UIColor whiteColor];
+        sampleImage = nil;
         
     }
     [self.collectionView reloadData];
@@ -322,14 +369,16 @@ NSString *msgBody;
           [cell.messageCountLabel setHidden:NO];
       }
   }
-  cell.contentView.backgroundColor = [UIColor whiteColor];
+  cell.contentView.backgroundColor = [UIColor clearColor];
     
   return cell;
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
 {
-  return UIEdgeInsetsMake(13, 13, 12, 12);
+    //changes made by iauro
+//  return UIEdgeInsetsMake(13, 13, 12, 12);
+    return UIEdgeInsetsMake(0, 0, 0, 0);
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -365,13 +414,17 @@ NSString *msgBody;
 
 
 -(void)shareButtonClicked:(id)sender{
-    
+    self.hidden = YES;
 #ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Pressed 'Sharing' button in manage overlay"];
 #endif
     UIButton *b = (UIButton*)sender;
     FunnelModel *fm = (FunnelModel *)filterArray[b.tag];
     ShareView *shareView = [[ShareView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT) withFunnlModel:fm];
+//    [shareView setBlurEnabled:YES];
+//    shareView.backgroundColor = [UIColor blackColor];
+//    shareView.blurRadius = 10;
+//    shareView.tintColor = [UIColor blackColor];
     [self.superview addSubview:shareView];
     [self setHidden:YES];
     
@@ -452,7 +505,7 @@ NSString *msgBody;
 }
 
 -(void)settingsButtonClicked:(id)sender{
-    
+    self.hidden = YES;
 #ifdef TRACK_MIXPANEL
   [[Mixpanel sharedInstance] track:@"Pressed 'Settings' button in manage overlay"];
 #endif

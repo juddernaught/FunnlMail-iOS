@@ -964,9 +964,6 @@ static NSString *currentFolder;
     AppDelegate *tempAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     if (tempAppDelegate.isPullToRefresh) {
         tempAppDelegate.isPullToRefresh = FALSE;
-        [self loadLatestMail:NUMBER_OF_NEW_MESSAGES_TO_CHECK_AFTER_PULL_TO_REFRESH withTableController:emailsTableViewController withFolder:INBOX];
-    }
-    else {
         MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
         [overlay hide];
         [overlay postImmediateMessage:@"Downloading..." animated:YES];
@@ -974,7 +971,11 @@ static NSString *currentFolder;
         overlay.detailViewMode = MTDetailViewModeHistory;         // enable automatic history-tracking and show in detail-view
         overlay.tag = 1;
         overlay.progress = 0.0;
-        [self loadLatestMail:NUMBER_OF_NEW_MESSAGES_TO_CHECK withTableController:emailsTableViewController withFolder:INBOX];
+
+        [self loadLatestMail:NUMBER_OF_NEW_MESSAGES_TO_CHECK_AFTER_PULL_TO_REFRESH withTableController:emailsTableViewController withFolder:INBOX];
+    }
+    else {
+       [self loadLatestMail:NUMBER_OF_NEW_MESSAGES_TO_CHECK withTableController:emailsTableViewController withFolder:INBOX];
     }
 }
 

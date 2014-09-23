@@ -268,7 +268,7 @@
     sampleScrollView = nil;
     
     UIButton *sampleButton = [[UIButton alloc] initWithFrame:CGRectMake((WIDTH - 165.0) / 2.0, HEIGHT - 100 + 15, 165, 25)];
-    [sampleButton setTitle:@"Add to Funnl" forState:UIControlStateNormal];
+    [sampleButton setTitle:@"Add to Funnel" forState:UIControlStateNormal];
     [sampleButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [sampleButton.titleLabel setFont:[UIFont systemFontOfSize:16]];
     sampleButton.clipsToBounds = YES;

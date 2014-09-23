@@ -318,7 +318,7 @@ replacementString:(NSString *)string {
     MCOSMTPSendOperation *sendOperation = [[EmailService instance].smtpSession sendOperationWithData:rfc822Data];
     [sendOperation start:^(NSError *error) {
         if(error) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnl" message:@"Error sending email" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnel" message:@"Error sending email" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
             [alert show];
             NSLog(@"%@ Error sending email:%@", [EmailService instance].smtpSession.username, error);
                   [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -460,7 +460,7 @@ replacementString:(NSString *)string {
     }
     else if (self.sendFeedback){
         NSLog(@"sendFeedback");
-        NSMutableString *temp = [[NSMutableString alloc] initWithString:@"Feedback for FunnlMail "];
+        NSMutableString *temp = [[NSMutableString alloc] initWithString:@"Feedback for FunnelMail "];
         subjectFieldView.tokenField.text = temp;
         toFieldView.tokenField.text = @"founders@funnlmail.com";
     }
@@ -502,7 +502,7 @@ replacementString:(NSString *)string {
     
     //This adds the signature to the body of the emails sent from the app
     NSMutableString * html = [NSMutableString string];
-    [html appendFormat:@"<html><br/><font color='black'><head><br><br>Sent from <a href=%@>FunnlMail</a><script>%@</script><style>%@</style></head>"
+    [html appendFormat:@"<html><br/><font color='black'><head><br><br>Sent from <a href=%@>FunnelMail</a><script>%@</script><style>%@</style></head>"
      @"<body bgColor=\"transparent;\"></body></font></html>",@"http://bit.do/funnlmailsite", mainJavascript, mainStyle];
     html = [[ html stringByReplacingOccurrencesOfString:@"<body bgColor=\"transparent;\">" withString:@"<body bgColor=\"transparent;\">"] mutableCopy];
     
