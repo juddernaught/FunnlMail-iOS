@@ -206,10 +206,10 @@ NSString *msgBody;
     
   
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.mas_top).with.offset(100);
-        make.left.equalTo(self.mas_left).with.offset(22);
-        make.right.equalTo(self.mas_right).with.offset(-22);
-        make.bottom.equalTo(self.mas_bottom).with.offset(-100);
+        make.top.equalTo(self.mas_top).with.offset(80);
+        make.left.equalTo(self.mas_left).with.offset(14);
+        make.right.equalTo(self.mas_right).with.offset(-14);
+        make.bottom.equalTo(self.mas_bottom).with.offset(-20);
     }];
   
 //    self.collectionView.backgroundColor = [UIColor colorWithHexString:@"#CDCDCD"];
@@ -302,6 +302,11 @@ NSString *msgBody;
 }
 
 #pragma mark - Collection view datasource
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
+{
+    return 25;
+}
+
 - (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section{
   return [filterArray count]+1;
 }

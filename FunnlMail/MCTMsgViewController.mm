@@ -586,7 +586,8 @@ typedef void (^DownloadCallback)(NSError * error);
     [[Mixpanel sharedInstance] track:@"user clicked get funnl"];
     if (IS_NEW_CREATE_FUNNEL) {
         FMCreateFunnlViewController *viewcontroller = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:(NSMutableArray *)sendersDictionary.allValues name:fm.funnelName andSubjects:(NSMutableArray *)subjectsDictionary.allValues];
-        viewcontroller.isEditFunnel = FALSE;
+        viewcontroller.isEditFunnel = NO;
+        viewcontroller.shareFunnl = YES;
         viewcontroller.oldModel = fm;
         viewcontroller.mainVCdelegate = nil;
         [self.navigationController pushViewController:viewcontroller animated:YES];

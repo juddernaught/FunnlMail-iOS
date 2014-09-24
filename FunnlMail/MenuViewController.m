@@ -260,7 +260,9 @@
     
     else if ([cell.menuLabel.text isEqualToString:@"LogOut"]){
         [NSObject cancelPreviousPerformRequestsWithTarget:appDelegate];
+        [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"show_vip"];
         [[NSUserDefaults standardUserDefaults] setObject:@"0" forKey:@"latest_tt_secondary"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
 //        [[EmailServersService instance] deleteEmailServer:[EmailService instance].userEmailID];
         [NSObject cancelPreviousPerformRequestsWithTarget:[EmailService instance]];
         [[MessageService instance] clearAllTables];

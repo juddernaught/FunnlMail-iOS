@@ -90,7 +90,12 @@ static MessageService *instance;
   paramDict[@"date"] = dateTimeInterval;
   paramDict[@"gmailthreadid"] = messageModel.gmailThreadID;
   paramDict[@"skipFlag"] = [NSNumber numberWithBool:messageModel.skipFlag];
-  paramDict[@"categoryName"] = messageModel.categoryName;
+    if (messageModel.categoryName) {
+        paramDict[@"categoryName"] = messageModel.categoryName;
+    }
+    else {
+        paramDict[@"categoryName"] = @"";
+    }
 
   [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
     success = [db executeUpdate:@"INSERT INTO messages (messageID,messageJSON,read,date,gmailthreadid,skipFlag,categoryName,gmailMessageID) VALUES (:messageID,:messageJSON,:read,:date,:gmailthreadid,:skipFlag,:categoryName,:gmailMessageID)" withParameterDictionary:paramDict];

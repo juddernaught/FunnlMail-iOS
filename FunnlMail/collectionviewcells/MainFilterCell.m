@@ -15,14 +15,15 @@
 @synthesize notificationButton,settingsButton,mailImageView,messageCountLabel,shareButton,backgroundView;
 - (id)initWithFrame:(CGRect)frame
 {
-    self = [super initWithFrame:frame];
+//    NSLog(@"%f,%f,%f,%f",frame.origin.x,frame.origin.y,frame.size.width,frame.size.height);
+    self = [super initWithFrame:CGRectMake(0, 0, 135, 140)];
     if (self) {
         // Initialization code
         self.backgroundColor = [UIColor clearColor];
 //        self.clipsToBounds = YES;
 //        self.layer.cornerRadius = frame.size.width/2.0;
         
-        heightOfBackgroundView = 100;
+        heightOfBackgroundView = 95;
         
         backgroundView = [[UIView alloc] initWithFrame:CGRectMake(self.frame.size.width/2.0 - heightOfBackgroundView/2.0, 1, heightOfBackgroundView, heightOfBackgroundView)];
         
@@ -30,11 +31,11 @@
         backgroundView.layer.cornerRadius = heightOfBackgroundView/2.0;
         [self addSubview:backgroundView];
         
-        filterTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 15 + heightOfBackgroundView, self.frame.size.width, self.frame.size.height - 1 - heightOfBackgroundView)];
+        filterTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, heightOfBackgroundView + 2, self.frame.size.width, self.frame.size.height - 1 - heightOfBackgroundView - 2)];
         [filterTitleLabel setTextAlignment:NSTextAlignmentCenter];
         [filterTitleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:14]];
-//        filterTitleLabel.numberOfLines = 2;
-//        filterTitleLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        filterTitleLabel.numberOfLines = 2;
+        filterTitleLabel.lineBreakMode = NSLineBreakByCharWrapping;
         [filterTitleLabel setBackgroundColor:[UIColor clearColor]];
         [filterTitleLabel setTextColor:[UIColor whiteColor]];
         [self addSubview:filterTitleLabel];

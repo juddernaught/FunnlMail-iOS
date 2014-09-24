@@ -19,6 +19,8 @@
 @synthesize isEditFunnel;
 @synthesize oldModel;
 @synthesize mainVCdelegate;
+@synthesize shareFunnl;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -508,7 +510,7 @@
     }
     funnelNameTextField.tag = 1001;
     funnelNameTextField.delegate = self;
-    if (isEditFunnel) {
+    if (isEditFunnel || shareFunnl) {
         funnelNameTextField.text = oldModel.funnelName;
     }
     else {
@@ -2108,7 +2110,7 @@
             }
             return;
         }
-        if((contactMutableArray.count > 0 || (![[(ContactModel *)[contactMutableArray objectAtIndex:0] name] isEqualToString:ADD_FUNNL] && contactMutableArray.count == 1)) || subjectArray.count){
+        if(contactMutableArray.count && ((contactMutableArray.count > 0 || (![[(ContactModel *)[contactMutableArray objectAtIndex:0] name] isEqualToString:ADD_FUNNL] && contactMutableArray.count == 1)) || subjectArray.count)){
 //            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             if (!enableNotification) {
                 if ([oldModel.webhookIds length]) {
@@ -2116,7 +2118,7 @@
                     NSData *jsonData = [webhookJSONString dataUsingEncoding:NSUTF8StringEncoding];
                     NSMutableDictionary *webhooks = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:nil]];
                     NSArray *senders = [[webhooks allKeys] copy];
-                    __block int reqCnt = [senders count];
+                    __block int reqCnt = (int)[senders count];
                     for (NSString *sender in senders) {
                         NSDictionary *webhook_id_Dictionary = [webhooks objectForKey:sender];
                         NSString *webhook_id = [webhook_id_Dictionary objectForKey:@"webhook_id"];

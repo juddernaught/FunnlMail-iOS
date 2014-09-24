@@ -89,7 +89,7 @@ UIView *greyView;
     self.ClearTable = 0;
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
-    greyView = [[UIView alloc] initWithFrame:CGRectMake(0, 144, self.view.bounds.size.width, self.view.bounds.size.height)];
+    greyView = [[UIView alloc] initWithFrame:CGRectMake(0, 144 - 40, self.view.bounds.size.width, self.view.bounds.size.height)];
     greyView.hidden = YES;
     [greyView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.78]];
     [self.view addSubview:greyView];
@@ -118,6 +118,20 @@ UIView *greyView;
     //newly added for VIP funnl
     if (IS_VIP_ENABLED) {
         [tempAppDelegate performSelector:@selector(loadVIPFunnelViewController) withObject:nil afterDelay:kVIP_FUNNEL_POP_UP_DISPLY_INTERVAL];
+    }
+    
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    BOOL isFirstTime = [[NSUserDefaults standardUserDefaults ]boolForKey:@"isFirstTime"];
+    if( helpButton && isFirstTime == NO){
+        CABasicAnimation *theAnimation;
+        theAnimation=[CABasicAnimation animationWithKeyPath:@"opacity"];
+        theAnimation.duration=1.0;
+        theAnimation.repeatCount= 50;
+        theAnimation.autoreverses= YES;
+        theAnimation.fromValue=[NSNumber numberWithFloat:1.0];
+        theAnimation.toValue=[NSNumber numberWithFloat:0.2];
+        [helpButton.layer addAnimation:theAnimation forKey:@"animateOpacity"];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isFirstTime"];
     }
 }
 
@@ -280,19 +294,7 @@ UIView *greyView;
     disclosureArrow.tintColor = UIColorFromRGB(0x007AFF);
     nextImage = nil;
  
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    BOOL isFirstTime = [[NSUserDefaults standardUserDefaults ]boolForKey:@"isFirstTime"];
-    if( helpButton && isFirstTime == NO && [EmailService instance].userEmailID.length > 0){
-        CABasicAnimation *theAnimation;
-        theAnimation=[CABasicAnimation animationWithKeyPath:@"opacity"];
-        theAnimation.duration=1.0;
-        theAnimation.repeatCount= 50;
-        theAnimation.autoreverses= YES;
-        theAnimation.fromValue=[NSNumber numberWithFloat:1.0];
-        theAnimation.toValue=[NSNumber numberWithFloat:0.2];
-        [helpButton.layer addAnimation:theAnimation forKey:@"animateOpacity"];
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isFirstTime"];
-    }
+    
     
     [helpButton setBackgroundColor:[UIColor clearColor]];
     if (!helpFlag) {
@@ -1490,11 +1492,10 @@ UIView *greyView;
 - (void)helpButtonPressed:(UIButton *)sender {
     
     [helpButton.layer removeAllAnimations];
-
-    if (sender == helpButton && ([sender.titleLabel.text isEqualToString:GUIDE_FOR_SWIPING_CELL] || [sender.titleLabel.text isEqualToString:HELP_COMMENT])) {
-        /*if (!helpFlag) {
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"show_vip"]) {
+        if (!helpFlag) {
             disclosureArrow.hidden = YES;
-
+            
             [helpButton setTitle:GUIDE_FOR_SWIPING_CELL forState:UIControlStateNormal];
             [helpButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
             if (isSearching == NO) {
@@ -1528,19 +1529,74 @@ UIView *greyView;
                 }
             }
         }
-        helpFlag = !helpFlag;*/
-        AppDelegate *appDelegate = APPDELEGATE;
-        [appDelegate performSelector:@selector(loadVIPFunnelViewController) withObject:nil afterDelay:0];
+        helpFlag = !helpFlag;
     }
     else {
-        disclosureArrow.hidden = NO;
-        [self.helpButton setTitle:HELP_COMMENT forState:UIControlStateNormal];
-        [helpButton setTitleColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE] forState:UIControlStateNormal];
-        helpFlag = FALSE;
-        AppDelegate *tempApp = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        [[(MainVC *)tempApp.mainVCControllerInstance segmentControl] setSelectedSegmentIndex:1];
-        [(MainVC *)tempApp.mainVCControllerInstance segmentControllerClicked:[(MainVC *)tempApp.mainVCControllerInstance segmentControl]];
+        [[NSUserDefaults standardUserDefaults] setBool:TRUE forKey:@"show_vip"];
+        if (sender == helpButton && ([sender.titleLabel.text isEqualToString:GUIDE_FOR_SWIPING_CELL] || [sender.titleLabel.text isEqualToString:HELP_COMMENT])) {
+            AppDelegate *appDelegate = APPDELEGATE;
+            [appDelegate performSelector:@selector(loadVIPFunnelViewController) withObject:nil afterDelay:0];
+        }
+        else {
+            disclosureArrow.hidden = NO;
+            [self.helpButton setTitle:HELP_COMMENT forState:UIControlStateNormal];
+            [helpButton setTitleColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE] forState:UIControlStateNormal];
+            helpFlag = FALSE;
+            AppDelegate *tempApp = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            [[(MainVC *)tempApp.mainVCControllerInstance segmentControl] setSelectedSegmentIndex:1];
+            [(MainVC *)tempApp.mainVCControllerInstance segmentControllerClicked:[(MainVC *)tempApp.mainVCControllerInstance segmentControl]];
+        }
     }
+//    if (sender == helpButton && ([sender.titleLabel.text isEqualToString:GUIDE_FOR_SWIPING_CELL] || [sender.titleLabel.text isEqualToString:HELP_COMMENT])) {
+//        /*if (!helpFlag) {
+//            disclosureArrow.hidden = YES;
+//
+//            [helpButton setTitle:GUIDE_FOR_SWIPING_CELL forState:UIControlStateNormal];
+//            [helpButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+//            if (isSearching == NO) {
+//                if ([[[EmailService instance] filterMessages] count]) {
+//                    EmailCell *tempCell = (EmailCell*)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+//                    [tempCell.backgroundImageView setHidden:NO];
+//                }
+//            }
+//            else {
+//                if (searchMessages.count) {
+//                    EmailCell *tempCell = (EmailCell*)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+//                    [tempCell.backgroundImageView setHidden:NO];
+//                }
+//            }
+//        }
+//        else {
+//            disclosureArrow.hidden = NO;
+//            
+//            [helpButton setTitle:HELP_COMMENT forState:UIControlStateNormal];
+//            [helpButton setTitleColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE] forState:UIControlStateNormal];
+//            if(isSearching == NO){
+//                if ([[[EmailService instance] filterMessages] count]) {
+//                    EmailCell *tempCell = (EmailCell*)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+//                    [tempCell.backgroundImageView setHidden:YES];
+//                }
+//            }
+//            else {
+//                if ([searchMessages count]) {
+//                    EmailCell *tempCell = (EmailCell*)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+//                    [tempCell.backgroundImageView setHidden:YES];
+//                }
+//            }
+//        }
+//        helpFlag = !helpFlag;*/
+//        AppDelegate *appDelegate = APPDELEGATE;
+//        [appDelegate performSelector:@selector(loadVIPFunnelViewController) withObject:nil afterDelay:0];
+//    }
+//    else {
+//        disclosureArrow.hidden = NO;
+//        [self.helpButton setTitle:HELP_COMMENT forState:UIControlStateNormal];
+//        [helpButton setTitleColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE] forState:UIControlStateNormal];
+//        helpFlag = FALSE;
+//        AppDelegate *tempApp = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//        [[(MainVC *)tempApp.mainVCControllerInstance segmentControl] setSelectedSegmentIndex:1];
+//        [(MainVC *)tempApp.mainVCControllerInstance segmentControllerClicked:[(MainVC *)tempApp.mainVCControllerInstance segmentControl]];
+//    }
 }
 
 - (UIView *)viewWithImageName:(NSString *)imageName {
@@ -1583,13 +1639,13 @@ UIView *greyView;
     [[Mixpanel sharedInstance] track:@"Clicked in the Search bar"];
 #endif
     CGRect searchBarFrame = searchBar.frame;
-    searchBarFrame.size.height = 80.f;
+    searchBarFrame.size.height = 40.f;
     searchBar.frame = searchBarFrame;
     searchBar.showsCancelButton = YES;
     searchBar.showsScopeBar = YES;
-    NSArray *scopeButtonTitles = @[@"All Mail",@"Current Funnel"];
-    [searchBar setScopeButtonTitles:scopeButtonTitles];
-    searchBar.selectedScopeButtonIndex = 1;
+//    NSArray *scopeButtonTitles = @[@"All Mail",@"Current Funnel"];
+    [searchBar setScopeButtonTitles:nil];
+//    searchBar.selectedScopeButtonIndex = 1;
     scopeButtonPressedIndexNumber = YES;
     self.tableView.tableHeaderView = searchBar;
     [self.view bringSubviewToFront: greyView];
@@ -1637,15 +1693,17 @@ UIView *greyView;
     [searchBar resignFirstResponder];
     NSString *searchText = searchBar.text;
     isSearching = YES;
+    
     greyView.hidden = YES;
-    if(!scopeButtonPressedIndexNumber){
+    /*if(!scopeButtonPressedIndexNumber){
         //All mailbox
         [self searchInMemory:searchText];
     }
     else{
         //Other funnsl
         [self searchInDatabaseWithSearchText:searchText withFunnelId:self.filterModel.funnelId];
-    }
+    }*/
+    [self searchInDatabaseWithSearchText:searchText withFunnelId:@"0"];
 }
 
 - (void)searchInDatabaseWithSearchText:(NSString*)searchText withFunnelId:(NSString*)funnelId{

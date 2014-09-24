@@ -58,10 +58,13 @@
     UITableView *autocompleteTableView;
     NSMutableArray *emailArr;
     CGFloat _keyboardHeight;
+    
 }
 @property (weak) id<MainVCDelegate> mainVCdelegate;
 @property (strong, nonatomic)FunnelModel *oldModel;
 @property BOOL isEditFunnel;
+@property BOOL shareFunnl;
+
 - (id)initWithSelectedContactArray:(NSMutableArray *)contactArray;
 - (id)initWithSelectedContactArray:(NSMutableArray *)contactArray name:(NSString *)name andSubjects:(NSMutableArray *)subjects;
 @end

@@ -149,6 +149,11 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
 }
 
 #pragma mark - Collection view datasource
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
+{
+    return 25;
+}
+
 - (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section{
     if(isNewCreatePopup)
         return filterArray.count+1;
