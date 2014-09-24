@@ -446,6 +446,7 @@ UIButton *loginButton;
                     [self performSelector:@selector(addToSourceWithAccountID:) withObject:contextIO_account_id afterDelay:0.01];
                     
                 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                    
                     NSLog(@"error getting getContextIOWithEmail: %@", error);
                 }];
             }
@@ -475,8 +476,33 @@ UIButton *loginButton;
     NSString *path = [NSString stringWithFormat:@"https://api.context.io/lite/users/%@/email_accounts",accID];
     [appDelegate.contextIOAPIClient postPath:path params:params success:^(NSDictionary *responseDict) {
         NSLog(@"-----> %@",responseDict.description);
+        // turn on all notifs for first time user
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"NOTIFS_ON_FIRST_TIME"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+        [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
+            NSString *webhook_id = [responseDict objectForKey:@"webhook_id"];
+            [[NSUserDefaults standardUserDefaults] setObject:webhook_id forKey:@"ALL_NOTIFS_ON_WEBHOOK_ID"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"createWebhooksandSaveFunnl --- deleteWebhookWithID : %@",error.userInfo.description);
+        }];
+    
         //[self performSelector:@selector(fetchContacts) withObject:nil afterDelay:20];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        // this gets called when user downloads app fresh for first time but already has existing Context.IO account
+        // turn on all notifs for first time user
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"NOTIFS_ON_FIRST_TIME"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+        [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
+            NSString *webhook_id = [responseDict objectForKey:@"webhook_id"];
+            [[NSUserDefaults standardUserDefaults] setObject:webhook_id forKey:@"ALL_NOTIFS_ON_WEBHOOK_ID"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"createWebhooksandSaveFunnl --- deleteWebhookWithID : %@",error.userInfo.description);
+        }];
+
         NSLog(@"-----> error getting addToSourceWithAccountID: %@", error);
     }];
 }
@@ -593,7 +619,7 @@ UIButton *loginButton;
 
 -(void)getUserInfo{
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    NSURL *url = [NSURL URLWithString:@"https://www.googleapis.com/oauth2/v1/userinfo?alt=json"];
+    NSURL *url = [NSURL URLWithString:@"https://www.googleapis.com/oauth2/v2/userinfo?alt=json"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
     [request setHTTPMethod:@"GET"];

@@ -92,9 +92,12 @@
 //    listArray =[[NSMutableArray alloc] initWithObjects:@"Email Account", @"Sent Mail", @"Archive",@"Drafts", @"Trash",@"Send Feedback",@"Help",@"LogOut",nil];
 //    imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"settingListIcon",@"alertListIcon",@"shareListIcon",@"sentListIcon", @"archiveListIcon",@"archiveListIcon", @"trashListIcon",@"emailListIcon",@"helpListIcon", @"helpListLogOutIcon",nil];
     
-
-    listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Create Funnel",@"Send Feedback",@"Tutorial",@"Help (FAQs)",@"LogOut",nil];
-    imageArray = [[NSMutableArray alloc] initWithObjects:@"",@"funnlIcon",@"sendFeedbackListIcon",@"tutorialListIcon@2x",@"helpListIcon", @"logoutListIcon",nil];
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"ALL_NOTIFS_ON_WEBHOOK_ID"]) {
+        listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Create Funnel", @"Turn Off All Notifs", @"Send Feedback",@"Tutorial",@"Help (FAQs)",@"LogOut",nil];
+    } else {
+    listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Create Funnel", @"Turn On All Notifs", @"Send Feedback",@"Tutorial",@"Help (FAQs)",@"LogOut",nil];
+    }
+    imageArray = [[NSMutableArray alloc] initWithObjects:@"",@"funnlIcon",@"", @"sendFeedbackListIcon",@"tutorialListIcon@2x",@"helpListIcon", @"logoutListIcon",nil];
 
 }
 
@@ -183,6 +186,27 @@
     if([cell.menuLabel.text isEqualToString:@"Help (FAQs)"]){
         FAQVC *faq = [[FAQVC alloc]init];
         [[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationController pushViewController:faq animated:NO];
+    }
+    
+    else if([cell.menuLabel.text isEqualToString:@"Turn On All Notifs"]){
+        cell.menuLabel.text = @"Turn Off All Notifs";
+        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+        [((AppDelegate *)[[UIApplication sharedApplication] delegate]).contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
+            NSString *webhook_id = [responseDict objectForKey:@"webhook_id"];
+            [[NSUserDefaults standardUserDefaults] setObject:webhook_id forKey:@"ALL_NOTIFS_ON_WEBHOOK_ID"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"createWebhooksandSaveFunnl --- deleteWebhookWithID : %@",error.userInfo.description);
+        }];
+    }
+    else if([cell.menuLabel.text isEqualToString:@"Turn Off All Notifs"]){
+        cell.menuLabel.text = @"Turn On All Notifs";
+        [((AppDelegate *)[[UIApplication sharedApplication] delegate]).contextIOAPIClient deleteWebhookWithID:[[NSUserDefaults standardUserDefaults] stringForKey:@"ALL_NOTIFS_ON_WEBHOOK_ID"] success:^(NSDictionary *responseDict) {
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"ALL_NOTIFS_ON_WEBHOOK_ID"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"createWebhooksandSaveFunnl --- deleteWebhookWithID : %@",error.userInfo.description);
+        }];
     }
     
     else if ([cell.menuLabel.text isEqualToString:@"Funnl Alerts"]){

@@ -87,6 +87,20 @@
     [contextIOAPIClient checkSSKeychainDataForNewInstall];
     if(contextIOAPIClient.isAuthorized){
         NSLog(@"---- ContextIO is Already authorized ----- accessToken: %@",contextIOAPIClient.description);
+        // turning on webhooks by default
+        if (![[NSUserDefaults standardUserDefaults] boolForKey:@"NOTIFS_ON_FIRST_TIME"]) {
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"NOTIFS_ON_FIRST_TIME"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+            [contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
+                NSString *webhook_id = [responseDict objectForKey:@"webhook_id"];
+                [[NSUserDefaults standardUserDefaults] setObject:webhook_id forKey:@"ALL_NOTIFS_ON_WEBHOOK_ID"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                NSLog(@"createWebhooksandSaveFunnl --- deleteWebhookWithID : %@",error.userInfo.description);
+            }];
+            
+        }
 //        [self.loginViewController performSelectorInBackground:@selector(fetchContacts) withObject:nil];
     }
     
