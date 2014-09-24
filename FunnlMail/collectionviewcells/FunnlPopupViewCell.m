@@ -134,7 +134,7 @@
     _newMessageCount = newMessageCount;
     messageCountLabel.text = [NSString stringWithFormat:@"%zd new", newMessageCount];
     
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:99]; //added by Chad
+    //[[UIApplication sharedApplication] setApplicationIconBadgeNumber:99]; //added by Chad
 }
 
 

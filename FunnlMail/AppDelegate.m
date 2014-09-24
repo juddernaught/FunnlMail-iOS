@@ -30,7 +30,7 @@
 #pragma mark - didFinishLaunchingx
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {   //[[UIApplication sharedApplication] setApplicationIconBadgeNumber:99]; //added by Chad
-    
+    application.applicationIconBadgeNumber = 0;
 
      
     self.internetAvailable = YES;

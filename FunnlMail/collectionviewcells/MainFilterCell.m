@@ -265,7 +265,7 @@
     
     // added by Chad
     if ([_filterTitle isEqualToString: ALL_FUNNL]) {
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber: newMessageCount];
+    //[[UIApplication sharedApplication] setApplicationIconBadgeNumber: newMessageCount];
     }
     
 }

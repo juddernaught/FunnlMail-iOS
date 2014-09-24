@@ -188,6 +188,8 @@ static NSString *currentFolder;
 }
 
 -(void)syncMessages{
+    
+    NSLog(@"Sync messages called");
     u_int64_t modSeqValue = UINT64_MAX;
 
     NSString *modSeqString = [[NSUserDefaults standardUserDefaults] objectForKey:@"MODSEQ"];
@@ -904,7 +906,6 @@ static NSString *currentFolder;
              [self loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD_AT_START withTableController:fv withFolder:inboxFolder  withFetchRange:MCORangeEmpty];
          }
          else{
-             [self syncMessages];
              u_int64_t inDatabaseMessageID = [[tempArray objectAtIndex:0] integerValue];
              if(inDatabaseMessageID){
                  inDatabaseMessageID = inDatabaseMessageID ;
@@ -951,6 +952,7 @@ static NSString *currentFolder;
                  [tempAppDelegate.progressHUD show:NO];
                  [tempAppDelegate.progressHUD setHidden:YES];
                  [fv.tablecontroller.refreshControl endRefreshing];
+                 [self syncMessages];
              }
          }
        
