@@ -280,6 +280,19 @@ UIView *greyView;
     disclosureArrow.tintColor = UIColorFromRGB(0x007AFF);
     nextImage = nil;
  
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    BOOL isFirstTime = [[NSUserDefaults standardUserDefaults ]boolForKey:@"isFirstTime"];
+    if( helpButton && isFirstTime == NO && [EmailService instance].userEmailID.length > 0){
+        CABasicAnimation *theAnimation;
+        theAnimation=[CABasicAnimation animationWithKeyPath:@"opacity"];
+        theAnimation.duration=1.0;
+        theAnimation.repeatCount= 50;
+        theAnimation.autoreverses= YES;
+        theAnimation.fromValue=[NSNumber numberWithFloat:1.0];
+        theAnimation.toValue=[NSNumber numberWithFloat:0.2];
+        [helpButton.layer addAnimation:theAnimation forKey:@"animateOpacity"];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isFirstTime"];
+    }
     
     [helpButton setBackgroundColor:[UIColor clearColor]];
     if (!helpFlag) {
@@ -1476,6 +1489,7 @@ UIView *greyView;
 #pragma mark Helpers
 - (void)helpButtonPressed:(UIButton *)sender {
     
+    [helpButton.layer removeAllAnimations];
 
     if (sender == helpButton && ([sender.titleLabel.text isEqualToString:GUIDE_FOR_SWIPING_CELL] || [sender.titleLabel.text isEqualToString:HELP_COMMENT])) {
         /*if (!helpFlag) {
