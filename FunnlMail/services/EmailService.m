@@ -699,11 +699,13 @@ static NSString *currentFolder;
 
 - (void)displayingButtonTitle {
     NSMutableString *emailString = [[EmailService instance] retrieveSecondaryAfterStoredTT];
-    if (emailString && [[NSUserDefaults standardUserDefaults] objectForKey:@"latest_tt_secondary"]) {
+    if (emailString && ![[[NSUserDefaults standardUserDefaults] objectForKey:@"latest_tt_secondary"] isEqualToString:@"0"] && numberOfMails >= SECONDARY_COUNT_FOR_DISPLAY) {
         if (emailString.length > 2) {
             NSString *displayString = [emailString substringWithRange:NSMakeRange(0, emailString.length - 2)];
             emailsTableViewController.displayStirng = displayString;
             emailsTableViewController.helpButton.titleLabel.numberOfLines = 2;
+            [emailsTableViewController.helpButton.layer removeAllAnimations];
+            [emailsTableViewController._shimmeringView setShimmering:NO];
             [emailsTableViewController.helpButton.titleLabel setTextAlignment:NSTextAlignmentLeft];
 //            [emailsTableViewController.helpButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
 

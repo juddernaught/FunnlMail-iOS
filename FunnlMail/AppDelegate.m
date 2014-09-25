@@ -32,6 +32,9 @@
 {   //[[UIApplication sharedApplication] setApplicationIconBadgeNumber:99]; //added by Chad
     application.applicationIconBadgeNumber = 0;
 
+    if (![[NSUserDefaults standardUserDefaults] objectForKey:@"latest_tt_secondary"]) {
+        [[NSUserDefaults standardUserDefaults] setObject:@"0" forKey:@"latest_tt_secondary"];
+    }
      
     self.internetAvailable = YES;
     isAlreadyRequestedRefreshToken = NO;

@@ -49,7 +49,7 @@ static NSString *inboxInfoIdentifier = @"InboxStatusCell";
 @end
 
 @implementation EmailsTableViewController
-@synthesize tablecontroller,activityIndicator,isSearching,helpFlag,helpButton,displayStirng,disclosureArrow;
+@synthesize tablecontroller,activityIndicator,isSearching,helpFlag,helpButton,displayStirng,disclosureArrow,_shimmeringView;
 UIView *greyView;
 
 #pragma mark -
@@ -94,10 +94,26 @@ UIView *greyView;
     [greyView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.78]];
     [self.view addSubview:greyView];
     [self.view bringSubviewToFront:greyView];
-    
+
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-  
+    _shimmeringView = [[FBShimmeringView alloc] init];
+    _shimmeringView.frame = CGRectMake(0, 0, WIDTH, 60);
+    _shimmeringView.shimmering = YES;
+    _shimmeringView.shimmeringBeginFadeDuration = 0.5;
+    _shimmeringView.shimmeringOpacity = 0.9;
+    _shimmeringView.shimmeringSpeed = 300;
+    
+    BOOL isFirstTime = [[NSUserDefaults standardUserDefaults ]boolForKey:@"isFirstTime"];
+    if( helpButton && isFirstTime == NO){
+        _shimmeringView.shimmering = YES;
+        NSLog(@"IF");
+    }
+    else {
+        NSLog(@"ELSE");
+        _shimmeringView.shimmering = NO;
+    }
+ 
 }
 
 
@@ -123,15 +139,16 @@ UIView *greyView;
     [[NSUserDefaults standardUserDefaults] synchronize];
     BOOL isFirstTime = [[NSUserDefaults standardUserDefaults ]boolForKey:@"isFirstTime"];
     if( helpButton && isFirstTime == NO){
-        CABasicAnimation *theAnimation;
-        theAnimation=[CABasicAnimation animationWithKeyPath:@"opacity"];
-        theAnimation.duration=1.0;
-        theAnimation.repeatCount= 50;
-        theAnimation.autoreverses= YES;
-        theAnimation.fromValue=[NSNumber numberWithFloat:1.0];
-        theAnimation.toValue=[NSNumber numberWithFloat:0.2];
-        [helpButton.layer addAnimation:theAnimation forKey:@"animateOpacity"];
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isFirstTime"];
+//        CABasicAnimation *theAnimation;
+//        theAnimation=[CABasicAnimation animationWithKeyPath:@"opacity"];
+//        theAnimation.duration=1.0;
+//        theAnimation.repeatCount= 50;
+//        theAnimation.autoreverses= YES;
+//        theAnimation.fromValue=[NSNumber numberWithFloat:1.0];
+//        theAnimation.toValue=[NSNumber numberWithFloat:0.2];
+//        [helpButton.layer addAnimation:theAnimation forKey:@"animateOpacity"];
+        
+//        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isFirstTime"];
     }
 }
 
@@ -286,6 +303,8 @@ UIView *greyView;
         [helpButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
         helpButton.contentEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 34);
     }
+    _shimmeringView.contentView = helpButton;
+    _shimmeringView.userInteractionEnabled = YES;
     
     UIImage *nextImage = [UIImage imageNamed:@"nextImage.png"];
     nextImage = [nextImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
@@ -310,9 +329,9 @@ UIView *greyView;
     
 //    [helpButton.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:18]];
     [helpButton addTarget:self action:@selector(helpButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [helpButton removeFromSuperview];
+//    [helpButton removeFromSuperview];
     [returnHeaderView addSubview:disclosureArrow];
-    [returnHeaderView addSubview:helpButton];
+    [returnHeaderView addSubview:_shimmeringView];
     
     
     mailSearchBar.frame = CGRectMake(0, 0, WIDTH, 40);
@@ -1491,7 +1510,9 @@ UIView *greyView;
 #pragma mark Helpers
 - (void)helpButtonPressed:(UIButton *)sender {
     
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isFirstTime"];
     [helpButton.layer removeAllAnimations];
+    [_shimmeringView setShimmering:NO];
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"show_vip"]) {
         if (!helpFlag) {
             disclosureArrow.hidden = YES;

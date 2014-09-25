@@ -155,13 +155,16 @@ UIButton *loginButton;
     self.view.backgroundColor = [UIColor colorWithHexString:@"F6F6F6"];
     self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
     self.pageController.dataSource = self;
-    images = @[@"intro slider 1.jpg", @"intro slider 3.jpg", @"intro slider 4.jpg",@"intro slider 5.jpg"];
+//    images = @[@"intro slider 1.jpg", @"intro slider 3.jpg", @"intro slider 4.jpg",@"intro slider 5.jpg"];
+    images = @[@"intro slider 3.jpg", @"intro slider 4.jpg",@"intro slider 5.jpg"];
     PageContentVC *initialViewController = [self viewControllerAtIndex:0];
     NSArray *viewControllers = [NSArray arrayWithObject:initialViewController];
     self.pageController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height); // Changed from (xx, 0 to 6, ...) by Chad
+    
     [self.pageController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     [self addChildViewController:self.pageController];
     [[self view] addSubview:[self.pageController view]];
+    
     [self.pageController didMoveToParentViewController:self];
     UIImage *loginImage = [UIImage imageNamed:@"getStarted"];
     loginButton = [[UIButton alloc] init];
@@ -174,6 +177,33 @@ UIButton *loginButton;
     [self.view setBackgroundColor:[UIColor clearColor]];
     [self.pageController.view addSubview:loginButton];
     
+}
+
+- (void)showSecondScreen:(UIButton*)sender {
+    NSArray *subViews = [introlView subviews];
+    for (UIView *subView in subViews) {
+        [subView removeFromSuperview];
+    }
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+    [imageView setImage:[UIImage imageNamed:@"introStartPage02.png"]];
+    imageView.contentMode = UIViewContentModeTopLeft;
+    [introlView addSubview:imageView];
+    imageView = nil;
+    
+    UIButton *nextButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 360/2, WIDTH, 45)];
+    UIImage *loginImage = [UIImage imageNamed:@"introSignIn.png"];
+    [nextButton setImage:loginImage forState:UIControlStateNormal];
+    loginImage = nil;
+    nextButton.backgroundColor = [UIColor clearColor];
+    [nextButton addTarget:self action:@selector(removeIntoPage:) forControlEvents:UIControlEventTouchUpInside];
+    [introlView addSubview:nextButton];
+    nextButton = nil;
+    [self.view addSubview:introlView];
+}
+
+- (void)removeIntoPage:(UIButton *)sender {
+    [introlView removeFromSuperview];
+    introlView = nil;
 }
 
 -(void) checkCredentialsandShowLoginScreen
@@ -205,6 +235,26 @@ UIButton *loginButton;
         //--end
         [self addChildViewController:viewController];
         [self.view addSubview:viewController.view];
+        
+        //for intro screen
+        if (![[NSUserDefaults standardUserDefaults] boolForKey:@"displaying_intro_screen"]) {
+            [[NSUserDefaults standardUserDefaults] setBool:TRUE forKey:@"displaying_intro_screen"];
+            introlView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+            [imageView setImage:[UIImage imageNamed:@"introStartPage01.png"]];
+            imageView.contentMode = UIViewContentModeTopLeft;
+            [introlView addSubview:imageView];
+            imageView = nil;
+            UIButton *nextButton = [[UIButton alloc] initWithFrame:CGRectMake(0, HEIGHT-56, WIDTH, 35)];
+            UIImage *continueImage = [UIImage imageNamed:@"introGetStarted.png"];
+            [nextButton setImage:continueImage forState:UIControlStateNormal];
+            continueImage = nil;
+            nextButton.backgroundColor = [UIColor clearColor];
+            [nextButton addTarget:self action:@selector(showSecondScreen:) forControlEvents:UIControlEventTouchUpInside];
+            [introlView addSubview:nextButton];
+            nextButton = nil;
+            [self.view addSubview:introlView];
+        }
     }
 }
 

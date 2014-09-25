@@ -16,6 +16,8 @@
 #import "MainVCDelegate.h"
 #import "AppDelegate.h"
 #import <MailCore/MailCore.h>
+#import "FBShimmeringView.h"
+
 
 @interface EmailsTableViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate,MCSwipeTableViewCellDelegate,RDSwipeableTableViewCellDelegate,UIScrollViewDelegate> {
     RDSwipeableTableViewCell *tempCellForDisplay;
@@ -55,6 +57,8 @@
 @property (nonatomic) BOOL isLoading;
 @property (nonatomic, strong) UIActivityIndicatorView *loadMoreActivityView;
 @property (retain,nonatomic) UIImageView *disclosureArrow;
+@property (retain,nonatomic) FBShimmeringView *_shimmeringView;
+
 
 -(void) setFilterModel:(FunnelModel *)filterModel;
 - (void)resetSearchBar;
