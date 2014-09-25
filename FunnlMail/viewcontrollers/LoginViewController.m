@@ -149,6 +149,12 @@ UIButton *loginButton;
     // Dispose of any resources that can be recreated.
 }
 
+-(void) createIntroViewController{
+    SPFirstViewController *sController = [[SPFirstViewController alloc] init];
+    [self.navigationController presentViewController:sController animated:YES completion:^{
+        
+    }];
+}
 
 -(void) createDemoPageViewController
 {
@@ -403,7 +409,8 @@ UIButton *loginButton;
         
 
         // Authentication succeeded
-        [self createDemoPageViewController];
+        //[self createDemoPageViewController];
+        [self createIntroViewController];
         [self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
         
     }

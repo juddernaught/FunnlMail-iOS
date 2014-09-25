@@ -40,7 +40,7 @@
 #define HELP_COMMENT @"   Help me organize my Inbox"
 #define GUIDE_FOR_SWIPING_CELL @"   Swipe any email to Funnel"
 #define IS_NEW_CREATE_FUNNEL 1
-#define SECONDARY_COUNT_FOR_DISPLAY 0
+#define SECONDARY_COUNT_FOR_DISPLAY 4
 #define SHOW_PRIMARY_INBOX 1
 #define IS_AUTO_REFRESH_ENABLE 1
 #define NUMBER_OF_NAME_TO_DISPLAY 2
@@ -96,6 +96,12 @@
 #define CLIENT_ID @"the-client-id"
 #define CLIENT_SECRET @"the-client-secret"
 #define KEYCHAIN_ITEM_NAME @"MailCore OAuth 2.0 Token"
+
+#define IMAGE_NAME @"introTutorial"
+#define IMAGE_TEXT @"introTutorialText"
+#define TIME_FOR_FADE_IN 0.4
+#define TIME_FOR_ANIMATION 1
+#define SLIDER_VALUE 0.2
 
 #define GRADIENT_ARRAY [NSArray arrayWithObjects:@"#A1A1AC",@"#46EEA5",@"#B48FD3",@"#598FC8",@"#FF605D",@"#48D4D1",@"#FF8194",@"#FF815E",nil];
 // removed these colors from palette: @"#FDDC74",@"#82D9F9"
