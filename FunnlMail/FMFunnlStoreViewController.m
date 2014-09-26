@@ -52,7 +52,8 @@
     return funnlStorageAccordingToSection.count;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [[funnlStorageAccordingToSection objectAtIndex:section] count];
+    NSMutableArray *tempArray = [funnlStorageAccordingToSection objectAtIndex:section];
+    return tempArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
