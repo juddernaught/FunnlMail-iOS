@@ -110,6 +110,21 @@
                 }
             }
         }
+        else {
+            //old logic
+            NSArray *contactArray = [[ContactService instance] retrieveAllContact];
+            if (contactMutableArray) {
+                [contactMutableArray removeAllObjects];
+            }
+            for (ContactModel *tempContact in contactArray) {
+                if (tempContact.name && tempContact.email && ![tempContact.name isEqualToString:@""]) {
+                    if (!contactMutableArray) {
+                        contactMutableArray = [[NSMutableArray alloc] init];
+                    }
+                    [contactMutableArray addObject:tempContact];
+                }
+            }
+        }
     }
     else {
     //old logic
@@ -183,7 +198,7 @@
             if ([(ContactModel*)[contactMutableArray objectAtIndex:counter] name].length >= 1) {
                 [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
             }
-            else {
+            else if ([(ContactModel*)[contactMutableArray objectAtIndex:counter] email].length >= 1) {
                 [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] email] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
             }
             tempButton.tag = counter;
@@ -218,7 +233,7 @@
             if ([(ContactModel*)[contactMutableArray objectAtIndex:counter] name].length >= 1) {
                 [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
             }
-            else {
+            else if ([(ContactModel*)[contactMutableArray objectAtIndex:counter] email].length >= 1) {
                 [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] email] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
             }
             [tempButton addTarget:self action:@selector(contactButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -253,7 +268,7 @@
             if ([(ContactModel*)[contactMutableArray objectAtIndex:counter] name].length >= 1) {
                 [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
             }
-            else {
+            else if ([(ContactModel*)[contactMutableArray objectAtIndex:counter] email].length >= 1) {
                 [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] email] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
             }
             

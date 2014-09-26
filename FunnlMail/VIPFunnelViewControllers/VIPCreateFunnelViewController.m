@@ -322,6 +322,11 @@
     for (int counter = 0; counter < 9 && counter < contactMutableArray.count; counter++) {
         if (counter > 0)
             color = 255/(counter*2);
+        unsigned long temp = counter % 8;
+        randomColors = nil;
+        randomColors = GRADIENT_ARRAY;
+        NSString *colorString = [randomColors objectAtIndex:temp];
+        UIColor *color = [UIColor colorWithHexString:colorString];
         
         NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[(ContactModel*)[contactMutableArray objectAtIndex:counter] thumbnail]]];
         [request setValue:@"image/*" forHTTPHeaderField:@"Accept"];
@@ -336,13 +341,14 @@
         if (counter % 3 == 0) {
             UIButton *tempButton = [[UIButton alloc] initWithFrame:CGRectMake(x, y, buttonSize, buttonSize)];
             
-            [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] substringWithRange:NSMakeRange(0, 1)] uppercaseString
-                                                                   ]] forState:UIControlStateNormal];
+            if ([[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] length]) {
+                [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
+            }
+            else if ([[(ContactModel*)[contactMutableArray objectAtIndex:counter] email] length]) {
+                [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] email] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
+            }
+        
             tempButton.tag = counter;
-            NSArray *randomColors = GRADIENT_ARRAY;
-            NSInteger gradientInt = randomColors.count - 1;
-            NSString *colorString = [randomColors objectAtIndex:gradientInt];
-            UIColor *color = [UIColor colorWithHexString:colorString];
             
             [tempButton setBackgroundColor:color];
             tempButton.clipsToBounds = YES;
@@ -365,11 +371,12 @@
         else if (counter % 3 == 1) {
             UIButton *tempButton = [[UIButton alloc] initWithFrame:CGRectMake((WIDTH / 2) - buttonSize / 2, y, buttonSize, buttonSize)];
             tempButton.tag = counter;
-            [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
-            NSArray *randomColors = GRADIENT_ARRAY;
-            NSInteger gradientInt = randomColors.count - 1;
-            NSString *colorString = [randomColors objectAtIndex:gradientInt];
-            UIColor *color = [UIColor colorWithHexString:colorString];
+            if ([[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] length]) {
+                [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
+            }
+            else if ([[(ContactModel*)[contactMutableArray objectAtIndex:counter] email] length]) {
+                [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] email] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
+            }
             
             [tempButton setBackgroundColor:color];
             tempButton.clipsToBounds = YES;
@@ -392,11 +399,12 @@
         else if (counter % 3 == 2) {
             UIButton *tempButton = [[UIButton alloc] initWithFrame:CGRectMake(WIDTH - 10 - buttonSize, y, buttonSize, buttonSize)];
             tempButton.tag = counter;
-            [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
-            NSArray *randomColors = GRADIENT_ARRAY;
-            NSInteger gradientInt = randomColors.count - 1;
-            NSString *colorString = [randomColors objectAtIndex:gradientInt];
-            UIColor *color = [UIColor colorWithHexString:colorString];
+            if ([[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] length]) {
+                [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
+            }
+            else if ([[(ContactModel*)[contactMutableArray objectAtIndex:counter] email] length]) {
+                [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] email] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
+            }
             [tempButton setBackgroundColor:color];
             
             tempButton.clipsToBounds = YES;
@@ -584,14 +592,14 @@
     [sampleLAbel setTextColor:[UIColor whiteColor]];
     sampleLAbel.text = @"Skip Primary Inbox";
 //    [containerView addSubview:sampleLAbel];
-    [footerView addSubview:sampleLAbel];
+//    [footerView addSubview:sampleLAbel];
     sampleLAbel = nil;
     
     UISwitch *primarySkipSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(WIDTH - 10 - 50, internalY, 70, 40)];
     [primarySkipSwitch setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
 //    [containerView addSubview:primarySkipSwitch];
     [primarySkipSwitch addTarget:self action:@selector(skipPrimaryMailChange:) forControlEvents:UIControlEventValueChanged];
-    [footerView addSubview:primarySkipSwitch];
+//    [footerView addSubview:primarySkipSwitch];
     primarySkipSwitch = nil;
     
 //    innerY = innerY + 40;
@@ -668,11 +676,16 @@
     
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:0.4];
-    if (HEIGHT == 568) {
-        [mainScrollView setContentOffset:CGPointMake(0, textField.frame.origin.y + containerView.frame.origin.y - 200) animated:YES];
+    if (textField == funnelNameTextField) {
+        [mainScrollView setContentOffset:CGPointMake(0, 0) animated:YES];
     }
     else {
-        [mainScrollView setContentOffset:CGPointMake(0, textField.frame.origin.y + containerView.frame.origin.y - 150) animated:YES];
+        if (HEIGHT == 568) {
+            [mainScrollView setContentOffset:CGPointMake(0, textField.frame.origin.y + containerView.frame.origin.y - 200) animated:YES];
+        }
+        else {
+            [mainScrollView setContentOffset:CGPointMake(0, textField.frame.origin.y + containerView.frame.origin.y - 150) animated:YES];
+        }
     }
     [UIView commitAnimations];
     return YES;

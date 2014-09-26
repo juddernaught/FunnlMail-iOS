@@ -402,6 +402,8 @@ UIButton *loginButton;
         [request setHTTPBody:postData];
         [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
             NSString *respString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSLog(@"------ VIP response: %@",respString);
+            
             //storing contact string onto persistance storage.
             [[NSUserDefaults standardUserDefaults] setObject:respString forKey:@"contact_string"];
             [[NSUserDefaults standardUserDefaults] synchronize];

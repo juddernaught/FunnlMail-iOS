@@ -140,16 +140,13 @@ static NSString *contactCellIdentifier = @"ContactCell";
     colorString = nil;
     randomColors = nil;
     
-    if (message.header.sender.displayName) {
+    if (message.header.sender.displayName.length) {
         [userButton setTitle:[[message.header.sender.displayName substringWithRange:NSMakeRange(0, 1)] uppercaseString] forState:UIControlStateNormal];
-//        [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[[contactInCC objectAtIndex:counter] displayName] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
     }
-    else {
+    else if (message.header.sender.mailbox.length) {
         [userButton setTitle:[[message.header.sender.mailbox substringWithRange:NSMakeRange(0, 1)] uppercaseString] forState:UIControlStateNormal];
     }
-//    [userButton setTitle:@"S" forState:UIControlStateNormal];
     [mainView addSubview:userButton];
-    
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[self getUserImage:message.header.sender.mailbox]]];
     [request setValue:@"image/*" forHTTPHeaderField:@"Accept"];
     
@@ -276,10 +273,10 @@ static NSString *contactCellIdentifier = @"ContactCell";
             if (counter % 3 == 0) {
                 UIButton *tempButton = [[UIButton alloc] initWithFrame:CGRectMake(x1, y1, buttonWidth, buttonWidth)];
                 [tempButton.titleLabel setFont:FONT_FOR_INITIAL];
-                if ([[contactInCC objectAtIndex:counter] displayName]) {
+                if ([[[contactInCC objectAtIndex:counter] displayName] length]) {
                     [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[[contactInCC objectAtIndex:counter] displayName] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
                 }
-                else {
+                else if ([[[contactInCC objectAtIndex:counter] mailbox] length]) {
                     [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[[contactInCC objectAtIndex:counter] mailbox] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
                 }
                 
@@ -319,10 +316,10 @@ static NSString *contactCellIdentifier = @"ContactCell";
                 UIButton *tempButton = [[UIButton alloc] initWithFrame:CGRectMake(160 - (buttonWidth/2.0), y1, buttonWidth, buttonWidth)];
                 tempButton.clipsToBounds = YES;
                 [tempButton.titleLabel setFont:FONT_FOR_INITIAL];
-                if ([[contactInCC objectAtIndex:counter] displayName]) {
+                if ([[[contactInCC objectAtIndex:counter] displayName] length]) {
                     [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[[contactInCC objectAtIndex:counter] displayName] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
                 }
-                else {
+                else if ([[[contactInCC objectAtIndex:counter] mailbox] length]) {
                     [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[[contactInCC objectAtIndex:counter] mailbox] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
                 }
                 tempButton.tag = counter;
@@ -354,10 +351,10 @@ static NSString *contactCellIdentifier = @"ContactCell";
                 UIButton *tempButton = [[UIButton alloc] initWithFrame:CGRectMake(WIDTH - 10 - buttonWidth, y1, buttonWidth, buttonWidth)];
                 tempButton.clipsToBounds = YES;
                 [tempButton.titleLabel setFont:FONT_FOR_INITIAL];
-                if ([[contactInCC objectAtIndex:counter] displayName]) {
+                if ([[[contactInCC objectAtIndex:counter] displayName] length]) {
                     [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[[contactInCC objectAtIndex:counter] displayName] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
                 }
-                else {
+                else if ([[[contactInCC objectAtIndex:counter] mailbox] length]) {
                     [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[[contactInCC objectAtIndex:counter] mailbox] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
                 }
                 

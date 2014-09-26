@@ -141,8 +141,12 @@
         if (counter % 3 == 0) {
             UIButton *tempButton = [[UIButton alloc] initWithFrame:CGRectMake(x, y, buttonSize, buttonSize)];
             
-            [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] substringWithRange:NSMakeRange(0, 1)] uppercaseString
-                                                                   ]] forState:UIControlStateNormal];
+            if ([[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] length]) {
+                [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
+            }
+            else if ([[(ContactModel*)[contactMutableArray objectAtIndex:counter] email] length]) {
+                [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] email] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
+            }
             tempButton.tag = counter;
 //            NSArray *randomColors = GRADIENT_ARRAY;
 //            NSInteger gradientInt = randomColors.count - 1;
@@ -158,7 +162,12 @@
             [buttonArray addObject:tempButton];
             
             UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, y + buttonSize + 0, buttonSize, label_height)];
-            sampleLabel.text = [[contactMutableArray objectAtIndex:counter] name];
+            if ([(ContactModel*)[contactMutableArray objectAtIndex:counter] name].length) {
+                sampleLabel.text = [(ContactModel *)[contactMutableArray objectAtIndex:counter] name];
+            }
+            else {
+                sampleLabel.text = [(ContactModel *)[contactMutableArray objectAtIndex:counter] email];
+            }
             [sampleLabel setTextColor:[UIColor whiteColor]];
             sampleLabel.numberOfLines = 2;
             sampleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
@@ -170,11 +179,12 @@
         else if (counter % 3 == 1) {
             UIButton *tempButton = [[UIButton alloc] initWithFrame:CGRectMake((WIDTH / 2) - buttonSize / 2, y, buttonSize, buttonSize)];
             tempButton.tag = counter;
-            [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
-//            NSArray *randomColors = GRADIENT_ARRAY;
-//            NSInteger gradientInt = randomColors.count - 1;
-//            NSString *colorString = [randomColors objectAtIndex:gradientInt];
-//            UIColor *color = [UIColor colorWithHexString:colorString];
+            if ([[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] length]) {
+                [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
+            }
+            else if ([[(ContactModel*)[contactMutableArray objectAtIndex:counter] email] length]) {
+                [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] email] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
+            }
             
             [tempButton setBackgroundColor:color];
             tempButton.clipsToBounds = YES;
@@ -188,7 +198,12 @@
             [sampleLabel setTextColor:[UIColor whiteColor]];
             sampleLabel.numberOfLines = 2;
             sampleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-            sampleLabel.text = [[contactMutableArray objectAtIndex:counter] name];
+            if ([(ContactModel*)[contactMutableArray objectAtIndex:counter] name].length) {
+                sampleLabel.text = [(ContactModel *)[contactMutableArray objectAtIndex:counter] name];
+            }
+            else {
+                sampleLabel.text = [(ContactModel *)[contactMutableArray objectAtIndex:counter] email];
+            }
             [sampleLabel setFont:labelFont];
             [sampleLabel setTextAlignment:NSTextAlignmentCenter];
             [mainScrollView addSubview:sampleLabel];
@@ -197,11 +212,12 @@
         else if (counter % 3 == 2) {
             UIButton *tempButton = [[UIButton alloc] initWithFrame:CGRectMake(WIDTH - 10 - buttonSize, y, buttonSize, buttonSize)];
             tempButton.tag = counter;
-            [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
-//            NSArray *randomColors = GRADIENT_ARRAY;
-//            NSInteger gradientInt = randomColors.count - 1;
-//            NSString *colorString = [randomColors objectAtIndex:gradientInt];
-//            UIColor *color = [UIColor colorWithHexString:colorString];
+            if ([[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] length]) {
+                [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
+            }
+            else if ([[(ContactModel*)[contactMutableArray objectAtIndex:counter] email] length]) {
+                [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] email] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
+            }
             
             [tempButton setBackgroundColor:color];
             tempButton.clipsToBounds = YES;
@@ -215,7 +231,12 @@
             [sampleLabel setTextColor:[UIColor whiteColor]];
             sampleLabel.numberOfLines = 2;
             sampleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-            sampleLabel.text = [[contactMutableArray objectAtIndex:counter] name];
+            if ([(ContactModel*)[contactMutableArray objectAtIndex:counter] name].length) {
+                sampleLabel.text = [(ContactModel *)[contactMutableArray objectAtIndex:counter] name];
+            }
+            else {
+                sampleLabel.text = [(ContactModel *)[contactMutableArray objectAtIndex:counter] email];
+            }
             [sampleLabel setFont:labelFont];
             [sampleLabel setTextAlignment:NSTextAlignmentCenter];
             [mainScrollView addSubview:sampleLabel];
@@ -225,7 +246,7 @@
         }
     }
     
-    [mainScrollView setContentSize:CGSizeMake(WIDTH, y)];
+    [mainScrollView setContentSize:CGSizeMake(WIDTH, y + 75 + 40)];
     
     [self.view addSubview:mainScrollView];
     mainScrollView = nil;

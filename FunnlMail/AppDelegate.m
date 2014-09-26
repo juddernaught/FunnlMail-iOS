@@ -431,6 +431,14 @@ didReceiveRemoteNotification:(NSDictionary *)userInfo {
     [PFPush handlePush:userInfo];
 }
 
+- (NSString *)getInitials:(NSString *)string {
+    NSString *returnString = nil;
+    if (string.length) {
+        returnString = [string substringWithRange:NSMakeRange(0, 1)];
+    }
+    return returnString;
+}
+
 #pragma mark UIView Animation
 
 @end

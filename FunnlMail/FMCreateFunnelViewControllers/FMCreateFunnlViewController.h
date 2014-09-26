@@ -18,6 +18,7 @@
 #define COMMON_DIFFERENCE 30
 @interface FMCreateFunnlViewController : UIViewController<UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate,UIScrollViewDelegate>
 {
+    UIButton *addButton;
     BOOL isTextFieldEditing;
     UIScrollView *suggestionScroll;
     NSArray *suggestionArray;

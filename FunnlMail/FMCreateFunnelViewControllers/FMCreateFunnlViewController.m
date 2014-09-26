@@ -11,6 +11,11 @@
 #import <Parse/Parse.h>
 #import <AddressBook/AddressBook.h>
 #import "FXBlurView.h"
+#import "EmailsTableViewController.h"
+#import "MainVC.h"
+#import "LoginViewController.h"
+
+
 @interface FMCreateFunnlViewController ()
 
 @end
@@ -335,11 +340,17 @@
         [contactMutableArray removeObjectAtIndex:0];
     }
     else {
+        if (contactMutableArray) {
+            NSLog(@"Number of object in contactMutableArray -- %d",(int)contactMutableArray.count);
+        }
         if (!contactMutableArray) {
             contactMutableArray = [[NSMutableArray alloc] init];
             for (NSString *emailString in emailTempArray) {
                 [self checkForEmailInContact:emailString];
             }
+        }
+        else {
+
         }
         if (contactMutableArray.count > 0) {
             if ([[[contactMutableArray objectAtIndex:0] name] isEqualToString:ADD_FUNNL]) {
@@ -643,6 +654,8 @@
             [tempButton setBackgroundImage:[UIImage imageNamed:@"addSenderCircle.png"] forState:UIControlStateNormal];
             [buttonArray addObject:tempButton];
             [mainScrollView addSubview:tempButton];
+            addButton = nil;
+            addButton = tempButton;
             tempButton = nil;
             
             UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10 - 5, y + buttonSize + 5, buttonSize + 10, label_height)];
@@ -674,7 +687,7 @@
                 if ([[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] length]) {
                     [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
                 }
-                else {
+                else if ([[(ContactModel*)[contactMutableArray objectAtIndex:counter] email] length]) {
                     [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] email] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
                 }
                 tempButton.tag = counter;
@@ -715,7 +728,7 @@
                 if ([(ContactModel*)[contactMutableArray objectAtIndex:counter] name].length) {
                     [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
                 }
-                else {
+                else if ([(ContactModel*)[contactMutableArray objectAtIndex:counter] email].length) {
                     [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] email] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
                 }
                 [tempButton.titleLabel setFont:FONT_FOR_INITIAL];
@@ -757,7 +770,7 @@
                 if ([(ContactModel*)[contactMutableArray objectAtIndex:counter] name].length) {
                     [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] name] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
                 }
-                else {
+                else if ([(ContactModel*)[contactMutableArray objectAtIndex:counter] email].length) {
                     [tempButton setTitle:[NSString stringWithFormat:@"%@",[[[(ContactModel*)[contactMutableArray objectAtIndex:counter] email] substringWithRange:NSMakeRange(0, 1)] uppercaseString]] forState:UIControlStateNormal];
                 }
                 [tempButton setBackgroundColor:color];
@@ -894,7 +907,7 @@
     //    y = y + 15 + 5;
     innerY = innerY + 15 + 10;
     
-    if (isEditFunnel) {
+    if (isEditFunnel || shareFunnl) {
         if (subjectArray.count == 0) {
             UITextField *sampleTextField = [[UITextField alloc] initWithFrame:CGRectMake(10, innerY, WIDTH - 20 - 45, 20)];
             sampleTextField.delegate = self;
@@ -1352,6 +1365,7 @@
     additionalTextField.text = [(ContactModel *)[searchArray objectAtIndex:indexPath.row] email];
     autocompleteTableView.hidden = YES;
     [mainScrollView setScrollEnabled:YES];
+    [addButton setUserInteractionEnabled:YES];
     [funnelNameTextField setUserInteractionEnabled:YES];
 }
 
@@ -1474,6 +1488,7 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [mainScrollView setScrollEnabled:YES];
+    [addButton setUserInteractionEnabled:YES];
     if (textField == funnelNameTextField) {
         subjectString = funnelNameTextField.text;
         [textField resignFirstResponder];
@@ -1590,6 +1605,7 @@
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     activeTextField = textField;
     [mainScrollView setScrollEnabled:NO];
+    [addButton setUserInteractionEnabled:NO];
     if (textField == funnelNameTextField || textField == additionalTextField) {
         
         if (textField == additionalTextField) {
@@ -1683,20 +1699,20 @@
                 NSLog(@"responseDict deletion %@",responseDict);
                 [webhooks removeObjectForKey:webhook_id];
                 reqCnt--;
-                dispatch_async(dispatch_get_main_queue(), ^{
+                //dispatch_async(dispatch_get_main_queue(), ^{
                     if (reqCnt == 0) {
                         [self deleteOperation];
                     }
-                });
+                //});
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 reqCnt--;
-                dispatch_async(dispatch_get_main_queue(), ^{
+                //dispatch_async(dispatch_get_main_queue(), ^{
                     NSLog(@"deleteButtonClicked --- deleteWebhookWithID : %@",error.userInfo.description);
                     //[self showAlertForError:error];
                     if (reqCnt == 0) {
                         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                     }
-                });
+                //});
             }];
         }
     }
@@ -1898,6 +1914,7 @@
 }
 
 - (void)addSubject:(UIButton*)sender {
+    NSLog(@"----> %@",[[self getTextFieldForButton:sender] text]);
     if ([[[self getTextFieldForButton:sender] text] length] > 0) {
         flag = FALSE;
         //        [self resignAllTextField];
@@ -2051,7 +2068,6 @@
 }
 
 - (void)saveButtonPressed:(UIButton*)sender {
-    
     [self performSelectorInBackground:@selector(showHUD) withObject:nil];
     if (senderArray) {
         senderArray = nil;
@@ -2110,6 +2126,7 @@
             }
             return;
         }
+        [self.navigationController popViewControllerAnimated:YES];
         if(contactMutableArray.count && ((contactMutableArray.count > 0 || (![[(ContactModel *)[contactMutableArray objectAtIndex:0] name] isEqualToString:ADD_FUNNL] && contactMutableArray.count == 1)) || subjectArray.count)){
 //            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             if (!enableNotification) {
@@ -2126,20 +2143,20 @@
                             NSLog(@"responseDict deletion %@",responseDict);
                             [webhooks removeObjectForKey:webhook_id];
                             reqCnt--;
-                            dispatch_async(dispatch_get_main_queue(), ^{
+                            //dispatch_async(dispatch_get_main_queue(), ^{
                                 if (reqCnt == 0) {
                                     [self saveFunnlWithWebhookId:nil];
                                 }
-                            });
+                            //});
                         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                             reqCnt--;
-                            dispatch_async(dispatch_get_main_queue(), ^{
+                            //dispatch_async(dispatch_get_main_queue(), ^{
                                 //[self showAlertForError:error];
                                 if (reqCnt == 0) {
                                     [self saveFunnlWithWebhookId:nil];
                                     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                                 }
-                            });
+                            //});
                         }];
                     }
                 } else {
@@ -2160,21 +2177,21 @@
                             NSLog(@"responseDict deletion %@",responseDict);
                             [webhooks removeObjectForKey:webhook_id];
                             reqCnt--;
-                            dispatch_async(dispatch_get_main_queue(), ^{
+                            //dispatch_async(dispatch_get_main_queue(), ^{
                                 if (reqCnt == 0) {
                                     [self createWebhooksAndSaveFunnl];
                                 }
-                            });
+                            //});
                         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                             reqCnt--;
-                            dispatch_async(dispatch_get_main_queue(), ^{
+                            //dispatch_async(dispatch_get_main_queue(), ^{
                                 //[self showAlertForError:error];
                                 NSLog(@"saveButtonPressed --- deleteWebhookWithID : %@",error.userInfo.description);
                                 if (reqCnt == 0) {
                                     [self createWebhooksAndSaveFunnl];
                                     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                                 }
-                            });
+                            //});
                         }];
                     }
                 } else {
@@ -2204,99 +2221,133 @@
 
 -(void) saveFunnlWithWebhookId:(NSString *) webhookId
 {
-    AppDelegate *tempAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    if(webhookId != nil){
-        //---- Added by Krunal to get work PNs
-        NSData* jsonData = [webhookId dataUsingEncoding:NSUTF8StringEncoding];
-        NSMutableDictionary *webhooks = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:nil]];
-        NSArray *senders = [[webhooks allKeys] copy];
-        NSMutableArray *webhookChannelArray = [NSMutableArray new];
-        PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-        for (NSString *sender in senders) {
-            NSDictionary *webhook_id_Dictionary = [webhooks objectForKey:sender];
-            NSString *webhook_id = [webhook_id_Dictionary objectForKey:@"webhook_id"];
-            [webhookChannelArray addObject:webhook_id];
-            [currentInstallation addUniqueObject:([NSString stringWithFormat:@"webhook_id_%@", webhook_id]) forKey:@"channels"];
-        }
-        [currentInstallation saveInBackground];
-        //---- end
-    }
-    else{
-        
-    }
-    
-    
-    unsigned long temp = [[FunnelService instance] allFunnels].count%8;
-    //NSInteger gradientInt = arc4random_uniform((uint32_t)randomColors.count);
-    NSString *colorString = @"#F9F9F9";
-    UIColor *color = [UIColor colorWithHexString:colorString];
-    if(isEditFunnel){
-        color = oldModel.barColor;
-        colorString = oldModel.funnelColor;
-    }
-    else{
-        colorString = [randomColors objectAtIndex:temp];
-        UIColor *color = [UIColor colorWithHexString:colorString];
-        if(color == nil){
-            color = [UIColor colorWithHexString:@"#F9F9F9"];
-        }
-    }
-    FunnelModel *model;
-    model = [[FunnelModel alloc]initWithBarColor:color filterTitle:funnelNameTextField.text newMessageCount:0 dateOfLastMessage:[NSDate new] sendersArray:senderArray subjectsArray:subjectArray skipAllFlag:skipPrimary funnelColor:colorString];
-    model.funnelId = oldModel.funnelId;
-    model.notificationsFlag = enableNotification;
-    model.webhookIds = webhookId ? webhookId : @"";
-    model.skipFlag = skipPrimary;
-    
-    if(isEditFunnel){
-        //                [EmailService editFilter:model withOldFilter:oldModel];
-        // save to db
-        
-        [[MessageFilterXRefService instance] deleteXRefWithFunnelId:model.funnelId];
-        [[FunnelService instance] updateFunnel:model];
-        [[EmailService instance] applyingFunnel:model toMessages:[[MessageService instance] messagesAllTopMessages]];
-        
-        if (oldModel.skipFlag == skipPrimary) {
-            NSLog(@"No changes had occured!!");
-        }
-        else {
-            if (skipPrimary) {
-                [self incrementCounterAgainstTheMessage];
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        FunnelModel *model;
+        AppDelegate *tempAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        //[MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        if(webhookId != nil){
+            //---- Added by Krunal to get work PNs
+            NSData* jsonData = [webhookId dataUsingEncoding:NSUTF8StringEncoding];
+            NSMutableDictionary *webhooks = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:nil]];
+            NSArray *senders = [[webhooks allKeys] copy];
+            NSMutableArray *webhookChannelArray = [NSMutableArray new];
+            PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+            for (NSString *sender in senders) {
+                NSDictionary *webhook_id_Dictionary = [webhooks objectForKey:sender];
+                NSString *webhook_id = [webhook_id_Dictionary objectForKey:@"webhook_id"];
+                [webhookChannelArray addObject:webhook_id];
+                [currentInstallation addUniqueObject:([NSString stringWithFormat:@"webhook_id_%@", webhook_id]) forKey:@"channels"];
             }
-            else {
-                [self decrementCounterAgainstTheMessage];
-            }
-            NSLog(@"Changes had occured!!");
+            [currentInstallation saveInBackground];
         }
-        [[MessageService instance] insertFunnelJsonForMessages];
-    }else{
-        [[FunnelService instance] insertFunnel:model];
-        [[EmailService instance] applyingFunnel:model toMessages:[[MessageService instance] messagesAllTopMessages]];
-        
-        if (skipPrimary) {
-            //                    [self incrementCounterAgainstTheMessage];
-        }
-        else {
+        else{
             
         }
-        [EmailService setNewFilterModel:model];
-        // save to db
         
-    }
-    if (self.mainVCdelegate) {
-        [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:model.funnelId top:2000];
-        [self.mainVCdelegate filterSelected:model];
-        tempAppDelegate.currentFunnelString = model.funnelName.lowercaseString;
-        tempAppDelegate.currentFunnelDS = model;
-    }
-    else {
-        [tempAppDelegate.mainVCdelegate filterSelected:tempAppDelegate.currentFunnelDS];
-    }
-    model = nil;
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    //[[CIOExampleAPIClient sharedClient] clearCredentials];
-    [self.navigationController popViewControllerAnimated:YES];
+        unsigned long temp = [[FunnelService instance] allFunnels].count%8;
+        NSString *colorString = @"#F9F9F9";
+        UIColor *color = [UIColor colorWithHexString:colorString];
+        if(isEditFunnel){
+            color = oldModel.barColor;
+            colorString = oldModel.funnelColor;
+        }
+        else{
+            colorString = [randomColors objectAtIndex:temp];
+            UIColor *color = [UIColor colorWithHexString:colorString];
+            if(color == nil){
+                color = [UIColor colorWithHexString:@"#F9F9F9"];
+            }
+        }
+        model = [[FunnelModel alloc]initWithBarColor:color filterTitle:funnelNameTextField.text newMessageCount:0 dateOfLastMessage:[NSDate new] sendersArray:senderArray subjectsArray:subjectArray skipAllFlag:skipPrimary funnelColor:colorString];
+        model.funnelId = oldModel.funnelId;
+        model.notificationsFlag = enableNotification;
+        model.webhookIds = webhookId ? webhookId : @"";
+        model.skipFlag = skipPrimary;
+        
+        if(isEditFunnel){
+            [[MessageFilterXRefService instance] deleteXRefWithFunnelId:model.funnelId];
+            [[FunnelService instance] updateFunnel:model];
+            [[EmailService instance] applyingFunnel:model toMessages:[[MessageService instance] messagesAllTopMessages]];
+            
+            if (oldModel.skipFlag == skipPrimary) {
+                NSLog(@"No changes had occured!!");
+            }
+            else {
+                if (skipPrimary) {
+                    [self incrementCounterAgainstTheMessage];
+                }
+                else {
+                    [self decrementCounterAgainstTheMessage];
+                }
+                NSLog(@"Changes had occured!!");
+            }
+            [[MessageService instance] insertFunnelJsonForMessages];
+        }else{
+            [[FunnelService instance] insertFunnel:model];
+            [[EmailService instance] applyingFunnel:model toMessages:[[MessageService instance] messagesAllTopMessages]];
+            if (skipPrimary) {
+                
+            }
+            else {
+                
+            }
+            //[EmailService setNewFilterModel:model];
+            // save to db
+        }
+        if (self.mainVCdelegate) {
+//            tempAppDelegate.currentFunnelDS = model;
+//            [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:model.funnelId top:2000];
+//            if(tempAppDelegate.currentFunnelDS.funnelId.length > 0)
+
+            //[self.mainVCdelegate filterSelected:model];
+            //tempAppDelegate.currentFunnelString = model.funnelName.lowercaseString;
+            //tempAppDelegate.currentFunnelDS = model;
+        }
+        else {
+            //[tempAppDelegate.mainVCdelegate filterSelected:tempAppDelegate.currentFunnelDS];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            AppDelegate *tempAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            UIView *tostView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 50)];
+            [tostView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.6]];
+            tostView.clipsToBounds = YES;
+            tostView.layer.cornerRadius = 7;
+            
+            UILabel *tostLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 280, 45)];
+            tostLabel.numberOfLines = 2;
+            tostLabel.lineBreakMode = NSLineBreakByWordWrapping;
+            tostLabel.backgroundColor = [UIColor clearColor];
+            tostLabel.textColor = [UIColor whiteColor];
+            [tostLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:14]];
+            tostLabel.center = tostView.center;
+            tostLabel.text = [NSString stringWithFormat:@"Funnel named \"%@\" has been created.",model.funnelName];
+            tostLabel.textAlignment = NSTextAlignmentCenter;
+            [tostView addSubview:tostLabel];
+            [tempAppDelegate.window showToast:tostView duration:TOST_DISPLAY_DURATION position:@"bottom"];
+            
+            NSMutableArray *tempArray;
+            if(tempAppDelegate.currentFunnelDS == nil){
+                tempArray = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
+                [EmailService instance].filterMessages = tempArray;
+                [[EmailService instance].emailsTableViewController.tableView reloadData];
+            }
+            else{
+                [tempAppDelegate.mainVCdelegate filterSelected:tempAppDelegate.currentFunnelDS];
+            }
+
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        });
+        model = nil;
+
+    });
+   //    UIAlertView *sampleAlertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"Funnel named \"%@\" has been created.",model.funnelName] message:@"" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+//    [sampleAlertView show];
+//    sampleAlertView = nil;
+    
+   
+    //[MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+//    [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(void) createWebhooksAndSaveFunnl
@@ -2320,22 +2371,22 @@
                 [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
                     [webhooks setObject:responseDict forKey:sender];
                     reqCnt--;
-                    dispatch_async(dispatch_get_main_queue(), ^{
+                    //dispatch_async(dispatch_get_main_queue(), ^{
                         if (reqCnt == 0) {
                             NSData *jsonData = [NSJSONSerialization dataWithJSONObject:webhooks options:NSJSONWritingPrettyPrinted error:nil];
                             NSString *webhookIds = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
                             [self saveFunnlWithWebhookId:webhookIds];
                         }
-                    });
+                    //});
                 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                     reqCnt--;
-                    dispatch_async(dispatch_get_main_queue(), ^{
+                    //dispatch_async(dispatch_get_main_queue(), ^{
                         NSLog(@"createWebhooksandSaveFunnl --- deleteWebhookWithID : %@",error.userInfo.description);
                         //[self showAlertForError:error];
                         if (reqCnt == 0) {
                             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                         }
-                    });
+                    //});
                 }];
                 continue;
             }
@@ -2343,23 +2394,23 @@
             [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
                 [webhooks setObject:responseDict forKey:sender];
                 reqCnt--;
-                dispatch_async(dispatch_get_main_queue(), ^{
+                //dispatch_async(dispatch_get_main_queue(), ^{
                     if (reqCnt == 0) {
                         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:webhooks options:NSJSONWritingPrettyPrinted error:nil];
                         NSString *webhookIds = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
                         [self saveFunnlWithWebhookId:webhookIds];
                     }
-                });
+                //});
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 reqCnt--;
-                dispatch_async(dispatch_get_main_queue(), ^{
+                //dispatch_async(dispatch_get_main_queue(), ^{
                     NSLog(@"createWebhooksAndSaveFunnl --- Email : %@",error.userInfo.description);
                     //[self showAlertForError:error];
                     if (reqCnt == 0) {
                         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                         [self saveFunnlWithWebhookId:nil];
                     }
-                });
+                //});
             }];
         }
     }

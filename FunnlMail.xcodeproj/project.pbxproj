@@ -323,6 +323,11 @@
 		FAAF172519863CDD00E877D4 /* UIImage+WebP.m in Sources */ = {isa = PBXBuildFile; fileRef = FAAF171619863CDD00E877D4 /* UIImage+WebP.m */; };
 		FAAF172619863CDD00E877D4 /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = FAAF171819863CDD00E877D4 /* UIImageView+WebCache.m */; };
 		FAAF172F198777FC00E877D4 /* PrimarySettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAAF172E198777FC00E877D4 /* PrimarySettingViewController.m */; };
+		FAB0759319D5998600FFB87E /* FMFunnlObject.h in Headers */ = {isa = PBXBuildFile; fileRef = FAB0759119D5998600FFB87E /* FMFunnlObject.h */; };
+		FAB0759419D5998600FFB87E /* FMFunnlObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB0759219D5998600FFB87E /* FMFunnlObject.m */; };
+		FAB0759B19D5999000FFB87E /* FMFunnlStoreViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = FAB0759919D5999000FFB87E /* FMFunnlStoreViewController.h */; };
+		FAB0759C19D5999000FFB87E /* FMFunnlStoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB0759A19D5999000FFB87E /* FMFunnlStoreViewController.m */; };
+		FAB0759E19D5999C00FFB87E /* store.csv in Resources */ = {isa = PBXBuildFile; fileRef = FAB0759D19D5999C00FFB87E /* store.csv */; };
 		FABAF0751976507E00AA7918 /* Email 1.png in Resources */ = {isa = PBXBuildFile; fileRef = FABAF0211976507E00AA7918 /* Email 1.png */; };
 		FABAF0761976507E00AA7918 /* Email 2.png in Resources */ = {isa = PBXBuildFile; fileRef = FABAF0221976507E00AA7918 /* Email 2.png */; };
 		FABAF0771976507E00AA7918 /* Email 3.png in Resources */ = {isa = PBXBuildFile; fileRef = FABAF0231976507E00AA7918 /* Email 3.png */; };
@@ -890,6 +895,11 @@
 		FAAF171819863CDD00E877D4 /* UIImageView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+WebCache.m"; sourceTree = "<group>"; };
 		FAAF172D198777FC00E877D4 /* PrimarySettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PrimarySettingViewController.h; path = viewcontrollers/PrimarySettingViewController.h; sourceTree = "<group>"; };
 		FAAF172E198777FC00E877D4 /* PrimarySettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PrimarySettingViewController.m; path = viewcontrollers/PrimarySettingViewController.m; sourceTree = "<group>"; };
+		FAB0759119D5998600FFB87E /* FMFunnlObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMFunnlObject.h; sourceTree = "<group>"; };
+		FAB0759219D5998600FFB87E /* FMFunnlObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMFunnlObject.m; sourceTree = "<group>"; };
+		FAB0759919D5999000FFB87E /* FMFunnlStoreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMFunnlStoreViewController.h; sourceTree = "<group>"; };
+		FAB0759A19D5999000FFB87E /* FMFunnlStoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMFunnlStoreViewController.m; sourceTree = "<group>"; };
+		FAB0759D19D5999C00FFB87E /* store.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = store.csv; sourceTree = "<group>"; };
 		FABAF0211976507E00AA7918 /* Email 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Email 1.png"; sourceTree = "<group>"; };
 		FABAF0221976507E00AA7918 /* Email 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Email 2.png"; sourceTree = "<group>"; };
 		FABAF0231976507E00AA7918 /* Email 3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Email 3.png"; sourceTree = "<group>"; };
@@ -1260,6 +1270,7 @@
 		66F2C47018E3293E00CD593E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				FAB0759D19D5999C00FFB87E /* store.csv */,
 				66F2C47118E3293E00CD593E /* FunnlMail-Info.plist */,
 				66F2C47218E3293E00CD593E /* InfoPlist.strings */,
 				66F2C47718E3293E00CD593E /* FunnlMail-Prefix.pch */,
@@ -1316,6 +1327,8 @@
 				CCC9E41E193DF91D0028DC84 /* MessageModel.m */,
 				FA029C371993BAC50021C6B1 /* ContactModel.h */,
 				FA029C381993BAC50021C6B1 /* ContactModel.m */,
+				FAB0759119D5998600FFB87E /* FMFunnlObject.h */,
+				FAB0759219D5998600FFB87E /* FMFunnlObject.m */,
 			);
 			name = models;
 			sourceTree = "<group>";
@@ -1375,6 +1388,8 @@
 			children = (
 				FA3FC08319D43CBB00BB928E /* SPFirstViewController.h */,
 				FA3FC08419D43CBB00BB928E /* SPFirstViewController.m */,
+				FAB0759919D5999000FFB87E /* FMFunnlStoreViewController.h */,
+				FAB0759A19D5999000FFB87E /* FMFunnlStoreViewController.m */,
 				25F87F4919CC031400237CD7 /* VIPFunnelViewControllers */,
 				259ECEE119B9BA29001D7459 /* FMContactDetailViewController */,
 				FA6C493B19B6EE9500249134 /* FMCreateFunnelViewControllers */,
@@ -2018,10 +2033,12 @@
 			files = (
 				25F87F5219CC031400237CD7 /* VIPFunnelCreationConfirmationController.h in Headers */,
 				FA83970619BF1D0700F9F529 /* FXBlurView.h in Headers */,
+				FAB0759319D5998600FFB87E /* FMFunnlObject.h in Headers */,
 				259ECEE419B9BA40001D7459 /* FMContactDetailViewController.h in Headers */,
 				FA6C493E19B6EE9500249134 /* FMCreateFunnlViewController.h in Headers */,
 				B72C2FB119A196E3000E5D5B /* RNBlurModalView.h in Headers */,
 				B7F3BB0619A597F00049CEE8 /* MTStatusBarOverlay.h in Headers */,
+				FAB0759B19D5999000FFB87E /* FMFunnlStoreViewController.h in Headers */,
 				2528AFAF19D3F7E00020F7AD /* FBShimmering-Prefix.pch in Headers */,
 				FA83970119BEF33B00F9F529 /* TutorialViewController.h in Headers */,
 				FA3FC05019D43C9500BB928E /* MultiplePulsingHaloLayer.h in Headers */,
@@ -2358,6 +2375,7 @@
 				66B1365E19C76F4C001540A6 /* addIcon.png in Resources */,
 				FA3FC07219D43CAF00BB928E /* introTutorial04@2x.png in Resources */,
 				D1EFF4C419818B6F0031A1D1 /* button-provider-bg@2x.png in Resources */,
+				FAB0759E19D5999C00FFB87E /* store.csv in Resources */,
 				FABAF0881976507E00AA7918 /* Edit_Button.png in Resources */,
 				FABAF0761976507E00AA7918 /* Email 2.png in Resources */,
 				FABAF0A51976507E00AA7918 /* splashScreen@2x.png in Resources */,
@@ -2522,6 +2540,7 @@
 				FA83970219BEF33B00F9F529 /* TutorialViewController.m in Sources */,
 				FA9164BE1973D162006A4726 /* ComposeViewController.m in Sources */,
 				D1EFF4AC198184C60031A1D1 /* AFJSONRequestOperation.m in Sources */,
+				FAB0759C19D5999000FFB87E /* FMFunnlStoreViewController.m in Sources */,
 				FA11B2BB1999033A00B4EA86 /* UIPopoverController+iPhone.m in Sources */,
 				FA2C9BD1193EDFCB00866BEE /* MMDrawerBarButtonItem.m in Sources */,
 				D1EFF4AB198184C60031A1D1 /* AFImageRequestOperation.m in Sources */,
@@ -2544,6 +2563,7 @@
 				FA3FC08619D43CBB00BB928E /* SPFirstViewController.m in Sources */,
 				CCC9E41C193DF5E80028DC84 /* FunnelService.m in Sources */,
 				2522AC171998DBEC002B1207 /* WETouchableView.m in Sources */,
+				FAB0759419D5998600FFB87E /* FMFunnlObject.m in Sources */,
 				25F87F5319CC031400237CD7 /* VIPFunnelCreationConfirmationController.m in Sources */,
 				D1EFF4AF198184C60031A1D1 /* AFURLConnectionOperation.m in Sources */,
 				25B5975019D13C8100265978 /* FMMainViewCollectionCell.m in Sources */,

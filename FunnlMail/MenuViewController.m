@@ -20,6 +20,7 @@
 #import "SQLiteDatabase.h"
 #import <Mixpanel/Mixpanel.h>
 #import "TutorialViewController.h"
+#import "FMFunnlStoreViewController.h"
 
 @interface MenuViewController ()
 
@@ -93,11 +94,11 @@
 //    imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"settingListIcon",@"alertListIcon",@"shareListIcon",@"sentListIcon", @"archiveListIcon",@"archiveListIcon", @"trashListIcon",@"emailListIcon",@"helpListIcon", @"helpListLogOutIcon",nil];
     
     if ([[NSUserDefaults standardUserDefaults] objectForKey:@"ALL_NOTIFS_ON_WEBHOOK_ID"]) {
-        listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Create Funnel", @"Turn Off All Notifs", @"Send Feedback",@"Tutorial",@"Help (FAQs)",@"LogOut",nil];
+        listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Create Funnel", @"Funnl Store",@"Turn Off All Notifs", @"Send Feedback",@"Tutorial",@"Help (FAQs)",@"LogOut",nil];
     } else {
-    listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Create Funnel", @"Turn On All Notifs", @"Send Feedback",@"Tutorial",@"Help (FAQs)",@"LogOut",nil];
+    listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Create Funnel", @"Funnl Store", @"Turn On All Notifs", @"Send Feedback",@"Tutorial",@"Help (FAQs)",@"LogOut",nil];
     }
-    imageArray = [[NSMutableArray alloc] initWithObjects:@"",@"funnlIcon",@"", @"sendFeedbackListIcon",@"tutorialListIcon@2x",@"helpListIcon", @"logoutListIcon",nil];
+    imageArray = [[NSMutableArray alloc] initWithObjects:@"",@"funnlIcon",@"funnlIcon",@"", @"sendFeedbackListIcon",@"tutorialListIcon@2x",@"helpListIcon", @"logoutListIcon",nil];
 
 }
 
@@ -266,7 +267,16 @@
     
         //[MBProgressHUD hideAllHUDsForView:appDelegate.window animated:YES];
     }
-    
+    else if ([cell.menuLabel.text isEqualToString:@"Funnl Store"]){
+        FMFunnlStoreViewController *controller = [[FMFunnlStoreViewController alloc]init];
+        controller.view.backgroundColor = [UIColor clearColor];
+        appDelegate.window.backgroundColor = [UIColor whiteColor];
+//        UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:controller];
+//        [appDelegate.window setRootViewController:nav];
+        [appDelegate.drawerController closeDrawerAnimated:YES completion:^(BOOL finished) {
+            [[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationController pushViewController:controller animated:NO];
+        }];
+    }
     else if ([cell.menuLabel.text isEqualToString:@"Trash"]){
         NSLog(@"trash mail requested");
         [MBProgressHUD showHUDAddedTo:appDelegate.window animated:YES];

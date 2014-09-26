@@ -305,7 +305,7 @@ UIView *greyView;
     }
     _shimmeringView.contentView = helpButton;
     _shimmeringView.userInteractionEnabled = YES;
-    
+
     UIImage *nextImage = [UIImage imageNamed:@"nextImage.png"];
     nextImage = [nextImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     disclosureArrow = [[UIImageView alloc] initWithFrame:CGRectMake(WIDTH - 10 - 24, 40 + 30 - 12, 24, 24)];
@@ -340,6 +340,7 @@ UIView *greyView;
     if (!headerViewFlag) {
         returnHeaderView.frame = CGRectMake(0, 0, WIDTH, 60);
         helpButton.frame = CGRectMake(0, 0, WIDTH, 60);
+        _shimmeringView.frame = CGRectMake(0, 0, WIDTH, 60);
         disclosureArrow.frame = CGRectMake(WIDTH - 10 - 24, 30 - 12, 24, 24);
         [mailSearchBar removeFromSuperview];
         
@@ -350,7 +351,8 @@ UIView *greyView;
     }
     else {
         returnHeaderView.frame = CGRectMake(0, 0, WIDTH, 100);
-        helpButton.frame = CGRectMake(0, 40, WIDTH, 60);
+        helpButton.frame = CGRectMake(0, 0, WIDTH, 60);
+        _shimmeringView.frame = CGRectMake(0, 40, WIDTH, 60);
         disclosureArrow.frame = CGRectMake(WIDTH - 10 - 24, 40 + 30 - 12, 24, 24);
         [returnHeaderView addSubview:mailSearchBar];
         

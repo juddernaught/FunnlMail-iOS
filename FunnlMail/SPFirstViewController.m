@@ -21,7 +21,7 @@
     [[self navigationController] setNavigationBarHidden:YES animated:NO];
     pageNumber = 1;
     imageArray = [[NSArray alloc] initWithObjects:@"", nil];
-    imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+    imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, 568)];
     [imageView setImage:[UIImage imageNamed:[self formImageString:pageNumber]]];
     [self.view addSubview:imageView];
     [self performSelector:@selector(addFeatureToSliderWithPageNo:) withObject:[NSNumber numberWithInt:pageNumber] afterDelay:TIME_FOR_ANIMATION];

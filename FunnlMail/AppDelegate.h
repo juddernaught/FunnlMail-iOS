@@ -14,7 +14,7 @@
 #import "Reachability.h"
 #import "CIOAPIClient.h"
 #import "MainVCDelegate.h"
-
+#import "UIView+Toast.h"
 @class MenuViewController;
 @class LoginViewController;
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
@@ -50,4 +50,5 @@
 -(void)hideWelcomeOverlay:(id)sender;
 //public function for loading VIP funnl View (newly added)
 - (void)loadVIPFunnelViewController;
+- (NSString *)getInitials:(NSString *)string;
 @end
