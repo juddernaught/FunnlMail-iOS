@@ -149,7 +149,7 @@
     [self.view addSubview:backGroungView];
     UILabel *sampleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 35, WIDTH - 20, 95 - 30)];
     [sampleLabel setBackgroundColor:[UIColor clearColor]];
-    sampleLabel.text = @"To help you organise better, we have identified some key sender in your indox!";
+    sampleLabel.text = @"We have analyzed your inbox and have found some key people. Tap a few to create a new Funnel!";
     sampleLabel.numberOfLines = 3;
     [sampleLabel setTextColor:[UIColor whiteColor]];
     sampleLabel.lineBreakMode = NSLineBreakByWordWrapping;
