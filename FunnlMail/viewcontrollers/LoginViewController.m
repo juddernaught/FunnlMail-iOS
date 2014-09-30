@@ -410,6 +410,9 @@ UIButton *loginButton;
 
         // Authentication succeeded
         //[self createDemoPageViewController];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"is_tutorial"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
         [self createIntroViewController];
         [self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
         

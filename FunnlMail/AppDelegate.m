@@ -336,7 +336,9 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
 //    NSLog(@"%@",[[EmailService instance] userEmailID]);
-    if ([[EmailService instance] userEmailID] && ![[[EmailService instance] userEmailID] isEqualToString:@""]) {
+    
+    
+    if ([[EmailService instance] userEmailID] && ![[[EmailService instance] userEmailID] isEqualToString:@""] && [[NSUserDefaults standardUserDefaults] boolForKey:@"is_tutorial"] == NO) {
         MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
         [overlay hide];
         [overlay postImmediateMessage:@"Downloading..." animated:YES];
@@ -356,7 +358,7 @@
     isAlreadyRequestedRefreshToken = NO;
 
     NSLog(@"-----applicationDidBecomeActive-----");
-    if(self.loginViewController){
+    if(self.loginViewController && [[NSUserDefaults standardUserDefaults] boolForKey:@"is_tutorial"] == NO){
         NSLog(@"-----Call Refresh Token -----");
         self.isAlreadyRequestedRefreshToken = NO;
         if(!self.didLoginIn)

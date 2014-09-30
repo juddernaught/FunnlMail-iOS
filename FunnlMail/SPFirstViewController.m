@@ -439,7 +439,11 @@
         [self performSelector:@selector(addFeatureToSliderWithPageNo:) withObject:[NSNumber numberWithInt:pageNumber] afterDelay:TIME_FOR_ANIMATION];
     }
     else {
+        
         NSLog(@"Write dismissing pop up");
+
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"is_tutorial"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
         [self loadInitActivity];
         //[self dismissViewControllerAnimated:YES completion:^{ [self loadInitActivity]; }];
     }

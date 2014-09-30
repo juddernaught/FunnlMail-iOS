@@ -73,6 +73,7 @@ static NSString *mailCellIdentifier = @"MailCell";
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [self.navigationController.navigationBar setBackgroundColor:[UIColor whiteColor]];
     [emailThreadTable reloadData];
 }
 

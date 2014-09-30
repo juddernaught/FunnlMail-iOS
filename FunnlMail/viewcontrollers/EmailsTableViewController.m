@@ -121,6 +121,7 @@ UIView *greyView;
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [self.navigationController.navigationBar setBackgroundColor:[UIColor whiteColor]];
     NSLog(@"EmailTableViewController: viewWillAppear");
     headerViewFlag = FALSE;
     self.tableView.tableHeaderView = [self headerView];
