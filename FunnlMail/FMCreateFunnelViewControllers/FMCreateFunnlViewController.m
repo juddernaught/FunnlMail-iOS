@@ -2068,7 +2068,7 @@
 }
 
 - (void)saveButtonPressed:(UIButton*)sender {
-    [self performSelectorInBackground:@selector(showHUD) withObject:nil];
+    //[self performSelectorInBackground:@selector(showHUD) withObject:nil];
     if (senderArray) {
         senderArray = nil;
     }
