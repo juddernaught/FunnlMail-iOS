@@ -30,7 +30,7 @@
 {
     [super viewDidLoad];
     
-    self.title = @"Funnl Store";
+    self.title = @"Funnel Store";
     
     // Do any additional setup after loading the view.
     funnlStorageArray = [[NSMutableArray alloc] init];

@@ -40,4 +40,5 @@
 -(void)refreshAccessToken;
 -(void)callOffline;
 -(void)fetchContacts;
+-(void) setDrawerControllerOnWindow;
 @end

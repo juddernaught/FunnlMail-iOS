@@ -67,15 +67,13 @@ static NSString *currentFolder;
 
 - (void) startLogin : (EmailsTableViewController *) fv
 {
-    if (((AppDelegate*)[[UIApplication sharedApplication] delegate]).hasStartLoginAlreadyOccured == NO) {
-        ((AppDelegate*)[[UIApplication sharedApplication] delegate]).hasStartLoginAlreadyOccured = YES;
-        KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"UserLoginInfo" accessGroup:nil];
-        NSString *username = [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
-        NSString *password = [keychainItem objectForKey:(__bridge id)(kSecAttrService)];
-        NSString *hostname = @"imap.gmail.com";
-        emailsTableViewController = fv;
-        [self loadAccountWithUsername:username password:password hostname:hostname oauth2Token:nil filterview: fv withBackgroundActivity:NO];
-    }
+    ((AppDelegate*)[[UIApplication sharedApplication] delegate]).hasStartLoginAlreadyOccured = YES;
+    KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"UserLoginInfo" accessGroup:nil];
+    NSString *username = [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
+    NSString *password = [keychainItem objectForKey:(__bridge id)(kSecAttrService)];
+    NSString *hostname = @"imap.gmail.com";
+    emailsTableViewController = fv;
+    [self loadAccountWithUsername:username password:password hostname:hostname oauth2Token:nil filterview: fv withBackgroundActivity:NO];
 }
 
 - (void)loadAccountWithUsername:(NSString *)username
@@ -307,6 +305,7 @@ static NSString *currentFolder;
 
 - (void)loadLastNMessages:(NSUInteger)nMessages withTableController:(EmailsTableViewController *)fv withFolder:(NSString*)folderName withFetchRange:(MCORange)newFetchRange
 {
+    
      emailsTableViewController = fv;
     AppDelegate *appDelegate = APPDELEGATE;
 //    if(fv == nil){
@@ -562,17 +561,7 @@ static NSString *currentFolder;
                           tempMessageModel = nil;
                       }
                       [[MessageService instance] insertBulkMessages:messageModelArray];
-                      /*NSMutableString *emailString = [[EmailService instance] retrieveSecondaryAfterStoredTT];
-                      if (emailString) {
-                          if (emailString.length > 2) {
-                              NSString *displayString = [emailString substringWithRange:NSMakeRange(0, emailString.length - 2)];
-                              emailsTableViewController.displayStirng = displayString;
-                              NSString *displayString2 = [NSString stringWithFormat:@"%lu",(unsigned long)[[displayString componentsSeparatedByString:@","] count]];
-                              emailsTableViewController.helpButton.titleLabel.numberOfLines = 2;
-                              [emailsTableViewController.helpButton setTitle:[NSString stringWithFormat:@"Other : %@ new conversation\n%@",displayString2,displayString] forState:UIControlStateNormal];
-                              
-                          }
-                      }*/
+                     
                       [self displayingButtonTitle];
                       
                       NSLog(@"***** insert %lu message to db",(unsigned long)messages.count);

@@ -2735,8 +2735,8 @@
 				BUNDLE_ID_SUFFIX = .debug;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Daniel Judd (PL7ET6U94G)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Daniel Judd (PL7ET6U94G)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: iauro Technologies (A8VTZ5JNZU)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -2774,7 +2774,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "69e28a4d-1186-4fab-8041-73ac81f00e8b";
+				PROVISIONING_PROFILE = "14d879d8-543c-405a-8404-2d55b8918ede";
 				SDKROOT = iphoneos7.1;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;

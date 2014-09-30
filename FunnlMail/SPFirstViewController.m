@@ -10,6 +10,7 @@
 #import "AppDelegate.h"
 #import "MessageService.h"
 #import <Mixpanel/Mixpanel.h>
+#import "FMFunnlStoreViewController.h"
 
 @implementation SPFirstViewController
 
@@ -17,7 +18,15 @@
     
 }
 
-- (void)viewDidLoad {
+-(id)init{
+    self = [super init];
+    if(self){
+    }
+    return self;
+}    
+
+-(void)setupView{
+    self.view.frame = [[UIScreen mainScreen] bounds];
     [[self navigationController] setNavigationBarHidden:YES animated:NO];
     pageNumber = 1;
     imageArray = [[NSArray alloc] initWithObjects:@"", nil];
@@ -30,11 +39,16 @@
     [nextButton addTarget:self action:@selector(nextButtonPresed:) forControlEvents:UIControlEventTouchUpInside];
     textImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 190/2, WIDTH, 70)];
     [self.view addSubview:textImage];
-    
+}
+
+- (void)viewDidLoad {
+    [self setupView];
+
     //    PulsingHaloLayer *layer = [PulsingHaloLayer layer];
     //    halo = layer;
     //    halo.position = nextButton.center;
     //    [self.view.layer insertSublayer:halo below:nextButton.layer];
+    
 }
 
 - (NSString *)formImageString:(int)pageNo {
@@ -450,25 +464,34 @@
     }
     else {
         NSLog(@"Write dismissing pop up");
-        AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-        [appDelegate.window setRootViewController:appDelegate.drawerController];
-#ifdef TRACK_MIXPANEL
-        [[Mixpanel sharedInstance] track:@"Viewed last slider"];
-#endif
-        if(appDelegate.didLoginIn) {
-            //                                         [appDelegate showWelcomeOverlay];
-            if ([[[MessageService instance] retrieveAllMessages] count] > 0) {
-                [appDelegate.letsGo setHidden:NO];
-                [appDelegate.activityIndicator stopAnimating];
-                [appDelegate.activityIndicator hidesWhenStopped];
-            }
-        }
-        
-        [self dismissViewControllerAnimated:YES
-                                 completion:^{
-                                     
-                                 }];
+        [self loadInitActivity];
+        //[self dismissViewControllerAnimated:YES completion:^{ [self loadInitActivity]; }];
     }
+}
+
+-(void)loadInitActivity{
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    //FMFunnlStoreViewController *controller = [[FMFunnlStoreViewController alloc]init];
+    //controller.view.backgroundColor = [UIColor clearColor];
+    //UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:controller];
+    //dispatch_async(dispatch_get_main_queue(), ^ {
+        [self.view setHidden:YES];
+       [appDelegate.window setRootViewController:appDelegate.drawerController];
+       [appDelegate.window makeKeyAndVisible];
+    //});
+    
+
+#ifdef TRACK_MIXPANEL
+    [[Mixpanel sharedInstance] track:@"Viewed last slider"];
+#endif
+    //        if(appDelegate.didLoginIn) {
+    //            //                                         [appDelegate showWelcomeOverlay];
+    //            if ([[[MessageService instance] retrieveAllMessages] count] > 0) {
+    //                [appDelegate.letsGo setHidden:NO];
+    //                [appDelegate.activityIndicator stopAnimating];
+    //                [appDelegate.activityIndicator hidesWhenStopped];
+    //            }
+    //        }
 }
 
 - (void)trackProgress:(UISlider *)statusBar {

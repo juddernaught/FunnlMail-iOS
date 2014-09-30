@@ -72,7 +72,7 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
 //    int width = 280;
     NSString *messageStr = nil;
     if (isNewCreatePopup) {
-        messageStr = @"Create new Funnl Rule?";
+        messageStr = @"Create new Funnel Rule?";
     }
     else
     {

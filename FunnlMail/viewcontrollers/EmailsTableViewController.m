@@ -78,6 +78,7 @@ UIView *greyView;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    NSLog(@"ViewDidLoad EmailsViewController");
     tempCellForDisplay = nil;
     currentIndexPath = nil;
     tempAppDelegate = APPDELEGATE;
@@ -120,6 +121,7 @@ UIView *greyView;
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    NSLog(@"EmailTableViewController: viewWillAppear");
     headerViewFlag = FALSE;
     self.tableView.tableHeaderView = [self headerView];
     NSLog(@"how often does this happen");
@@ -799,7 +801,7 @@ UIView *greyView;
                 else
                     cell.textLabel.text = nil;
                 
-                if ([EmailService instance].totalNumberOfMessages > 0)
+                /*if ([EmailService instance].totalNumberOfMessages > 0)
                     cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld message(s)",(long)[EmailService instance].totalNumberOfMessages];
                 cell.accessoryView = self.loadMoreActivityView;
                 
@@ -809,7 +811,7 @@ UIView *greyView;
                 {
                     [tempAppDelegate.progressHUD show:NO];
                     [self.loadMoreActivityView stopAnimating];
-                }                
+                }        */
                 return cell;
                 break;
             }
@@ -1024,7 +1026,7 @@ UIView *greyView;
                         cell.textLabel.text = nil;
 
                 }
-                
+                /*
                 //                if ([EmailService instance].totalNumberOfInboxMessages > 0)
                 //                    cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld message(s)",(long)[EmailService instance].totalNumberOfInboxMessages];
                 cell.accessoryView = self.loadMoreActivityView;
@@ -1035,7 +1037,7 @@ UIView *greyView;
                 {
                     [tempAppDelegate.progressHUD show:NO];
                     [self.loadMoreActivityView stopAnimating];
-                }
+                }*/
                 
                 return cell;
                 break;

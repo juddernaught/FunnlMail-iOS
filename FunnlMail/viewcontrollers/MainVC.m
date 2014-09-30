@@ -61,6 +61,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     if([app.currentFunnelString.lowercaseString isEqualToString:[ALL_FUNNL lowercaseString]])
     {
 //         [self setTitle:ALL_FUNNL];
+        NSLog(@"viewWillAppear ALL_FUNNL");
     }
     else
     {

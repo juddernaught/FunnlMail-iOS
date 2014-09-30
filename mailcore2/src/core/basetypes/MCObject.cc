@@ -70,7 +70,7 @@ void Object::release()
     }
     pthread_mutex_unlock(&mLock);
     
-    if (shouldRelease && !zombieEnabled) {
+    if (shouldRelease      && !zombieEnabled) {
         //int status;
         //char * unmangled = abi::__cxa_demangle(typeid(* this).name(), NULL, NULL, &status);
         //MCLog("dealloc %p %s", this, unmangled);

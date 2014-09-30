@@ -102,6 +102,7 @@
 
 #define IMAGE_NAME @"introTutorial"
 #define IMAGE_TEXT @"introTutorialText"
+
 #define TIME_FOR_FADE_IN 0.4
 #define TIME_FOR_ANIMATION 1
 #define SLIDER_VALUE 0.2

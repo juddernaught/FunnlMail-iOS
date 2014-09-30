@@ -68,7 +68,7 @@
 -(void)setupView{
     
     UILabel *funnelLabel = [[UILabel alloc] initWithFrame:CGRectMake(8, 70, 320-50, 30)];
-    funnelLabel.text = [NSString stringWithFormat:@"Share Funnl '%@' With",funnelModel.filterTitle];
+    funnelLabel.text = [NSString stringWithFormat:@"Share Funnel '%@' With",funnelModel.filterTitle];
     funnelLabel.numberOfLines = 1;
     [funnelLabel setTextAlignment:NSTextAlignmentLeft];
     [funnelLabel setFont:[UIFont boldSystemFontOfSize:20]];
@@ -119,7 +119,7 @@
     _messageView.backgroundColor= CLEAR_COLOR;
     _messageView.textColor= LIGHT_GRAY_COLOR;
 	[_messageView setFont:[UIFont systemFontOfSize:13]];
-	[_messageView setText:@"\n\n\n\n\n\n\nShairing Funnls helps your team members and friends get organized with just one click. None of your personal emails and info is shared."];
+	[_messageView setText:@"\n\n\n\n\n\n\nShairing Funnels helps your team members and friends get organized with just one click. None of your personal emails and info is shared."];
 	[toFieldView.contentView addSubview:_messageView];
 
     UIButton *sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -185,7 +185,7 @@
 -(void)shareFunnlClicked:(id)sender{
     
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"Shared a Funnl (pressed send button successfully after entering email)"];
+    [[Mixpanel sharedInstance] track:@"Shared a Funnel (pressed send button successfully after entering email)"];
 #endif
     
     [toFieldView.tokenField resignFirstResponder];
@@ -216,11 +216,11 @@
     //     NSLog(@"%@",jsonString);
     NSString *base64EncodedString = [[jsonString dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0];
 
-    NSString *subjectString = [NSString stringWithFormat:@"Stay on top of %@ emails with FunnlMail.",funnelModel.filterTitle];
+    NSString *subjectString = [NSString stringWithFormat:@"Stay on top of %@ emails with FunnelMail.",funnelModel.filterTitle];
     [[builder header] setSubject:subjectString];
     
     //    NSString *funnlLinkStr = [NSString stringWithFormat:@"<a href=funnl://name=%@&from=%@&subject=%@> Get Funnl </a>",fm.filterTitle,[fm.sendersArray componentsJoinedByString:@","],[fm.subjectsArray componentsJoinedByString:@","]];
-    NSString *funnlLinkStr = [NSString stringWithFormat:@"<a href=funnl://%@> View & import Funnl   </a>",base64EncodedString];
+    NSString *funnlLinkStr = [NSString stringWithFormat:@"<a href=funnl://%@> View & import Funnel   </a>",base64EncodedString];
     NSString *htmlString = [[NSString alloc] initWithFormat:
                             @"<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\
                             <html>\
@@ -236,15 +236,15 @@
                             </head>\
                             <body>\
                             <p class=\"p1\"><span class=\"s1\">\
-                            <a href=\"http://bit.do/funnlmailsite\">FunnlMail</a>\
+                            <a href=\"http://bit.do/funnlmailsite\">FunnelMail</a>\
                             for iOS helps me stay on top of important emails on-the-go!<br/><br/>\
-                            I am sharing my custom Funnl for %@ with you - with just one tap below, you can get my filter settings and custom alerts for %@, so that you dont miss these important emails among the clutter in your inbox.<br/><br/>\
+                            I am sharing my custom Funnel for %@ with you - with just one tap below, you can get my filter settings and custom alerts for %@, so that you dont miss these important emails among the clutter in your inbox.<br/><br/>\
                             You can also edit/ delete these settings anytime later if you dont need them anymore.<br/><br/>\
                             %@<br/>\
-                            (works only within FunnlMail iOS app)\
+                            (works only within FunnelMail iOS app)\
                             <br/><br/>\
-                            Or, if you don't have FunnlMail, \
-                            <a href=\"http://bit.do/funnlmailsite\">Download the FunnlMail iOS app</a>\
+                            Or, if you don't have FunnelMail, \
+                            <a href=\"http://bit.do/funnlmailsite\">Download the FunnelMail iOS app</a>\
                             <br/>\
                             (Limited Alpha Release)\
                             </span></p>\

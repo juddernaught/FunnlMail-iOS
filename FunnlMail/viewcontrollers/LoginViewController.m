@@ -151,9 +151,7 @@ UIButton *loginButton;
 
 -(void) createIntroViewController{
     SPFirstViewController *sController = [[SPFirstViewController alloc] init];
-    [self.navigationController presentViewController:sController animated:YES completion:^{
-        
-    }];
+    [self.navigationController presentViewController:sController animated:YES completion:^{    }];
 }
 
 -(void) createDemoPageViewController
@@ -328,7 +326,7 @@ UIButton *loginButton;
 
         
         [NSObject cancelPreviousPerformRequestsWithTarget:[EmailService instance]];
-        [[MessageService instance] clearAllTables];
+//        [[MessageService instance] clearAllTables];
         
         AppDelegate *appDelegate = APPDELEGATE;
         [appDelegate.contextIOAPIClient clearCredentials];

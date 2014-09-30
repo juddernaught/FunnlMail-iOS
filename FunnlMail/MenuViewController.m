@@ -94,9 +94,9 @@
 //    imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"settingListIcon",@"alertListIcon",@"shareListIcon",@"sentListIcon", @"archiveListIcon",@"archiveListIcon", @"trashListIcon",@"emailListIcon",@"helpListIcon", @"helpListLogOutIcon",nil];
     
     if ([[NSUserDefaults standardUserDefaults] objectForKey:@"ALL_NOTIFS_ON_WEBHOOK_ID"]) {
-        listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Create Funnel", @"Funnl Store",@"Turn Off All Notifs", @"Send Feedback",@"Tutorial",@"Help (FAQs)",@"LogOut",nil];
+        listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Create Funnel", @"Funnel Store",@"Turn Off All Notifs", @"Send Feedback",@"Tutorial",@"Help (FAQs)",@"LogOut",nil];
     } else {
-    listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Create Funnel", @"Funnl Store", @"Turn On All Notifs", @"Send Feedback",@"Tutorial",@"Help (FAQs)",@"LogOut",nil];
+    listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Create Funnel", @"Funnel Store", @"Turn On All Notifs", @"Send Feedback",@"Tutorial",@"Help (FAQs)",@"LogOut",nil];
     }
     imageArray = [[NSMutableArray alloc] initWithObjects:@"",@"funnlIcon",@"funnlIcon",@"", @"sendFeedbackListIcon",@"tutorialListIcon@2x",@"helpListIcon", @"logoutListIcon",nil];
 
@@ -267,12 +267,10 @@
     
         //[MBProgressHUD hideAllHUDsForView:appDelegate.window animated:YES];
     }
-    else if ([cell.menuLabel.text isEqualToString:@"Funnl Store"]){
+    else if ([cell.menuLabel.text isEqualToString:@"Funnel Store"]){
         FMFunnlStoreViewController *controller = [[FMFunnlStoreViewController alloc]init];
         controller.view.backgroundColor = [UIColor clearColor];
         appDelegate.window.backgroundColor = [UIColor whiteColor];
-//        UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:controller];
-//        [appDelegate.window setRootViewController:nav];
         [appDelegate.drawerController closeDrawerAnimated:YES completion:^(BOOL finished) {
             [[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationController pushViewController:controller animated:NO];
         }];
@@ -300,6 +298,9 @@
 //        [[EmailServersService instance] deleteEmailServer:[EmailService instance].userEmailID];
         [NSObject cancelPreviousPerformRequestsWithTarget:[EmailService instance]];
         [[MessageService instance] clearAllTables];
+        [[EmailService instance].imapCheckOp cancel];
+        [[EmailService instance].imapMessagesFetchOp cancel];
+        [[EmailService instance].imapSession cancelAllOperations];
 
         [appDelegate.contextIOAPIClient clearCredentials];
         [SQLiteDatabase sharedInstance];
