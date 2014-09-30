@@ -72,12 +72,14 @@ NSArray *answers;
 //    view.backgroundColor = [;
     
     // Text Color
-    UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
-    [header.textLabel setTextColor:[UIColor blackColor]];
+    if([view isKindOfClass:[UITableViewHeaderFooterView class]]) {
+        UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
+        [header.textLabel setTextColor:[UIColor blackColor]];
+        // Another way to set the background color
+        // Note: does not preserve gradient effect of original header
+        header.contentView.backgroundColor = [UIColor colorWithHexString:@"FDF5E6"];
+    }
     
-    // Another way to set the background color
-    // Note: does not preserve gradient effect of original header
-    header.contentView.backgroundColor = [UIColor colorWithHexString:@"FDF5E6"];
 }
 
 - (UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {

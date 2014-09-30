@@ -9,7 +9,7 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.iauro.FunnlMail${BUNDLE_ID_SUFFIX}</string>
+	<string>com.Funnl.FunnlMail${BUNDLE_ID_SUFFIX}</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -30,7 +30,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>6.5</string>
+	<string>6.6</string>
 	<key>FacebookAppID</key>
 	<string>537794509657915</string>
 	<key>FunnlDisplayName</key>
