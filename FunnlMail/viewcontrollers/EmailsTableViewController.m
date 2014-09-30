@@ -624,7 +624,7 @@ UIView *greyView;
                 }
                 else{
                     // loads email body and stores in database
-                    if(FETCH_MSG_BODY_AT_MSG_LOADING){
+                    /*if(FETCH_MSG_BODY_AT_MSG_LOADING){
                         MCOIMAPMessageRenderingOperation * op = [[EmailService instance].imapSession htmlBodyRenderingOperationWithMessage:message folder:@"INBOX"];
                     
                         [op start:^(NSString * htmlString, NSError * error) {
@@ -645,7 +645,7 @@ UIView *greyView;
                                 [[MessageService instance] updateMessageWithHTMLContent:paramDict];
                             }
                         }];
-                    }
+                    }*/
 
                     cell.messageRenderingOperation = [[EmailService instance].imapSession plainTextBodyRenderingOperationWithMessage:message folder:self.emailFolder];
                     [cell.messageRenderingOperation start:^(NSString * plainTextBodyString, NSError * error) {

@@ -236,7 +236,7 @@
                             </head>\
                             <body>\
                             <p class=\"p1\"><span class=\"s1\">\
-                            <a href=\"http://bit.do/funnlmailsite\">FunnelMail</a>\
+                            <a href=\"http://www.funnelmailapp.com\">FunnelMail</a>\
                             for iOS helps me stay on top of important emails on-the-go!<br/><br/>\
                             I am sharing my custom Funnel for %@ with you - with just one tap below, you can get my filter settings and custom alerts for %@, so that you dont miss these important emails among the clutter in your inbox.<br/><br/>\
                             You can also edit/ delete these settings anytime later if you dont need them anymore.<br/><br/>\
@@ -244,7 +244,7 @@
                             (works only within FunnelMail iOS app)\
                             <br/><br/>\
                             Or, if you don't have FunnelMail, \
-                            <a href=\"http://bit.do/funnlmailsite\">Download the FunnelMail iOS app</a>\
+                            <a href=\"http://www.funnelmailapp.com\">Download the FunnelMail iOS app</a>\
                             <br/>\
                             (Limited Alpha Release)\
                             </span></p>\

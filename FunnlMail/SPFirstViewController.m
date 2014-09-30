@@ -181,6 +181,8 @@
             [UIView commitAnimations];
             break;
         case 5:
+            halo.animationDuration = 0.7;
+            [halo setBackgroundColor:[[UIColor colorWithHexString:@"757CFD"] CGColor]];
             if (nextButton) {
                 nextButton = nil;
             }
@@ -260,7 +262,6 @@
             [nextButton addTarget:self action:@selector(nextButtonPresed:) forControlEvents:UIControlEventTouchUpInside];
             nextButton.tag = 7;
             nextButton.backgroundColor = [UIColor clearColor];
-            //            [self.view bringSubviewToFront:nextButton];
             nextButton.alpha = 0;
             
             if (textImage) {
@@ -272,45 +273,18 @@
             [textImage setContentMode:UIViewContentModeTop];
             textImage.alpha = 0;
             
-            /*slider = [[UISlider alloc] initWithFrame:CGRectMake(130/2, 570/2 + 1, 500/2 - 130/2, 20)];
-             slider.tag = 7;
-             [slider setThumbImage:[[UIImage alloc] init] forState:UIControlStateNormal];
-             [slider addTarget:self action:@selector(trackProgress:) forControlEvents:UIControlEventValueChanged];
-             slider.value = 1;
-             [slider setMinimumTrackImage:[UIImage new] forState:UIControlStateNormal];
-             [slider setMaximumTrackImage:[UIImage new] forState:UIControlStateNormal];
-             slider.alpha = 0;*/
-            
-            
-            /*UIView *leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 210, 60)];
-             [leftView setBackgroundColor:[UIColor blueColor]];
-             [sampleScrollView addSubview:leftView];
-             leftView = nil;
-             
-             leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 210, 60)];
-             [leftView setBackgroundColor:[UIColor blueColor]];
-             [sampleScrollView addSubview:leftView];
-             leftView = nil;*/
-            
             sampleScrollView.contentSize = CGSizeMake(420, 60);
             sampleScrollView.bounces = NO;
             [sampleScrollView setShowsHorizontalScrollIndicator:NO];
             
-            
-            
-            
             [self.view addSubview:textImage];
-            [self.view addSubview:nextButton];
-            //            [self.view addSubview:slider];
+//            [self.view addSubview:nextButton];
             [UIView beginAnimations:nil context:nil];
             [UIView setAnimationDuration:TIME_FOR_FADE_IN];
             nextButton.alpha = 1;
             textImage.alpha = 1;
-            //            slider.alpha = 1;
             [UIView commitAnimations];
-            [self.view bringSubviewToFront:nextButton];
-            //            [self.view sendSubviewToBack:sampleScrollView];
-            
+//            [self.view bringSubviewToFront:nextButton];
             break;
         }
         case 8:
@@ -361,6 +335,8 @@
             [textImage setContentMode:UIViewContentModeTop];
             textImage.alpha = 0;
             
+            nextButton.frame = CGRectMake(160 - 25, 190/2, 50, 50);
+            
             [self.view addSubview:nextButton];
             [self.view addSubview:textImage];
             [UIView beginAnimations:nil context:nil];
@@ -383,7 +359,7 @@
             if (textImage) {
                 textImage = nil;
             }
-            
+            nextButton.frame = CGRectMake(160 - 25, 190/2, 50, 50);
             [self.view addSubview:nextButton];
             [UIView beginAnimations:nil context:nil];
             [UIView setAnimationDuration:TIME_FOR_FADE_IN];
@@ -471,32 +447,15 @@
 
 -(void)loadInitActivity{
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    //FMFunnlStoreViewController *controller = [[FMFunnlStoreViewController alloc]init];
-    //controller.view.backgroundColor = [UIColor clearColor];
-    //UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:controller];
-    //dispatch_async(dispatch_get_main_queue(), ^ {
-        [self.view setHidden:YES];
-       [appDelegate.window setRootViewController:appDelegate.drawerController];
-       [appDelegate.window makeKeyAndVisible];
-    //});
-    
-
+    [self.view setHidden:YES];
+    [appDelegate.window setRootViewController:appDelegate.drawerController];
+    [appDelegate.window makeKeyAndVisible];
 #ifdef TRACK_MIXPANEL
     [[Mixpanel sharedInstance] track:@"Viewed last slider"];
 #endif
-    //        if(appDelegate.didLoginIn) {
-    //            //                                         [appDelegate showWelcomeOverlay];
-    //            if ([[[MessageService instance] retrieveAllMessages] count] > 0) {
-    //                [appDelegate.letsGo setHidden:NO];
-    //                [appDelegate.activityIndicator stopAnimating];
-    //                [appDelegate.activityIndicator hidesWhenStopped];
-    //            }
-    //        }
 }
 
 - (void)trackProgress:(UISlider *)statusBar {
-    //    185
-    
     if (statusBar.value < SLIDER_VALUE) {
         statusBar.value = 0;
         UIButton *sender = [[UIButton alloc] init];
@@ -517,13 +476,7 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    NSLog(@"%f",scrollView.contentOffset.x);
-    //    if (scrollView.contentOffset.x > 105) {
-    //        scrollView.contentOffset = CGPointMake(210, 0);
-    //    }
-    //    else {
-    //        scrollView.contentOffset = CGPointMake(210, 0);
-    //    }
+
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
