@@ -103,7 +103,7 @@
     int y1 = 66 + 15;
     
     UIImageView *sampleImage = [[UIImageView alloc] initWithFrame:CGRectMake((WIDTH - 270/2)/2, y1, 270/2, 200/2)];
-    [sampleImage setImage:[UIImage imageNamed:@"funnl.png"]];
+    [sampleImage setImage:[UIImage imageNamed:@"VIPConfirmBox.png"]];
     [sampleImage setBackgroundColor:[UIColor clearColor]];
     [self.view addSubview:sampleImage];
     sampleImage = nil;
