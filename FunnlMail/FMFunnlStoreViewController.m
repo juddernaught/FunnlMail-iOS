@@ -142,15 +142,17 @@
 }
 
 - (void)parseString {
-    NSArray *csvComponent = [fileContentString componentsSeparatedByString:@"\n"];
+    NSArray *csvComponent = [fileContentString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
     for (NSString *tuple in csvComponent) {
-        NSArray *column = [tuple componentsSeparatedByString:@","];
-        FMFunnlObject *tempObject = [[FMFunnlObject alloc] init];
-        [tempObject setFunnelName:column[0]];
-        [tempObject setSenderString:column[1]];
-        [tempObject setSubjectString:column[2]];
-        [tempObject setCategoryName:column[3]];
-        [funnlStorageArray addObject:tempObject];
+        if (![tuple isEqualToString:@""]) {
+            NSArray *column = [tuple componentsSeparatedByString:@","];
+            FMFunnlObject *tempObject = [[FMFunnlObject alloc] init];
+            [tempObject setFunnelName:column[0]];
+            [tempObject setSenderString:column[1]];
+            [tempObject setSubjectString:column[2]];
+            [tempObject setCategoryName:column[3]];
+            [funnlStorageArray addObject:tempObject];
+        }
     }
 }
 
