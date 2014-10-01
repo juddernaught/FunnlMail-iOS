@@ -263,6 +263,8 @@
             nextButton.tag = 7;
             nextButton.backgroundColor = [UIColor clearColor];
             nextButton.alpha = 0;
+            nextButton.hidden = YES;
+
             
             if (textImage) {
                 textImage = nil;
@@ -281,7 +283,7 @@
 //            [self.view addSubview:nextButton];
             [UIView beginAnimations:nil context:nil];
             [UIView setAnimationDuration:TIME_FOR_FADE_IN];
-            nextButton.alpha = 1;
+            //nextButton.alpha = 1;
             textImage.alpha = 1;
             [UIView commitAnimations];
 //            [self.view bringSubviewToFront:nextButton];
@@ -347,7 +349,7 @@
             break;
         case 10:
             if (nextButton) {
-                nextButton = nil;
+                nextButton = nil;   
             }
             nextButton = [[UIButton alloc] initWithFrame:CGRectMake(WIDTH - 50, HEIGHT/2 - 25, 50, 50)];
             [nextButton addTarget:self action:@selector(nextButtonPresed:) forControlEvents:UIControlEventTouchUpInside];
@@ -415,7 +417,7 @@
         default:
             break;
     }
-    if (pageNo.integerValue >= 1 && pageNo.integerValue < 11) {
+    if ((pageNo.integerValue >= 1 && pageNo.integerValue < 11) && pageNo.integerValue != 7) {
         halo.hidden = NO;
         halo.position = nextButton.center;
     }
