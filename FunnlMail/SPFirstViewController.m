@@ -14,8 +14,18 @@
 
 @implementation SPFirstViewController
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"outter_tutorial"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
-    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"outter_tutorial"]) {
+        [self.navigationController setNavigationBarHidden:NO animated:YES];
+    }
+    else {
+        [self.navigationController setNavigationBarHidden:YES animated:YES];
+    }
 }
 
 -(id)init{
@@ -370,27 +380,32 @@
             [UIView commitAnimations];
             break;
         case 11:
-            if (nextButton) {
-                nextButton = nil;
+            if ([[NSUserDefaults standardUserDefaults] boolForKey:@"outter_tutorial"]) {
+                
             }
-            nextButton = [[UIButton alloc] initWithFrame:CGRectMake((WIDTH - 180)/2, HEIGHT - 50, 180, 35)];
-            [nextButton setImage:[UIImage imageNamed:@"IntroTakeMeToInbox.png"] forState:UIControlStateNormal];
-            [nextButton addTarget:self action:@selector(nextButtonPresed:) forControlEvents:UIControlEventTouchUpInside];
-            nextButton.tag = 11;
-            nextButton.backgroundColor = [UIColor clearColor];
-            [self.view bringSubviewToFront:nextButton];
-            nextButton.alpha = 0;
-            
-            if (textImage) {
-                textImage = nil;
+            else {
+                if (nextButton) {
+                    nextButton = nil;
+                }
+                nextButton = [[UIButton alloc] initWithFrame:CGRectMake((WIDTH - 180)/2, HEIGHT - 50, 180, 35)];
+                [nextButton setImage:[UIImage imageNamed:@"IntroTakeMeToInbox.png"] forState:UIControlStateNormal];
+                [nextButton addTarget:self action:@selector(nextButtonPresed:) forControlEvents:UIControlEventTouchUpInside];
+                nextButton.tag = 11;
+                nextButton.backgroundColor = [UIColor clearColor];
+                [self.view bringSubviewToFront:nextButton];
+                nextButton.alpha = 0;
+                
+                if (textImage) {
+                    textImage = nil;
+                }
+                
+                [self.view addSubview:nextButton];
+                [UIView beginAnimations:nil context:nil];
+                [UIView setAnimationDuration:TIME_FOR_FADE_IN];
+                nextButton.alpha = 1;
+                textImage.alpha = 1;
+                [UIView commitAnimations];
             }
-            
-            [self.view addSubview:nextButton];
-            [UIView beginAnimations:nil context:nil];
-            [UIView setAnimationDuration:TIME_FOR_FADE_IN];
-            nextButton.alpha = 1;
-            textImage.alpha = 1;
-            [UIView commitAnimations];
             break;
         case 12:
             if (nextButton) {

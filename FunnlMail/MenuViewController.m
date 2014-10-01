@@ -21,6 +21,7 @@
 #import <Mixpanel/Mixpanel.h>
 #import "TutorialViewController.h"
 #import "FMFunnlStoreViewController.h"
+#import "SPFirstViewController.h"
 
 @interface MenuViewController ()
 
@@ -216,8 +217,13 @@
         [[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationController pushViewController:alerts animated:NO];
     }
     else if([cell.menuLabel.text isEqualToString:@"Tutorial"]){
-        TutorialViewController *tutorialVC = [[TutorialViewController alloc]init];
-        [[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationController pushViewController:tutorialVC animated:NO];
+        SPFirstViewController *viewController = [[SPFirstViewController alloc] init];
+        [[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationController pushViewController:viewController animated:NO];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"outter_tutorial"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+//        TutorialViewController *tutorialVC = [[TutorialViewController alloc]init];
+//        [[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationController pushViewController:tutorialVC animated:NO];
+        
     }
     
     else if ([cell.menuLabel.text isEqualToString:@"Sent Mail"]) {
