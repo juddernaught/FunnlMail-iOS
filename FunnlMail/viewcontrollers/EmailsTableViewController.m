@@ -102,8 +102,10 @@ UIView *greyView;
     _shimmeringView.frame = CGRectMake(0, 0, WIDTH, 60);
     _shimmeringView.shimmering = YES;
     _shimmeringView.shimmeringBeginFadeDuration = 0.5;
-    _shimmeringView.shimmeringOpacity = 0.9;
-    _shimmeringView.shimmeringSpeed = 300;
+    _shimmeringView.shimmeringOpacity = 1;
+    _shimmeringView.shimmeringHighlightLength = 0.7;
+    _shimmeringView.shimmeringAnimationOpacity = 0.3;
+    _shimmeringView.shimmeringSpeed = 400;
     
     BOOL isFirstTime = [[NSUserDefaults standardUserDefaults ]boolForKey:@"isFirstTime"];
     if( helpButton && isFirstTime == NO){
@@ -302,7 +304,7 @@ UIView *greyView;
     if (!helpButton) {
         [helpButton removeFromSuperview];
         helpButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 40, WIDTH, 60)];
-        [helpButton.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:18]];
+        [helpButton.titleLabel setFont:HELP_BUTTON_TITLE_FONT];
         [helpButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
         helpButton.contentEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 34);
     }
@@ -1541,7 +1543,7 @@ UIView *greyView;
             disclosureArrow.hidden = NO;
             
             [helpButton setTitle:HELP_COMMENT forState:UIControlStateNormal];
-            [helpButton setTitleColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE] forState:UIControlStateNormal];
+            [helpButton setTitleColor:[UIColor colorWithHexString:HELP_BUTTON_BLUE] forState:UIControlStateNormal];
             if(isSearching == NO){
                 if ([[[EmailService instance] filterMessages] count]) {
                     EmailCell *tempCell = (EmailCell*)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];

@@ -217,9 +217,10 @@ static NSString *currentFolder;
     
     //         __weak EmailService *weakSelf = self;
     NSLog(@"--- start Sync - INBOX fetch operation for mail download");
-    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [syncMessagesFetchOperation start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
-         {
+//    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    [syncMessagesFetchOperation start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
+     {
+         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
              NSInteger count = 0;
              for (MCOIMAPMessage *m in messages) {
                  MessageModel *tempMessageModel = [[MessageModel alloc] init];
@@ -228,7 +229,7 @@ static NSString *currentFolder;
                  tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
                  tempMessageModel.messageJSON = [m serializable];
                  tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
-                 BOOL success = [[MessageService instance] updateMessageMetaInfo:tempMessageModel];
+//                 BOOL success = [[MessageService instance] updateMessageMetaInfo:tempMessageModel];
                  if(messages.count == count){
                      [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%llu",m.modSeqValue] forKey:@"MODSEQ"];
                      [[NSUserDefaults standardUserDefaults] synchronize];
@@ -240,8 +241,9 @@ static NSString *currentFolder;
                  NSLog(@"INBOX --- deleted messages: %@", vanishedMessages);
                  [self refreshMessages];
              }
-         }];
-    });
+         });
+     }];
+//    });
     
     
     MCOIMAPFetchMessagesOperation *trashSyncMessagesFetchOperation =  [[EmailService instance].imapSession syncMessagesByUIDWithFolder:TRASH requestKind:requestKind uids:mcoIndexSet modSeq:modSeqValue];
@@ -251,13 +253,12 @@ static NSString *currentFolder;
     
     //         __weak EmailService *weakSelf = self;
     NSLog(@"--- start Sync - DELETE fetch operation for mail download");
-    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [trashSyncMessagesFetchOperation start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
-         {
+//    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    [trashSyncMessagesFetchOperation start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
+     {
+         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
              NSInteger count = 0;
              for (MCOIMAPMessage *m in messages) {
-                 NSString *gmailMessageID = [NSString stringWithFormat:@"%llu",m.gmailMessageID];
-                 BOOL success = [[MessageService instance] deleteMessageWithGmailMessageID:gmailMessageID];
                  if(messages.count == count){
                      [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%llu",m.modSeqValue] forKey:@"MODSEQ"];
                      [[NSUserDefaults standardUserDefaults] synchronize];
@@ -269,8 +270,8 @@ static NSString *currentFolder;
                  NSLog(@"TRASH ----- deleted messages: %@", vanishedMessages);
                  [self refreshMessages];
              }
-         }];
-    });
+         });
+     }];
 }
 
 -(void)refreshMessages{
@@ -660,11 +661,11 @@ static NSString *currentFolder;
                       [tempAppDelegate.progressHUD setHidden:YES];
                       [tempAppDelegate.progressHUD show:NO];
                       [fv.tablecontroller.refreshControl endRefreshing];
-                      dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-                          if (tempArray.count < kNUMBER_OF_MESSAGES_TO_DOWNLOAD_IN_BACKGROUND) {
-                              
-                          }
-                      });
+//                      dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+//                          if (tempArray.count < kNUMBER_OF_MESSAGES_TO_DOWNLOAD_IN_BACKGROUND) {
+//                              
+//                          }
+//                      });
                       
                       dispatch_async(dispatch_get_main_queue(), ^(void){
                           isfetchingOperationActive = NO;
@@ -701,10 +702,10 @@ static NSString *currentFolder;
             NSString *titleString = [NSString stringWithFormat:@"   %d new emails in Secondary",numberOfMails];
             NSString *subTitleString = [NSString stringWithFormat:@"    %@",displayString];
             NSMutableAttributedString *attString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n%@",titleString,subTitleString]];
-            [attString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithHexString:DONE_BUTTON_BLUE] range:NSMakeRange(0, titleString.length)];
-            [attString addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-Light" size:18] range:NSMakeRange(0, titleString.length)];
+            [attString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithHexString:HELP_BUTTON_BLUE] range:NSMakeRange(0, titleString.length)];
+            [attString addAttribute:NSFontAttributeName value:HELP_BUTTON_TITLE_FONT range:NSMakeRange(0, titleString.length)];
             [attString addAttribute:NSForegroundColorAttributeName value:[UIColor lightGrayColor] range:NSMakeRange(titleString.length + 1, subTitleString.length)];
-            [attString addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-Light" size:14] range:NSMakeRange(titleString.length + 1, subTitleString.length)];
+            [attString addAttribute:NSFontAttributeName value:HELP_BUTTON_SUB_TITLE range:NSMakeRange(titleString.length + 1, subTitleString.length)];
 
             dispatch_async(dispatch_get_main_queue(), ^{
                 [emailsTableViewController.helpButton setAttributedTitle:attString forState:UIControlStateNormal];

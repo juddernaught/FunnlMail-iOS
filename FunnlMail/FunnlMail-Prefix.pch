@@ -80,6 +80,11 @@
 #define BUTTON_BORDER_COLOR_SELECTED @"00BC34"
 #define DONE_BUTTON_BLUE_COLOR @"3878DE"
 #define DONE_BUTTON_BLUE @"0086DC"
+//#define HELP_BUTTON_BLUE @"0086FF"
+#define HELP_BUTTON_BLUE @"007AFF"
+
+#define HELP_BUTTON_TITLE_FONT [UIFont fontWithName:@"HelveticaNeue" size:18]
+#define HELP_BUTTON_SUB_TITLE [UIFont fontWithName:@"HelveticaNeue-Light" size:14]
 
 #define ALPHA_FOR_TOST 0.7
 #define COLOR_OF_WHITE 0.0

@@ -25,6 +25,7 @@
 @synthesize oldModel;
 @synthesize mainVCdelegate;
 @synthesize shareFunnl;
+@synthesize isFunnelStore;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -61,10 +62,16 @@
 {
     [super viewDidLoad];
     
+    if (shareFunnl || isFunnelStore) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Press save or edit the Funnel rules" message:@"" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alertView show];
+        alertView = nil;
+    }
+    
     if (isEditFunnel) {
         isFunnlNameTextFieldEditing = FALSE;
     }
-    else {
+    else if (!isFunnelStore){
         isFunnlNameTextFieldEditing = TRUE;
     }
     
@@ -110,7 +117,7 @@
     if (isEditFunnel) {
 
     }
-    else {
+    else if(!isFunnelStore){
         [funnelNameTextField becomeFirstResponder];
     }
 }

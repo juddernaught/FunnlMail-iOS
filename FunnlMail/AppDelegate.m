@@ -337,6 +337,7 @@
 {
 //    NSLog(@"%@",[[EmailService instance] userEmailID]);
     
+    application.applicationIconBadgeNumber = 0;
     
     if ([[EmailService instance] userEmailID] && ![[[EmailService instance] userEmailID] isEqualToString:@""] && [[NSUserDefaults standardUserDefaults] boolForKey:@"is_tutorial"] == NO) {
         MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
