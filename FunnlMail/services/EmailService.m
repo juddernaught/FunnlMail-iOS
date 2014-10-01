@@ -690,6 +690,10 @@ static NSString *currentFolder;
     NSMutableString *emailString = [[EmailService instance] retrieveSecondaryAfterStoredTT];
     if (emailString && ![[[NSUserDefaults standardUserDefaults] objectForKey:@"latest_tt_secondary"] isEqualToString:@"0"] && numberOfMails >= SECONDARY_COUNT_FOR_DISPLAY) {
         if (emailString.length > 2) {
+            [emailsTableViewController.helpButton removeTarget:nil
+                                                        action:NULL
+                                              forControlEvents:UIControlEventAllEvents];
+            [emailsTableViewController.helpButton addTarget:self action:@selector(secondaryClickedFromHelpText) forControlEvents:UIControlEventTouchUpInside];
             NSString *displayString = [emailString substringWithRange:NSMakeRange(0, emailString.length - 2)];
             emailsTableViewController.displayStirng = displayString;
             emailsTableViewController.helpButton.titleLabel.numberOfLines = 2;
@@ -716,6 +720,20 @@ static NSString *currentFolder;
             subTitleString = nil;
         }
     }
+}
+
+- (void) secondaryClickedFromHelpText {
+    emailsTableViewController.disclosureArrow.hidden = NO;
+    [emailsTableViewController.helpButton setTitle:HELP_COMMENT forState:UIControlStateNormal];
+    [emailsTableViewController.helpButton setTitleColor:[UIColor colorWithHexString:DONE_BUTTON_BLUE] forState:UIControlStateNormal];
+    emailsTableViewController.helpFlag = FALSE;
+    [emailsTableViewController.helpButton removeTarget:nil
+                                                action:NULL
+                                      forControlEvents:UIControlEventAllEvents];
+    [emailsTableViewController.helpButton addTarget:emailsTableViewController action:@selector(helpButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    AppDelegate *tempApp = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [[(MainVC *)tempApp.mainVCControllerInstance segmentControl] setSelectedSegmentIndex:1];
+    [(MainVC *)tempApp.mainVCControllerInstance segmentControllerClicked:[(MainVC *)tempApp.mainVCControllerInstance segmentControl]];
 }
 
 - (NSMutableString *)retrieveSecondaryAfterStoredTT {
