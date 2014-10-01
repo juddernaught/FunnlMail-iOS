@@ -591,6 +591,7 @@ typedef void (^DownloadCallback)(NSError * error);
         FMCreateFunnlViewController *viewcontroller = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:(NSMutableArray *)sendersDictionary.allValues name:fm.funnelName andSubjects:(NSMutableArray *)subjectsDictionary.allValues];
         viewcontroller.isEditFunnel = NO;
         viewcontroller.shareFunnl = YES;
+        viewcontroller.isFunnelStore = YES;
         viewcontroller.oldModel = fm;
         viewcontroller.mainVCdelegate = nil;
         [self.navigationController pushViewController:viewcontroller animated:YES];

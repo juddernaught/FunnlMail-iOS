@@ -110,6 +110,7 @@
     FMCreateFunnlViewController *viewController = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:senderArray name:nil andSubjects:subjectArray];
     viewController.isEditFunnel = FALSE;
     viewController.shareFunnl = true;
+    viewController.isFunnelStore = YES;
     viewController.oldModel = funnlModel;
     viewController.mainVCdelegate = appDeleage.mainVCdelegate;
     [appDeleage.mainVCdelegate pushViewController:viewController];

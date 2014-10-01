@@ -105,7 +105,15 @@ NSString *msgBody;
     editButton.tintColor = [UIColor whiteColor];
     sampleImage = nil;
     self.imapSession = [EmailService instance].imapSession;
-    filterArray = [[FunnelService instance] getFunnelsExceptAllFunnel];
+    filterArray = [[FunnelService instance] allFunnels];
+    NSMutableArray *tempArray = [[NSMutableArray alloc] initWithArray:filterArray];
+    if (filterArray.count >= 2) {
+        [tempArray removeObjectAtIndex:0];
+        [tempArray removeObjectAtIndex:0];
+    }
+    filterArray = nil;
+    filterArray = (NSArray *)tempArray;
+    tempArray = nil;
     [self.collectionView reloadData];
 }
 
