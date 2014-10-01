@@ -184,12 +184,15 @@
     [EmailService setNewFilterModel:model];
     [tempAppDelegate.mainVCdelegate filterSelected:model];
     model = nil;
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 
     if (![[NSUserDefaults standardUserDefaults] boolForKey:@"IS_VIP_CREATED"]) {
         [[NSUserDefaults standardUserDefaults] setBool:TRUE forKey:@"IS_VIP_CREATED"];
     }
     VIPFunnelCreationConfirmationController *viewController = [[VIPFunnelCreationConfirmationController alloc] initWithContacts:contactMutableArray];
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    [tempAppDelegate.progressHUD setHidden:YES];
+    [tempAppDelegate.progressHUD removeFromSuperview];
+    [MBProgressHUD hideHUDForView:tempAppDelegate.window animated:YES];
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
@@ -799,7 +802,6 @@
 
 - (void)saveButtonPressed:(UIButton*)sender {
     
-    [self performSelectorInBackground:@selector(showHUD) withObject:nil];
     if (senderArray) {
         senderArray = nil;
     }
@@ -851,7 +853,7 @@
             return;
         }
         if((contactMutableArray.count > 1 || (![[(ContactModel *)[contactMutableArray objectAtIndex:0] name] isEqualToString:ADD_FUNNL] && contactMutableArray.count == 1)) || subjectArray.count){
-            //            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            [self performSelectorInBackground:@selector(showHUD) withObject:nil];
             if (!enableNotification) {
                 [self saveFunnlWithWebhookId:nil];
             } else {
@@ -872,9 +874,9 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnel" message:@"Please add name for Funnel" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert show];
     }
-    [appDelegate.progressHUD setHidden:YES];
+    /*[appDelegate.progressHUD setHidden:YES];
     [appDelegate.progressHUD removeFromSuperview];
-    [MBProgressHUD hideHUDForView:appDelegate.window animated:YES];
+    [MBProgressHUD hideHUDForView:appDelegate.window animated:YES];*/
 }
 
 - (void)didReceiveMemoryWarning
