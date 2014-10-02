@@ -18,5 +18,6 @@
     PulsingHaloLayer *halo;
     int pageNumber;
     UISlider *slider;
+    UIButton *skipToPrimaryButton;
 }
 @end

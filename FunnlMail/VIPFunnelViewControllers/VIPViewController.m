@@ -75,10 +75,9 @@
 }
 
 - (void)retrieveContact {
-    //new logic
     [[NSUserDefaults standardUserDefaults] synchronize];
     NSString *VIPContactString = [[NSUserDefaults standardUserDefaults] objectForKey:@"contact_string"];
-    if (0) {
+    if (VIPContactString) {
         NSData *data = [VIPContactString dataUsingEncoding:NSUTF8StringEncoding];
         id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
         NSArray *temp = [json objectForKey:@"results"];
@@ -111,74 +110,70 @@
             }
         }
         else {
-            //old logic
-            NSArray *contactArray = [[ContactService instance] retrieveAllContact];
-            if (contactMutableArray) {
-                [contactMutableArray removeAllObjects];
-            }
+            [self retrieveVIPContactLocally];
+        }
+    }
+    else {
+        [self retrieveVIPContactLocally];
+    }
+}
+
+- (void)retrieveVIPContactLocally {
+    if (contactMutableArray) {
+        [contactMutableArray removeAllObjects];
+        contactMutableArray = nil;
+    }
+    contactMutableArray = [[NSMutableArray alloc] init];
+    NSMutableArray *temp = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
+    if (temp.count) {
+        NSArray *contactArray = [[ContactService instance] retrieveAllContact];
+        for (int counter = 0; contactMutableArray.count < 9 && counter < temp.count; counter++) {
+            MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)temp[counter] messageJSON]];
+            BOOL flagForDuplicates = FALSE;
             for (ContactModel *tempContact in contactArray) {
-                if (tempContact.name && tempContact.email && ![tempContact.name isEqualToString:@""]) {
+                //checking for login user
+                if ([tempContact.email isEqualToString:message.header.sender.mailbox] && ![message.header.sender.mailbox isEqualToString:[[EmailService instance] userEmailID]]) {
                     if (!contactMutableArray) {
                         contactMutableArray = [[NSMutableArray alloc] init];
                     }
-                    [contactMutableArray addObject:tempContact];
+                    if (![self checkForDuplicate:tempContact]) {
+                        [contactMutableArray addObject:tempContact];
+                        flagForDuplicates = TRUE;
+                    }
                 }
+                else if ([message.header.sender.mailbox isEqualToString:[[EmailService instance] userEmailID]]) {
+                    flagForDuplicates = TRUE;
+                    NSLog(@"Email of logged in user.");
+                }
+            }
+            if (!flagForDuplicates) {
+                ContactModel *tempModel = [[ContactModel alloc] init];
+                tempModel.email = message.header.sender.mailbox;
+                tempModel.name = message.header.sender.displayName;
+                tempModel.thumbnail = @"";
+                if (![self checkForDuplicate:tempModel]) {
+                    [contactMutableArray addObject:tempModel];
+                }
+                tempModel = nil;
             }
         }
     }
     else {
-    //changed logic
-        NSMutableArray *temp = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
-        if (temp.count) {
-            NSArray *contactArray = [[ContactService instance] retrieveAllContact];
-            for (int counter = 0; contactMutableArray.count < 9 && counter < temp.count; counter++) {
-                MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)temp[counter] messageJSON]];
-                BOOL flagForDuplicates = FALSE;
-                for (ContactModel *tempContact in contactArray) {
-                    //checking for login user
-                    if ([tempContact.email isEqualToString:message.header.sender.mailbox] && ![message.header.sender.mailbox isEqualToString:[[EmailService instance] userEmailID]]) {
-                        if (!contactMutableArray) {
-                            contactMutableArray = [[NSMutableArray alloc] init];
-                        }
-                        if (![self checkForDuplicate:tempContact]) {
-                            [contactMutableArray addObject:tempContact];
-                            flagForDuplicates = TRUE;
-                        }
-                    }
-                    else if ([message.header.sender.mailbox isEqualToString:[[EmailService instance] userEmailID]]) {
-                        flagForDuplicates = TRUE;
-                        NSLog(@"Email of logged in user.");
-                    }
-                }
-                if (!flagForDuplicates) {
-                    ContactModel *tempModel = [[ContactModel alloc] init];
-                    tempModel.email = message.header.sender.mailbox;
-                    tempModel.name = message.header.sender.displayName;
-                    tempModel.thumbnail = @"";
-                    if (![self checkForDuplicate:tempModel]) {
-                        [contactMutableArray addObject:tempModel];
-                    }
-                    tempModel = nil;
-                }
-            }
-        }
-        else {
         //old logic
-            NSArray *contactArray = [[ContactService instance] retrieveAllContact];
-            if (contactMutableArray) {
-                [contactMutableArray removeAllObjects];
-            }
-            for (ContactModel *tempContact in contactArray) {
-                if (tempContact.name && tempContact.email && ![tempContact.name isEqualToString:@""]) {
-                    if (!contactMutableArray) {
-                        contactMutableArray = [[NSMutableArray alloc] init];
-                    }
-                    [contactMutableArray addObject:tempContact];
-                }
-             }
+        NSArray *contactArray = [[ContactService instance] retrieveAllContact];
+        if (contactMutableArray) {
+            [contactMutableArray removeAllObjects];
         }
-        temp = nil;
+        for (ContactModel *tempContact in contactArray) {
+            if (tempContact.name && tempContact.email && ![tempContact.name isEqualToString:@""]) {
+                if (!contactMutableArray) {
+                    contactMutableArray = [[NSMutableArray alloc] init];
+                }
+                [contactMutableArray addObject:tempContact];
+            }
+        }
     }
+    temp = nil;
 }
 
 - (BOOL)checkForDuplicate:(ContactModel *)contact {

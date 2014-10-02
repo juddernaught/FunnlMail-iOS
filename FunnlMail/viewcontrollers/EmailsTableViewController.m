@@ -101,14 +101,16 @@ UIView *greyView;
     _shimmeringView = [[FBShimmeringView alloc] init];
     _shimmeringView.frame = CGRectMake(0, 0, WIDTH, 60);
     _shimmeringView.shimmering = YES;
-    _shimmeringView.shimmeringBeginFadeDuration = 0.5;
+    _shimmeringView.shimmeringBeginFadeDuration = 0.8;
     _shimmeringView.shimmeringOpacity = 1;
     _shimmeringView.shimmeringHighlightLength = 0.7;
-    _shimmeringView.shimmeringAnimationOpacity = 0.3;
+    _shimmeringView.shimmeringAnimationOpacity = 0.0;
     _shimmeringView.shimmeringSpeed = 400;
     
-    BOOL isFirstTime = [[NSUserDefaults standardUserDefaults ]boolForKey:@"isFirstTime"];
-    if( helpButton && isFirstTime == NO){
+    //BOOL isFirstTime = [[NSUserDefaults standardUserDefaults ]boolForKey:@"isFirstTime"];
+    
+    //if( helpButton && isFirstTime == NO){
+    if( helpButton && 1){
         _shimmeringView.shimmering = YES;
         NSLog(@"IF");
     }
@@ -598,7 +600,7 @@ UIView *greyView;
                     cell.subjectLabel.text = @"No Subject";
                 else {
                     NSString *subjectString = cell.subjectLabel.text;
-                    NSLog(@"%@",subjectString);
+                    //NSLog(@"%@",subjectString);
                     if ([self willFitString:cell.subjectLabel.text InLabel:cell.subjectLabel]) {
                         CGSize labelSize = [cell.subjectLabel.text sizeWithFont:MAIL_SUBJECT_FONT constrainedToSize:CGSizeMake(cell.subjectLabel.frame.size.width, cell.subjectLabel.frame.size.height) lineBreakMode:NSLineBreakByCharWrapping];
                         cell.threadLabel.frame = CGRectMake(13 + labelSize.width, 33 + 1.5, cell.threadLabel.frame.size.width, cell.threadLabel.frame.size.height);
@@ -644,7 +646,7 @@ UIView *greyView;
                             NSMutableDictionary *paramDict = [[NSMutableDictionary alloc] init];
                             if(htmlString){
                                 paramDict[uidKey] = htmlString;
-                                NSLog(@"----ListView: HTML data callback recieved -----");
+                                //NSLog(@"----ListView: HTML data callback recieved -----");
                                 [[MessageService instance] updateMessageWithHTMLContent:paramDict];
                             }
                         }];
@@ -1520,6 +1522,7 @@ UIView *greyView;
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isFirstTime"];
     [helpButton.layer removeAllAnimations];
     [_shimmeringView setShimmering:NO];
+    //if (0) {
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"show_vip"]) {
         if (!helpFlag) {
             disclosureArrow.hidden = YES;
