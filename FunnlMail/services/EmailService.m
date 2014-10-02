@@ -964,9 +964,9 @@ static NSString *currentFolder;
                  [tempAppDelegate.progressHUD show:NO];
                  [tempAppDelegate.progressHUD setHidden:YES];
                  [fv.tablecontroller.refreshControl endRefreshing];
-                 /*dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-                    [self syncMessages];
-                 });*/
+                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+                    [self performSelector:@selector(syncMessages) withObject:nil afterDelay:10];
+                 });
              }
          }
        
