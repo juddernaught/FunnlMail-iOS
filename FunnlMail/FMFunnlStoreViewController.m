@@ -44,6 +44,11 @@
     [self readFileContent];
     [self parseString];
     [self processAccordingToCategory];
+    flagArray = [[NSMutableArray alloc] init];
+    for (int counter = 0; counter < funnlStorageAccordingToSection.count; counter++) {
+        [flagArray setObject:@"1" atIndexedSubscript:counter];
+    }
+    
     [funnlStoreTableView reloadData];
 }
 
@@ -52,18 +57,29 @@
     return funnlStorageAccordingToSection.count;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSMutableArray *tempArray = [funnlStorageAccordingToSection objectAtIndex:section];
-    return tempArray.count;
+    if ([[flagArray objectAtIndex:section] isEqualToString:@"1"]) {
+        NSMutableArray *tempArray = [funnlStorageAccordingToSection objectAtIndex:section];
+        return tempArray.count;
+    }
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"cell"];
     }
     FMFunnlObject *tempObject = [[funnlStorageAccordingToSection objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     [cell.textLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:18]];
+    [cell.detailTextLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:14]];
+    [cell.detailTextLabel setTextColor:[UIColor grayColor]];
     cell.textLabel.text = tempObject.funnelName;
+    if (tempObject.funnelPreview) {
+        cell.detailTextLabel.text = tempObject.funnelPreview;
+    }
+    else {
+        cell.detailTextLabel.text = @"No preview preasent";
+    }
     return cell;
 }
 
@@ -125,16 +141,39 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView *returnView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, STORE_FUNNL_TABLE_VIEW_SECTION_HEIGHT)];
-    [returnView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.1]];
+    [returnView setBackgroundColor:[UIColor colorWithHexString:@"E5E5E5"]];
+    
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 310, STORE_FUNNL_TABLE_VIEW_SECTION_HEIGHT)];
     [titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:18]];
     titleLabel.text = [(FMFunnlObject *)[[funnlStorageAccordingToSection objectAtIndex:section] objectAtIndex:0] categoryName];
     [returnView addSubview:titleLabel];
     titleLabel = nil;
+    
+    UIButton *sampleButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, WIDTH, STORE_FUNNL_TABLE_VIEW_SECTION_HEIGHT)];
+    sampleButton.tag = section;
+    [sampleButton addTarget:self action:@selector(headerClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [returnView addSubview:sampleButton];
+    sampleButton = nil;
+    
+    UIView *sampleView = [[UIView alloc] initWithFrame:CGRectMake(0, STORE_FUNNL_TABLE_VIEW_SECTION_HEIGHT - 1, WIDTH, 1)];
+    [sampleButton setBackgroundColor:[UIColor whiteColor]];
+    [returnView addSubview:sampleView];
+    sampleView = nil;
+    
     return returnView;
 }
 
 #pragma mark HELPER
+- (void)headerClicked:(UIButton *)sender {
+    if ([[flagArray objectAtIndex:sender.tag] isEqualToString:@"1"]) {
+        [flagArray setObject:@"0" atIndexedSubscript:sender.tag];
+    }
+    else {
+        [flagArray setObject:@"1" atIndexedSubscript:sender.tag];
+    }
+    [funnlStoreTableView reloadData];
+}
+
 - (void) readFileContent {
     NSString *sampleString = [[NSBundle mainBundle] pathForResource:CSV_FILE_NAME ofType:@"csv"];
     NSError *error = nil;
@@ -148,10 +187,21 @@
         if (![tuple isEqualToString:@""]) {
             NSArray *column = [tuple componentsSeparatedByString:@","];
             FMFunnlObject *tempObject = [[FMFunnlObject alloc] init];
-            [tempObject setFunnelName:column[0]];
-            [tempObject setSenderString:column[1]];
-            [tempObject setSubjectString:column[2]];
-            [tempObject setCategoryName:column[3]];
+            if (column.count > 0 && column[0]) {
+                [tempObject setFunnelName:column[0]];
+            }
+            if (column.count > 1 && column[1]) {
+                [tempObject setSenderString:column[1]];
+            }
+            if (column.count > 2 && column[2]) {
+                [tempObject setSubjectString:column[2]];
+            }
+            if (column.count > 3 && column[3]) {
+                [tempObject setCategoryName:column[3]];
+            }
+            if (column.count > 4 && column[4]) {
+                [tempObject setFunnelPreview:column[4]];
+            }
             [funnlStorageArray addObject:tempObject];
         }
     }

@@ -16,4 +16,5 @@
 @property(nonatomic, strong) NSString *senderString;
 @property(nonatomic, strong) NSString *subjectString;
 @property(nonatomic, strong) NSString *categoryName;
+@property(nonatomic, strong) NSString *funnelPreview;
 @end

@@ -403,8 +403,14 @@ UIButton *loginButton;
             [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
             [request setHTTPBody:postData];
             [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                
+                if(connectionError){
+                    NSLog(@"******** ------ VIP ERROR ******* : %@",connectionError.description);
+
+                    return;
+                }
                 NSString *respString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-                NSLog(@"------ VIP response: %@",respString);
+                NSLog(@" ******* ------ VIP response: %@",respString);
                 
                 //storing contact string onto persistance storage.
                 [[NSUserDefaults standardUserDefaults] setObject:respString forKey:@"contact_string"];
@@ -636,7 +642,7 @@ UIButton *loginButton;
 //            NSString* newStr = [[NSString alloc] initWithData:retrievedData encoding:NSUTF8StringEncoding];
 //            NSLog(@"user Info: %@",newStr);
             NSDictionary* json = [NSJSONSerialization JSONObjectWithData:retrievedData options:kNilOptions error:&error];
-            dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+            dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 NSDictionary *feedDict = [json objectForKey:@"feed"];
                 NSDictionary *contacts = [feedDict objectForKey:@"entry"];
                 for (NSDictionary *contactDict in contacts) {
@@ -731,7 +737,7 @@ UIButton *loginButton;
 
                 //[self getContextIOWithEmail:currentEmail withFirstName:currentName withLastName:currentName];
                 //[self getContextIOWithEmail:currentEmail withName:currentName];
-                dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+                dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                     [self performSelector:@selector(getContextIOWithEmail:withName:) withObject:currentEmail withObject:currentName];
                 });
             }
@@ -753,13 +759,13 @@ UIButton *loginButton;
             }
             NSLog(@"what is currntNam: %@",[EmailService instance].currentName);
             
-            dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+            //dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 NSArray *array = [[ContactService instance] getAllContacts];
                 if(array.count == 0){
                         [self performSelector:@selector(getUserContact) withObject:nil afterDelay:0.1];
 
                 }
-            });
+            //});
             //[self performSelectorInBackground:@selector(getUserContact) withObject:nil];
 
             [[NSUserDefaults standardUserDefaults] synchronize];

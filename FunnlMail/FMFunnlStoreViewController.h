@@ -15,5 +15,6 @@
     NSMutableArray *funnlStorageArray;
     NSMutableArray *funnlStorageAccordingToSection;
     UITableView *funnlStoreTableView;
+    NSMutableArray *flagArray;
 }
 @end

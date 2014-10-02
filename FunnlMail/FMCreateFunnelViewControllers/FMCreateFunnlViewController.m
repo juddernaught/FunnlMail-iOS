@@ -2133,6 +2133,37 @@
             }
             return;
         }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            AppDelegate *tempAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            UIView *tostView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 50)];
+            [tostView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.6]];
+            tostView.clipsToBounds = YES;
+            tostView.layer.cornerRadius = 7;
+            
+            UILabel *tostLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 280, 45)];
+            tostLabel.numberOfLines = 2;
+            tostLabel.lineBreakMode = NSLineBreakByWordWrapping;
+            tostLabel.backgroundColor = [UIColor clearColor];
+            tostLabel.textColor = [UIColor whiteColor];
+            [tostLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:14]];
+            tostLabel.center = tostView.center;
+            tostLabel.text = [NSString stringWithFormat:@"Funnel \"%@\" is being created.",funnelNameTextField.text];
+            tostLabel.textAlignment = NSTextAlignmentCenter;
+            [tostView addSubview:tostLabel];
+            [tempAppDelegate.window showToast:tostView duration:TOST_DISPLAY_DURATION position:@"bottom"];
+            
+            NSMutableArray *tempArray;
+            if(tempAppDelegate.currentFunnelDS == nil){
+                tempArray = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
+                [EmailService instance].filterMessages = tempArray;
+                [[EmailService instance].emailsTableViewController.tableView reloadData];
+            }
+            else{
+                [tempAppDelegate.mainVCdelegate filterSelected:tempAppDelegate.currentFunnelDS];
+            }
+            
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        });
         [self.navigationController popViewControllerAnimated:YES];
         if(contactMutableArray.count && ((contactMutableArray.count > 0 || (![[(ContactModel *)[contactMutableArray objectAtIndex:0] name] isEqualToString:ADD_FUNNL] && contactMutableArray.count == 1)) || subjectArray.count)){
 //            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -2315,7 +2346,7 @@
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            AppDelegate *tempAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            /*AppDelegate *tempAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
             UIView *tostView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 50)];
             [tostView setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.6]];
             tostView.clipsToBounds = YES;
@@ -2331,7 +2362,7 @@
             tostLabel.text = [NSString stringWithFormat:@"Funnel named \"%@\" has been created.",model.funnelName];
             tostLabel.textAlignment = NSTextAlignmentCenter;
             [tostView addSubview:tostLabel];
-            [tempAppDelegate.window showToast:tostView duration:TOST_DISPLAY_DURATION position:@"bottom"];
+            [tempAppDelegate.window showToast:tostView duration:TOST_DISPLAY_DURATION position:@"bottom"];*/
             
             NSMutableArray *tempArray;
             if(tempAppDelegate.currentFunnelDS == nil){

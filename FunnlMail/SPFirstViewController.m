@@ -20,12 +20,12 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"outter_tutorial"]) {
+    /*if ([[NSUserDefaults standardUserDefaults] boolForKey:@"outter_tutorial"]) {
         [self.navigationController setNavigationBarHidden:NO animated:YES];
     }
     else {
         [self.navigationController setNavigationBarHidden:YES animated:YES];
-    }
+    }*/
 }
 
 -(id)init{
@@ -49,6 +49,12 @@
     [nextButton addTarget:self action:@selector(nextButtonPresed:) forControlEvents:UIControlEventTouchUpInside];
     textImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 190/2, WIDTH, 70)];
     [self.view addSubview:textImage];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"outter_tutorial"]) {
+        skipToPrimaryButton = [[UIButton alloc] initWithFrame:CGRectMake((WIDTH - 180)/2, HEIGHT - 50, 180, 35)];
+        [skipToPrimaryButton setImage:[UIImage imageNamed:@"IntroTakeMeToInbox.png"] forState:UIControlStateNormal];
+        [skipToPrimaryButton addTarget:self action:@selector(skipTOPrimaryPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:skipToPrimaryButton];
+    }
 }
 
 - (void)viewDidLoad {
@@ -99,6 +105,15 @@
             [self.view bringSubviewToFront:textImage];
             [textImage setContentMode:UIViewContentModeTop];
             textImage.alpha = 0;
+            
+//            [UIView animateWithDuration:TIME_FOR_FADE_IN
+//                             animations:^{
+//                                 nextButton.alpha = 1;
+//                                 textImage.alpha = 1;
+//                             }
+//                             completion:^(BOOL finished){
+//                                 NSLog(@"completion block");
+//                             }];
             
             [UIView beginAnimations:nil context:nil];
             [UIView setAnimationDuration:TIME_FOR_FADE_IN];
@@ -441,6 +456,10 @@
     }
 }
 
+- (void)skipTOPrimaryPressed:(UIButton *)sender {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 - (void)nextButtonPresed:(UIButton *)sender {
     int tag = (int)sender.tag;
     if (tag < 11) {
@@ -452,7 +471,12 @@
         nextButton.hidden = YES;
         pageNumber = tag + 1;
         [imageView setImage:[UIImage imageNamed:[self formImageString:pageNumber]]];
+        [imageView removeFromSuperview];
         [self.view addSubview:imageView];
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"outter_tutorial"]) {
+            [skipToPrimaryButton removeFromSuperview];
+            [self.view addSubview:skipToPrimaryButton];
+        }
         [self performSelector:@selector(addFeatureToSliderWithPageNo:) withObject:[NSNumber numberWithInt:pageNumber] afterDelay:TIME_FOR_ANIMATION];
     }
     else {
