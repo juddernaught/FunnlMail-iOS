@@ -78,7 +78,7 @@
         cell.detailTextLabel.text = tempObject.funnelPreview;
     }
     else {
-        cell.detailTextLabel.text = @"No preview preasent";
+        cell.detailTextLabel.text = @"No preview available";
     }
     return cell;
 }

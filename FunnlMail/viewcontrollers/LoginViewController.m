@@ -539,21 +539,26 @@ UIButton *loginButton;
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate.contextIOAPIClient getWebhooksWithParams:nil success:^(NSArray *responseArray) {
         __block int reqCnt = (int)[responseArray count];
-        for (NSDictionary *dictionary in responseArray) {
-            NSString *webhookID = [dictionary objectForKey:@"webhook_id"];
-            if(webhookID && webhookID.length){
-                [appDelegate.contextIOAPIClient deleteWebhookWithID:webhookID success:^(NSDictionary *responseDict) {
-                    reqCnt--;
-                    if(reqCnt == 0){
-                        [self performSelector:@selector(createFirstTimeNotifs) withObject:nil afterDelay:0.01];
-                    }
-                } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                    reqCnt--;
-                    if(reqCnt == 0){
-                        [self performSelector:@selector(createFirstTimeNotifs) withObject:nil afterDelay:0.01];
-                    }
-                }];
+        if ([responseArray count] != 0) {
+            for (NSDictionary *dictionary in responseArray) {
+                NSString *webhookID = [dictionary objectForKey:@"webhook_id"];
+                if(webhookID && webhookID.length){
+                    [appDelegate.contextIOAPIClient deleteWebhookWithID:webhookID success:^(NSDictionary *responseDict) {
+                        reqCnt--;
+                        if(reqCnt == 0){
+                            [self performSelector:@selector(createFirstTimeNotifs) withObject:nil afterDelay:0.01];
+                        }
+                    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                        reqCnt--;
+                        if(reqCnt == 0){
+                            [self performSelector:@selector(createFirstTimeNotifs) withObject:nil afterDelay:0.01];
+                        }
+                    }];
+                }
             }
+        }
+        else {
+            [self performSelector:@selector(createFirstTimeNotifs) withObject:nil afterDelay:0.01];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [self performSelector:@selector(createFirstTimeNotifs) withObject:nil afterDelay:0.01];
