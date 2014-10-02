@@ -322,51 +322,53 @@ UIButton *loginButton;
 #ifdef TRACK_MIXPANEL
         [[Mixpanel sharedInstance] track:@"Signed into email"]; // Signed into Gmail
 #endif
-
-
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"is_tutorial"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
         
-        [NSObject cancelPreviousPerformRequestsWithTarget:[EmailService instance]];
+        [self createIntroViewController];
+
+            [NSObject cancelPreviousPerformRequestsWithTarget:[EmailService instance]];
 //        [[MessageService instance] clearAllTables];
         
-        AppDelegate *appDelegate = APPDELEGATE;
-        [appDelegate.contextIOAPIClient clearCredentials];
-        [SQLiteDatabase sharedInstance];
-        [[NSUserDefaults standardUserDefaults] setObject:[NSMutableArray new] forKey: ALL_FUNNL];
-        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"PRIMARY_PAGE_TOKEN"];
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"IS_NEW_INSTALL"];
-        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"MODSEQ"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        [[EmailService instance] clearData];
-        [EmailService instance].userEmailID = @"";
-        
-        NSString * email = [auth userEmail];
-        NSString * accessToken = [auth accessToken];
-        NSString * refreshToken = [auth refreshToken];
-        
-        
-        self.emailServerModel = [[EmailServerModel alloc] init];
-        self.emailServerModel.emailAddress = email;
-        self.emailServerModel.accessToken = accessToken;
-        self.emailServerModel.refreshToken = refreshToken;
-        
+            AppDelegate *appDelegate = APPDELEGATE;
+            [appDelegate.contextIOAPIClient clearCredentials];
+            [SQLiteDatabase sharedInstance];
+            [[NSUserDefaults standardUserDefaults] setObject:[NSMutableArray new] forKey: ALL_FUNNL];
+            [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"PRIMARY_PAGE_TOKEN"];
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"IS_NEW_INSTALL"];
+            [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"MODSEQ"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            [[EmailService instance] clearData];
+            [EmailService instance].userEmailID = @"";
+            
+            NSString * email = [auth userEmail];
+            NSString * accessToken = [auth accessToken];
+            NSString * refreshToken = [auth refreshToken];
+            
+            
+            self.emailServerModel = [[EmailServerModel alloc] init];
+            self.emailServerModel.emailAddress = email;
+            self.emailServerModel.accessToken = accessToken;
+            self.emailServerModel.refreshToken = refreshToken;
+            
 
-        [[EmailServersService instance] insertEmailServer:self.emailServerModel];
-        MCOIMAPSession * imapSession = [[MCOIMAPSession alloc] init];
-        imapSession.timeout = 60;
-        [EmailService instance].imapSession = imapSession;
-        [imapSession setAuthType:MCOAuthTypeXOAuth2];
-        [imapSession setOAuth2Token:accessToken];
-        [imapSession setUsername:email];
-        
-        MCOSMTPSession * smtpSession = [[MCOSMTPSession alloc] init];
-        [smtpSession setAuthType:MCOAuthTypeXOAuth2];
-        [smtpSession setOAuth2Token:accessToken];
-        [smtpSession setUsername:email];
-        smtpSession.hostname = @"smtp.gmail.com";
-        smtpSession.port = 465;
-        smtpSession.authType = MCOAuthTypeXOAuth2;
-        smtpSession.connectionType = MCOConnectionTypeTLS;
-        [EmailService instance].smtpSession = smtpSession;
+            [[EmailServersService instance] insertEmailServer:self.emailServerModel];
+            MCOIMAPSession * imapSession = [[MCOIMAPSession alloc] init];
+            imapSession.timeout = 60;
+            [EmailService instance].imapSession = imapSession;
+            [imapSession setAuthType:MCOAuthTypeXOAuth2];
+            [imapSession setOAuth2Token:accessToken];
+            [imapSession setUsername:email];
+            
+            MCOSMTPSession * smtpSession = [[MCOSMTPSession alloc] init];
+            [smtpSession setAuthType:MCOAuthTypeXOAuth2];
+            [smtpSession setOAuth2Token:accessToken];
+            [smtpSession setUsername:email];
+            smtpSession.hostname = @"smtp.gmail.com";
+            smtpSession.port = 465;
+            smtpSession.authType = MCOAuthTypeXOAuth2;
+            smtpSession.connectionType = MCOConnectionTypeTLS;
+            [EmailService instance].smtpSession = smtpSession;
 
 //        AppDelegate *tempAppDelegate = APPDELEGATE;
 //        [tempAppDelegate.progressHUD show:YES];
@@ -388,33 +390,33 @@ UIButton *loginButton;
             NSString *respString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
             NSArray *vipEmails = [respString componentsSeparatedByString:@"\n\n"];
             NSLog(@"vipEmails %@",vipEmails);
-        }];*/
-        NSString *post = [NSString stringWithFormat:@"refresh_token=%@", refreshToken];
-        NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
-        NSString *postLength = [NSString stringWithFormat:@"%lu",(unsigned long)[postData length]];
-        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-        [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://lit-citadel-5624.herokuapp.com/vip"]]];
-        [request setHTTPMethod:@"POST"];
-        [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-        [request setHTTPBody:postData];
-        [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-            NSString *respString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            NSLog(@"------ VIP response: %@",respString);
-            
-            //storing contact string onto persistance storage.
-            [[NSUserDefaults standardUserDefaults] setObject:respString forKey:@"contact_string"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }];
-        
+         }];*/
+        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+
+            NSString *post = [NSString stringWithFormat:@"refresh_token=%@", refreshToken];
+            NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+            NSString *postLength = [NSString stringWithFormat:@"%lu",(unsigned long)[postData length]];
+            NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+            [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://lit-citadel-5624.herokuapp.com/vip"]]];
+            [request setHTTPMethod:@"POST"];
+            [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+            [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+            [request setHTTPBody:postData];
+            [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                NSString *respString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                NSLog(@"------ VIP response: %@",respString);
+                
+                //storing contact string onto persistance storage.
+                [[NSUserDefaults standardUserDefaults] setObject:respString forKey:@"contact_string"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }];
+        });
 
         // Authentication succeeded
         //[self createDemoPageViewController];
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"is_tutorial"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
-        [self createIntroViewController];
+
         [self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
+
         
     }
 }
@@ -444,7 +446,7 @@ UIButton *loginButton;
                 PFInstallation *currentInstallation = [PFInstallation currentInstallation];
                 [currentInstallation setObject:email forKey:@"email"];
                 if (![currentInstallation channels]) {
-                    //[currentInstallation setChannels:@[]];
+                    [currentInstallation setChannels:@[]];
                 }
                 [currentInstallation addUniqueObject:[NSString stringWithFormat:@"account_id_%@", accountID] forKey:@"channels"];
                 [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
@@ -492,7 +494,7 @@ UIButton *loginButton;
                     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
                     [currentInstallation setObject:email forKey:@"email"];
                     if (![currentInstallation channels]) {
-                        //[currentInstallation setChannels:@[]];
+                        [currentInstallation setChannels:@[]];
                     }
                     [currentInstallation addUniqueObject:[NSString stringWithFormat:@"account_id_%@", contextIO_account_id] forKey:@"channels"];
                     [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
@@ -722,7 +724,7 @@ UIButton *loginButton;
             else{
                 PFInstallation *currentInstallation = [PFInstallation currentInstallation];
                 if (![currentInstallation channels]) {
-                    //[currentInstallation setChannels:@[]];
+                    [currentInstallation setChannels:@[]];
                 }
                 [currentInstallation addUniqueObject:[NSString stringWithFormat:@"account_id_%@", appDelegate.contextIOAPIClient._accountID] forKey:@"channels"];
                 [currentInstallation setObject:currentEmail forKey:@"email"];
@@ -749,6 +751,7 @@ UIButton *loginButton;
             
             
             NSString *imageUrl = [EmailService instance].userImageURL;
+            dispatch_async(dispatch_get_main_queue(), ^{
             if([imageUrl hasPrefix:@"http"]){
                 [appDelegate.menuController.userImageView setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"userimage-placeholder.png"] options:SDWebImageProgressiveDownload completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
                 }];
@@ -761,11 +764,10 @@ UIButton *loginButton;
 //            [appDelegate.menuController.listArray replaceObjectAtIndex:0 withObject:currentName];
 //            [appDelegate.menuController.imageArray replaceObjectAtIndex:0 withObject:[EmailService instance].userImageURL];
             [appDelegate.menuController.listView reloadData];
-            
+            });
             
             NSLog(@"email: %@", currentEmail);
             [self getPrimaryMessages:currentEmail nextPageToken:nextPageToken numberOfMaxResult:100];
-            
         }
     }];
 }
@@ -830,12 +832,19 @@ UIButton *loginButton;
 
 -(void)loadHomeScreen {
     NSLog(@"*****************  In loadhomescreen ***************** ");
-     [self performSelector:@selector(getUserInfo) withObject:nil afterDelay:0.2];
+    [self performSelector:@selector(getUserInfo) withObject:nil afterDelay:0.2];
+
+    /*dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+         [self performSelector:@selector(getUserInfo) withObject:nil afterDelay:0.2];
+    });*/
 
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     // Krunal : Commented below line 26 aug
     if(appDelegate.internetAvailable){
 //        [[EmailService instance] performSelectorInBackground:@selector(startLogin:) withObject:self.mainViewController.emailsTableViewController];
+        /*dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+            [[EmailService instance] startLogin:self.mainViewController.emailsTableViewController];
+        });*/
         [[EmailService instance] startLogin:self.mainViewController.emailsTableViewController];
     }
     
