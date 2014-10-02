@@ -535,6 +535,47 @@ UIButton *loginButton;
     }
 }
 
+-(void)getAllWebhooksAndDeleteIt{
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.contextIOAPIClient getWebhooksWithParams:nil success:^(NSArray *responseArray) {
+        __block int reqCnt = (int)[responseArray count];
+        for (NSDictionary *dictionary in responseArray) {
+            NSString *webhookID = [dictionary objectForKey:@"webhook_id"];
+            if(webhookID && webhookID.length){
+                [appDelegate.contextIOAPIClient deleteWebhookWithID:webhookID success:^(NSDictionary *responseDict) {
+                    reqCnt--;
+                    if(reqCnt == 0){
+                        [self performSelector:@selector(createFirstTimeNotifs) withObject:nil afterDelay:0.01];
+                    }
+                } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                    reqCnt--;
+                    if(reqCnt == 0){
+                        [self performSelector:@selector(createFirstTimeNotifs) withObject:nil afterDelay:0.01];
+                    }
+                }];
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [self performSelector:@selector(createFirstTimeNotifs) withObject:nil afterDelay:0.01];
+    }];
+}
+
+-(void)createFirstTimeNotifs{
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    // turn on all notifs for first time user
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"NOTIFS_ON_FIRST_TIME"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+    [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
+        NSString *webhook_id = [responseDict objectForKey:@"webhook_id"];
+        [[NSUserDefaults standardUserDefaults] setObject:webhook_id forKey:@"ALL_NOTIFS_ON_WEBHOOK_ID"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        NSLog(@"********* createFirstTimeNotifs: SUCCUSS : %@",webhook_id);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"createFirstTimeNotifs: FAILURE : %@",error.userInfo.description);
+    }];
+}
+
 -(void)addToSourceWithAccountID:(NSString*)accID{
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
@@ -550,34 +591,16 @@ UIButton *loginButton;
     NSString *path = [NSString stringWithFormat:@"https://api.context.io/lite/users/%@/email_accounts",accID];
     [appDelegate.contextIOAPIClient postPath:path params:params success:^(NSDictionary *responseDict) {
         NSLog(@"-----> %@",responseDict.description);
-        // turn on all notifs for first time user
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"NOTIFS_ON_FIRST_TIME"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-        [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
-            NSString *webhook_id = [responseDict objectForKey:@"webhook_id"];
-            [[NSUserDefaults standardUserDefaults] setObject:webhook_id forKey:@"ALL_NOTIFS_ON_WEBHOOK_ID"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"createWebhooksandSaveFunnl --- deleteWebhookWithID : %@",error.userInfo.description);
-        }];
+        [self performSelector:@selector(getAllWebhooksAndDeleteIt) withObject:nil afterDelay:0.01];
+
     
         //[self performSelector:@selector(fetchContacts) withObject:nil afterDelay:20];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         // this gets called when user downloads app fresh for first time but already has existing Context.IO account
-        // turn on all notifs for first time user
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"NOTIFS_ON_FIRST_TIME"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-        [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
-            NSString *webhook_id = [responseDict objectForKey:@"webhook_id"];
-            [[NSUserDefaults standardUserDefaults] setObject:webhook_id forKey:@"ALL_NOTIFS_ON_WEBHOOK_ID"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"createWebhooksandSaveFunnl --- deleteWebhookWithID : %@",error.userInfo.description);
-        }];
 
         NSLog(@"-----> error getting addToSourceWithAccountID: %@", error);
+        [self performSelector:@selector(getAllWebhooksAndDeleteIt) withObject:nil afterDelay:0.01];
+
     }];
 }
 
