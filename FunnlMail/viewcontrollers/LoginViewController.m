@@ -455,6 +455,10 @@ UIButton *loginButton;
                     [currentInstallation setChannels:@[]];
                 }
                 [currentInstallation addUniqueObject:[NSString stringWithFormat:@"account_id_%@", accountID] forKey:@"channels"];
+                NSString *s = [NSString stringWithFormat:@"account_id_%@", accountID];
+
+                NSArray *array = currentInstallation.channels;
+
                 [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                     NSInteger errCode = [error code];
                     if (kPFErrorConnectionFailed == errCode ||  kPFErrorInternalServer == errCode)
@@ -503,6 +507,8 @@ UIButton *loginButton;
                         [currentInstallation setChannels:@[]];
                     }
                     [currentInstallation addUniqueObject:[NSString stringWithFormat:@"account_id_%@", contextIO_account_id] forKey:@"channels"];
+                    NSArray *array = currentInstallation.channels;
+                    NSString *s = [NSString stringWithFormat:@"account_id_%@", contextIO_account_id] ;
                     [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                         NSInteger errCode = [error code];
                         if (kPFErrorConnectionFailed == errCode ||  kPFErrorInternalServer == errCode)
@@ -741,6 +747,9 @@ UIButton *loginButton;
                     [currentInstallation setChannels:@[]];
                 }
                 [currentInstallation addUniqueObject:[NSString stringWithFormat:@"account_id_%@", appDelegate.contextIOAPIClient._accountID] forKey:@"channels"];
+                NSString *s = [NSString stringWithFormat:@"account_id_%@", appDelegate.contextIOAPIClient._accountID];
+
+                NSArray *array = currentInstallation.channels;
                 [currentInstallation setObject:currentEmail forKey:@"email"];
                 [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                     NSInteger errCode = [error code];
