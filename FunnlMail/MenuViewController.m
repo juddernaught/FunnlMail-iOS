@@ -46,6 +46,16 @@
 //    return YES;
 //}
 
+-(void)viewWillAppear:(BOOL)animated{
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"ALL_NOTIFS_ON_WEBHOOK_ID"]) {
+        listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Create Funnel", @"Funnel Store",@"Turn Off All Alerts", @"Send Feedback",@"Tutorial",@"Help (FAQs)",@"LogOut",nil];
+    } else {
+        listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Create Funnel", @"Funnel Store", @"Turn On All Alerts", @"Send Feedback",@"Tutorial",@"Help (FAQs)",@"LogOut",nil];
+    }
+    imageArray = [[NSMutableArray alloc] initWithObjects:@"",@"funnlIcon",@"storeListIcon",@"notifyListIcon", @"sendFeedbackListIcon",@"tutorialListIcon",@"helpListIcon", @"logoutListIcon",nil];
+    [listView reloadData];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -94,12 +104,7 @@
 //    listArray =[[NSMutableArray alloc] initWithObjects:@"Email Account", @"Sent Mail", @"Archive",@"Drafts", @"Trash",@"Send Feedback",@"Help",@"LogOut",nil];
 //    imageArray = [[NSMutableArray alloc] initWithObjects:@"emailListIcon",@"settingListIcon",@"alertListIcon",@"shareListIcon",@"sentListIcon", @"archiveListIcon",@"archiveListIcon", @"trashListIcon",@"emailListIcon",@"helpListIcon", @"helpListLogOutIcon",nil];
     
-    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"ALL_NOTIFS_ON_WEBHOOK_ID"]) {
-        listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Create Funnel", @"Funnel Store",@"Turn Off All Alerts", @"Send Feedback",@"Tutorial",@"Help (FAQs)",@"LogOut",nil];
-    } else {
-    listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Create Funnel", @"Funnel Store", @"Turn On All Alerts", @"Send Feedback",@"Tutorial",@"Help (FAQs)",@"LogOut",nil];
-    }
-    imageArray = [[NSMutableArray alloc] initWithObjects:@"",@"funnlIcon",@"storeListIcon",@"notifyListIcon", @"sendFeedbackListIcon",@"tutorialListIcon",@"helpListIcon", @"logoutListIcon",nil];
+   
 
 }
 
