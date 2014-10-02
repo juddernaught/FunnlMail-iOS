@@ -415,7 +415,7 @@ UIButton *loginButton;
         // Authentication succeeded
         //[self createDemoPageViewController];
 
-        [self performSelector:@selector(loadHomeScreen) withObject:nil afterDelay:1];
+        [self performSelector:@selector(loadHomeScreenFromFirstLogin) withObject:nil afterDelay:1];
 
         
     }
@@ -630,51 +630,54 @@ UIButton *loginButton;
 //            NSString* newStr = [[NSString alloc] initWithData:retrievedData encoding:NSUTF8StringEncoding];
 //            NSLog(@"user Info: %@",newStr);
             NSDictionary* json = [NSJSONSerialization JSONObjectWithData:retrievedData options:kNilOptions error:&error];
-            NSDictionary *feedDict = [json objectForKey:@"feed"];
-            NSDictionary *contacts = [feedDict objectForKey:@"entry"];
-            for (NSDictionary *contactDict in contacts) {
-                ContactModel *tempContact = [[ContactModel alloc] init];
-                tempContact.name = [[contactDict objectForKey:@"title"] objectForKey:@"$t"];
-                NSArray *emailArray = [contactDict objectForKey:@"gd$email"];
-                
-                if (emailArray.count > 0) {
-                    if ([[emailArray objectAtIndex:0] objectForKey:@"address"]) {
-                        tempContact.email = [[emailArray objectAtIndex:0] objectForKey:@"address"];
-                    }
-                }
-                else {
-                    //when we don't have email id we put string @"nil"
-                    tempContact.email = @"nil";
-                }
-                emailArray = nil;
-                
-                NSArray *linkArray = [contactDict objectForKey:@"link"];
-                if (linkArray.count > 0) {
-                    for (NSDictionary *tempLinkDict in linkArray) {
-                        if ([[tempLinkDict objectForKey:@"type"] isEqualToString:@"image/*"]) {
-                            tempContact.thumbnail = [tempLinkDict objectForKey:@"href"];
-                            break;
+            dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+                NSDictionary *feedDict = [json objectForKey:@"feed"];
+                NSDictionary *contacts = [feedDict objectForKey:@"entry"];
+                for (NSDictionary *contactDict in contacts) {
+                    ContactModel *tempContact = [[ContactModel alloc] init];
+                    tempContact.name = [[contactDict objectForKey:@"title"] objectForKey:@"$t"];
+                    NSArray *emailArray = [contactDict objectForKey:@"gd$email"];
+                    
+                    if (emailArray.count > 0) {
+                        if ([[emailArray objectAtIndex:0] objectForKey:@"address"]) {
+                            tempContact.email = [[emailArray objectAtIndex:0] objectForKey:@"address"];
                         }
                     }
+                    else {
+                        //when we don't have email id we put string @"nil"
+                        tempContact.email = @"nil";
+                    }
+                    emailArray = nil;
+                    
+                    NSArray *linkArray = [contactDict objectForKey:@"link"];
+                    if (linkArray.count > 0) {
+                        for (NSDictionary *tempLinkDict in linkArray) {
+                            if ([[tempLinkDict objectForKey:@"type"] isEqualToString:@"image/*"]) {
+                                tempContact.thumbnail = [tempLinkDict objectForKey:@"href"];
+                                break;
+                            }
+                        }
+                    }
+                    linkArray = nil;
+                    
+                    //set default value for rest of contact parameters
+                    tempContact.count = 0;
+                    tempContact.sent_count = 0;
+                    tempContact.sent_from_account_count = 0;
+                    tempContact.received_count = 0;
+                    tempContact.resource_url = @"nil";
+                    if (![tempContact.email isEqualToString:@"nil"]) {
+                        [contactArray addObject:tempContact];
+                    }
+                    else {
+                        NSLog(@"----rec---");
+                    }
                 }
-                linkArray = nil;
                 
-                //set default value for rest of contact parameters
-                tempContact.count = 0;
-                tempContact.sent_count = 0;
-                tempContact.sent_from_account_count = 0;
-                tempContact.received_count = 0;
-                tempContact.resource_url = @"nil";
-                if (![tempContact.email isEqualToString:@"nil"]) {
-                    [contactArray addObject:tempContact];
-                }
-                else {
-                    NSLog(@"----rec---");
-                }
-            }
-            
-            [[ContactService instance] insertBulkContacts:contactArray];
+                [[ContactService instance] insertBulkContacts:contactArray];
+            });
         }
+
     }];
 }
 
@@ -716,10 +719,15 @@ UIButton *loginButton;
             [EmailService instance].userEmailID = currentEmail;
             [EmailService instance].userImageURL = currentUserImageURL;
             [EmailService instance].currentName = currentName;
+            
+
             if(![appDelegate.contextIOAPIClient isAuthorized]){
+
                 //[self getContextIOWithEmail:currentEmail withFirstName:currentName withLastName:currentName];
                 //[self getContextIOWithEmail:currentEmail withName:currentName];
-                [self performSelector:@selector(getContextIOWithEmail:withName:) withObject:currentEmail withObject:currentName];
+                dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+                    [self performSelector:@selector(getContextIOWithEmail:withName:) withObject:currentEmail withObject:currentName];
+                });
             }
             else{
                 PFInstallation *currentInstallation = [PFInstallation currentInstallation];
@@ -736,10 +744,13 @@ UIButton *loginButton;
             }
             NSLog(@"what is currntNam: %@",[EmailService instance].currentName);
             
-            NSArray *array = [[ContactService instance] getAllContacts];
-            if(array.count == 0){
-                [self performSelector:@selector(getUserContact) withObject:nil afterDelay:0.1];
-            }
+            dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+                NSArray *array = [[ContactService instance] getAllContacts];
+                if(array.count == 0){
+                        [self performSelector:@selector(getUserContact) withObject:nil afterDelay:0.1];
+
+                }
+            });
             //[self performSelectorInBackground:@selector(getUserContact) withObject:nil];
 
             [[NSUserDefaults standardUserDefaults] synchronize];
@@ -815,8 +826,10 @@ UIButton *loginButton;
             if([[EmailService instance] userEmailID].length > 0){
                 if([EmailService instance].primaryMessages.count < 2000 )
                     [self getPrimaryMessages:emailStr nextPageToken:nextPageToken numberOfMaxResult:100];
-                else
+                else{
                     NSLog(@"----- Primary messages count > %d",pArray.count);
+                }
+                    
             }
             else{
                 NSLog(@"----- Clean Primary > %d",pArray.count);
@@ -828,6 +841,25 @@ UIButton *loginButton;
         }
     }];
 
+}
+
+-(void)loadHomeScreenFromFirstLogin {
+    NSLog(@"*****************  In loadhomescreen ***************** ");
+    [self performSelector:@selector(getUserInfo) withObject:nil afterDelay:0.2];
+    
+    /*dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+     [self performSelector:@selector(getUserInfo) withObject:nil afterDelay:0.2];
+     });*/
+    
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    // Krunal : Commented below line 26 aug
+    if(appDelegate.internetAvailable){
+        //        [[EmailService instance] performSelectorInBackground:@selector(startLogin:) withObject:self.mainViewController.emailsTableViewController];
+        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [[EmailService instance] startLogin:self.mainViewController.emailsTableViewController];
+        });
+        //[[EmailService instance] startLogin:self.mainViewController.emailsTableViewController];
+    }
 }
 
 -(void)loadHomeScreen {
@@ -842,10 +874,10 @@ UIButton *loginButton;
     // Krunal : Commented below line 26 aug
     if(appDelegate.internetAvailable){
 //        [[EmailService instance] performSelectorInBackground:@selector(startLogin:) withObject:self.mainViewController.emailsTableViewController];
-        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        /*dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [[EmailService instance] startLogin:self.mainViewController.emailsTableViewController];
-        });
-        //[[EmailService instance] startLogin:self.mainViewController.emailsTableViewController];
+        });*/
+        [[EmailService instance] startLogin:self.mainViewController.emailsTableViewController];
     }
     
     

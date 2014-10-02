@@ -182,7 +182,9 @@ static NSString *currentFolder;
 - (void)checkMailsAtStart:(EmailsTableViewController*)fv
 {
     NSLog(@"-----checkMailsAtStart-----");
-    [[EmailService instance] loadLatestMail:NUMBER_OF_NEW_MESSAGES_TO_CHECK withTableController:fv withFolder:INBOX];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        [[EmailService instance] loadLatestMail:NUMBER_OF_NEW_MESSAGES_TO_CHECK withTableController:fv withFolder:INBOX];
+    });
 }
 
 -(void)syncMessages{
@@ -252,7 +254,7 @@ static NSString *currentFolder;
     }];
     
     //         __weak EmailService *weakSelf = self;
-    NSLog(@"--- start Sync - DELETE fetch operation for mail download");
+    /*NSLog(@"--- start Sync - DELETE fetch operation for mail download");
 //    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     [trashSyncMessagesFetchOperation start:^(NSError *error, NSArray *messages, MCOIndexSet *vanishedMessages)
      {
@@ -271,7 +273,7 @@ static NSString *currentFolder;
                  [self refreshMessages];
              }
          });
-     }];
+     }];*/
 }
 
 -(void)refreshMessages{
@@ -457,6 +459,7 @@ static NSString *currentFolder;
                       
                       NSArray *funnels = [[FunnelService instance] getFunnelsExceptAllFunnel];
                       NSMutableArray *messageModelArray = [[NSMutableArray alloc] init];
+                      NSMutableArray *primaryArray = [[EmailService instance] primaryMessages];
                       for (MCOIMAPMessage *m in messages) {
                           MessageModel *tempMessageModel = [[MessageModel alloc] init];
                           tempMessageModel.read = m.flags;
@@ -529,7 +532,6 @@ static NSString *currentFolder;
                           if(SHOW_PRIMARY_INBOX){
                               NSString *gmailMessageID =  [NSString stringWithFormat:@"%qx", m.gmailMessageID];
                               //NSLog(@"%@",gmailMessageID);
-                              NSMutableArray *primaryArray = [[EmailService instance] primaryMessages];
                               NSPredicate *p = [NSPredicate predicateWithFormat:@"SELF matches[c] %@", gmailMessageID];
                               NSArray *b = [primaryArray filteredArrayUsingPredicate:p];
                               
@@ -962,7 +964,9 @@ static NSString *currentFolder;
                  [tempAppDelegate.progressHUD show:NO];
                  [tempAppDelegate.progressHUD setHidden:YES];
                  [fv.tablecontroller.refreshControl endRefreshing];
-                 [self syncMessages];
+                 /*dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+                    [self syncMessages];
+                 });*/
              }
          }
        
