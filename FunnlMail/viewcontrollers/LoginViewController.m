@@ -842,10 +842,10 @@ UIButton *loginButton;
     // Krunal : Commented below line 26 aug
     if(appDelegate.internetAvailable){
 //        [[EmailService instance] performSelectorInBackground:@selector(startLogin:) withObject:self.mainViewController.emailsTableViewController];
-        /*dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [[EmailService instance] startLogin:self.mainViewController.emailsTableViewController];
-        });*/
-        [[EmailService instance] startLogin:self.mainViewController.emailsTableViewController];
+        });
+        //[[EmailService instance] startLogin:self.mainViewController.emailsTableViewController];
     }
     
     
