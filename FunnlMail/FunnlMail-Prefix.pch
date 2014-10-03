@@ -37,7 +37,7 @@
 #define EMPTY_DELIMITER @"#NOT#"
 #define HEIGHT [[UIScreen mainScreen] bounds].size.height
 #define WIDTH [[UIScreen mainScreen] bounds].size.width
-#define NUMBER_OF_MESSAGES_TO_LOAD_AT_START 500
+#define NUMBER_OF_MESSAGES_TO_LOAD_AT_START 400
 #define NUMBER_OF_MESSAGES_TO_LOAD 100
 #define NUMBER_OF_MESSAGES_TO_LOAD_ON_SEARCH NUMBER_OF_MESSAGES_TO_LOAD
 #define HELP_COMMENT @"   Help me organize my Inbox"
@@ -109,7 +109,13 @@
 #define IMAGE_TEXT @"introTutorialText"
 
 #define TIME_FOR_FADE_IN 0.4
-#define TIME_FOR_ANIMATION 2
+
+#ifdef DEBUG
+    #define TIME_FOR_ANIMATION 2
+#else
+    #define TIME_FOR_ANIMATION 2
+#endif
+
 #define SLIDER_VALUE 0.2
 
 #define GRADIENT_ARRAY [NSArray arrayWithObjects:@"#A1A1AC",@"#46EEA5",@"#B48FD3",@"#598FC8",@"#FF605D",@"#48D4D1",@"#FF8194",@"#FF815E",nil];

@@ -107,6 +107,8 @@
 //        [self.loginViewController performSelectorInBackground:@selector(fetchContacts) withObject:nil];
     }
     
+#if TARGET_OS_IPHONE
+
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
         //Right, that is the point
         UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIRemoteNotificationTypeBadge
@@ -121,7 +123,7 @@
                                                          UIRemoteNotificationTypeAlert |
                                                          UIRemoteNotificationTypeSound)];
     }
-    
+#endif
     
     // setting up HockeyApp
     // nocommit: must change app identifier

@@ -324,7 +324,8 @@ UIButton *loginButton;
 #endif
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"is_tutorial"];
         [[NSUserDefaults standardUserDefaults] synchronize];
-        
+        [self performSelector:@selector(loadHomeScreenFromFirstLogin) withObject:nil afterDelay:0.1];
+
         [self createIntroViewController];
 
             [NSObject cancelPreviousPerformRequestsWithTarget:[EmailService instance]];
@@ -421,7 +422,6 @@ UIButton *loginButton;
         // Authentication succeeded
         //[self createDemoPageViewController];
 
-        [self performSelector:@selector(loadHomeScreenFromFirstLogin) withObject:nil afterDelay:1];
 
         
     }
@@ -847,7 +847,9 @@ UIButton *loginButton;
     [myFetcher beginFetchWithCompletionHandler:^(NSData *retrievedData, NSError *error) {
         if (error != nil) {
             // status code or network error
-            NSLog(@"--Message info error %@: ", [error description]);
+            NSLog(@"******* --Message info error %@: ", [error description]);
+            [self startFirstTimeLogin];
+            
         } else {
             // succeeded
             NSString* newStr = [[NSString alloc] initWithData:retrievedData encoding:NSUTF8StringEncoding];
@@ -867,33 +869,35 @@ UIButton *loginButton;
             [[NSUserDefaults standardUserDefaults] synchronize];
             
             if([[EmailService instance] userEmailID].length > 0){
-                if([EmailService instance].primaryMessages.count < 2000 )
-                    [self getPrimaryMessages:emailStr nextPageToken:nextPageToken numberOfMaxResult:100];
+                if([EmailService instance].primaryMessages.count < NUMBER_OF_MESSAGES_TO_LOAD_AT_START )
+                    if(nextPageToken == nil){
+                       [self startFirstTimeLogin];
+                    }
+                    else{
+                        [self getPrimaryMessages:emailStr nextPageToken:nextPageToken numberOfMaxResult:100];
+                    }
                 else{
+                    [self startFirstTimeLogin];
                     NSLog(@"----- Primary messages count > %d",pArray.count);
                 }
                     
             }
             else{
+                [self startFirstTimeLogin];
+                
                 NSLog(@"----- Clean Primary > %d",pArray.count);
+                [EmailService instance].primaryMessages = [[NSMutableArray alloc] init];
                 [[EmailService instance].primaryMessages removeAllObjects];
                 [[NSUserDefaults standardUserDefaults] setObject:[[EmailService instance] primaryMessages] forKey: ALL_FUNNL];
                 [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"PRIMARY_PAGE_TOKEN"];
-
             }
         }
     }];
 
 }
 
--(void)loadHomeScreenFromFirstLogin {
-    NSLog(@"*****************  In loadhomescreen ***************** ");
-    [self performSelector:@selector(getUserInfo) withObject:nil afterDelay:0.2];
-    
-    /*dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-     [self performSelector:@selector(getUserInfo) withObject:nil afterDelay:0.2];
-     });*/
-    
+
+-(void) startFirstTimeLogin{
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     // Krunal : Commented below line 26 aug
     if(appDelegate.internetAvailable){
@@ -903,6 +907,17 @@ UIButton *loginButton;
         });
         //[[EmailService instance] startLogin:self.mainViewController.emailsTableViewController];
     }
+}
+
+-(void)loadHomeScreenFromFirstLogin {
+    NSLog(@"*****************  In loadhomescreen ***************** ");
+    [self performSelector:@selector(getUserInfo) withObject:nil afterDelay:0.2];
+    
+    
+    // Below is the startLogin method which is working 4 out of 5 times till date 2nd Oct, commented this logic 3rd oct
+    // To revert to previous logic uncomment previous logic and commment all the other method calls for startFirstTimeLogin in this files
+    //[self startFirstTimeLogin];
+    
 }
 
 -(void)loadHomeScreen {

@@ -25,6 +25,7 @@
 static EmailService *instance;
 
 static NSMutableArray *filterArray = nil;
+static NSMutableArray *primaryMessages = nil;
 static FunnelModel *defaultFilter;
 static NSString *currentFolder;
 @interface EmailService ()
@@ -56,6 +57,8 @@ static NSString *currentFolder;
         instance = [[EmailService alloc] init];
         filterArray = [[NSMutableArray alloc] init];
         [self addInitialFilter];
+        primaryMessages = [[NSMutableArray alloc] init];
+
     }
 }
 
@@ -110,7 +113,6 @@ static NSString *currentFolder;
     self.filterMessages = [[NSMutableArray alloc] init];
     self.sentMessages = [[NSMutableArray alloc] init];
     self.threadIdDictionary = [[NSMutableDictionary alloc] init];
-    self.primaryMessages = [[NSMutableArray alloc] init];
     
 	self.totalNumberOfMessages = -1;
 	self.isLoading = NO;
@@ -166,7 +168,9 @@ static NSString *currentFolder;
     self.filterMessages = [[NSMutableArray alloc] init];
     self.sentMessages = [[NSMutableArray alloc] init];
     self.threadIdDictionary = [[NSMutableDictionary alloc] init];
+    [primaryMessages removeAllObjects];
     self.primaryMessages = [[NSMutableArray alloc] init];
+    
     
 	self.totalNumberOfMessages = -1;
 	self.isLoading = NO;
