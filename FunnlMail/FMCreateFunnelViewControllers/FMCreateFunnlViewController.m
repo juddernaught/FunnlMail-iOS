@@ -62,8 +62,8 @@
 {
     [super viewDidLoad];
     
-    if (shareFunnl || isFunnelStore) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Press save or edit the Funnel rules" message:@"" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+    if (shareFunnl && !isFunnelStore) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Press save to save the Funnel!" message:@"" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [alertView show];
         alertView = nil;
     }

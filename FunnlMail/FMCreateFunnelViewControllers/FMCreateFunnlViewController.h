@@ -69,4 +69,6 @@
 
 - (id)initWithSelectedContactArray:(NSMutableArray *)contactArray;
 - (id)initWithSelectedContactArray:(NSMutableArray *)contactArray name:(NSString *)name andSubjects:(NSMutableArray *)subjects;
+- (void)saveButtonPressed:(UIButton*)sender;
+- (void)setUpViewForCreatingFunnel;
 @end

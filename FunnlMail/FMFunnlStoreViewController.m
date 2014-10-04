@@ -121,7 +121,39 @@
     }
     FunnelModel *funnlModel = [[FunnelModel alloc] initWithBarColor:color filterTitle:funnelName newMessageCount:0 dateOfLastMessage:nil sendersArray:(NSMutableArray *)senderArray subjectsArray:(NSMutableArray *)subjectArray skipAllFlag:NO funnelColor:colorString];
 
-    
+    NSString *title = [NSString stringWithFormat: @"Press OK to create the Funnel called %@!", funnelName];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
+                                                                   message:nil
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction* ok = [UIAlertAction
+                         actionWithTitle:@"OK"
+                         style:UIAlertActionStyleDefault
+                         handler:^(UIAlertAction * action)
+                         {
+                             [alert dismissViewControllerAnimated:YES completion:nil];
+                             AppDelegate *appDeleage = APPDELEGATE;
+                             FMCreateFunnlViewController *viewController = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:senderArray name:nil andSubjects:subjectArray];
+                             viewController.isEditFunnel = FALSE;
+                             viewController.shareFunnl = true;
+                             viewController.isFunnelStore = YES;
+                             viewController.oldModel = funnlModel;
+                             viewController.mainVCdelegate = appDeleage.mainVCdelegate;
+                             [viewController setUpViewForCreatingFunnel];
+                             [viewController saveButtonPressed:nil];
+                         }];
+    UIAlertAction* cancel = [UIAlertAction
+                             actionWithTitle:@"Cancel"
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action)
+                             {
+                                 [alert dismissViewControllerAnimated:YES completion:nil];
+                                 
+                             }];
+    [alert addAction:ok];
+    [alert addAction:cancel];
+    //UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:@"Click OK to create your new funnel!" delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+    [self presentViewController:alert animated:YES completion:nil];
+    /*
     AppDelegate *appDeleage = APPDELEGATE;
     FMCreateFunnlViewController *viewController = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:senderArray name:nil andSubjects:subjectArray];
     viewController.isEditFunnel = FALSE;
@@ -129,7 +161,7 @@
     viewController.isFunnelStore = YES;
     viewController.oldModel = funnlModel;
     viewController.mainVCdelegate = appDeleage.mainVCdelegate;
-    [appDeleage.mainVCdelegate pushViewController:viewController];
+    [appDeleage.mainVCdelegate pushViewController:viewController];*/
     
 
     
