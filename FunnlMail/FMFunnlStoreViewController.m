@@ -200,7 +200,9 @@
                 [tempObject setCategoryName:column[3]];
             }
             if (column.count > 4 && column[4]) {
-                [tempObject setFunnelPreview:column[4]];
+                NSString *preview = [column[4] stringByReplacingOccurrencesOfString:@";" withString:@","];
+                
+                [tempObject setFunnelPreview:preview];
             }
             [funnlStorageArray addObject:tempObject];
         }
