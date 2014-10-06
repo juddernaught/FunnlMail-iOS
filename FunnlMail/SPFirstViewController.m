@@ -496,7 +496,7 @@
     [appDelegate.window setRootViewController:appDelegate.drawerController];
     [appDelegate.window makeKeyAndVisible];
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"Viewed last slider"];
+    //[[Mixpanel sharedInstance] track:@"Viewed last slider"];
 #endif
 }
 

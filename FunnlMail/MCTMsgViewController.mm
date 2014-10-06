@@ -296,10 +296,10 @@
 
 //    UIBarButtonItem *funnelButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"emailDetailViewFunnel.png"] style:UIBarButtonItemStylePlain target:self action:@selector(createFunnl:)];
     UIBarButtonItem *archiveButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"emailDetailViewArchive.png"] style:UIBarButtonItemStylePlain target:self action:@selector(archiveMail:)];
-//    UIBarButtonItem *emailButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"emailDetailViewMail.png"] style:UIBarButtonItemStylePlain target:self action:@selector(unreadMail:)];
+    UIBarButtonItem *emailButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"emailDetailViewMail.png"] style:UIBarButtonItemStylePlain target:self action:@selector(unreadMail:)];
     UIBarButtonItem *deleteButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"emailDetailViewTrash.png"] style:UIBarButtonItemStylePlain target:self action:@selector(deleteMail:)];
 //    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:actualfixedSpace, deleteButton,fixedSpace, archiveButton,fixedSpace, emailButton,fixedSpace, funnelButton, nil]];
-    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:actualfixedSpace, deleteButton,fixedSpace, archiveButton,fixedSpace, nil]];
+    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:actualfixedSpace, deleteButton,fixedSpace, archiveButton,fixedSpace, emailButton, fixedSpace, nil]];
     //---end of new changes
 }
 
@@ -586,7 +586,7 @@ typedef void (^DownloadCallback)(NSError * error);
             count ++;
         }
     }
-    [[Mixpanel sharedInstance] track:@"user clicked get funnl"];
+    //[[Mixpanel sharedInstance] track:@"user clicked get funnl"];
     if (IS_NEW_CREATE_FUNNEL) {
         FMCreateFunnlViewController *viewcontroller = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:(NSMutableArray *)sendersDictionary.allValues name:fm.funnelName andSubjects:(NSMutableArray *)subjectsDictionary.allValues];
         viewcontroller.isEditFunnel = NO;
@@ -699,7 +699,7 @@ typedef void (^DownloadCallback)(NSError * error);
 
 -(void) replyButtonSelected{
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"Reply Email Selected"];
+    //[[Mixpanel sharedInstance] track:@"Reply Email Selected"];
 #endif
     NSLog(@"reply Email selected");
     ComposeViewController *viewEmail = [[ComposeViewController alloc]init];
@@ -713,7 +713,7 @@ typedef void (^DownloadCallback)(NSError * error);
 
 -(void) replyAllButtonSelected{
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"Reply All selected"];
+    //[[Mixpanel sharedInstance] track:@"Reply All selected"];
 #endif
     NSLog(@"reply Email selected");
     ComposeViewController *viewEmail = [[ComposeViewController alloc]init];
@@ -728,7 +728,7 @@ typedef void (^DownloadCallback)(NSError * error);
 
 -(void) forwardButtonSelected{
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"Forward selected"];
+    //[[Mixpanel sharedInstance] track:@"Forward selected"];
 #endif
     NSLog(@"reply Email selected");
     ComposeViewController *viewEmail = [[ComposeViewController alloc]init];

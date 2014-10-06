@@ -185,7 +185,7 @@
 -(void)shareFunnlClicked:(id)sender{
     
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"Shared a Funnel (pressed send button successfully after entering email)"];
+    //[[Mixpanel sharedInstance] track:@"Shared a Funnel (pressed send button successfully after entering email)"];
 #endif
     
     [toFieldView.tokenField resignFirstResponder];

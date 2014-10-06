@@ -825,7 +825,7 @@
     NSLog(@"Save Butoon pressed");
     
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"Created a new Funnl or modified existing Funnl"];
+    //[[Mixpanel sharedInstance] track:@"Created a new Funnl or modified existing Funnl"];
 #endif
     
     NSString *funnlName = funnelNameTextField.text;

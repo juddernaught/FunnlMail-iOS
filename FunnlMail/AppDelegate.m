@@ -26,10 +26,12 @@
 @implementation AppDelegate
 @synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable,contextIOAPIClient,isAlreadyRequestedRefreshToken,currentSelectedFunnlModel,isPullToRefresh,navControllerForCentralView, hasStartLoginAlreadyOccured;
 @synthesize mainVCdelegate,letsGo,activityIndicator;
+@synthesize previewDownloadQueue;
 
 #pragma mark - didFinishLaunchingx
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {   //[[UIApplication sharedApplication] setApplicationIconBadgeNumber:99]; //added by Chad
+    [self initializeQueue];
     application.applicationIconBadgeNumber = 0;
 
     if (![[NSUserDefaults standardUserDefaults] objectForKey:@"latest_tt_secondary"]) {
@@ -44,7 +46,7 @@
     [Mixpanel sharedInstanceWithToken:@"08b1e55d72f1b22a8e5696c2b56a6777"];
 
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"Launched App"]; //Launched app
+    //[[Mixpanel sharedInstance] track:@"Launched App"]; //Launched app
 #endif
     // Parse setup
     //[Parse setApplicationId:@"oXAOrMLIRzLNZh50VZ3sk3LBEfUuNDXuLZVBvHdV" clientKey:@"Z5mFEsiX7xTXYlKYKXMbN2zlqqf97l39E0PzZoZg"];
@@ -145,6 +147,11 @@
     return YES;
 }
 
+- (void)initializeQueue {
+    previewDownloadQueue = [[NSOperationQueue alloc] init];
+    previewDownloadQueue.maxConcurrentOperationCount = CONCURRENCY_TASK;
+}
+
 #pragma mark - Rechability
 -(void)reachabilityChanged:(NSNotification*)note
 {
@@ -216,7 +223,7 @@
     imageView.frame = CGRectMake(0, 0, WIDTH, HEIGHT);
     
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"Viewed intro overlay"];
+    //[[Mixpanel sharedInstance] track:@"Viewed intro overlay"];
 #endif
     
   
@@ -259,7 +266,7 @@
         NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjects:
                                            [NSArray arrayWithObjects:emailService.userEmailID,emailService.currentName, nil]
                                                                                forKeys:[NSArray arrayWithObjects:@"Email",@"Name", nil]];
-        [[Mixpanel sharedInstance] track:@"Signed In" properties:dictionary];
+        //[[Mixpanel sharedInstance] track:@"Signed In" properties:dictionary];
         
         NSMutableArray *allMessagesArray = (NSMutableArray*)[[MessageService instance] messagesAllTopMessages];
         
@@ -269,7 +276,7 @@
             NSMutableDictionary *trackPrimaryDictionary = [[NSMutableDictionary alloc] initWithObjects:
                                                            [NSArray arrayWithObjects:emailService.userEmailID,[NSNumber numberWithInt:(int)trackPrimaryArray.count], [NSNumber numberWithFloat:primaryPercentage], nil]
                                                                                                forKeys:[NSArray arrayWithObjects:@"Email",@"PrimaryMailsCount",@"PrimaryPercentage", nil]];
-            [[Mixpanel sharedInstance] track:@"Total Number of Primary Mails" properties:trackPrimaryDictionary];
+            //[[Mixpanel sharedInstance] track:@"Total Number of Primary Mails" properties:trackPrimaryDictionary];
             
             
             NSMutableArray *funnlArray  =  (NSMutableArray*)[[FunnelService instance] getFunnelsExceptAllFunnel];
@@ -283,7 +290,7 @@
             NSMutableDictionary *trackFunnlDictionary = [[NSMutableDictionary alloc] initWithObjects:
                                                          [NSArray arrayWithObjects:emailService.userEmailID,[NSNumber numberWithInt:(int)funnlArray.count], [NSNumber numberWithInt:(int)totalNumberFunnlsArray.count], [NSNumber numberWithFloat:funnlPercentage],nil]
                                                                                              forKeys:[NSArray arrayWithObjects:@"Email",@"Total Funnls", @"Total Mails in Funnl",@"FunnlPercentage", nil]];
-            [[Mixpanel sharedInstance] track:@"Total Number of Funnl Mails" properties:trackFunnlDictionary];
+            //[[Mixpanel sharedInstance] track:@"Total Number of Funnl Mails" properties:trackFunnlDictionary];
         }else{
             
         }
@@ -417,7 +424,7 @@
     float time2 = (float)(secondsInDecimal/60) + minutes;
     NSLog(@"Time: %@",[NSString stringWithFormat:@"%02f + %02f = %02f", minutes, (secondsInDecimal/60), time2]);
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"Time Open" properties:@{@"Time": [NSString stringWithFormat:@"%02f", time2]}];
+    //[[Mixpanel sharedInstance] track:@"Time Open" properties:@{@"Time": [NSString stringWithFormat:@"%02f", time2]}];
 #endif
 }
 

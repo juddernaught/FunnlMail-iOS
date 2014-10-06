@@ -273,7 +273,7 @@ UIButton *loginButton;
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     [self setDrawerControllerOnWindow];
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"Viewed last slider"];
+    //[[Mixpanel sharedInstance] track:@"Viewed last slider"];
 #endif
     if(appDelegate.didLoginIn) {
         [appDelegate showWelcomeOverlay];
@@ -320,7 +320,7 @@ UIButton *loginButton;
         // Authentication failed
     } else {
 #ifdef TRACK_MIXPANEL
-        [[Mixpanel sharedInstance] track:@"Signed into email"]; // Signed into Gmail
+        //[[Mixpanel sharedInstance] track:@"Signed into email"]; // Signed into Gmail
 #endif
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"is_tutorial"];
         [[NSUserDefaults standardUserDefaults] synchronize];
@@ -848,7 +848,17 @@ UIButton *loginButton;
         if (error != nil) {
             // status code or network error
             NSLog(@"******* --Message info error %@: ", [error description]);
-            [self startFirstTimeLogin];
+            if(numberOfRetries < 3){
+                NSString *nextPageToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"PRIMARY_PAGE_TOKEN"];
+                if(nextPageToken == nil || nextPageToken.length <= 0){
+                    nextPageToken = @"";
+                }
+                [self getPrimaryMessages:emailStr nextPageToken:nextPageToken numberOfMaxResult:100];
+                numberOfRetries++;
+            }
+            else{
+                [self startFirstTimeLogin];
+            }
             
         } else {
             // succeeded

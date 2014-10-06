@@ -29,6 +29,7 @@
 #import "MCTMsgViewController.h"
 #import "LoginViewController.h"
 #import "FMCreateFunnlViewController.h"
+#import "FMFunnlStoreViewController.h"
 
 @implementation UILabel (Additions)
 
@@ -700,7 +701,7 @@ UIView *greyView;
                 
                 [cell setSwipeGestureWithView:archiveView color:yellowColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
 #ifdef TRACK_MIXPANEL
-                    [[Mixpanel sharedInstance] track:@" Swiped an email left to right for Archive "];
+                    //[[Mixpanel sharedInstance] track:@" Swiped an email left to right for Archive "];
 #endif
                     NSLog(@"Did swipe \"Archive\" cell");
                     NSIndexPath *deleteIndexPath = [tableView indexPathForCell:cell];
@@ -721,7 +722,7 @@ UIView *greyView;
                 
                 [cell setSwipeGestureWithView:trashView color:redColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState2 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
 #ifdef TRACK_MIXPANEL
-                    [[Mixpanel sharedInstance] track:@"Swiped an email left to right for Trash"];
+                    //[[Mixpanel sharedInstance] track:@"Swiped an email left to right for Trash"];
 #endif
                     NSLog(@"Did swipe \"Trash\" cell");
                     NSIndexPath *deleteIndexPath = [tableView indexPathForCell:cell];
@@ -752,7 +753,7 @@ UIView *greyView;
                     }
                     self.tableView.tableHeaderView = [self headerView];
 #ifdef TRACK_MIXPANEL
-                    [[Mixpanel sharedInstance] track:@"Swiped an email right to left to add to Funnl"];
+                    //[[Mixpanel sharedInstance] track:@"Swiped an email right to left to add to Funnl"];
 #endif
                     
                     [cell swipeToOriginWithCompletion:nil];
@@ -958,7 +959,7 @@ UIView *greyView;
                 [cell setSwipeGestureWithView:archiveView color:yellowColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
                     
 #ifdef TRACK_MIXPANEL
-                    [[Mixpanel sharedInstance] track:@"Swiped an email left to right for Archive"];
+                    //[[Mixpanel sharedInstance] track:@"Swiped an email left to right for Archive"];
 #endif
                     
                     NSLog(@"Did swipe \"Archive\" cell");
@@ -980,7 +981,7 @@ UIView *greyView;
                 [cell setSwipeGestureWithView:fullFunnlView color:fullFunnlColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
                     NSLog(@"Did swipe full cell, -----");
 #ifdef TRACK_MIXPANEL
-                    [[Mixpanel sharedInstance] track:@"Add email to Funnl"];
+                    //[[Mixpanel sharedInstance] track:@"Add email to Funnl"];
 #endif
                     [cell swipeToOriginWithCompletion:nil];
                     MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)searchMessages[indexPath.row] messageJSON]];
@@ -1125,7 +1126,7 @@ UIView *greyView;
 - (void)leftSwip:(UIButton*)sender {
     NSLog(@"in [leftSwip]");
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"left swipe: Archive"];
+    //[[Mixpanel sharedInstance] track:@"left swipe: Archive"];
 #endif
     MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[sender.tag] messageJSON]];
     
@@ -1143,7 +1144,7 @@ UIView *greyView;
     [_tableView reloadData];
     NSLog(@"in [fullSwipe]");
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"fullSwipe: add to funnl pressed"];
+    //[[Mixpanel sharedInstance] track:@"fullSwipe: add to funnl pressed"];
 #endif
     MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[sender.tag] messageJSON]];
     FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:YES withMessageId:[NSString stringWithFormat:@"%d",message.uid] withMessage:message subViewOnViewController:self];
@@ -1155,7 +1156,7 @@ UIView *greyView;
     [_tableView reloadData];
     NSLog(@"in [halfSwipe]");
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"halfSwipe"];
+    //[[Mixpanel sharedInstance] track:@"halfSwipe"];
 #endif
     MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[sender.tag] messageJSON]];
     if ([[FunnelService instance] allFunnels].count > 1) {
@@ -1175,7 +1176,7 @@ UIView *greyView;
 #pragma mark didPressDelete
 - (void)didPressMore:(UIButton*)sender {
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"User Loaded more emails"];
+    //[[Mixpanel sharedInstance] track:@"User Loaded more emails"];
 #endif
     MCOIMAPMessage *message = nil;
     int row = 0;
@@ -1231,7 +1232,7 @@ UIView *greyView;
             case 0:
             {
 #ifdef TRACK_MIXPANEL
-                [[Mixpanel sharedInstance] track:@"User Viewed Email"];
+                //[[Mixpanel sharedInstance] track:@"User Viewed Email"];
 #endif
                 MCOIMAPMessage *msg = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
                 //MsgViewController *vc = [[MsgViewController alloc] init];
@@ -1297,7 +1298,7 @@ UIView *greyView;
         }
         else {
 #ifdef TRACK_MIXPANEL
-            [[Mixpanel sharedInstance] track:@"User viewed email"];
+            //[[Mixpanel sharedInstance] track:@"User viewed email"];
 #endif
             MCOIMAPMessage *msg = [MCOIMAPMessage importSerializable:[(MessageModel*)searchMessages[indexPath.row] messageJSON]];
             //MsgViewController *vc = [[MsgViewController alloc] init];
@@ -1524,7 +1525,7 @@ UIView *greyView;
     [_shimmeringView setShimmering:NO];
     //if (0) {
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"show_vip"]) {
-        if (!helpFlag) {
+        /*if (!helpFlag) {
             disclosureArrow.hidden = YES;
             
             [helpButton setTitle:GUIDE_FOR_SWIPING_CELL forState:UIControlStateNormal];
@@ -1560,7 +1561,9 @@ UIView *greyView;
                 }
             }
         }
-        helpFlag = !helpFlag;
+        helpFlag = !helpFlag;*/
+        FMFunnlStoreViewController *funnelStoreViewController = [[FMFunnlStoreViewController alloc] init];
+        [self.navigationController pushViewController:funnelStoreViewController animated:YES];
     }
     else {
         [[NSUserDefaults standardUserDefaults] setBool:TRUE forKey:@"show_vip"];
@@ -1667,7 +1670,7 @@ UIView *greyView;
 #pragma mark - SearchBar delegates
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar{
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"Clicked in the Search bar"];
+    //[[Mixpanel sharedInstance] track:@"Clicked in the Search bar"];
 #endif
     CGRect searchBarFrame = searchBar.frame;
     searchBarFrame.size.height = 40.f;
@@ -1734,7 +1737,17 @@ UIView *greyView;
         //Other funnsl
         [self searchInDatabaseWithSearchText:searchText withFunnelId:self.filterModel.funnelId];
     }*/
-    [self searchInDatabaseWithSearchText:searchText withFunnelId:@"0"];
+    /*if (tempAppDelegate.currentFunnelDS.funnelId) {
+        [self searchInDatabaseWithSearchText:searchText withFunnelId:tempAppDelegate.currentFunnelDS.funnelId];
+    }
+    else {
+        [self searchInDatabaseWithSearchText:searchText withFunnelId:@"0"];
+    }*/
+    [searchMessages removeAllObjects];
+    NSArray *tempArray = [[MessageService instance] retrieveAllMessageWithKey:searchText];
+    searchMessages = [NSMutableArray arrayWithArray:tempArray];
+    [_tableView reloadData];
+    tempArray = nil;
 }
 
 - (void)searchInDatabaseWithSearchText:(NSString*)searchText withFunnelId:(NSString*)funnelId{

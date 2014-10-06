@@ -404,6 +404,8 @@
 		FAE1EB3619B87620001FF334 /* sendFeedbackListIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FAE1EB3219B87620001FF334 /* sendFeedbackListIcon@2x.png */; };
 		FAE1EB3719B87620001FF334 /* logoutListIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FAE1EB3319B87620001FF334 /* logoutListIcon@2x.png */; };
 		FAE1EB3819B87620001FF334 /* sendFeedbackListIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = FAE1EB3419B87620001FF334 /* sendFeedbackListIcon.png */; };
+		FAE42EEE19E287670082D3B3 /* FMRenderingOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = FAE42EEC19E287670082D3B3 /* FMRenderingOperation.h */; };
+		FAE42EEF19E287670082D3B3 /* FMRenderingOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE42EED19E287670082D3B3 /* FMRenderingOperation.m */; };
 		FAE644BD19DA820C00EE076C /* storeListIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FAE644B919DA820C00EE076C /* storeListIcon@2x.png */; };
 		FAE644BE19DA820C00EE076C /* storeListIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = FAE644BA19DA820C00EE076C /* storeListIcon.png */; };
 		FAE644BF19DA820C00EE076C /* notifyListIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FAE644BB19DA820C00EE076C /* notifyListIcon@2x.png */; };
@@ -984,6 +986,8 @@
 		FAE1EB3219B87620001FF334 /* sendFeedbackListIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sendFeedbackListIcon@2x.png"; sourceTree = "<group>"; };
 		FAE1EB3319B87620001FF334 /* logoutListIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logoutListIcon@2x.png"; sourceTree = "<group>"; };
 		FAE1EB3419B87620001FF334 /* sendFeedbackListIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sendFeedbackListIcon.png; sourceTree = "<group>"; };
+		FAE42EEC19E287670082D3B3 /* FMRenderingOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMRenderingOperation.h; sourceTree = "<group>"; };
+		FAE42EED19E287670082D3B3 /* FMRenderingOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMRenderingOperation.m; sourceTree = "<group>"; };
 		FAE644B919DA820C00EE076C /* storeListIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "storeListIcon@2x.png"; sourceTree = "<group>"; };
 		FAE644BA19DA820C00EE076C /* storeListIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = storeListIcon.png; sourceTree = "<group>"; };
 		FAE644BB19DA820C00EE076C /* notifyListIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "notifyListIcon@2x.png"; sourceTree = "<group>"; };
@@ -1373,6 +1377,8 @@
 		CC7F72F518E838C7008962C3 /* services */ = {
 			isa = PBXGroup;
 			children = (
+				FAE42EEC19E287670082D3B3 /* FMRenderingOperation.h */,
+				FAE42EED19E287670082D3B3 /* FMRenderingOperation.m */,
 				CC7F72F718E83925008962C3 /* EmailService.h */,
 				CC7F72F618E83925008962C3 /* EmailService.m */,
 				CCC9E40D193D5CC20028DC84 /* EmailServersService.h */,
@@ -2046,6 +2052,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAE42EEE19E287670082D3B3 /* FMRenderingOperation.h in Headers */,
 				25F87F5219CC031400237CD7 /* VIPFunnelCreationConfirmationController.h in Headers */,
 				FA83970619BF1D0700F9F529 /* FXBlurView.h in Headers */,
 				FAB0759319D5998600FFB87E /* FMFunnlObject.h in Headers */,
@@ -2576,6 +2583,7 @@
 				CC4263B11934B67A00F3C5EB /* FMDatabaseAdditions.m in Sources */,
 				2522AC151998DBEC002B1207 /* WEPopoverContainerView.m in Sources */,
 				D1EFF48B19817BBF0031A1D1 /* OAuth.m in Sources */,
+				FAE42EEF19E287670082D3B3 /* FMRenderingOperation.m in Sources */,
 				66AEEB811933002D00B6DBE5 /* EmailsTableViewController.m in Sources */,
 				2522AC141998DBEC002B1207 /* UIBarButtonItem+WEPopover.m in Sources */,
 				25F87F5519CC031400237CD7 /* VIPViewController.m in Sources */,
@@ -2794,8 +2802,8 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e29d5397-e36a-4271-82d2-eeeeca1d2b79";
-				SDKROOT = iphoneos7.1;
+				PROVISIONING_PROFILE = "69e28a4d-1186-4fab-8041-73ac81f00e8b";
+				SDKROOT = iphoneos8.0;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2812,8 +2820,8 @@
 				BUNDLE_ID_SUFFIX = "";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Funnl Labs, LLC";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Funnl Labs, LLC";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Renee Migdal (4724LVRTFE)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Renee Migdal (4724LVRTFE)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -2850,8 +2858,8 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "764ce18d-57a7-4481-a456-37c77c7a5e4d";
-				SDKROOT = iphoneos7.1;
+				PROVISIONING_PROFILE = "a0ff5168-ae66-4265-9505-57f6d8fdde9f";
+				SDKROOT = iphoneos8.0;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2983,7 +2991,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "764ce18d-57a7-4481-a456-37c77c7a5e4d";
-				SDKROOT = iphoneos7.1;
+				SDKROOT = iphoneos8.0;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3092,7 +3100,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "a9c75f81-8b86-460e-94a8-c968af5c1bf0";
-				SDKROOT = iphoneos7.1;
+				SDKROOT = iphoneos8.0;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

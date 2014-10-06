@@ -191,7 +191,7 @@ static NSString *mailCellIdentifier = @"MailCell";
     [cell setSwipeGestureWithView:fullFunnlView color:fullFunnlColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
         NSLog(@"Did swipe full cell, ");
 #ifdef TRACK_MIXPANEL
-        [[Mixpanel sharedInstance] track:@"Add email to Funnl"];
+        //[[Mixpanel sharedInstance] track:@"Add email to Funnl"];
 #endif
         [cell swipeToOriginWithCompletion:nil];
         MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)dataSourceArray[indexPath.row] messageJSON]];

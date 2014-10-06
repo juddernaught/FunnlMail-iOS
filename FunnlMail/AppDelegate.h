@@ -44,6 +44,7 @@
 @property (strong,nonatomic) UIButton* letsGo;
 @property (strong,nonatomic) UIActivityIndicatorView *activityIndicator;
 @property (strong,nonatomic) UINavigationController *navControllerForCentralView;
+@property (strong,nonatomic) NSOperationQueue *previewDownloadQueue;
 @property BOOL funnelUpDated,internetAvailable;
 -(void)showWelcomeOverlay;
 -(void)trackMixpanelAnalytics;

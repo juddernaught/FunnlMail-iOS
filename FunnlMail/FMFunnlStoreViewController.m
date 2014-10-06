@@ -30,7 +30,16 @@
 {
     [super viewDidLoad];
     
-    self.title = @"Funnel Store";
+    [self.navigationItem hidesBackButton];
+    
+    UILabel *tempLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, WIDTH - 150, 66)];
+    [tempLabel setTextAlignment:NSTextAlignmentCenter];
+    [tempLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:16]];
+    [tempLabel setTextColor:[UIColor blackColor]];
+    tempLabel.text = @"Funnel Store";
+    self.navigationItem.titleView = tempLabel;
+    tempLabel = nil;
+//    self.title = @"Funnel Store";
     
     // Do any additional setup after loading the view.
     funnlStorageArray = [[NSMutableArray alloc] init];
@@ -90,7 +99,10 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    FMFunnlObject *tempObject = [[funnlStorageAccordingToSection objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+    if (tempObject) {
+        tempObject = nil;
+    }
+    tempObject = [[funnlStorageAccordingToSection objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     NSString *funnelName = [tempObject funnelName];
     NSMutableArray *senderArray = (NSMutableArray*)[[tempObject senderString] componentsSeparatedByString:@"~"];
     NSMutableArray *subjectArray = (NSMutableArray*)[[tempObject subjectString] componentsSeparatedByString:@"~"];
@@ -119,10 +131,15 @@
     if(color == nil){
         color = [UIColor colorWithHexString:@"#F7F7F7"];
     }
-    FunnelModel *funnlModel = [[FunnelModel alloc] initWithBarColor:color filterTitle:funnelName newMessageCount:0 dateOfLastMessage:nil sendersArray:(NSMutableArray *)senderArray subjectsArray:(NSMutableArray *)subjectArray skipAllFlag:NO funnelColor:colorString];
+    funnlModel = [[FunnelModel alloc] initWithBarColor:color filterTitle:funnelName newMessageCount:0 dateOfLastMessage:nil sendersArray:(NSMutableArray *)senderArray subjectsArray:(NSMutableArray *)subjectArray skipAllFlag:NO funnelColor:colorString];
 
     NSString *title = [NSString stringWithFormat: @"Press OK to create the Funnel called %@!", funnelName];
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
+    
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:nil delegate:self cancelButtonTitle:@"OK" otherButtonTitles:@"Cancel", nil];
+    [alertView show];
+    alertView = nil;
+    
+    /*UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
                                                                    message:nil
                                                             preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction* ok = [UIAlertAction
@@ -151,8 +168,8 @@
                              }];
     [alert addAction:ok];
     [alert addAction:cancel];
-    //UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:@"Click OK to create your new funnel!" delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-    [self presentViewController:alert animated:YES completion:nil];
+    [self presentViewController:alert animated:YES completion:nil];*/
+    
     /*
     AppDelegate *appDeleage = APPDELEGATE;
     FMCreateFunnlViewController *viewController = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:senderArray name:nil andSubjects:subjectArray];
@@ -165,6 +182,29 @@
     
 
     
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 0) {
+        
+        //NSString *funnelName = [tempObject funnelName];
+        NSMutableArray *senderArray = (NSMutableArray*)[[tempObject senderString] componentsSeparatedByString:@"~"];
+        NSMutableArray *subjectArray = (NSMutableArray*)[[tempObject subjectString] componentsSeparatedByString:@"~"];
+        //NSString *categoryName = [tempObject categoryName];
+        
+        AppDelegate *appDeleage = APPDELEGATE;
+        FMCreateFunnlViewController *viewController = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:senderArray name:nil andSubjects:subjectArray];
+        viewController.isEditFunnel = FALSE;
+        viewController.shareFunnl = true;
+        viewController.isFunnelStore = YES;
+        viewController.oldModel = funnlModel;
+        viewController.mainVCdelegate = appDeleage.mainVCdelegate;
+        [viewController setUpViewForCreatingFunnel];
+        [viewController saveButtonPressed:nil];
+    }
+    else if (buttonIndex == 1) {
+        [alertView dismissWithClickedButtonIndex:1 animated:YES];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
