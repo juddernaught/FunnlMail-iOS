@@ -23,6 +23,7 @@
     BOOL hasStartLoginAlreadyOccured;
     NSString *MIXPANEL_TOKEN;
 
+
 }
 @property (nonatomic,strong)  NSNumber *didLoginIn;
 @property (nonatomic, assign) BOOL hasStartLoginAlreadyOccured;

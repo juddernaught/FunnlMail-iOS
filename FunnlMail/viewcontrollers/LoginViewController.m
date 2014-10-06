@@ -756,19 +756,22 @@ UIButton *loginButton;
 
 #ifdef TRACK_MIXPANEL
             AppDelegate *appDelegate = APPDELEGATE;
+            NSArray *excludeArray = TRACKING_EXCLUDE_USERS_ARRAY;
             Mixpanel *mixpanel = [Mixpanel sharedInstance];
-            [mixpanel identify: appDelegate.loggedInEmailAddress];
 
-            if(appDelegate.isFreshInstall == NO){
-                [[Mixpanel sharedInstance] track:@"first time user logged in"];
-                [mixpanel.people set:@{@"User has visited funnel store": @0}];
-                [mixpanel.people set:@{@"User has created funnel from VIP": @0}];
-                [mixpanel.people set:@{@"User swiped to create funnel": @0}];
-                [mixpanel.people set:@{@"funnel count": @0}];
+            if([excludeArray containsObject:appDelegate.loggedInEmailAddress] == NO){
+                [mixpanel identify: appDelegate.loggedInEmailAddress];
+                if(appDelegate.isFreshInstall == NO){
+                    [[Mixpanel sharedInstance] track:@"first time user logged in"];
+                    [mixpanel.people set:@{@"User has visited funnel store": @0}];
+                    [mixpanel.people set:@{@"User has created funnel from VIP": @0}];
+                    [mixpanel.people set:@{@"User swiped to create funnel": @0}];
+                    [mixpanel.people set:@{@"funnel count": @0}];
+                }
+                [mixpanel.people set:@{@"Email" : currentEmail}];
+                [mixpanel.people set:@{@"User name" : currentName}];
+                [mixpanel.people set:@{@"$email" : currentEmail}];
             }
-            [mixpanel.people set:@{@"Email" : currentEmail}];
-            [mixpanel.people set:@{@"User name" : currentName}];
-            [mixpanel.people set:@{@"$email" : currentEmail}];
 #endif
             
             [EmailService instance].userEmailID = currentEmail;

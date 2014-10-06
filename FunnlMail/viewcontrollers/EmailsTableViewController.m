@@ -745,9 +745,12 @@ UIView *greyView;
                     NSLog(@"Did swipe full cell, ");
 #ifdef TRACK_MIXPANEL
                     AppDelegate *appDelegate = APPDELEGATE;
-                    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-                    [mixpanel identify:appDelegate.loggedInEmailAddress];
-                    [mixpanel.people set:@{@"User swiped to create funnel": @1}];
+                    NSArray *excludeArray = TRACKING_EXCLUDE_USERS_ARRAY;
+                    if([excludeArray containsObject:appDelegate.loggedInEmailAddress] == NO){
+                        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+                        [mixpanel identify:appDelegate.loggedInEmailAddress];
+                        [mixpanel.people set:@{@"User swiped to create funnel": @1}];
+                    }
 #endif
                     
                     helpFlag = FALSE;

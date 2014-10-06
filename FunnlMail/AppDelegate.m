@@ -279,11 +279,12 @@
 -(void)trackMixpanelAnalytics{
 #ifdef TRACK_MIXPANEL
     EmailService *emailService = [EmailService instance];
-    if(emailService.userEmailID && emailService.userEmailID.length)
+    AppDelegate *appDelegate = APPDELEGATE;
+    NSArray *excludeArray = TRACKING_EXCLUDE_USERS_ARRAY;
+    if(emailService.userEmailID && emailService.userEmailID.length && [excludeArray containsObject:appDelegate.loggedInEmailAddress] == NO )
     {
-        AppDelegate *appDelegate = APPDELEGATE;
         Mixpanel *mixpanel = [Mixpanel sharedInstance];
-        //[mixpanel identify:appDelegate.loggedInEmailAddress];
+        [mixpanel identify:appDelegate.loggedInEmailAddress];
 
         //NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjects:[NSArray arrayWithObjects:emailService.userEmailID,emailService.currentName, nil]forKeys:[NSArray arrayWithObjects:@"Email",@"Name", nil]];
         //[[Mixpanel sharedInstance] track:@"Signed In" properties:dictionary];

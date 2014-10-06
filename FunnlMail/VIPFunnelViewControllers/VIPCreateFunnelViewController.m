@@ -855,9 +855,12 @@
         
 #ifdef TRACK_MIXPANEL
         AppDelegate *appDelegate = APPDELEGATE;
-        Mixpanel *mixpanel = [Mixpanel sharedInstance];
-        [mixpanel identify:appDelegate.loggedInEmailAddress];
-        [mixpanel.people set:@{@"User has created funnel from VIP": @1}];
+        NSArray *excludeArray = TRACKING_EXCLUDE_USERS_ARRAY;
+        if([excludeArray containsObject:appDelegate.loggedInEmailAddress] == NO){
+            Mixpanel *mixpanel = [Mixpanel sharedInstance];
+            [mixpanel identify:appDelegate.loggedInEmailAddress];
+            [mixpanel.people set:@{@"User has created funnel from VIP": @1}];
+        }
 #endif
 
         if((contactMutableArray.count > 1 || (![[(ContactModel *)[contactMutableArray objectAtIndex:0] name] isEqualToString:ADD_FUNNL] && contactMutableArray.count == 1)) || subjectArray.count){
