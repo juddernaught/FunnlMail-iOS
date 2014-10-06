@@ -24,6 +24,13 @@
 }
 -(void)viewWillAppear:(BOOL)animated{
     self.navigationController.navigationBarHidden = NO;
+
+#ifdef TRACK_MIXPANEL
+    AppDelegate *appDelegate = APPDELEGATE;
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel identify:appDelegate.loggedInEmailAddress];
+    [mixpanel.people set:@{@"User has visited funnel store": @1}];
+#endif
 }
 
 - (void)viewDidLoad

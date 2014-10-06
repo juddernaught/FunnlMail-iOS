@@ -1685,7 +1685,10 @@
 }
 
 - (void)deleteFunnel:(UIButton *)sender {
+
 #ifdef TRACK_MIXPANEL
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel.people increment:@"funnel count" by:[NSNumber numberWithInt:-1]];
     //[[Mixpanel sharedInstance] track:@"Deleted a Funnl (from settings page)"];
 #endif
     
@@ -2075,6 +2078,7 @@
 }
 
 - (void)saveButtonPressed:(UIButton*)sender {
+    
     //[self performSelectorInBackground:@selector(showHUD) withObject:nil];
     if (senderArray) {
         senderArray = nil;
@@ -2133,6 +2137,15 @@
             }
             return;
         }
+        
+        
+#ifdef TRACK_MIXPANEL
+        if(isEditFunnel == NO || shareFunnl == YES){
+            Mixpanel *mixpanel = [Mixpanel sharedInstance];
+            [mixpanel.people increment:@"funnel count" by:@1];
+        }
+#endif
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             AppDelegate *tempAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
             UIView *tostView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 50)];

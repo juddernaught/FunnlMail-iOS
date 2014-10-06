@@ -320,6 +320,7 @@
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"IS_NEW_INSTALL"];
         [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"MODSEQ"];
         [[NSUserDefaults standardUserDefaults] synchronize];
+        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"EMAIL_LOGGED_IN"];
         [[EmailService instance] clearData];
         [EmailService instance].userEmailID = @"";
 

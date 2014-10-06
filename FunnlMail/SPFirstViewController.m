@@ -482,7 +482,12 @@
     else {
         
         NSLog(@"Write dismissing pop up");
-
+        AppDelegate *appDelegate = APPDELEGATE;
+        BOOL isFromLogin = [[NSUserDefaults standardUserDefaults] boolForKey:@"outter_tutorial"];
+        if(appDelegate.isFreshInstall == NO &&  isFromLogin == NO) {
+            [[Mixpanel sharedInstance] track:@"first time user finished tutorial"];
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"IS_FRESH_INSTALL"];
+        }
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"is_tutorial"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         [self loadInitActivity];

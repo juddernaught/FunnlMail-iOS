@@ -743,6 +743,13 @@ UIView *greyView;
                 
                 [cell setSwipeGestureWithView:fullFunnlView color:fullFunnlColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
                     NSLog(@"Did swipe full cell, ");
+#ifdef TRACK_MIXPANEL
+                    AppDelegate *appDelegate = APPDELEGATE;
+                    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+                    [mixpanel identify:appDelegate.loggedInEmailAddress];
+                    [mixpanel.people set:@{@"User swiped to create funnel": @1}];
+#endif
+                    
                     helpFlag = FALSE;
                     if (indexPath.row == 0) {
                         [[(EmailCell *)cell backgroundImageView] setHidden:YES];

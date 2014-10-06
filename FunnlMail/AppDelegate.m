@@ -21,16 +21,25 @@
 #import <HockeySDK/HockeySDK.h>
 #import "VIPViewController.h"
 #import "MTStatusBarOverlay.h"
-#define MIXPANEL_TOKEN @"08b1e55d72f1b22a8e5696c2b56a6777"
+
+#ifdef IS_RELEASE
+#define MIXPANEL_TOKEN @"9373e7f6b57abde608b47abf2f2f8326"
+#else
+#define MIXPANEL_TOKEN @"3335353d90043594517928ae8ec453f7"
+#endif
 
 @implementation AppDelegate
 @synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable,contextIOAPIClient,isAlreadyRequestedRefreshToken,currentSelectedFunnlModel,isPullToRefresh,navControllerForCentralView, hasStartLoginAlreadyOccured;
 @synthesize mainVCdelegate,letsGo,activityIndicator;
-@synthesize previewDownloadQueue;
+@synthesize previewDownloadQueue,isFreshInstall,loggedInEmailAddress;
 
 #pragma mark - didFinishLaunchingx
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {   //[[UIApplication sharedApplication] setApplicationIconBadgeNumber:99]; //added by Chad
+
+    
+    NSLog(@"---> %@",MIXPANEL_TOKEN);
+    
     [self initializeQueue];
     application.applicationIconBadgeNumber = 0;
 
@@ -43,10 +52,18 @@
     [Crashlytics startWithAPIKey:@"44e1f44afdbcda726d1a42fdbbd770dff98bca43"];
     // MixPanel setup
     //[[CIOExampleAPIClient sharedClient] clearCredentials];
-    [Mixpanel sharedInstanceWithToken:@"08b1e55d72f1b22a8e5696c2b56a6777"];
 
+    [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
+    
+    
 #ifdef TRACK_MIXPANEL
     //[[Mixpanel sharedInstance] track:@"Launched App"]; //Launched app
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    isFreshInstall = [[NSUserDefaults standardUserDefaults] boolForKey:@"IS_FRESH_INSTALL"];
+    if(isFreshInstall == NO){
+        [[Mixpanel sharedInstance] track:@"first time user opened app"];
+    }
+    
 #endif
     // Parse setup
     //[Parse setApplicationId:@"oXAOrMLIRzLNZh50VZ3sk3LBEfUuNDXuLZVBvHdV" clientKey:@"Z5mFEsiX7xTXYlKYKXMbN2zlqqf97l39E0PzZoZg"];
@@ -259,13 +276,15 @@
 
 
 -(void)trackMixpanelAnalytics{
+#ifdef TRACK_MIXPANEL
     EmailService *emailService = [EmailService instance];
     if(emailService.userEmailID && emailService.userEmailID.length)
     {
-        
-        NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjects:
-                                           [NSArray arrayWithObjects:emailService.userEmailID,emailService.currentName, nil]
-                                                                               forKeys:[NSArray arrayWithObjects:@"Email",@"Name", nil]];
+        AppDelegate *appDelegate = APPDELEGATE;
+        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+        //[mixpanel identify:appDelegate.loggedInEmailAddress];
+
+        //NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjects:[NSArray arrayWithObjects:emailService.userEmailID,emailService.currentName, nil]forKeys:[NSArray arrayWithObjects:@"Email",@"Name", nil]];
         //[[Mixpanel sharedInstance] track:@"Signed In" properties:dictionary];
         
         NSMutableArray *allMessagesArray = (NSMutableArray*)[[MessageService instance] messagesAllTopMessages];
@@ -273,11 +292,9 @@
         if(allMessagesArray.count){
             NSMutableArray *trackPrimaryArray = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
             float primaryPercentage =  ((float)trackPrimaryArray.count /(float)allMessagesArray.count ) * 100;
-            NSMutableDictionary *trackPrimaryDictionary = [[NSMutableDictionary alloc] initWithObjects:
-                                                           [NSArray arrayWithObjects:emailService.userEmailID,[NSNumber numberWithInt:(int)trackPrimaryArray.count], [NSNumber numberWithFloat:primaryPercentage], nil]
-                                                                                               forKeys:[NSArray arrayWithObjects:@"Email",@"PrimaryMailsCount",@"PrimaryPercentage", nil]];
+            //NSMutableDictionary *trackPrimaryDictionary = [[NSMutableDictionary alloc] initWithObjects:[NSArray arrayWithObjects:emailService.userEmailID,[NSNumber numberWithInt:(int)trackPrimaryArray.count], [NSNumber numberWithFloat:primaryPercentage], nil]forKeys:[NSArray arrayWithObjects:@"Email",@"PrimaryMailsCount",@"PrimaryPercentage", nil]];
             //[[Mixpanel sharedInstance] track:@"Total Number of Primary Mails" properties:trackPrimaryDictionary];
-            
+            [mixpanel.people set:@{@"Percentage Primary Mails":[NSNumber numberWithFloat:primaryPercentage]}];
             
             NSMutableArray *funnlArray  =  (NSMutableArray*)[[FunnelService instance] getFunnelsExceptAllFunnel];
             NSMutableArray *totalNumberFunnlsArray = [[NSMutableArray alloc] init];
@@ -287,15 +304,16 @@
                 
             }
             float funnlPercentage =   (float)( (float)totalNumberFunnlsArray.count / (float)allMessagesArray.count ) * 100;
-            NSMutableDictionary *trackFunnlDictionary = [[NSMutableDictionary alloc] initWithObjects:
-                                                         [NSArray arrayWithObjects:emailService.userEmailID,[NSNumber numberWithInt:(int)funnlArray.count], [NSNumber numberWithInt:(int)totalNumberFunnlsArray.count], [NSNumber numberWithFloat:funnlPercentage],nil]
-                                                                                             forKeys:[NSArray arrayWithObjects:@"Email",@"Total Funnls", @"Total Mails in Funnl",@"FunnlPercentage", nil]];
+            //NSMutableDictionary *trackFunnlDictionary = [[NSMutableDictionary alloc] initWithObjects:[NSArray arrayWithObjects:emailService.userEmailID,[NSNumber numberWithInt:(int)funnlArray.count], [NSNumber numberWithInt:(int)totalNumberFunnlsArray.count], [NSNumber numberWithFloat:funnlPercentage],nil]forKeys:[NSArray arrayWithObjects:@"Email",@"Total Funnls", @"Total Mails in Funnl",@"FunnlPercentage", nil]];
             //[[Mixpanel sharedInstance] track:@"Total Number of Funnl Mails" properties:trackFunnlDictionary];
+            [mixpanel.people set:@{@"Percentage Funnel Mails":[NSNumber numberWithFloat:funnlPercentage]}];
+            
         }else{
             
         }
         
     }
+#endif
 }
 
 -(IBAction)hideWelcomeOverlay:(id)sender{
@@ -336,6 +354,9 @@
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
+//    if(loggedInEmailAddress.length > 0){
+        [[Mixpanel sharedInstance] track:@"app closed"];
+//    }
 
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
@@ -358,9 +379,27 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
 //    NSLog(@"%@",[[EmailService instance] userEmailID]);
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    if([[NSUserDefaults standardUserDefaults] objectForKey:@"EMAIL_LOGGED_IN"]){
+        loggedInEmailAddress = [[NSString alloc] initWithString:[[NSUserDefaults standardUserDefaults] objectForKey:@"EMAIL_LOGGED_IN"]];
+    }
+    else{
+        loggedInEmailAddress = @"";
+    }
+
+    
+#ifdef TRACK_MIXPANEL
+//    if(loggedInEmailAddress.length > 0){
+        [[Mixpanel sharedInstance] track:@"app opened"];
+        
+        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+        [mixpanel timeEvent:@"app closed"];
+//  }
+#endif
+    
+    
     
     application.applicationIconBadgeNumber = 0;
-    
     if ([[EmailService instance] userEmailID] && ![[[EmailService instance] userEmailID] isEqualToString:@""] && [[NSUserDefaults standardUserDefaults] boolForKey:@"is_tutorial"] == NO) {
         MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
         [overlay hide];
@@ -405,6 +444,7 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     [self endInterval];
 
+    [[Mixpanel sharedInstance] track:@"app closed"];
 }
 
 - (void)dismissStatusBar {
