@@ -484,7 +484,7 @@ static NSString *contactCellIdentifier = @"ContactCell";
 -(void)updateFunnelData{
     
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"Updated Funnl"];
+    //[[Mixpanel sharedInstance] track:@"Updated Funnl"];
 #endif
     NSMutableString *senderString = [[NSMutableString alloc] init];
     for (int counter =0 ; counter < contactInCC.count; counter++) {
@@ -524,7 +524,7 @@ static NSString *contactCellIdentifier = @"ContactCell";
 
 - (void)outterButtonClicked:(UIButton *)sender {
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"Clicked away from funnlPopUp"];
+    //[[Mixpanel sharedInstance] track:@"Clicked away from funnlPopUp"];
 #endif
     [self removeFromSuperview];
     [[(EmailsTableViewController*)viewController tableView] reloadData];

@@ -78,7 +78,7 @@ static FunnelService *instance;
 
 -(BOOL) updateFunnel:(FunnelModel *)funnelModel{
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"Updated funnl"];
+    //[[Mixpanel sharedInstance] track:@"Updated funnl"];
 #endif
   __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
   

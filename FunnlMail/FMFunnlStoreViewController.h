@@ -8,13 +8,16 @@
 
 #import <UIKit/UIKit.h>
 #import "FMFunnlObject.h"
+#import "FunnelModel.h"
 
-@interface FMFunnlStoreViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface FMFunnlStoreViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
 {
     NSString *fileContentString;
     NSMutableArray *funnlStorageArray;
     NSMutableArray *funnlStorageAccordingToSection;
     UITableView *funnlStoreTableView;
     NSMutableArray *flagArray;
+    FunnelModel *funnlModel;
+    FMFunnlObject *tempObject;
 }
 @end

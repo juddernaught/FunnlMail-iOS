@@ -15,7 +15,8 @@
 #import <MailCore/MailCore.h>
 #import "FunnelService.h"
 #import "MessageFilterXRefService.h"
-
+#import "EmailService.h"
+#import "FMRenderingOperation.h"
 static MessageService *instance;
 
 @implementation MessageService
@@ -46,7 +47,8 @@ static MessageService *instance;
 -(BOOL) insertBulkMessages:(NSArray *)messageModelArray{
     
     __block BOOL success = NO;
-    for (MessageModel *messageModel in messageModelArray) {
+    for (int counter = messageModelArray.count - 1 ; counter >= 0 ; counter--) {
+        MessageModel *messageModel = messageModelArray[counter];
         __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
         
         NSNumber *dateTimeInterval = [NSNumber numberWithDouble:[messageModel.date timeIntervalSince1970]];
@@ -71,7 +73,10 @@ static MessageService *instance;
             success = [db executeUpdate:@"INSERT INTO messages (messageID,messageJSON,read,date,gmailthreadid,skipFlag,categoryName,gmailMessageID) VALUES (:messageID,:messageJSON,:read,:date,:gmailthreadid,:skipFlag,:categoryName,:gmailMessageID)" withParameterDictionary:paramDict];
         }];
 
-        
+        MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:messageModel.messageJSON];
+        AppDelegate *tempAppDelegate = APPDELEGATE;
+        FMRenderingOperation *downloadPreviewOperation = [[FMRenderingOperation alloc] initWithMessage:message];
+        [tempAppDelegate.previewDownloadQueue addOperation:downloadPreviewOperation];
     }
     return success;
 }
@@ -234,6 +239,35 @@ static MessageService *instance;
     success = [db executeUpdate:@"UPDATE messages SET messageJSON=:messageJSON,read=:read,date=:date,skipFlag=:skipFlag,funnelJson=:funnelJson WHERE messageID=:messageID" withParameterDictionary:paramDict];
     
   }];
+}
+
+- (NSArray *)retrieveAllMessageWithKey:(NSString *)key {
+    __block NSMutableArray *array = [[NSMutableArray alloc] init];
+    [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+        NSString *query = [NSString stringWithFormat:@"select * from messages WHERE messageJSON LIKE '%%%@%%' order by CAST(messageID as integer) DESC",key];
+        FMResultSet *resultSet = [db executeQuery:query];
+        
+        MessageModel *model;
+        
+        while ([resultSet next]) {
+            model = [[MessageModel alloc]init];
+            
+            model.messageID = [resultSet stringForColumn:@"messageID"];
+            model.messageJSON = [resultSet stringForColumn:@"messageJSON"];
+            model.read = [resultSet intForColumn:@"read"];
+            model.skipFlag = [resultSet intForColumn:@"skipFlag"];
+            double dateTimeInterval = [resultSet doubleForColumn:@"date"];
+            if ([resultSet stringForColumn:@"funnelJson"]) {
+                model.funnelJson = [resultSet stringForColumn:@"funnelJson"];
+            }
+            else
+                model.funnelJson = @"";
+            model.date = [NSDate dateWithTimeIntervalSince1970:dateTimeInterval];
+            [array addObject:model];
+            //            [array addObject:[MCOIMAPMessage importSerializable:model.messageJSON]];
+        }
+    }];
+    return array;
 }
 
 -(NSArray *) messagesWithFunnelId:(NSString *)funnelId withSearchTerm:(NSString*)searchTerm {

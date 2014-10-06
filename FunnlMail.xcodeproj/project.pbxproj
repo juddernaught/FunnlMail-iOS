@@ -405,6 +405,8 @@
 		FAE1EB3619B87620001FF334 /* sendFeedbackListIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FAE1EB3219B87620001FF334 /* sendFeedbackListIcon@2x.png */; };
 		FAE1EB3719B87620001FF334 /* logoutListIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FAE1EB3319B87620001FF334 /* logoutListIcon@2x.png */; };
 		FAE1EB3819B87620001FF334 /* sendFeedbackListIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = FAE1EB3419B87620001FF334 /* sendFeedbackListIcon.png */; };
+		FAE42EEE19E287670082D3B3 /* FMRenderingOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = FAE42EEC19E287670082D3B3 /* FMRenderingOperation.h */; };
+		FAE42EEF19E287670082D3B3 /* FMRenderingOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE42EED19E287670082D3B3 /* FMRenderingOperation.m */; };
 		FAE644BD19DA820C00EE076C /* storeListIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FAE644B919DA820C00EE076C /* storeListIcon@2x.png */; };
 		FAE644BE19DA820C00EE076C /* storeListIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = FAE644BA19DA820C00EE076C /* storeListIcon.png */; };
 		FAE644BF19DA820C00EE076C /* notifyListIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FAE644BB19DA820C00EE076C /* notifyListIcon@2x.png */; };
@@ -511,7 +513,9 @@
 		25F87F4E19CC031400237CD7 /* VIPViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VIPViewController.h; sourceTree = "<group>"; };
 		25F87F4F19CC031400237CD7 /* VIPViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VIPViewController.m; sourceTree = "<group>"; };
 		27D9CEE565FC46E3B3970F17 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		2B928198F5034A5AB4B3F004 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		2BA6C03297A378E22EEC1A9A /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		50C2CBC974284E4E62CFDB22 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		539C48122CCF89E1F0F2640C /* Pods.dailydistribution.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.dailydistribution.xcconfig; path = "Pods/Target Support Files/Pods/Pods.dailydistribution.xcconfig"; sourceTree = "<group>"; };
 		5A1FF53B1948263B0056750F /* FunnelModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FunnelModel.h; path = models/FunnelModel.h; sourceTree = "<group>"; };
 		5A1FF53C1948263B0056750F /* FunnelModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FunnelModel.m; path = models/FunnelModel.m; sourceTree = "<group>"; };
 		5A59DC6C1957FF9D0094B00D /* ConfirmFunnelPopUp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfirmFunnelPopUp.h; sourceTree = "<group>"; };
@@ -582,6 +586,7 @@
 		66F2C49218E3293F00CD593E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		66F2C49418E3293F00CD593E /* FunnlMailTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FunnlMailTests.m; sourceTree = "<group>"; };
 		66F8A52219E1FEB40020DBFA /* tap-here@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tap-here@2x.png"; sourceTree = "<group>"; };
+		6F5A9AD70D888E4EBEB08B93 /* Pods.distribution.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.distribution.xcconfig; path = "Pods/Target Support Files/Pods/Pods.distribution.xcconfig"; sourceTree = "<group>"; };
 		B703C50319760E27003037FC /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		B7169C82199C6D78004D8759 /* FAQVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAQVC.h; sourceTree = "<group>"; };
 		B7169C83199C6D78004D8759 /* FAQVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FAQVC.m; sourceTree = "<group>"; };
@@ -986,6 +991,8 @@
 		FAE1EB3219B87620001FF334 /* sendFeedbackListIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sendFeedbackListIcon@2x.png"; sourceTree = "<group>"; };
 		FAE1EB3319B87620001FF334 /* logoutListIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logoutListIcon@2x.png"; sourceTree = "<group>"; };
 		FAE1EB3419B87620001FF334 /* sendFeedbackListIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sendFeedbackListIcon.png; sourceTree = "<group>"; };
+		FAE42EEC19E287670082D3B3 /* FMRenderingOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMRenderingOperation.h; sourceTree = "<group>"; };
+		FAE42EED19E287670082D3B3 /* FMRenderingOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMRenderingOperation.m; sourceTree = "<group>"; };
 		FAE644B919DA820C00EE076C /* storeListIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "storeListIcon@2x.png"; sourceTree = "<group>"; };
 		FAE644BA19DA820C00EE076C /* storeListIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = storeListIcon.png; sourceTree = "<group>"; };
 		FAE644BB19DA820C00EE076C /* notifyListIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "notifyListIcon@2x.png"; sourceTree = "<group>"; };
@@ -1137,6 +1144,17 @@
 			path = VIPFunnelViewControllers;
 			sourceTree = "<group>";
 		};
+		2C15CC4A7B88068361C9420E /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				2BA6C03297A378E22EEC1A9A /* Pods.debug.xcconfig */,
+				50C2CBC974284E4E62CFDB22 /* Pods.release.xcconfig */,
+				6F5A9AD70D888E4EBEB08B93 /* Pods.distribution.xcconfig */,
+				539C48122CCF89E1F0F2640C /* Pods.dailydistribution.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		5ACEBEA0195DA0CA00D4EAAA /* RDSwipeableTableViewCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -1208,7 +1226,7 @@
 				66F2C48E18E3293F00CD593E /* FunnlMailTests */,
 				66F2C46818E3293E00CD593E /* Frameworks */,
 				66F2C46718E3293E00CD593E /* Products */,
-				2B928198F5034A5AB4B3F004 /* Pods.xcconfig */,
+				2C15CC4A7B88068361C9420E /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1375,6 +1393,8 @@
 		CC7F72F518E838C7008962C3 /* services */ = {
 			isa = PBXGroup;
 			children = (
+				FAE42EEC19E287670082D3B3 /* FMRenderingOperation.h */,
+				FAE42EED19E287670082D3B3 /* FMRenderingOperation.m */,
 				CC7F72F718E83925008962C3 /* EmailService.h */,
 				CC7F72F618E83925008962C3 /* EmailService.m */,
 				CCC9E40D193D5CC20028DC84 /* EmailServersService.h */,
@@ -2049,6 +2069,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAE42EEE19E287670082D3B3 /* FMRenderingOperation.h in Headers */,
 				25F87F5219CC031400237CD7 /* VIPFunnelCreationConfirmationController.h in Headers */,
 				FA83970619BF1D0700F9F529 /* FXBlurView.h in Headers */,
 				FAB0759319D5998600FFB87E /* FMFunnlObject.h in Headers */,
@@ -2479,7 +2500,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -2580,6 +2601,7 @@
 				CC4263B11934B67A00F3C5EB /* FMDatabaseAdditions.m in Sources */,
 				2522AC151998DBEC002B1207 /* WEPopoverContainerView.m in Sources */,
 				D1EFF48B19817BBF0031A1D1 /* OAuth.m in Sources */,
+				FAE42EEF19E287670082D3B3 /* FMRenderingOperation.m in Sources */,
 				66AEEB811933002D00B6DBE5 /* EmailsTableViewController.m in Sources */,
 				2522AC141998DBEC002B1207 /* UIBarButtonItem+WEPopover.m in Sources */,
 				25F87F5519CC031400237CD7 /* VIPViewController.m in Sources */,
@@ -2750,7 +2772,7 @@
 		};
 		66F2C49918E3293F00CD593E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2B928198F5034A5AB4B3F004 /* Pods.xcconfig */;
+			baseConfigurationReference = 2BA6C03297A378E22EEC1A9A /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -2773,7 +2795,8 @@
 					"IS_DAILY_BUILD=1",
 					"MIXPANEL_DEBUG=1",
 					"MIXPANEL_LOG=1",
-					"TRACK_MIXPANEL=0",
+					"TRACK_MIXPANEL=1",
+					"IS_RELEASE=0",
 				);
 				HEADER_SEARCH_PATHS = (
 					"\"${PODS_ROOT}/Headers\"",
@@ -2781,6 +2804,15 @@
 					"\"${PODS_ROOT}/Headers/SSKeychain\"",
 				);
 				INFOPLIST_FILE = "FunnlMail/FunnlMail-Info.plist";
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Mixpanel\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/SSKeychain\"",
+				);
 				OTHER_LDFLAGS = (
 					"-lctemplate-ios",
 					"-letpan-ios",
@@ -2798,8 +2830,8 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e29d5397-e36a-4271-82d2-eeeeca1d2b79";
-				SDKROOT = iphoneos7.1;
+				PROVISIONING_PROFILE = "69e28a4d-1186-4fab-8041-73ac81f00e8b";
+				SDKROOT = iphoneos8.0;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2807,17 +2839,17 @@
 		};
 		66F2C49A18E3293F00CD593E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2B928198F5034A5AB4B3F004 /* Pods.xcconfig */;
+			baseConfigurationReference = 50C2CBC974284E4E62CFDB22 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				BUNDLE_DISPLAY_NAME_SUFFIX = Beta;
+				BUNDLE_DISPLAY_NAME_SUFFIX = "";
 				BUNDLE_ID_SUFFIX = "";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Funnl Labs, LLC";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Funnl Labs, LLC";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Renee Migdal (4724LVRTFE)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Renee Migdal (4724LVRTFE)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -2829,7 +2861,8 @@
 					"$(inherited)",
 					"COCOAPODS=1",
 					"IS_DAILY_BUILD=0",
-					"TRACK_MIXPANEL=0",
+					"TRACK_MIXPANEL=1",
+					"IS_RELEASE=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					"\"${PODS_ROOT}/Headers\"",
@@ -2837,6 +2870,15 @@
 					"\"${PODS_ROOT}/Headers/SSKeychain\"",
 				);
 				INFOPLIST_FILE = "FunnlMail/FunnlMail-Info.plist";
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Mixpanel\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/SSKeychain\"",
+				);
 				OTHER_LDFLAGS = (
 					"-lctemplate-ios",
 					"-letpan-ios",
@@ -2854,8 +2896,8 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "764ce18d-57a7-4481-a456-37c77c7a5e4d";
-				SDKROOT = iphoneos7.1;
+				PROVISIONING_PROFILE = "a0ff5168-ae66-4265-9505-57f6d8fdde9f";
+				SDKROOT = iphoneos8.0;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2938,12 +2980,12 @@
 		};
 		66F3323E199D37A8003D4F2F /* Distribution */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2B928198F5034A5AB4B3F004 /* Pods.xcconfig */;
+			baseConfigurationReference = 6F5A9AD70D888E4EBEB08B93 /* Pods.distribution.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				BUNDLE_DISPLAY_NAME_SUFFIX = "";
+				BUNDLE_DISPLAY_NAME_SUFFIX = " Beta";
 				BUNDLE_ID_SUFFIX = .distribution;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -2969,6 +3011,15 @@
 					"\"$(BUILT_PRODUCTS_DIR)/../../include",
 				);
 				INFOPLIST_FILE = "FunnlMail/FunnlMail-Info.plist";
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Mixpanel\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/SSKeychain\"",
+				);
 				OTHER_LDFLAGS = (
 					"-lctemplate-ios",
 					"-letpan-ios",
@@ -2987,7 +3038,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "764ce18d-57a7-4481-a456-37c77c7a5e4d";
-				SDKROOT = iphoneos7.1;
+				SDKROOT = iphoneos8.0;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2995,7 +3046,6 @@
 		};
 		66F3323F199D37A8003D4F2F /* Distribution */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2B928198F5034A5AB4B3F004 /* Pods.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/FunnlMail.app/FunnlMail";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3049,7 +3099,7 @@
 		};
 		FA6ABD9119C2CC6900DB10A3 /* DailyDistribution */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2B928198F5034A5AB4B3F004 /* Pods.xcconfig */;
+			baseConfigurationReference = 539C48122CCF89E1F0F2640C /* Pods.dailydistribution.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -3071,6 +3121,7 @@
 					"$(inherited)",
 					"IS_DAILY_BUILD=1",
 					"TRACK_MIXPANEL=0",
+					"IS_RELEASE=0",
 				);
 				HEADER_SEARCH_PATHS = (
 					"\"${PODS_ROOT}/Headers\"",
@@ -3078,6 +3129,15 @@
 					"\"${PODS_ROOT}/Headers/SSKeychain\"",
 				);
 				INFOPLIST_FILE = "FunnlMail/FunnlMail-Info.plist";
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Mixpanel\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/SSKeychain\"",
+				);
 				OTHER_LDFLAGS = (
 					"-lctemplate-ios",
 					"-letpan-ios",
@@ -3096,7 +3156,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "a9c75f81-8b86-460e-94a8-c968af5c1bf0";
-				SDKROOT = iphoneos7.1;
+				SDKROOT = iphoneos8.0;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3104,7 +3164,6 @@
 		};
 		FA6ABD9219C2CC6900DB10A3 /* DailyDistribution */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2B928198F5034A5AB4B3F004 /* Pods.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/FunnlMail.app/FunnlMail";
 				FRAMEWORK_SEARCH_PATHS = (

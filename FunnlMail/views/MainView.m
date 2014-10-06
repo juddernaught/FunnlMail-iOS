@@ -284,7 +284,7 @@ NSString *msgBody;
 - (void)editButtonPressed:(UIButton*)sender {
     
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"Pressed 'Manage' button in Funnl Overlay"];
+    //[[Mixpanel sharedInstance] track:@"Pressed 'Manage' button in Funnl Overlay"];
 #endif
     if (editOn) {
         editOn = FALSE;
@@ -429,7 +429,7 @@ NSString *msgBody;
 -(void)shareButtonClicked:(id)sender{
     self.hidden = YES;
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"Pressed 'Sharing' button in manage overlay"];
+    //[[Mixpanel sharedInstance] track:@"Pressed 'Sharing' button in manage overlay"];
 #endif
     UIButton *b = (UIButton*)sender;
     FunnelModel *fm = (FunnelModel *)filterArray[b.tag];
@@ -505,7 +505,7 @@ NSString *msgBody;
             [MBProgressHUD hideHUDForView:appDelegate.window animated:YES];
         } else {
             NSLog(@"%@ Successfully sent email!", [EmailService instance].smtpSession.username);
-            [[Mixpanel sharedInstance] track:@"Send Button from composeVC"];
+            //[[Mixpanel sharedInstance] track:@"Send Button from composeVC"];
             [MBProgressHUD hideHUDForView:appDelegate.window animated:YES];
             [[[EmailService instance].imapSession appendMessageOperationWithFolder:SENT messageData:rfc822Data flags:MCOMessageFlagMDNSent] start:^(NSError *error, uint32_t createdUID) {
                 if (error)
@@ -520,7 +520,7 @@ NSString *msgBody;
 -(void)settingsButtonClicked:(id)sender{
     self.hidden = YES;
 #ifdef TRACK_MIXPANEL
-  [[Mixpanel sharedInstance] track:@"Pressed 'Settings' button in manage overlay"];
+  //[[Mixpanel sharedInstance] track:@"Pressed 'Settings' button in manage overlay"];
 #endif
   UIButton *b = (UIButton*)sender;
   FunnelModel *fm = (FunnelModel *)filterArray[b.tag];

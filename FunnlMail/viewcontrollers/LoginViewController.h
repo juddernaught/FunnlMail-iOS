@@ -19,6 +19,7 @@
 @interface LoginViewController : UIViewController <NSURLConnectionDataDelegate,GTMFetcherAuthorizationProtocol,GTMHTTPFetcherServiceProtocol,UIPageViewControllerDataSource,UIPageViewControllerDelegate>
 {
     UIView *introlView;
+    int numberOfRetries;
 }
 @property (nonatomic, retain) UITextField *username;
 @property (nonatomic, retain) UITextField *password;

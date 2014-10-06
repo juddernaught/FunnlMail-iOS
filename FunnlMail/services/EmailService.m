@@ -151,9 +151,6 @@ static NSString *currentFolder;
 		if (error == nil) {
             //[self performSelectorInBackground:@selector(checkMailsAtStart:) withObject:fv];
             [self performSelector:@selector(checkMailsAtStart:) withObject:fv afterDelay:0.3];
-            NSLog(@"--- Track Mixpanel Analytics ---");
-            AppDelegate *appDelegate = APPDELEGATE;
-            [appDelegate trackMixpanelAnalytics];
 
 		} else {
 			NSLog(@"error loading account: %@", error);
@@ -678,6 +675,10 @@ static NSString *currentFolder;
                           [tempAppDelegate.progressHUD setHidden:YES];
                           [tempAppDelegate.progressHUD show:NO];
                           [fv.activityIndicator stopAnimating];
+                          
+                          NSLog(@"--- Track Mixpanel Analytics ---");
+                          AppDelegate *appDelegate = APPDELEGATE;
+                          [appDelegate trackMixpanelAnalytics];
 
                           if([folderName isEqualToString:SENT]  || [folderName isEqualToString:TRASH] || [folderName isEqualToString:DRAFTS] || [folderName isEqualToString:ARCHIVE]){
                               [MBProgressHUD hideAllHUDsForView:appDelegate.window animated:YES];

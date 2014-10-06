@@ -134,6 +134,7 @@ UIButton *loginButton;
 }
 
 - (void) viewWillAppear:(BOOL)animated {
+    numberOfRetries = 1;
     [[self navigationController] setNavigationBarHidden:YES animated:NO];
 }
 
@@ -273,7 +274,7 @@ UIButton *loginButton;
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     [self setDrawerControllerOnWindow];
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"Viewed last slider"];
+    //[[Mixpanel sharedInstance] track:@"Viewed last slider"];
 #endif
     if(appDelegate.didLoginIn) {
         [appDelegate showWelcomeOverlay];
@@ -320,7 +321,7 @@ UIButton *loginButton;
         // Authentication failed
     } else {
 #ifdef TRACK_MIXPANEL
-        [[Mixpanel sharedInstance] track:@"Signed into email"]; // Signed into Gmail
+        //[[Mixpanel sharedInstance] track:@"Signed into email"]; // Signed into Gmail
 #endif
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"is_tutorial"];
         [[NSUserDefaults standardUserDefaults] synchronize];
@@ -338,6 +339,8 @@ UIButton *loginButton;
             [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"PRIMARY_PAGE_TOKEN"];
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"IS_NEW_INSTALL"];
             [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"MODSEQ"];
+            [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"EMAIL_LOGGED_IN"];
+
             [[NSUserDefaults standardUserDefaults] synchronize];
             [[EmailService instance] clearData];
             [EmailService instance].userEmailID = @"";
@@ -746,20 +749,31 @@ UIButton *loginButton;
             NSString* currentName = [json objectForKey:@"name"];
             NSString* currentUserImageURL = [json objectForKey:@"picture"];
             
-            // Added by Chad to track users
-            Mixpanel *mixpanel = [Mixpanel sharedInstance];
+            [[NSUserDefaults standardUserDefaults] setObject:currentEmail forKey:@"EMAIL_LOGGED_IN"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
             
-            // Associate all future events sent from
-            // the library with a distinct_id
-            [mixpanel identify: mixpanel.distinctId];
-            
-            [mixpanel.people set:@{@"Email" : currentEmail}];
-            [mixpanel.people set:@{@"Name" : currentName}];
+            appDelegate.loggedInEmailAddress = [[NSString alloc] initWithString:currentEmail];
 
+#ifdef TRACK_MIXPANEL
+            AppDelegate *appDelegate = APPDELEGATE;
+            Mixpanel *mixpanel = [Mixpanel sharedInstance];
+            [mixpanel identify: appDelegate.loggedInEmailAddress];
+
+            if(appDelegate.isFreshInstall == NO){
+                [[Mixpanel sharedInstance] track:@"first time user logged in"];
+                [mixpanel.people set:@{@"User has visited funnel store": @0}];
+                [mixpanel.people set:@{@"User has created funnel from VIP": @0}];
+                [mixpanel.people set:@{@"User swiped to create funnel": @0}];
+                [mixpanel.people set:@{@"funnel count": @0}];
+            }
+            [mixpanel.people set:@{@"Email" : currentEmail}];
+            [mixpanel.people set:@{@"User name" : currentName}];
+            [mixpanel.people set:@{@"$email" : currentEmail}];
+#endif
+            
             [EmailService instance].userEmailID = currentEmail;
             [EmailService instance].userImageURL = currentUserImageURL;
             [EmailService instance].currentName = currentName;
-            
 
             if(![appDelegate.contextIOAPIClient isAuthorized]){
 
@@ -848,7 +862,18 @@ UIButton *loginButton;
         if (error != nil) {
             // status code or network error
             NSLog(@"******* --Message info error %@: ", [error description]);
-            [self startFirstTimeLogin];
+            if(numberOfRetries < 3){
+                NSString *nextPageToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"PRIMARY_PAGE_TOKEN"];
+                if(nextPageToken == nil || nextPageToken.length <= 0){
+                    nextPageToken = @"";
+                }
+                [[Mixpanel sharedInstance] track:@"Primary Fails" properties:@{@"retries":[NSNumber numberWithInt:numberOfRetries]}];
+                [self getPrimaryMessages:emailStr nextPageToken:nextPageToken numberOfMaxResult:100];
+                numberOfRetries++;
+            }
+            else{
+                [self startFirstTimeLogin];
+            }
             
         } else {
             // succeeded

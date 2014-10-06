@@ -489,7 +489,12 @@
     else {
         
         NSLog(@"Write dismissing pop up");
-
+        AppDelegate *appDelegate = APPDELEGATE;
+        BOOL isFromLogin = [[NSUserDefaults standardUserDefaults] boolForKey:@"outter_tutorial"];
+        if(appDelegate.isFreshInstall == NO &&  isFromLogin == NO) {
+            [[Mixpanel sharedInstance] track:@"first time user finished tutorial"];
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"IS_FRESH_INSTALL"];
+        }
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"is_tutorial"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         [self loadInitActivity];
@@ -503,7 +508,7 @@
     [appDelegate.window setRootViewController:appDelegate.drawerController];
     [appDelegate.window makeKeyAndVisible];
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"Viewed last slider"];
+    //[[Mixpanel sharedInstance] track:@"Viewed last slider"];
 #endif
 }
 

@@ -115,7 +115,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
         self.navigationItem.title = ALL_OTHER_FUNNL_DISPLAY_NAME;
         //[self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xF7F7F7)];
 #ifdef TRACK_MIXPANEL
-        [[Mixpanel sharedInstance] track:@"Viewed 'All other' mail"];
+        //[[Mixpanel sharedInstance] track:@"Viewed 'All other' mail"];
 #endif
     }
     else if(currentFilterModel)
@@ -245,7 +245,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 -(void)menuButtonSelected{
     NSLog(@"Menu button selected");
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"Tapped on Left menu bar button"];
+    //[[Mixpanel sharedInstance] track:@"Tapped on Left menu bar button"];
 #endif
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 //    [appDelegate.drawerController openDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
@@ -260,7 +260,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
 
 -(void) filterButtonSelected{
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"Tapped on Funnl button"];
+    //[[Mixpanel sharedInstance] track:@"Tapped on Funnl button"];
 #endif
     AppDelegate *tempAppDelegate = APPDELEGATE;
 //    if (tempAppDelegate.funnelUpDated) {
@@ -306,7 +306,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     NSLog(@"Compose Email selected");
     
 #ifdef TRACK_MIXPANEL
-    [[Mixpanel sharedInstance] track:@"Tapped on compose email"];
+    //[[Mixpanel sharedInstance] track:@"Tapped on compose email"];
 #endif
     
     mainView.hidden = YES;
@@ -399,7 +399,7 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     else if ([filterModel.funnelName isEqualToString:ALL_OTHER_FUNNL]) {
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveOtherMessagesThanPrimary];
 #ifdef TRACK_MIXPANEL
-        [[Mixpanel sharedInstance] track:@"Viewed 'All other' mail"];
+        //[[Mixpanel sharedInstance] track:@"Viewed 'All other' mail"];
 #endif
 //        [self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xF7F7F7)];
         

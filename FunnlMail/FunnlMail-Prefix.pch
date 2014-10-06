@@ -34,6 +34,8 @@
 #define CSV_FILE_NAME @"store"
 #define STORE_FUNNL_TABLE_VIEW_SECTION_HEIGHT 30
 
+#define CONCURRENCY_TASK 1
+
 #define EMPTY_DELIMITER @"#NOT#"
 #define HEIGHT [[UIScreen mainScreen] bounds].size.height
 #define WIDTH [[UIScreen mainScreen] bounds].size.width
@@ -111,7 +113,7 @@
 #define TIME_FOR_FADE_IN 0.4
 
 #ifdef DEBUG
-    #define TIME_FOR_ANIMATION 2
+    #define TIME_FOR_ANIMATION 0
 #else
     #define TIME_FOR_ANIMATION 2
 #endif

@@ -46,4 +46,5 @@
 
 - (NSString *)latestSecondaryTT;
 - (NSArray *) retrieveSenderOfNewSecondary;
+- (NSArray *)retrieveAllMessageWithKey:(NSString *)key;
 @end

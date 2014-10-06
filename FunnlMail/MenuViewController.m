@@ -235,7 +235,7 @@
         NSLog(@"sent mail requested");
         [MBProgressHUD showHUDAddedTo:appDelegate.window animated:YES];
 #ifdef TRACK_MIXPANEL
-        [[Mixpanel sharedInstance] track:@"Viewed sent mail"];
+        //[[Mixpanel sharedInstance] track:@"Viewed sent mail"];
 #endif
          //The following line is required to get to the emailTableVC in mainVC
          // [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject;
@@ -254,7 +254,7 @@
         [MBProgressHUD showHUDAddedTo:appDelegate.window animated:YES];
 
 #ifdef TRACK_MIXPANEL
-        [[Mixpanel sharedInstance] track:@"Viewed archive mail"];
+        //[[Mixpanel sharedInstance] track:@"Viewed archive mail"];
 #endif
         
         appDelegate.currentFunnelString = ARCHIVE;
@@ -268,7 +268,7 @@
         [MBProgressHUD showHUDAddedTo:appDelegate.window animated:YES];
 
 #ifdef TRACK_MIXPANEL
-        [[Mixpanel sharedInstance] track:@"Viewed drafts"];
+        //[[Mixpanel sharedInstance] track:@"Viewed drafts"];
 #endif
         
         appDelegate.currentFunnelString = DRAFTS;
@@ -291,7 +291,7 @@
         [MBProgressHUD showHUDAddedTo:appDelegate.window animated:YES];
 
 #ifdef TRACK_MIXPANEL
-        [[Mixpanel sharedInstance] track:@"Viewed trash"];
+        //[[Mixpanel sharedInstance] track:@"Viewed trash"];
 #endif
         
         appDelegate.currentFunnelString = TRASH;
@@ -320,6 +320,7 @@
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"IS_NEW_INSTALL"];
         [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"MODSEQ"];
         [[NSUserDefaults standardUserDefaults] synchronize];
+        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"EMAIL_LOGGED_IN"];
         [[EmailService instance] clearData];
         [EmailService instance].userEmailID = @"";
 
