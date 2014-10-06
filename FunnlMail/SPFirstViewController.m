@@ -79,6 +79,13 @@
 
 - (void)addFeatureToSliderWithPageNo:(NSNumber *)pageNo {
     if (pageNo.integerValue >= 1 && pageNo.integerValue < 11) {
+        if (pageNo.integerValue == 1) {
+            UIView *tapHere = [[UIView alloc] initWithFrame:CGRectMake(WIDTH - 46, HEIGHT/2 - 8, 165, 165)];
+            
+            UIImageView *tapHereImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tap-here"]];
+            [tapHere addSubview:tapHereImageView];
+            [self.view addSubview:tapHere];
+        }
         PulsingHaloLayer *layer = [PulsingHaloLayer layer];
         halo = layer;
         halo.pulseInterval = 0;

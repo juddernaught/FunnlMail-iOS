@@ -96,6 +96,7 @@
 		66F2C48B18E3293F00CD593E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C46D18E3293E00CD593E /* UIKit.framework */; };
 		66F2C49318E3293F00CD593E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66F2C49118E3293F00CD593E /* InfoPlist.strings */; };
 		66F2C49518E3293F00CD593E /* FunnlMailTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F2C49418E3293F00CD593E /* FunnlMailTests.m */; };
+		66F8A52319E1FEB40020DBFA /* tap-here@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66F8A52219E1FEB40020DBFA /* tap-here@2x.png */; };
 		B703C50419760E27003037FC /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B703C50319760E27003037FC /* AddressBook.framework */; };
 		B7169C84199C6D78004D8759 /* FAQVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B7169C83199C6D78004D8759 /* FAQVC.m */; };
 		B720A24519BCEAEF002C08B9 /* intro slider 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B720A24019BCEAEF002C08B9 /* intro slider 1.jpg */; };
@@ -580,6 +581,7 @@
 		66F2C49018E3293F00CD593E /* FunnlMailTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FunnlMailTests-Info.plist"; sourceTree = "<group>"; };
 		66F2C49218E3293F00CD593E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		66F2C49418E3293F00CD593E /* FunnlMailTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FunnlMailTests.m; sourceTree = "<group>"; };
+		66F8A52219E1FEB40020DBFA /* tap-here@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tap-here@2x.png"; sourceTree = "<group>"; };
 		B703C50319760E27003037FC /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		B7169C82199C6D78004D8759 /* FAQVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAQVC.h; sourceTree = "<group>"; };
 		B7169C83199C6D78004D8759 /* FAQVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FAQVC.m; sourceTree = "<group>"; };
@@ -1724,6 +1726,7 @@
 		FA3FC05819D43CAF00BB928E /* Tutorials */ = {
 			isa = PBXGroup;
 			children = (
+				66F8A52219E1FEB40020DBFA /* tap-here@2x.png */,
 				FA3FC05919D43CAF00BB928E /* IntroTakeMeToInbox@2x.png */,
 				FA3FC05A19D43CAF00BB928E /* introTutorial01@2x.png */,
 				FA3FC05B19D43CAF00BB928E /* introTutorial02@2x.png */,
@@ -2326,6 +2329,7 @@
 				D1EFF4C119818B6F0031A1D1 /* button-provider-aol.png in Resources */,
 				66B1365C19C76F4C001540A6 /* addIcon@2x.png in Resources */,
 				FA11B2D8199908D200B4EA86 /* popoverArrowDown.png in Resources */,
+				66F8A52319E1FEB40020DBFA /* tap-here@2x.png in Resources */,
 				FABAF07D1976507E00AA7918 /* News.png in Resources */,
 				FABAF09B1976507E00AA7918 /* settingListIcon.png in Resources */,
 				FABAF0931976507E00AA7918 /* alertListIcon.png in Resources */,
