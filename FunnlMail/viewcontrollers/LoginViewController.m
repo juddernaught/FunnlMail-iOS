@@ -764,6 +764,7 @@ UIButton *loginButton;
                 [mixpanel.people set:@{@"User has visited funnel store": @0}];
                 [mixpanel.people set:@{@"User has created funnel from VIP": @0}];
                 [mixpanel.people set:@{@"User swiped to create funnel": @0}];
+                [mixpanel.people set:@{@"funnel count": @0}];
             }
             [mixpanel.people set:@{@"Email" : currentEmail}];
             [mixpanel.people set:@{@"User name" : currentName}];

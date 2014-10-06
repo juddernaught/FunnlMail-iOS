@@ -21,6 +21,7 @@
 {
     UIView *showWelcomeOverlay;
     BOOL hasStartLoginAlreadyOccured;
+    NSString *MIXPANEL_TOKEN;
 
 }
 @property (nonatomic,strong)  NSNumber *didLoginIn;

@@ -22,11 +22,6 @@
 #import "VIPViewController.h"
 #import "MTStatusBarOverlay.h"
 
-#ifdef IS_RELEASE
-#define MIXPANEL_TOKEN @"9373e7f6b57abde608b47abf2f2f8326"
-#else
-#define MIXPANEL_TOKEN @"3335353d90043594517928ae8ec453f7"
-#endif
 
 @implementation AppDelegate
 @synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable,contextIOAPIClient,isAlreadyRequestedRefreshToken,currentSelectedFunnlModel,isPullToRefresh,navControllerForCentralView, hasStartLoginAlreadyOccured;
@@ -36,6 +31,12 @@
 #pragma mark - didFinishLaunchingx
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {   //[[UIApplication sharedApplication] setApplicationIconBadgeNumber:99]; //added by Chad
+    
+#if IS_RELEASE == 1
+    MIXPANEL_TOKEN = @"9373e7f6b57abde608b47abf2f2f8326";
+#else
+    MIXPANEL_TOKEN = @"3335353d90043594517928ae8ec453f7";
+#endif
 
     
     NSLog(@"---> %@",MIXPANEL_TOKEN);
