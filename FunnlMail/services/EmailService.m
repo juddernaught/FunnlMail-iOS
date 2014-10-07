@@ -888,8 +888,13 @@ static NSString *currentFolder;
     }
     
     //	self.isLoading = YES;
-    if(self.imapSession == nil)
+    if(self.imapSession == nil) {
+        MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
+        [overlay hide];
+        AppDelegate *tempAppDelegate = APPDELEGATE;
+        [[[(MainVC*)tempAppDelegate.mainVCControllerInstance emailsTableViewController] tablecontroller].refreshControl endRefreshing];
         return;
+    }
     
     [self.imapSession cancelAllOperations];
     NSString *inboxFolder = folderName;
