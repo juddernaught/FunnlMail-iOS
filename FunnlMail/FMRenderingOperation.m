@@ -50,7 +50,7 @@
         }
     }];
     
-    /*MCOIMAPMessageRenderingOperation * op = [[EmailService instance].imapSession htmlBodyRenderingOperationWithMessage:messageObj folder:@"INBOX"];
+    MCOIMAPMessageRenderingOperation * op = [[EmailService instance].imapSession htmlBodyRenderingOperationWithMessage:messageObj folder:@"INBOX"];
     
     [op start:^(NSString * htmlString, NSError * error) {
         NSArray *tempArray = [htmlString componentsSeparatedByString:@"<head>"];
@@ -69,7 +69,7 @@
             //NSLog(@"----ListView: HTML data callback recieved -----");
             [[MessageService instance] updateMessageWithHTMLContent:paramDict];
         }
-    }];*/
+    }];
 }
 
 - (NSString *)removeStartingSpaceFromString:(NSString*)sourceString {

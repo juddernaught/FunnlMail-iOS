@@ -34,13 +34,14 @@
 #define CSV_FILE_NAME @"store"
 #define STORE_FUNNL_TABLE_VIEW_SECTION_HEIGHT 30
 
-#define CONCURRENCY_TASK 1
+#define CONCURRENCY_TASK 2
 
 #define EMPTY_DELIMITER @"#NOT#"
 #define HEIGHT [[UIScreen mainScreen] bounds].size.height
 #define WIDTH [[UIScreen mainScreen] bounds].size.width
-#define NUMBER_OF_MESSAGES_TO_LOAD_AT_START 400
+#define NUMBER_OF_MESSAGES_TO_LOAD_AT_START 500
 #define NUMBER_OF_MESSAGES_TO_LOAD 100
+#define MESSAGE_PREVIEWS_TO_BE_LOADED 50
 #define NUMBER_OF_MESSAGES_TO_LOAD_ON_SEARCH NUMBER_OF_MESSAGES_TO_LOAD
 #define HELP_COMMENT @"   Help me organize my Inbox"
 #define GUIDE_FOR_SWIPING_CELL @"   Swipe any email to Funnel"

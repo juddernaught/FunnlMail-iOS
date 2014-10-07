@@ -73,10 +73,13 @@ static MessageService *instance;
             success = [db executeUpdate:@"INSERT INTO messages (messageID,messageJSON,read,date,gmailthreadid,skipFlag,categoryName,gmailMessageID) VALUES (:messageID,:messageJSON,:read,:date,:gmailthreadid,:skipFlag,:categoryName,:gmailMessageID)" withParameterDictionary:paramDict];
         }];
 
-        MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:messageModel.messageJSON];
-        AppDelegate *tempAppDelegate = APPDELEGATE;
-        FMRenderingOperation *downloadPreviewOperation = [[FMRenderingOperation alloc] initWithMessage:message];
-        [tempAppDelegate.previewDownloadQueue addOperation:downloadPreviewOperation];
+        if (counter >= messageModelArray.count - MESSAGE_PREVIEWS_TO_BE_LOADED)
+        {
+            MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:messageModel.messageJSON];
+            AppDelegate *tempAppDelegate = APPDELEGATE;
+            FMRenderingOperation *downloadPreviewOperation = [[FMRenderingOperation alloc] initWithMessage:message];
+            [tempAppDelegate.previewDownloadQueue addOperation:downloadPreviewOperation];
+        }
     }
     return success;
 }
