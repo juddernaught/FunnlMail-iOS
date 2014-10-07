@@ -227,7 +227,10 @@ UIButton *loginButton;
 //        NSString *scope = @"https://mail.google.com/"; // scope for Gmail
         NSString *scope = @"https://mail.google.com/ https://www.googleapis.com/auth/userinfo.profile https://www.google.com/m8/feeds "; // scope for Gmail https://www.googleapis.com/auth/gmail.readonly
 
-        GTMOAuth2ViewControllerTouch *viewController;
+        if (viewController) {
+            [viewController removeFromParentViewController];
+            viewController = nil;
+        }
         viewController = [[GTMOAuth2ViewControllerTouch alloc] initWithScope:scope
                                                                     clientID:kMyClientID
                                                                 clientSecret:kMyClientSecret
@@ -317,7 +320,13 @@ UIButton *loginButton;
       finishedWithAuth:(GTMOAuth2Authentication *)auth
                  error:(NSError *)error {
     if (error != nil) {
-        [[self navigationController] popViewControllerAnimated:YES];
+        NSArray *subViews = [self.view subviews];
+        for (UIView *views in subViews) {
+            [views removeFromSuperview];
+        }
+        [self checkCredentialsandShowLoginScreen];
+
+//        [[self navigationController] popViewControllerAnimated:YES];
         // Authentication failed
     } else {
 #ifdef TRACK_MIXPANEL

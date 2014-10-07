@@ -20,6 +20,7 @@
 {
     UIView *introlView;
     int numberOfRetries;
+    GTMOAuth2ViewControllerTouch *viewController;
 }
 @property (nonatomic, retain) UITextField *username;
 @property (nonatomic, retain) UITextField *password;
