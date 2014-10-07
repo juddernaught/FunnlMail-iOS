@@ -314,6 +314,9 @@
         [[EmailService instance].imapSession cancelAllOperations];
 
         [appDelegate.contextIOAPIClient clearCredentials];
+        appDelegate.currentFunnelDS = nil;
+        appDelegate.currentFunnelString = nil;
+        appDelegate.currentSelectedFunnlModel = nil;
         [SQLiteDatabase sharedInstance];
         [[NSUserDefaults standardUserDefaults] setObject:[NSMutableArray new] forKey: ALL_FUNNL];
         [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"PRIMARY_PAGE_TOKEN"];

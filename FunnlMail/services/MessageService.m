@@ -73,7 +73,7 @@ static MessageService *instance;
             success = [db executeUpdate:@"INSERT INTO messages (messageID,messageJSON,read,date,gmailthreadid,skipFlag,categoryName,gmailMessageID) VALUES (:messageID,:messageJSON,:read,:date,:gmailthreadid,:skipFlag,:categoryName,:gmailMessageID)" withParameterDictionary:paramDict];
         }];
 
-        if (counter >= messageModelArray.count - MESSAGE_PREVIEWS_TO_BE_LOADED)
+        if (counter >= messageModelArray.count - MESSAGE_PREVIEWS_TO_BE_LOADED && [messageModel.categoryName isEqualToString:PRIMARY_CATEGORY_NAME])
         {
             MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:messageModel.messageJSON];
             AppDelegate *tempAppDelegate = APPDELEGATE;
