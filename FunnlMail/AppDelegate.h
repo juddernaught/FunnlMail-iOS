@@ -47,6 +47,7 @@
 @property (strong,nonatomic) UIActivityIndicatorView *activityIndicator;
 @property (strong,nonatomic) UINavigationController *navControllerForCentralView;
 @property (strong,nonatomic) NSOperationQueue *previewDownloadQueue;
+@property (strong,nonatomic) NSOperationQueue *previewDownloadQueueForSecondary;
 @property (assign, nonatomic) BOOL isFreshInstall;
 @property (retain, nonatomic) NSString *loggedInEmailAddress;
 

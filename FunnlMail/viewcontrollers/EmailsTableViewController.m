@@ -122,7 +122,15 @@ UIView *greyView;
  
 }
 
-
+- (void)reloadDataInTableView {
+  if ([EmailService instance].filterMessages.count > 0) {
+    [self.tableView reloadData];
+  }
+  else {
+    [EmailService instance].filterMessages = (NSMutableArray *)[[MessageService instance] retrieveAllMessages];
+    [self performSelector:@selector(reloadDataInTableView) withObject:nil afterDelay:RELOADING_TIME_IN_CASE_NO_MESSAGE];
+  }
+}
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -134,6 +142,9 @@ UIView *greyView;
     NSLog(@"what is emailFolder: %@",self.emailFolder);
     if ([EmailService instance].filterMessages.count > 0) {
         [self.tableView reloadData];
+    }
+    else {
+      [self performSelector:@selector(reloadDataInTableView) withObject:nil afterDelay:RELOADING_TIME_IN_CASE_NO_MESSAGE];
     }
     funnlArray = [[FunnelService instance] allFunnels];
     tempAppDelegate.mainVCdelegate = self.mainVCdelegate;
@@ -440,6 +451,7 @@ UIView *greyView;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+  NSLog(@"Email tableview being reloaded -------- >>>>>");
     if(self.ClearTable) {
         NSLog(@"clear table == %d",self.ClearTable);
         return 0;
@@ -451,6 +463,7 @@ UIView *greyView;
                 return 1;
             return 0;
         }
+    NSLog(@"[EmailService instance].filterMessages.count %d",(int)[EmailService instance].filterMessages.count);
         return [EmailService instance].filterMessages.count;
     }
     else{
@@ -483,8 +496,6 @@ UIView *greyView;
                 if (tempCellForDisplay.tag == indexPath.row) {
                     tempCellForDisplay = nil;
                 }
-//                else
-//                    [cell resetToOriginalState];
                 cell.funnlLabel1.text = @"";
                 cell.funnlLabel2.text = @"";
                 cell.funnlLabel3.text = @"";
@@ -492,9 +503,16 @@ UIView *greyView;
                 cell.funnlLabel2.backgroundColor = CLEAR_COLOR;
                 cell.funnlLabel3.backgroundColor = CLEAR_COLOR;
                 
+                MCOIMAPMessage *message = nil;
+                MessageModel *cellMessageModel = nil;
                 NSArray *tempMessageArray = [EmailService instance].filterMessages;
                 if(tempMessageArray.count == 0){
+                    tempMessageArray = nil;
                     return cell;
+                }
+                else {
+                    message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
+                    cellMessageModel = [EmailService instance].filterMessages[indexPath.row];
                 }
                 MessageModel *messageModel =tempMessageArray[indexPath.row];
                 NSMutableDictionary *funnlLabelDictionary= [self getFunnlsDictionary:messageModel];
@@ -512,28 +530,15 @@ UIView *greyView;
                             cell.funnlLabel1.textColor = [UIColor whiteColor];
                         }
                     }
-//                    if(funnlLabelCount == 0){
-//                    
-//                    }
-//                    else if(funnlLabelCount == 1){
-//                        cell.funnlLabel2.text = key;
-//                        if(funnlLabelDictionary.allKeys.count > 1){
-//                            cell.funnlLabel2.text = [NSString stringWithFormat:@"%@ + %d ",key,funnlLabelDictionary.allKeys.count-1];
-//                            cell.funnlLabel2.backgroundColor = [UIColor colorWithHexString:[funnlLabelDictionary objectForKey:key]];
-//                            cell.funnlLabel2.textColor = [UIColor whiteColor];
-//                        }
-//                    }
                     [cell.funnlLabel1 sizeThatFits:CGSizeMake(60, 20)];
                     [cell.funnlLabel2 sizeThatFits:CGSizeMake(60, 20)];
                     funnlLabelCount++;
                 }
                 
-                
-                //[cell.labelNameText setAttributedText:[self returnFunnelString:(MessageModel*)[EmailService instance].filterMessages[indexPath.row]]];
                 cell.tag = indexPath.row;
                 cell.delegate = self;
-                MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
-                if ([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread] > 1) {
+                
+                if ([cellMessageModel numberOfEmailInThread] > 1) {
                     if ([self isThreadRead:[NSString stringWithFormat:@"%llul",message.gmailThreadID]]) {
                         cell.readLabel.backgroundColor = [UIColor clearColor];
                         cell.readLabel.hidden = YES;
@@ -552,7 +557,7 @@ UIView *greyView;
                     }
                 }
                 else{
-                    if([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] read]) {
+                    if([cellMessageModel read]) {
                         cell.readLabel.backgroundColor = [UIColor clearColor];
                         cell.readLabel.hidden = YES;
                         
@@ -580,12 +585,7 @@ UIView *greyView;
                 }
                 else
                     cell.dateLabel.text = [message.header.date timeAgo];
-//                if(message.header.from.displayName.length){
-//                    cell.senderLabel.text = [self removeAngularBracket:message.header.from.displayName];
-//                }
-//                else {
-//                    cell.senderLabel.text = [self removeAngularBracket:message.header.from.mailbox];
-//                }
+                
                 NSString *senderLabelText = [self removeAngularBracket:[self getDisplayName:message]];
                 if (senderLabelText) {
                     cell.senderLabel.text = senderLabelText;
@@ -600,7 +600,7 @@ UIView *greyView;
                 if (cell.subjectLabel.text.length == 0)
                     cell.subjectLabel.text = @"No Subject";
                 else {
-                    NSString *subjectString = cell.subjectLabel.text;
+                    //NSString *subjectString = cell.subjectLabel.text;
                     //NSLog(@"%@",subjectString);
                     if ([self willFitString:cell.subjectLabel.text InLabel:cell.subjectLabel]) {
                         CGSize labelSize = [cell.subjectLabel.text sizeWithFont:MAIL_SUBJECT_FONT constrainedToSize:CGSizeMake(cell.subjectLabel.frame.size.width, cell.subjectLabel.frame.size.height) lineBreakMode:NSLineBreakByCharWrapping];
@@ -611,8 +611,8 @@ UIView *greyView;
                     }
                 }
                 
-                if([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread] > 1){
-                    cell.threadLabel.text = [NSString stringWithFormat:@" (%d)",[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread]];
+                if([cellMessageModel numberOfEmailInThread] > 1){
+                    cell.threadLabel.text = [NSString stringWithFormat:@" (%d)",[cellMessageModel numberOfEmailInThread]];
                     [cell.threadLabel setHidden:NO];
                     [cell.detailDiscloser setHidden:YES];
                 }
@@ -771,8 +771,8 @@ UIView *greyView;
                     FunnlPopUpView *funnlPopUpView = [[FunnlPopUpView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) withNewPopup:YES withMessageId:uidKey withMessage:message subViewOnViewController:self];
                     funnlPopUpView.mainVCdelegate = self.mainVCdelegate;
                     if ([FunnelService instance].allFunnels.count < 4){
-//                        RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Hello Funnler!" message:@"Funnls help you to filter out emails from important senders – you can add multiple senders to a Funnl (eg. team) or create a new Funnl for key senders (eg. boss)"];
-//                        [modal show];
+                        /*RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Hello Funnler!" message:@"Funnls help you to filter out emails from important senders – you can add multiple senders to a Funnl (eg. team) or create a new Funnl for key senders (eg. boss)"];
+                        [modal show];*/
                     }
                     [self.view addSubview:funnlPopUpView];
                     /*funnlPopUpView.alpha = 0;
@@ -813,7 +813,7 @@ UIView *greyView;
                 if ([EmailService instance].messages.count < [EmailService instance].totalNumberOfMessages){
                     cell.textLabel.text = @"Load more";
                 }
-//                    cell.textLabel.text = [NSString stringWithFormat:@"Load %lu more",MIN([EmailService instance].totalNumberOfMessages - [EmailService instance].messages.count, NUMBER_OF_MESSAGES_TO_LOAD)];
+                    //cell.textLabel.text = [NSString stringWithFormat:@"Load %lu more",MIN([EmailService instance].totalNumberOfMessages - [EmailService instance].messages.count, NUMBER_OF_MESSAGES_TO_LOAD)];
                 else
                     cell.textLabel.text = nil;
                 
@@ -1236,94 +1236,89 @@ UIView *greyView;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if(isSearching == NO){
-        switch (indexPath.section)
-        {
-            case 0:
+    if ([EmailService instance].filterMessages.count > indexPath.row) {
+
+        if(isSearching == NO){
+            switch (indexPath.section)
             {
-#ifdef TRACK_MIXPANEL
-                //[[Mixpanel sharedInstance] track:@"User Viewed Email"];
-#endif
-                MCOIMAPMessage *msg = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
-                //MsgViewController *vc = [[MsgViewController alloc] init];
-                MCTMsgViewController *vc = [[MCTMsgViewController alloc] init];
-                vc.folder = self.emailFolder;
-                vc.selectedIndexPath = indexPath;
-                vc.messageModel = (MessageModel*)[EmailService instance].filterMessages[indexPath.row];
-                vc.address = msg.header.from;
-                vc.message = msg;
-                vc.session = [EmailService instance].imapSession;
-//                msg.flags = msg.flags | MCOMessageFlagSeen;
-//                MCOIMAPOperation *msgOperation=[[EmailService instance].imapSession storeFlagsOperationWithFolder:self.emailFolder uids:[MCOIndexSet indexSetWithIndex:msg.uid] kind:MCOIMAPStoreFlagsRequestKindAdd flags:MCOMessageFlagSeen];
-//                [msgOperation start:^(NSError * error)
-//                 {
-//                     NSLog(@"selected message flags %u UID is %u",msg.flags,msg.uid );
-//                 }];
-                if ([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread] > 1) {
-                    EmailThreadTableViewController *threadViewController = [[EmailThreadTableViewController alloc] initWithGmailThreadID:[NSString stringWithFormat:@"%llu",msg.gmailThreadID]];
-                    [self.navigationController pushViewController:threadViewController animated:YES];
+                case 0:
+                {
+    #ifdef TRACK_MIXPANEL
+                    //[[Mixpanel sharedInstance] track:@"User Viewed Email"];
+    #endif
+                    MCOIMAPMessage *msg = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
+                    //MsgViewController *vc = [[MsgViewController alloc] init];
+                    MCTMsgViewController *vc = [[MCTMsgViewController alloc] init];
+                    vc.folder = self.emailFolder;
+                    vc.selectedIndexPath = indexPath;
+                    vc.messageModel = (MessageModel*)[EmailService instance].filterMessages[indexPath.row];
+                    vc.address = msg.header.from;
+                    vc.message = msg;
+                    vc.session = [EmailService instance].imapSession;
+                    if ([(MessageModel*)[EmailService instance].filterMessages[indexPath.row] numberOfEmailInThread] > 1) {
+                        EmailThreadTableViewController *threadViewController = [[EmailThreadTableViewController alloc] initWithGmailThreadID:[NSString stringWithFormat:@"%llu",msg.gmailThreadID]];
+                        [self.navigationController pushViewController:threadViewController animated:YES];
+                    }
+                    else{
+                        [self setReadMessage:(MessageModel*)[EmailService instance].filterMessages[indexPath.row]];
+                        [self.mainVCdelegate pushViewController:vc];
+                    }
+                    break;
+                }
+                    
+                case 1:
+                {
+                    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                    if (!self.isLoading && [EmailService instance].messages.count < [EmailService instance].totalNumberOfMessages)
+                    {
+                        NSLog(@"Call to loadLastNMessages from  didSelectRowAtIndexPath   function & isSearching = NO");
+                        AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+                        if(appDelegate.internetAvailable){
+                            NSString *PRIMARY_PAGE_TOKEN = [[NSUserDefaults standardUserDefaults] objectForKey:@"PRIMARY_PAGE_TOKEN"];
+                            //if(PRIMARY_PAGE_TOKEN)
+                            [appDelegate.loginViewController getPrimaryMessages:[EmailService instance].userEmailID nextPageToken:PRIMARY_PAGE_TOKEN numberOfMaxResult:100 ];
+                            
+                            //int totalNumberOfMessage = (int)[[MessageService instance] messagesAllTopMessages].count + NUMBER_OF_MESSAGES_TO_LOAD;
+                            [[EmailService instance] loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD withTableController:self withFolder:INBOX  withFetchRange:MCORangeEmpty];
+                            cell.accessoryView = self.loadMoreActivityView;
+                            [self.loadMoreActivityView startAnimating];
+                        }
+                    }
+                    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+                    break;
+                }
+                    
+                default:
+                    break;
+            }
+        }
+        else{
+            if (indexPath.section == 1) {
+                if(self.filterModel == nil || [self.filterModel.funnelId isEqualToString:@"0"] || [self.filterModel.funnelId isEqualToString:@"1"]){
+                    [self searchOnlineWithString:mailSearchBar.text];
                 }
                 else{
-                    [self setReadMessage:(MessageModel*)[EmailService instance].filterMessages[indexPath.row]];
-                    [self.mainVCdelegate pushViewController:vc];
+                    
                 }
-                break;
             }
-                
-            case 1:
-            {
-                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                if (!self.isLoading && [EmailService instance].messages.count < [EmailService instance].totalNumberOfMessages)
-                {
-//                    NSLog(@"[EmailsTableViewController didSelect] %d",totalNumberOfMessage);
-                    NSLog(@"Call to loadLastNMessages from  didSelectRowAtIndexPath   function & isSearching = NO");
-                    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-                    if(appDelegate.internetAvailable){
-                        NSString *PRIMARY_PAGE_TOKEN = [[NSUserDefaults standardUserDefaults] objectForKey:@"PRIMARY_PAGE_TOKEN"];
-                        //if(PRIMARY_PAGE_TOKEN)
-                        [appDelegate.loginViewController getPrimaryMessages:[EmailService instance].userEmailID nextPageToken:PRIMARY_PAGE_TOKEN numberOfMaxResult:100 ];
-                        
-                        //int totalNumberOfMessage = (int)[[MessageService instance] messagesAllTopMessages].count + NUMBER_OF_MESSAGES_TO_LOAD;
-                        [[EmailService instance] loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD withTableController:self withFolder:INBOX  withFetchRange:MCORangeEmpty];
-                        cell.accessoryView = self.loadMoreActivityView;
-                        [self.loadMoreActivityView startAnimating];
-                    }
-                }
-                [tableView deselectRowAtIndexPath:indexPath animated:YES];
-                break;
+            else {
+    #ifdef TRACK_MIXPANEL
+                //[[Mixpanel sharedInstance] track:@"User viewed email"];
+    #endif
+                MCOIMAPMessage *msg = [MCOIMAPMessage importSerializable:[(MessageModel*)searchMessages[indexPath.row] messageJSON]];
+                //MsgViewController *vc = [[MsgViewController alloc] init];
+                MCTMsgViewController *vc = [[MCTMsgViewController alloc] init];
+                vc.selectedIndexPath = indexPath;
+                vc.messageModel = (MessageModel*)searchMessages[indexPath.row];
+                vc.folder = self.emailFolder;
+                vc.message = msg;
+                vc.session = [EmailService instance].imapSession;
+                //[self.navigationController pushViewController:vc animated:YES];
+                [self setReadMessage:(MessageModel*)searchMessages[indexPath.row]];
+                [self.mainVCdelegate pushViewController:vc];
             }
-                
-            default:
-                break;
         }
     }
-    else{
-        if (indexPath.section == 1) {
-            if(self.filterModel == nil || [self.filterModel.funnelId isEqualToString:@"0"] || [self.filterModel.funnelId isEqualToString:@"1"]){
-                [self searchOnlineWithString:mailSearchBar.text];
-            }
-            else{
-                
-            }
-        }
-        else {
-#ifdef TRACK_MIXPANEL
-            //[[Mixpanel sharedInstance] track:@"User viewed email"];
-#endif
-            MCOIMAPMessage *msg = [MCOIMAPMessage importSerializable:[(MessageModel*)searchMessages[indexPath.row] messageJSON]];
-            //MsgViewController *vc = [[MsgViewController alloc] init];
-            MCTMsgViewController *vc = [[MCTMsgViewController alloc] init];
-            vc.selectedIndexPath = indexPath;
-            vc.messageModel = (MessageModel*)searchMessages[indexPath.row];
-            vc.folder = self.emailFolder;
-            vc.message = msg;
-            vc.session = [EmailService instance].imapSession;
-            //[self.navigationController pushViewController:vc animated:YES];
-            [self setReadMessage:(MessageModel*)searchMessages[indexPath.row]];
-            [self.mainVCdelegate pushViewController:vc];
-        }
-    }
-    
 }
 
 #pragma mark -

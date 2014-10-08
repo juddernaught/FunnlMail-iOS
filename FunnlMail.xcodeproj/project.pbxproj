@@ -2830,7 +2830,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "69e28a4d-1186-4fab-8041-73ac81f00e8b";
+				PROVISIONING_PROFILE = "e29d5397-e36a-4271-82d2-eeeeca1d2b79";
 				SDKROOT = iphoneos8.0;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
@@ -2896,7 +2896,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "85c737f3-eca1-471f-b3c1-e27cb214f723";
+				PROVISIONING_PROFILE = "a0ff5168-ae66-4265-9505-57f6d8fdde9f";
 				SDKROOT = iphoneos8.0;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;

@@ -47,6 +47,9 @@ static MessageService *instance;
 -(BOOL) insertBulkMessages:(NSArray *)messageModelArray{
     
     __block BOOL success = NO;
+  int counterforsecondary = 0;
+  int counterforprimary = 0;
+  NSMutableArray *tempArray = [[NSMutableArray alloc] init];
     for (int counter = messageModelArray.count - 1 ; counter >= 0 ; counter--) {
         MessageModel *messageModel = messageModelArray[counter];
         __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
@@ -73,15 +76,36 @@ static MessageService *instance;
             success = [db executeUpdate:@"INSERT INTO messages (messageID,messageJSON,read,date,gmailthreadid,skipFlag,categoryName,gmailMessageID) VALUES (:messageID,:messageJSON,:read,:date,:gmailthreadid,:skipFlag,:categoryName,:gmailMessageID)" withParameterDictionary:paramDict];
         }];
 
-        if (counter >= messageModelArray.count - MESSAGE_PREVIEWS_TO_BE_LOADED && [messageModel.categoryName isEqualToString:PRIMARY_CATEGORY_NAME])
+        if (counterforprimary <= MESSAGE_PREVIEWS_TO_BE_LOADED && [messageModel.categoryName isEqualToString:PRIMARY_CATEGORY_NAME])
         {
             MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:messageModel.messageJSON];
             AppDelegate *tempAppDelegate = APPDELEGATE;
-            FMRenderingOperation *downloadPreviewOperation = [[FMRenderingOperation alloc] initWithMessage:message];
+            FMRenderingOperation *downloadPreviewOperation = [[FMRenderingOperation alloc] initWithMessage:message andPrimaryFlag:YES];
             [tempAppDelegate.previewDownloadQueue addOperation:downloadPreviewOperation];
+          counterforprimary++;
+          if (tempArray.count > counterforsecondary && counterforprimary % 4 == 0) {
+            MCOIMAPMessage *tempMessage = tempArray[counterforsecondary];
+            AppDelegate *tempAppDelegate = APPDELEGATE;
+            FMRenderingOperation *downloadPreviewOperation = [[FMRenderingOperation alloc] initWithMessage:tempMessage andPrimaryFlag:NO];
+            [tempAppDelegate.previewDownloadQueue addOperation:downloadPreviewOperation];
+            counterforsecondary ++;
+          }
+        }
+        else if (counter >= messageModelArray.count - MESSAGE_PREVIEWS_TO_BE_LOADED - 10) {
+          MCOIMAPMessage *message = [MCOIMAPMessage importSerializable:messageModel.messageJSON];
+          [tempArray addObject:message];
         }
     }
-    return success;
+//  if (tempArray.count) {
+//    for (int counter = 0 ; counter < 5 ; counter++) {
+//      MCOIMAPMessage *tempMessage = tempArray[counter];
+//      AppDelegate *tempAppDelegate = APPDELEGATE;
+//      FMRenderingOperation *downloadPreviewOperation = [[FMRenderingOperation alloc] initWithMessage:tempMessage];
+//      [tempAppDelegate.previewDownloadQueueForSecondary addOperation:downloadPreviewOperation];
+//    }
+//  }
+  tempArray = nil;
+  return success;
 }
 
 -(BOOL) insertMessage:(MessageModel *)messageModel{

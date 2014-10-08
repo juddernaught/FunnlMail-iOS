@@ -881,6 +881,10 @@ static NSString *currentFolder;
             [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(startAutoRefresh) object:nil];
             [self performSelector:@selector(startAutoRefresh) withObject:nil afterDelay:AUTOREFRESH_DELAY];
         }
+        MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
+        [overlay hide];
+        AppDelegate *tempAppDelegate = APPDELEGATE;
+        [[[(MainVC*)tempAppDelegate.mainVCControllerInstance emailsTableViewController] tablecontroller].refreshControl endRefreshing];
         return;
     }
     else{

@@ -59,7 +59,8 @@
     UITableView *autocompleteTableView;
     NSMutableArray *emailArr;
     CGFloat _keyboardHeight;
-    
+  
+  UITapGestureRecognizer *singleTapGesture;
 }
 @property (weak) id<MainVCDelegate> mainVCdelegate;
 @property (strong, nonatomic)FunnelModel *oldModel;
