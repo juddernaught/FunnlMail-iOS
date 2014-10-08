@@ -124,6 +124,7 @@ UIView *greyView;
 
 - (void)reloadDataInTableView {
   if ([EmailService instance].filterMessages.count > 0) {
+    [[EmailService instance].imapSession cancelAllOperations];
     [self.tableView reloadData];
   }
   else {

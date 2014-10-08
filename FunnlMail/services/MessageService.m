@@ -96,14 +96,6 @@ static MessageService *instance;
           [tempArray addObject:message];
         }
     }
-//  if (tempArray.count) {
-//    for (int counter = 0 ; counter < 5 ; counter++) {
-//      MCOIMAPMessage *tempMessage = tempArray[counter];
-//      AppDelegate *tempAppDelegate = APPDELEGATE;
-//      FMRenderingOperation *downloadPreviewOperation = [[FMRenderingOperation alloc] initWithMessage:tempMessage];
-//      [tempAppDelegate.previewDownloadQueueForSecondary addOperation:downloadPreviewOperation];
-//    }
-//  }
   tempArray = nil;
   return success;
 }
