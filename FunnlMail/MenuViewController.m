@@ -47,11 +47,12 @@
 //}
 
 -(void)viewWillAppear:(BOOL)animated{
-    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"ALL_NOTIFS_ON_WEBHOOK_ID"]) {
+    /*if ([[NSUserDefaults standardUserDefaults] objectForKey:@"ALL_NOTIFS_ON_WEBHOOK_ID"]) {
         listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Create Funnel", @"Funnel Store",@"Turn Off All Alerts", @"Send Feedback",@"Tutorial",@"Help (FAQs)",@"LogOut",nil];
     } else {
         listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Create Funnel", @"Funnel Store", @"Turn On All Alerts", @"Send Feedback",@"Tutorial",@"Help (FAQs)",@"LogOut",nil];
-    }
+    }*/
+  listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Create Funnel", @"Funnel Store", @"Alerts", @"Send Feedback",@"Tutorial",@"Help (FAQs)",@"LogOut",nil];
     imageArray = [[NSMutableArray alloc] initWithObjects:@"",@"funnlIcon",@"storeListIcon",@"notifyListIcon", @"sendFeedbackListIcon",@"tutorialListIcon",@"helpListIcon", @"logoutListIcon",nil];
     [listView reloadData];
 }
@@ -194,8 +195,13 @@
         FAQVC *faq = [[FAQVC alloc]init];
         [[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationController pushViewController:faq animated:NO];
     }
-    
-    else if([cell.menuLabel.text isEqualToString:@"Turn On All Alerts"]){
+    else if ([cell.menuLabel.text isEqualToString:@"Alerts"]) {
+      FMNotificationsViewController *notificationsViewController = [[FMNotificationsViewController alloc] init];
+      [appDelegate.drawerController closeDrawerAnimated:YES completion:^(BOOL finished) {
+        [[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationController pushViewController:notificationsViewController animated:YES];
+      }];
+    }
+    /*else if([cell.menuLabel.text isEqualToString:@"Turn On All Alerts"]){
         cell.menuLabel.text = @"Turn Off All Alerts";
         NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
         [((AppDelegate *)[[UIApplication sharedApplication] delegate]).contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
@@ -214,7 +220,7 @@
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"createWebhooksandSaveFunnl --- deleteWebhookWithID : %@",error.userInfo.description);
         }];
-    }
+    }*/
     
     else if ([cell.menuLabel.text isEqualToString:@"Funnl Alerts"]){
         FunnlAlertsVC *alerts = [[FunnlAlertsVC alloc]init];
@@ -298,7 +304,6 @@
         [(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].navigationItem.title = @"Trash";
         [[EmailService instance] getDatabaseMessages:TRASH withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject];
         [[EmailService instance]loadLastNMessages:50 withTableController:[(UINavigationController *)[(MMDrawerController *) self.parentViewController centerViewController] topViewController].childViewControllers.firstObject withFolder:TRASH withFetchRange:MCORangeEmpty];
-        //[MBProgressHUD hideAllHUDsForView:appDelegate.window animated:YES];
     }
     
     else if ([cell.menuLabel.text isEqualToString:@"LogOut"]){

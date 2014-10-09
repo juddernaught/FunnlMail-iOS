@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MenuCell.h"
 #import "AppDelegate.h"
+#import "FMNotificationsViewController.h"
 @interface MenuViewController : UIViewController <UITableViewDataSource,UITableViewDelegate>
 {
 

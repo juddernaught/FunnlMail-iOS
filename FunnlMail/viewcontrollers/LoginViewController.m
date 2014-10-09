@@ -127,9 +127,8 @@ UIButton *loginButton;
     appDelegate.drawerController = [[MMDrawerController alloc] initWithCenterViewController:nav leftDrawerViewController:appDelegate.menuController];
     [appDelegate.drawerController setRestorationIdentifier:@"MMDrawer"];
     [appDelegate.drawerController setMaximumLeftDrawerWidth:250.0];
-    [appDelegate.drawerController setOpenDrawerGestureModeMask:MMOpenDrawerGestureModeAll];
+    [appDelegate.drawerController setOpenDrawerGestureModeMask:MMOpenDrawerGestureModeNone];
     [appDelegate.drawerController setCloseDrawerGestureModeMask:MMCloseDrawerGestureModeAll];
-    
 
 }
 

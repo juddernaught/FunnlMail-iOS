@@ -33,6 +33,10 @@
 {   //[[UIApplication sharedApplication] setApplicationIconBadgeNumber:99]; //added by Chad
     
 
+  if (![[NSUserDefaults standardUserDefaults] objectForKey:@"all_notificatio"]) {
+    [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"all_notificatio"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+  }
 #if IS_RELEASE == 1
     MIXPANEL_TOKEN = @"9373e7f6b57abde608b47abf2f2f8326";
 #else
@@ -387,6 +391,7 @@
     [[NSUserDefaults standardUserDefaults] synchronize];
     if([[NSUserDefaults standardUserDefaults] objectForKey:@"EMAIL_LOGGED_IN"]){
         loggedInEmailAddress = [[NSString alloc] initWithString:[[NSUserDefaults standardUserDefaults] objectForKey:@"EMAIL_LOGGED_IN"]];
+      [[EmailService instance] startAutoRefresh];
     }
     else{
         loggedInEmailAddress = @"";
@@ -406,19 +411,19 @@
     
     application.applicationIconBadgeNumber = 0;
     if ([[EmailService instance] userEmailID] && ![[[EmailService instance] userEmailID] isEqualToString:@""] && [[NSUserDefaults standardUserDefaults] boolForKey:@"is_tutorial"] == NO) {
-        MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
-        [overlay hide];
-        [overlay postImmediateMessage:@"Downloading..." animated:YES];
-        [overlay setDefaultStatusBarImage:[UIImage imageNamed:@""]];
-        overlay.animation = MTStatusBarOverlayAnimationShrink;  // MTStatusBarOverlayAnimationShrink
-        overlay.detailViewMode = MTDetailViewModeHistory;         // enable automatic history-tracking and show in detail-view
-        overlay.tag = 1;
-        overlay.progress = 0.0;
-        UIImageView *statusBarBackgroundImageView_ = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, 20)];
-		statusBarBackgroundImageView_.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		[overlay addSubviewToBackgroundView:statusBarBackgroundImageView_];
-
-        [self performSelector:@selector(dismissStatusBar) withObject:nil afterDelay:10];
+//        MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
+//        [overlay hide];
+//        [overlay postImmediateMessage:@"Downloading..." animated:YES];
+//        [overlay setDefaultStatusBarImage:[UIImage imageNamed:@""]];
+//        overlay.animation = MTStatusBarOverlayAnimationShrink;  // MTStatusBarOverlayAnimationShrink
+//        overlay.detailViewMode = MTDetailViewModeHistory;         // enable automatic history-tracking and show in detail-view
+//        overlay.tag = 1;
+//        overlay.progress = 0.0;
+//        UIImageView *statusBarBackgroundImageView_ = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, 20)];
+//		statusBarBackgroundImageView_.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//		[overlay addSubviewToBackgroundView:statusBarBackgroundImageView_];
+//
+//        [self performSelector:@selector(dismissStatusBar) withObject:nil afterDelay:10];
     }
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     self.startDate = [NSDate date];

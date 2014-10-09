@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		251050A519E6C38200312869 /* downImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 251050A319E6C38200312869 /* downImage.png */; };
+		251050A619E6C38200312869 /* upImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 251050A419E6C38200312869 /* upImage.png */; };
+		251050AD19E6C3CE00312869 /* downImage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 251050AB19E6C3CE00312869 /* downImage@2x.png */; };
+		251050AE19E6C3CE00312869 /* upImage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 251050AC19E6C3CE00312869 /* upImage@2x.png */; };
 		2522AC141998DBEC002B1207 /* UIBarButtonItem+WEPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 2522AC0C1998DBEC002B1207 /* UIBarButtonItem+WEPopover.m */; };
 		2522AC151998DBEC002B1207 /* WEPopoverContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2522AC0E1998DBEC002B1207 /* WEPopoverContainerView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		2522AC161998DBEC002B1207 /* WEPopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2522AC101998DBEC002B1207 /* WEPopoverController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -32,6 +36,10 @@
 		259ECEE519B9BA40001D7459 /* FMContactDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 259ECEE319B9BA40001D7459 /* FMContactDetailViewController.m */; };
 		259ECEE819B9F232001D7459 /* userPlaceholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 259ECEE619B9F232001D7459 /* userPlaceholder.png */; };
 		259ECEE919B9F232001D7459 /* userPlaceholder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 259ECEE719B9F232001D7459 /* userPlaceholder@2x.png */; };
+		25A4EE9919E653B90065E0AF /* FMNotificationsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 25A4EE9719E653B90065E0AF /* FMNotificationsViewController.h */; };
+		25A4EE9A19E653B90065E0AF /* FMNotificationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25A4EE9819E653B90065E0AF /* FMNotificationsViewController.m */; };
+		25A4EEA319E659340065E0AF /* FMNotificationsTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 25A4EEA119E659340065E0AF /* FMNotificationsTableViewCell.h */; };
+		25A4EEA419E659340065E0AF /* FMNotificationsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 25A4EEA219E659340065E0AF /* FMNotificationsTableViewCell.m */; };
 		25B5974F19D13C8100265978 /* FMMainViewCollectionCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 25B5974D19D13C8100265978 /* FMMainViewCollectionCell.h */; };
 		25B5975019D13C8100265978 /* FMMainViewCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B5974E19D13C8100265978 /* FMMainViewCollectionCell.m */; };
 		25B5975F19D15CD400265978 /* addIcon-FunnlOverlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 25B5975919D15CD400265978 /* addIcon-FunnlOverlay.png */; };
@@ -467,6 +475,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		251050A319E6C38200312869 /* downImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = downImage.png; sourceTree = "<group>"; };
+		251050A419E6C38200312869 /* upImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = upImage.png; sourceTree = "<group>"; };
+		251050AB19E6C3CE00312869 /* downImage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "downImage@2x.png"; sourceTree = "<group>"; };
+		251050AC19E6C3CE00312869 /* upImage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "upImage@2x.png"; sourceTree = "<group>"; };
 		2522AC0B1998DBEC002B1207 /* UIBarButtonItem+WEPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBarButtonItem+WEPopover.h"; sourceTree = "<group>"; };
 		2522AC0C1998DBEC002B1207 /* UIBarButtonItem+WEPopover.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBarButtonItem+WEPopover.m"; sourceTree = "<group>"; };
 		2522AC0D1998DBEC002B1207 /* WEPopoverContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WEPopoverContainerView.h; sourceTree = "<group>"; };
@@ -498,6 +510,10 @@
 		259ECEE319B9BA40001D7459 /* FMContactDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMContactDetailViewController.m; sourceTree = "<group>"; };
 		259ECEE619B9F232001D7459 /* userPlaceholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = userPlaceholder.png; sourceTree = "<group>"; };
 		259ECEE719B9F232001D7459 /* userPlaceholder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "userPlaceholder@2x.png"; sourceTree = "<group>"; };
+		25A4EE9719E653B90065E0AF /* FMNotificationsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMNotificationsViewController.h; sourceTree = "<group>"; };
+		25A4EE9819E653B90065E0AF /* FMNotificationsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMNotificationsViewController.m; sourceTree = "<group>"; };
+		25A4EEA119E659340065E0AF /* FMNotificationsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMNotificationsTableViewCell.h; sourceTree = "<group>"; };
+		25A4EEA219E659340065E0AF /* FMNotificationsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMNotificationsTableViewCell.m; sourceTree = "<group>"; };
 		25B5974D19D13C8100265978 /* FMMainViewCollectionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMMainViewCollectionCell.h; sourceTree = "<group>"; };
 		25B5974E19D13C8100265978 /* FMMainViewCollectionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMMainViewCollectionCell.m; sourceTree = "<group>"; };
 		25B5975919D15CD400265978 /* addIcon-FunnlOverlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "addIcon-FunnlOverlay.png"; sourceTree = "<group>"; };
@@ -1107,6 +1123,25 @@
 			path = FMContactDetailViewController;
 			sourceTree = "<group>";
 		};
+		25A4EE9219E6536D0065E0AF /* FMNotificationsViewCOntroller */ = {
+			isa = PBXGroup;
+			children = (
+				25A4EE9C19E659160065E0AF /* FMNotificationsUITableViewCell */,
+				25A4EE9719E653B90065E0AF /* FMNotificationsViewController.h */,
+				25A4EE9819E653B90065E0AF /* FMNotificationsViewController.m */,
+			);
+			path = FMNotificationsViewCOntroller;
+			sourceTree = "<group>";
+		};
+		25A4EE9C19E659160065E0AF /* FMNotificationsUITableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				25A4EEA119E659340065E0AF /* FMNotificationsTableViewCell.h */,
+				25A4EEA219E659340065E0AF /* FMNotificationsTableViewCell.m */,
+			);
+			path = FMNotificationsUITableViewCell;
+			sourceTree = "<group>";
+		};
 		25B5974819D13C5700265978 /* MainViewCollectionCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -1418,13 +1453,14 @@
 		CC8C7EAA18E6EF8600E76AE8 /* viewcontrollers */ = {
 			isa = PBXGroup;
 			children = (
+				25A4EE9219E6536D0065E0AF /* FMNotificationsViewCOntroller */,
+				25F87F4919CC031400237CD7 /* VIPFunnelViewControllers */,
+				259ECEE119B9BA29001D7459 /* FMContactDetailViewController */,
+				FA6C493B19B6EE9500249134 /* FMCreateFunnelViewControllers */,
 				FA3FC08319D43CBB00BB928E /* SPFirstViewController.h */,
 				FA3FC08419D43CBB00BB928E /* SPFirstViewController.m */,
 				FAB0759919D5999000FFB87E /* FMFunnlStoreViewController.h */,
 				FAB0759A19D5999000FFB87E /* FMFunnlStoreViewController.m */,
-				25F87F4919CC031400237CD7 /* VIPFunnelViewControllers */,
-				259ECEE119B9BA29001D7459 /* FMContactDetailViewController */,
-				FA6C493B19B6EE9500249134 /* FMCreateFunnelViewControllers */,
 				FA8396FF19BEF33B00F9F529 /* TutorialViewController.h */,
 				FA83970019BEF33B00F9F529 /* TutorialViewController.m */,
 				CC1AD1DC18F54BE9000E356C /* MainVCDelegate.h */,
@@ -2015,6 +2051,10 @@
 		FABAF0551976507E00AA7918 /* Mail */ = {
 			isa = PBXGroup;
 			children = (
+				251050AB19E6C3CE00312869 /* downImage@2x.png */,
+				251050AC19E6C3CE00312869 /* upImage@2x.png */,
+				251050A319E6C38200312869 /* downImage.png */,
+				251050A419E6C38200312869 /* upImage.png */,
 				FA6ABD8A19C1A46B00DB10A3 /* nextImage.png */,
 				FA6ABD8B19C1A46B00DB10A3 /* nextImage@2x.png */,
 				FA11B3071999D70900B4EA86 /* addIcon_white.png */,
@@ -2081,6 +2121,7 @@
 				2528AFAF19D3F7E00020F7AD /* FBShimmering-Prefix.pch in Headers */,
 				FA83970119BEF33B00F9F529 /* TutorialViewController.h in Headers */,
 				FA3FC05019D43C9500BB928E /* MultiplePulsingHaloLayer.h in Headers */,
+				25A4EEA319E659340065E0AF /* FMNotificationsTableViewCell.h in Headers */,
 				25B5974F19D13C8100265978 /* FMMainViewCollectionCell.h in Headers */,
 				FA33E1B119A9A48100CE79B0 /* MCTMsgViewController.h in Headers */,
 				FA3FC05219D43C9500BB928E /* PulsingHaloLayer.h in Headers */,
@@ -2090,6 +2131,7 @@
 				2528AFB119D3F7E00020F7AD /* FBShimmeringLayer.h in Headers */,
 				FAAE9CDA19A354F0007FB804 /* UIView+Toast.h in Headers */,
 				2528AFB319D3F7E00020F7AD /* FBShimmeringView.h in Headers */,
+				25A4EE9919E653B90065E0AF /* FMNotificationsViewController.h in Headers */,
 				2528AFB019D3F7E00020F7AD /* FBShimmering.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2246,6 +2288,7 @@
 				FABAF0C91976573400AA7918 /* composeIcon@2x.png in Resources */,
 				FABAF08E1976507E00AA7918 /* Message.png in Resources */,
 				FABAF07F1976507E00AA7918 /* Shopping.png in Resources */,
+				251050A619E6C38200312869 /* upImage.png in Resources */,
 				FA3FC08019D43CAF00BB928E /* introTutorialText07@2x.png in Resources */,
 				FA4A2E8A198A7E2C00CB9FAD /* menuIcon@2x.png in Resources */,
 				FA3FC07419D43CAF00BB928E /* introTutorial06@2x.png in Resources */,
@@ -2303,7 +2346,9 @@
 				FABAF08C1976507E00AA7918 /* manage_Button.png in Resources */,
 				FABAF0851976507E00AA7918 /* Done_Button@2x.png in Resources */,
 				FABAF0C81976573400AA7918 /* composeIcon.png in Resources */,
+				251050AE19E6C3CE00312869 /* upImage@2x.png in Resources */,
 				B7C940E0198D6F49008468E7 /* WHITEsliders1nobar.png in Resources */,
+				251050AD19E6C3CE00312869 /* downImage@2x.png in Resources */,
 				2528AFA719D3F3830020F7AD /* introStartPage02@2x.png in Resources */,
 				FAAE9CF619A38ADD007FB804 /* emailDetailViewMail@2x.png in Resources */,
 				25B5976019D15CD400265978 /* addIcon-FunnlOverlay@2x.png in Resources */,
@@ -2442,6 +2487,7 @@
 				FAAE9CF519A38ADD007FB804 /* emailDetailViewMail.png in Resources */,
 				2528AFA419D3F3830020F7AD /* introGetStarted@2x.png in Resources */,
 				FAE1EB3619B87620001FF334 /* sendFeedbackListIcon@2x.png in Resources */,
+				251050A519E6C38200312869 /* downImage.png in Resources */,
 				FABAF0911976507E00AA7918 /* Share.png in Resources */,
 				FABAF0AD1976507E00AA7918 /* close@2x.png in Resources */,
 				FA11B2E2199908D200B4EA86 /* popoverArrowRightSimple.png in Resources */,
@@ -2549,6 +2595,7 @@
 				B79F9FCC1998860E00AEF9B2 /* FunnlAlertsVC.m in Sources */,
 				FA9164CB1973D302006A4726 /* TITokenField.m in Sources */,
 				FAAF171C19863CDD00E877D4 /* SDWebImageCompat.m in Sources */,
+				25A4EEA419E659340065E0AF /* FMNotificationsTableViewCell.m in Sources */,
 				6677881A18EF84FB00EF1962 /* MCOCIDURLProtocol.mm in Sources */,
 				FAAE9CDB19A354F0007FB804 /* UIView+Toast.m in Sources */,
 				FAAF172F198777FC00E877D4 /* PrimarySettingViewController.m in Sources */,
@@ -2593,6 +2640,7 @@
 				FA83970719BF1D0700F9F529 /* FXBlurView.m in Sources */,
 				CC4263BA1934BB2000F3C5EB /* SQLiteDatabase.m in Sources */,
 				CC7F72F418E837C9008962C3 /* FilterViewCell.m in Sources */,
+				25A4EE9A19E653B90065E0AF /* FMNotificationsViewController.m in Sources */,
 				FAAF171A19863CDD00E877D4 /* NSData+ImageContentType.m in Sources */,
 				FAAF172319863CDD00E877D4 /* UIImage+GIF.m in Sources */,
 				25F87F5119CC031400237CD7 /* VIPCreateFunnelViewController.m in Sources */,
@@ -2732,7 +2780,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "a9c75f81-8b86-460e-94a8-c968af5c1bf0";
-				SDKROOT = iphoneos7.1;
+				SDKROOT = iphoneos8.0;
 			};
 			name = Debug;
 		};
@@ -2765,7 +2813,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PROVISIONING_PROFILE = "a9c75f81-8b86-460e-94a8-c968af5c1bf0";
-				SDKROOT = iphoneos7.1;
+				SDKROOT = iphoneos8.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -2804,6 +2852,7 @@
 					"\"${PODS_ROOT}/Headers/SSKeychain\"",
 				);
 				INFOPLIST_FILE = "FunnlMail/FunnlMail-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-isystem",
@@ -2870,6 +2919,7 @@
 					"\"${PODS_ROOT}/Headers/SSKeychain\"",
 				);
 				INFOPLIST_FILE = "FunnlMail/FunnlMail-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-isystem",
@@ -2972,7 +3022,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PROVISIONING_PROFILE = "a9c75f81-8b86-460e-94a8-c968af5c1bf0";
-				SDKROOT = iphoneos7.1;
+				SDKROOT = iphoneos8.0;
 				USER_HEADER_SEARCH_PATHS = "$(BUILD_ROOT)/../IntermediateBuildFilesPath/UninstalledProducts";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -3011,6 +3061,7 @@
 					"\"$(BUILT_PRODUCTS_DIR)/../../include",
 				);
 				INFOPLIST_FILE = "FunnlMail/FunnlMail-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-isystem",
@@ -3091,7 +3142,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PROVISIONING_PROFILE = "a9c75f81-8b86-460e-94a8-c968af5c1bf0";
-				SDKROOT = iphoneos7.1;
+				SDKROOT = iphoneos8.0;
 				USER_HEADER_SEARCH_PATHS = "$(BUILD_ROOT)/../IntermediateBuildFilesPath/UninstalledProducts";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -3129,6 +3180,7 @@
 					"\"${PODS_ROOT}/Headers/SSKeychain\"",
 				);
 				INFOPLIST_FILE = "FunnlMail/FunnlMail-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-isystem",

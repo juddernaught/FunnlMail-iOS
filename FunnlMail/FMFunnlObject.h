@@ -17,4 +17,5 @@
 @property(nonatomic, strong) NSString *subjectString;
 @property(nonatomic, strong) NSString *categoryName;
 @property(nonatomic, strong) NSString *funnelPreview;
+@property(nonatomic, strong) NSString *expandSection;
 @end

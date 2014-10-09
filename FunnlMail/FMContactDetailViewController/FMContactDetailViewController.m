@@ -166,7 +166,7 @@
 - (void)emailLongPress:(id)sender {
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     [pasteboard setString:emailLabel.text];
-    [self.view showToast:[self tostViewForOperation:1] duration:TOST_DISPLAY_DURATION position:@"bottom"];
+    [self.view showToast:[self tostViewForOperation:1] duration:TOST_DISPLAY_DURATION position:@"top"];
 }
 
 - (UIView*)tostViewForOperation:(int)operation {

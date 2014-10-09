@@ -860,6 +860,8 @@ static NSString *currentFolder;
                     [[EmailService instance].primaryMessages addObject:messageID];
             }
             [self loadLastNMessages:-1 withTableController:emailsTableViewController withFolder:folderName withFetchRange:newFetchRange];
+            MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
+            [overlay postImmediateFinishMessage:@"Finished Downloading" duration:2.0 animated:YES];
 
             NSMutableArray *pArray = [[EmailService instance] primaryMessages];
             [[NSUserDefaults standardUserDefaults] setObject:pArray forKey: ALL_FUNNL];
@@ -914,6 +916,7 @@ static NSString *currentFolder;
      {
          //dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
              MTStatusBarOverlay *overlay = [MTStatusBarOverlay sharedInstance];
+
              if(error != nil){
                  
                  NSLog(@"******* ERROR: %@ for folderinfo: %@ ********",error.description,inboxFolder);
@@ -946,21 +949,39 @@ static NSString *currentFolder;
                  if(numberOfMessagesToLoad){
                      overlay.progress = 0.5;
                      NSLog(@"checking new messages:  Range: %qu - %qu",fetchRange.location, fetchRange.length);
+
+                   if (numberOfMessagesToLoad > 0 && numberOfMessagesToLoad < 1000) {
+                     [overlay postImmediateFinishMessage:[NSString stringWithFormat:@"Downloading %d mail(s)",(int)numberOfMessagesToLoad] duration:2.0 animated:YES];
                      [self getNewMessages:[EmailService instance].userEmailID nextPageToken:@"" numberOfMaxResult:numberOfMessagesToLoad + 10 withFolder:inboxFolder withFetchRange:fetchRange];
+                   }
+                   else {
+                     [overlay postImmediateFinishMessage:@"No new emails" duration:2.0 animated:YES];
+                     AppDelegate *tempAppDelegate = APPDELEGATE;
+                     [tempAppDelegate.progressHUD show:NO];
+                     [tempAppDelegate.progressHUD setHidden:YES];
+                     [fv.tablecontroller.refreshControl endRefreshing];
                      
-                     if(overlay.tag == 1){
+                   }
+                   
+                    /*if(overlay.tag == 1){
                          overlay.progress = 1;
+                         //[overlay postImmediateFinishMessage:@"Finished Downloading" duration:2.0 animated:YES];
+                       if (numberOfMessagesToLoad > 0 && numberOfMessagesToLoad < 1000) {
+                         [overlay postImmediateFinishMessage:[NSString stringWithFormat:@"%d more mail(s) downloaded",(int)numberOfMessagesToLoad] duration:2.0 animated:YES];
+                       }
+                       else {
                          [overlay postImmediateFinishMessage:@"Finished Downloading" duration:2.0 animated:YES];
+                       }
                          overlay.tag = 0;
-                     }
+                     }*/
                  }
                  else{
-                     if(overlay.tag == 1){
+//                     if(overlay.tag == 0){
                          overlay.progress = 1;
                          [overlay postImmediateFinishMessage:@"No new emails" duration:2.0 animated:YES];
-                         overlay.tag = 0;
-                     }
-                     
+//                         overlay.tag = 0;
+//                     }
+                   
                      NSLog(@"No New Message Found:  LastMessageIDSynced: %llu",self.totalNumberOfMessages);
                      AppDelegate *tempAppDelegate = APPDELEGATE;
                      [tempAppDelegate.progressHUD show:NO];

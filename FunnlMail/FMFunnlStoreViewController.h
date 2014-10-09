@@ -18,6 +18,6 @@
     UITableView *funnlStoreTableView;
     NSMutableArray *flagArray;
     FunnelModel *funnlModel;
-    FMFunnlObject *tempObject;
+    FMFunnlObject *tempObject1;
 }
 @end
