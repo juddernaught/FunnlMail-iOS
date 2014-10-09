@@ -463,6 +463,7 @@ replacementString:(NSString *)string {
 //            toFieldView.tokenField.text = selectedCell.textLabel.text;
         toFieldView.tokenField.text = selectedCell.detailTextLabel.text;
         //[autocompleteTableView removeFromSuperview];
+      [toFieldView.tokenField tokenizeText];
     }
     autocompleteTableView.hidden = YES;
     

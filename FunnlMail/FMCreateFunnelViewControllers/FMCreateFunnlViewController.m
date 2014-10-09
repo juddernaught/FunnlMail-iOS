@@ -2221,7 +2221,7 @@
             tostLabel.text = [NSString stringWithFormat:@"Funnel \"%@\" is being created.",funnelNameTextField.text];
             tostLabel.textAlignment = NSTextAlignmentCenter;
             [tostView addSubview:tostLabel];
-            [tempAppDelegate.window showToast:tostView duration:TOST_DISPLAY_DURATION position:@"bottom"];
+            [tempAppDelegate.window showToast:tostView duration:TOST_DISPLAY_DURATION position:[NSValue valueWithCGPoint:CGPointMake(160, 66 + 27)]];
             
             NSMutableArray *tempArray;
             if(tempAppDelegate.currentFunnelDS == nil){

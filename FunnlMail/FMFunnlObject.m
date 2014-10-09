@@ -9,5 +9,5 @@
 #import "FMFunnlObject.h"
 
 @implementation FMFunnlObject
-@synthesize senderString,funnelName,subjectString,categoryName,funnelPreview;
+@synthesize senderString,funnelName,subjectString,categoryName,funnelPreview,expandSection;
 @end

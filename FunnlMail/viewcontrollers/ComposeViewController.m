@@ -211,6 +211,7 @@ replacementString:(NSString *)string {
             // MUSTFIX: show name of sender, but send to sender email address
             toFieldView.tokenField.text = selectedCell.detailTextLabel.text;
         //[autocompleteTableView removeFromSuperview];
+      [toFieldView.tokenField tokenizeText];
     }
     else if(ccFieldView.tokenField.isEditing){
         if ([selectedCell.textLabel.text isEqualToString:@"Recent"]) {
@@ -220,6 +221,7 @@ replacementString:(NSString *)string {
             ccFieldView.tokenField.text = selectedCell.detailTextLabel.text;
         //[self.view setFrame:CGRectMake(0,25,self.view.bounds.size.width,self.view.bounds.size.height)];
         //[autocompleteTableView removeFromSuperview];
+      [ccFieldView.tokenField tokenizeText];
     }
     else{
         NSLog(@"bcc is editing");
@@ -230,9 +232,9 @@ replacementString:(NSString *)string {
             bccFieldView.tokenField.text = selectedCell.detailTextLabel.text;
         //[self.view setFrame:CGRectMake(0,50,self.view.bounds.size.width,self.view.bounds.size.height)];
         //[autocompleteTableView removeFromSuperview];
+      [bccFieldView.tokenField tokenizeText];
     }
     autocompleteTableView.hidden = YES;
-    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger) section {

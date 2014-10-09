@@ -222,13 +222,16 @@ UIView *greyView;
     [returnView addSubview:seperatorView];
     seperatorView = nil;
     
-    UIButton *sampleButton = [[UIButton alloc] initWithFrame:CGRectMake(250, 0, 50, 50)];
+    UIButton *sampleButton = [[UIButton alloc] initWithFrame:CGRectMake(250, 0, 55, 50)];
     sampleButton.tag = operation;
+    sampleButton.backgroundColor = UIColorFromRGB(0xEE585C);
+  
     [sampleButton addTarget:self action:@selector(undoButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [sampleButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
     [sampleButton setTitle:@"Undo" forState:UIControlStateNormal];
     [sampleButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [returnView addSubview:sampleButton];
+    [returnView.layer setMasksToBounds:YES];
     sampleButton = nil;
     return returnView;
 }
@@ -714,7 +717,8 @@ UIView *greyView;
                     [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:deleteIndexPath, nil] withRowAnimation:UITableViewRowAnimationLeft];
                     [tableView endUpdates];
                     [cell swipeToOriginWithCompletion:nil];
-                    [self.view showToast:[self tostViewForOperation:1] duration:TOST_DISPLAY_DURATION position:@"bottom"];
+                    //[self.view showToast:[self tostViewForOperation:1] duration:TOST_DISPLAY_DURATION position:@"bottom"];
+                    [self.view showToast:[self tostViewForOperation:1] duration:TOST_DISPLAY_DURATION position:[NSValue valueWithCGPoint:CGPointMake(160, 66 + 27)]];
                     messageSelected = message;
                     [self performSelector:@selector(deleteMessageAfterOperation:) withObject:@"1" afterDelay:TOST_DISPLAY_DURATION];
                 }];
@@ -737,7 +741,8 @@ UIView *greyView;
                     [tableView endUpdates];
                     [self performSelector:@selector(deleteMessageAfterOperation:) withObject:@"2" afterDelay:TOST_DISPLAY_DURATION];
                     [cell swipeToOriginWithCompletion:nil];
-                    [self.view showToast:[self tostViewForOperation:2] duration:TOST_DISPLAY_DURATION position:@"bottom"];
+                    //[self.view showToast:[self tostViewForOperation:2] duration:TOST_DISPLAY_DURATION position:@"bottom"];
+                  [self.view showToast:[self tostViewForOperation:2] duration:TOST_DISPLAY_DURATION position:[NSValue valueWithCGPoint:CGPointMake(160, 66 + 27)]];
                     messageSelected = message;
                 }];
                 

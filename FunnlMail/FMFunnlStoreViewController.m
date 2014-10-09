@@ -65,6 +65,10 @@
     [self processAccordingToCategory];
     flagArray = [[NSMutableArray alloc] init];
     for (int counter = 0; counter < funnlStorageAccordingToSection.count; counter++) {
+      if (counter % 2 == 0) {
+        [flagArray setObject:@"0" atIndexedSubscript:counter];
+      }
+      else
         [flagArray setObject:@"1" atIndexedSubscript:counter];
     }
     
@@ -109,14 +113,14 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (tempObject) {
-        tempObject = nil;
+    if (tempObject1) {
+        tempObject1 = nil;
     }
-    tempObject = [[funnlStorageAccordingToSection objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-    NSString *funnelName = [tempObject funnelName];
-    NSMutableArray *senderArray = (NSMutableArray*)[[tempObject senderString] componentsSeparatedByString:@"~"];
-    NSMutableArray *subjectArray = (NSMutableArray*)[[tempObject subjectString] componentsSeparatedByString:@"~"];
-    NSString *categoryName = [tempObject categoryName];
+    tempObject1 = [[funnlStorageAccordingToSection objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+    NSString *funnelName = [tempObject1 funnelName];
+    NSMutableArray *senderArray = (NSMutableArray*)[[tempObject1 senderString] componentsSeparatedByString:@"~"];
+    NSMutableArray *subjectArray = (NSMutableArray*)[[tempObject1 subjectString] componentsSeparatedByString:@"~"];
+    //NSString *categoryName = [tempObject1 categoryName];
     
     if(senderArray.count == 1){
         NSString *str = [senderArray objectAtIndex:0];
@@ -198,8 +202,8 @@
     if (buttonIndex == 0) {
         
         //NSString *funnelName = [tempObject funnelName];
-        NSMutableArray *senderArray = (NSMutableArray*)[[tempObject senderString] componentsSeparatedByString:@"~"];
-        NSMutableArray *subjectArray = (NSMutableArray*)[[tempObject subjectString] componentsSeparatedByString:@"~"];
+        NSMutableArray *senderArray = (NSMutableArray*)[[tempObject1 senderString] componentsSeparatedByString:@"~"];
+        NSMutableArray *subjectArray = (NSMutableArray*)[[tempObject1 subjectString] componentsSeparatedByString:@"~"];
         //NSString *categoryName = [tempObject categoryName];
         
         AppDelegate *appDeleage = APPDELEGATE;
@@ -236,7 +240,24 @@
     [sampleButton addTarget:self action:@selector(headerClicked:) forControlEvents:UIControlEventTouchUpInside];
     [returnView addSubview:sampleButton];
     sampleButton = nil;
-    
+  
+  UIImageView *sampleImage = [[UIImageView alloc] initWithFrame:CGRectMake(WIDTH - 10 - 20, 5, 20, 20)];
+  if (funnlStorageAccordingToSection.count > section) {
+    NSMutableArray *sArray = [funnlStorageAccordingToSection objectAtIndex:section];
+    if (sArray.count) {
+      if ([[[[funnlStorageAccordingToSection objectAtIndex:section] objectAtIndex:0] expandSection] isEqualToString:@"1"]) {
+        [sampleImage setImage:[UIImage imageNamed:@"upImage.png"]];
+      }
+      else
+        [sampleImage setImage:[UIImage imageNamed:@"downImage.png"]];
+    }
+    else {
+      [sampleImage setImage:[UIImage imageNamed:@"downImage.png"]];
+    }
+  }
+  
+  [returnView addSubview:sampleImage];
+  
     UIView *sampleView = [[UIView alloc] initWithFrame:CGRectMake(0, STORE_FUNNL_TABLE_VIEW_SECTION_HEIGHT - 1, WIDTH, 1)];
     [sampleButton setBackgroundColor:[UIColor whiteColor]];
     [returnView addSubview:sampleView];
@@ -253,6 +274,20 @@
     else {
         [flagArray setObject:@"1" atIndexedSubscript:sender.tag];
     }
+  NSInteger section = sender.tag;
+  if (funnlStorageAccordingToSection.count > section) {
+      NSMutableArray *sArray = [funnlStorageAccordingToSection objectAtIndex:section];
+    if (sArray.count) {
+      if ([[[[funnlStorageAccordingToSection objectAtIndex:section] objectAtIndex:0] expandSection] isEqualToString:@"1"]) {
+        [[[funnlStorageAccordingToSection objectAtIndex:section] objectAtIndex:0] setExpandSection:@"0"];
+      }
+      else
+        [[[funnlStorageAccordingToSection objectAtIndex:section] objectAtIndex:0] setExpandSection:@"1"];
+    }
+    else {
+      [[[funnlStorageAccordingToSection objectAtIndex:section] objectAtIndex:0] setExpandSection:@"1"];
+    }
+  }
     [funnlStoreTableView reloadData];
 }
 
@@ -285,6 +320,10 @@
                 NSString *preview = [column[4] stringByReplacingOccurrencesOfString:@";" withString:@","];
                 
                 [tempObject setFunnelPreview:preview];
+            }
+            if (column.count > 5 && column[5]) {
+                NSString *preview = [column[5] stringByReplacingOccurrencesOfString:@";" withString:@","];
+                [tempObject setExpandSection:preview];
             }
             [funnlStorageArray addObject:tempObject];
         }

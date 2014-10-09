@@ -59,7 +59,7 @@
 #define TOST_DISPLAY_DURATION 3.0
 //email cell's #defines
 #define MAIL_READ_BLUE_COLOR [UIColor colorWithHexString:@"007aff"]
-
+#define NOTIFICATION_VIEW_CONTROLLER_BACKGROUND [UIColor colorWithHexString:@"1F252A"]
 #define MAIL_HEADER_TEXT_COLOR [UIColor colorWithHexString:@"2b2f32"]
 #define MAIL_HEADER_FONT [UIFont fontWithName:@"HelveticaNeue-Medium" size:16]
 
