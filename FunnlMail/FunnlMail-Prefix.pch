@@ -116,7 +116,7 @@
 #ifdef DEBUG
     #define TIME_FOR_ANIMATION 0
 #else
-    #define TIME_FOR_ANIMATION 2
+    #define TIME_FOR_ANIMATION 1
 #endif
 
 #define SLIDER_VALUE 0.2

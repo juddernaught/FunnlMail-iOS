@@ -44,7 +44,7 @@
     [imageView setImage:[UIImage imageNamed:[self formImageString:pageNumber]]];
     [self.view addSubview:imageView];
     [self performSelector:@selector(addFeatureToSliderWithPageNo:) withObject:[NSNumber numberWithInt:pageNumber] afterDelay:TIME_FOR_ANIMATION];
-    nextButton = [[UIButton alloc] initWithFrame:CGRectMake(WIDTH - 50, HEIGHT/2 - 25, 50, 50)];
+    nextButton = [[UIButton alloc] initWithFrame:CGRectMake(350/2.0 - 25, 227, 50, 50)];
     [self.view addSubview:nextButton];
     [nextButton addTarget:self action:@selector(nextButtonPresed:) forControlEvents:UIControlEventTouchUpInside];
     textImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 190/2, WIDTH, 70)];
@@ -80,7 +80,7 @@
 - (void)addFeatureToSliderWithPageNo:(NSNumber *)pageNo {
     if (pageNo.integerValue >= 1 && pageNo.integerValue < 11) {
         if (pageNo.integerValue == 1) {
-            UIView *tapHere = [[UIView alloc] initWithFrame:CGRectMake(WIDTH - 46, HEIGHT/2 - 8, 165, 165)];
+            UIView *tapHere = [[UIView alloc] initWithFrame:CGRectMake(350/2.0 - 20, 245, 165, 165)];
             
             UIImageView *tapHereImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tap-here"]];
             [tapHere addSubview:tapHereImageView];
@@ -476,7 +476,12 @@
         }
         textImage.hidden = YES;
         nextButton.hidden = YES;
-        pageNumber = tag + 1;
+        if (pageNumber == 1) {
+            pageNumber = tag + 2;
+        }
+        else {
+            pageNumber = tag + 1;
+        }
         [imageView setImage:[UIImage imageNamed:[self formImageString:pageNumber]]];
         [imageView removeFromSuperview];
         [self.view addSubview:imageView];
