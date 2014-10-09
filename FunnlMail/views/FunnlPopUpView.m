@@ -149,6 +149,30 @@ static NSString *ADD_MAIN_FILTER_CELL = @"MainFilterCellAdd";
 }
 
 #pragma mark - Collection view datasource
+- (void)collectionView:(UICollectionView *)collectionView didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
+  if (filterArray.count > indexPath.row) {
+    MainFilterCell *tempCell = (MainFilterCell*)[collectionView cellForItemAtIndexPath:indexPath];
+    FunnelModel *tempModel = (FunnelModel *)[filterArray objectAtIndex:indexPath.row];
+    [tempCell.backgroundView setBackgroundColor:[UIColor colorWithHexString:tempModel.funnelColor]];
+  }
+  else {
+    MainFilterCell *tempCell = (MainFilterCell*)[collectionView cellForItemAtIndexPath:indexPath];
+    [tempCell.backgroundView setBackgroundColor:[UIColor blackColor]];
+  }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
+  if (filterArray.count > indexPath.row) {
+    MainFilterCell *tempCell = (MainFilterCell*)[collectionView cellForItemAtIndexPath:indexPath];
+    FunnelModel *tempModel = (FunnelModel *)[filterArray objectAtIndex:indexPath.row];
+    [tempCell.backgroundView setBackgroundColor:[UIColor colorWithHexString:[NSString stringWithFormat:@"%@%@",SELECTION_ALPHA_FOR_COLLECTION_VIEW, tempModel.funnelColor]]];
+  }
+  else {
+    MainFilterCell *tempCell = (MainFilterCell*)[collectionView cellForItemAtIndexPath:indexPath];
+    [tempCell.backgroundView setBackgroundColor:[UIColor colorWithHexString:[NSString stringWithFormat:@"%@636466",SELECTION_ALPHA_FOR_COLLECTION_VIEW]]];
+  }
+}
+
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
 {
     return 25;

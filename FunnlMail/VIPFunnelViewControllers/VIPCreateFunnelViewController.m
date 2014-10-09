@@ -161,7 +161,7 @@
         
     }
     
-    unsigned long temp = [[FunnelService instance] allFunnels].count%8;
+    /*unsigned long temp = [[FunnelService instance] allFunnels].count%8;
     //NSInteger gradientInt = arc4random_uniform((uint32_t)randomColors.count);
     NSString *colorString = @"#F9F9F9";
     UIColor *color = [UIColor colorWithHexString:colorString];
@@ -172,7 +172,24 @@
     }
     else {
         color = [UIColor colorWithHexString:colorString];
+    }*/
+    
+    NSString *colorString = nil;
+    UIColor *color = nil;
+    //changed logic
+    int currentIndex = ((int)[[NSUserDefaults standardUserDefaults] integerForKey:@"number_of_funnel_created"]) % randomColors.count;
+    colorString = [randomColors objectAtIndex:currentIndex];
+    if (colorString) {
+        color = [UIColor colorWithHexString:colorString];
     }
+    
+    if(color == nil){
+        color = [UIColor colorWithHexString:@"#F9F9F9"];
+    }
+    int numberOfFunnels = (int)[[NSUserDefaults standardUserDefaults] integerForKey:@"number_of_funnel_created"];
+    [[NSUserDefaults standardUserDefaults] setInteger:numberOfFunnels + 1 forKey:@"number_of_funnel_created"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
     FunnelModel *model;
     model = [[FunnelModel alloc]initWithBarColor:color filterTitle:funnelNameTextField.text newMessageCount:0 dateOfLastMessage:[NSDate new] sendersArray:senderArray subjectsArray:subjectArray skipAllFlag:skipPrimary funnelColor:colorString];
     model.notificationsFlag = enableNotification;

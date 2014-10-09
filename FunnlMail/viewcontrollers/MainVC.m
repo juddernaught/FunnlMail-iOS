@@ -379,13 +379,6 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
     //fetching from database
     if ([filterModel.funnelName isEqualToString:ALL_FUNNL]) {
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] retrieveAllMessages];
-//        [self.navigationController.navigationBar setBarTintColor:UIColorFromRGB(0xF7F7F7)];
-//        UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:menuButton];
-//        self.navigationItem.leftBarButtonItem = leftItem;
-//        [menuButton removeTarget:self action:@selector(bacButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-//        [menuButton setTitle:@"Primary" forState:UIControlStateNormal];
-//        [menuButton addTarget:self action:@selector(menuButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-        
         menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [menuButton addTarget:self action:@selector(menuButtonSelected) forControlEvents:UIControlEventTouchUpInside];
         menuButton.contentEdgeInsets = (UIEdgeInsets){.left= 0};
@@ -420,13 +413,8 @@ static NSString *MAIN_FILTER_CELL = @"MainFilterCell";
         filterButton.tintColor = [UIColor colorWithHexString:filterModel.funnelColor];
         NSDictionary * navBarTitleTextAttributes =   @{ NSForegroundColorAttributeName : [UIColor colorWithHexString:filterModel.funnelColor], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:17]};
         [self.navigationController.navigationBar setTitleTextAttributes:navBarTitleTextAttributes];
-
-//        [self.navigationController.navigationBar setBarTintColor:[UIColor colorWithHexString:filterModel.funnelColor]];
         [EmailService instance].filterMessages = (NSMutableArray*)[[MessageService instance] messagesWithFunnelId:filterModel.funnelId top:2000];
-        
-//        [menuButton removeTarget:self action:@selector(menuButtonSelected) forControlEvents:UIControlEventTouchUpInside];
-//        [menuButton setTitle:@"Primary" forState:UIControlStateNormal];
-//        [menuButton addTarget:self action:@selector(bacButtonSelected) forControlEvents:UIControlEventTouchUpInside];
+      
         menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
         menuButton.tintColor = [UIColor colorWithHexString:filterModel.funnelColor];
         [menuButton addTarget:self action:@selector(bacButtonSelected) forControlEvents:UIControlEventTouchUpInside];

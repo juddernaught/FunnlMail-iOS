@@ -26,12 +26,13 @@
 @implementation AppDelegate
 @synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable,contextIOAPIClient,isAlreadyRequestedRefreshToken,currentSelectedFunnlModel,isPullToRefresh,navControllerForCentralView, hasStartLoginAlreadyOccured;
 @synthesize mainVCdelegate,letsGo,activityIndicator;
-@synthesize previewDownloadQueue,isFreshInstall,loggedInEmailAddress;
+@synthesize previewDownloadQueue,isFreshInstall,loggedInEmailAddress,previewDownloadQueueForSecondary;
 
 #pragma mark - didFinishLaunchingx
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {   //[[UIApplication sharedApplication] setApplicationIconBadgeNumber:99]; //added by Chad
     
+
 #if IS_RELEASE == 1
     MIXPANEL_TOKEN = @"9373e7f6b57abde608b47abf2f2f8326";
 #else
@@ -166,8 +167,10 @@
 }
 
 - (void)initializeQueue {
-    previewDownloadQueue = [[NSOperationQueue alloc] init];
-    previewDownloadQueue.maxConcurrentOperationCount = CONCURRENCY_TASK;
+  previewDownloadQueue = [[NSOperationQueue alloc] init];
+  previewDownloadQueue.maxConcurrentOperationCount = CONCURRENCY_TASK;
+  previewDownloadQueueForSecondary = [[NSOperationQueue alloc] init];
+  previewDownloadQueueForSecondary.maxConcurrentOperationCount = 1;
 }
 
 #pragma mark - Rechability

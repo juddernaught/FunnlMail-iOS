@@ -11,7 +11,8 @@
 
 @interface FMRenderingOperation : NSOperation
 {
-    MCOIMAPMessage *messageObj;
+  MCOIMAPMessage *messageObj;
+  BOOL isPrimaryflag;
 }
-- (id)initWithMessage:(MCOIMAPMessage *)message;
+- (id)initWithMessage:(MCOIMAPMessage *)message andPrimaryFlag:(BOOL)flag;
 @end

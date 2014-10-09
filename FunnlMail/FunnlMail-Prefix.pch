@@ -98,6 +98,8 @@
 #define kVIP_FUNNEL_POP_UP_DISPLY_INTERVAL 60
 #define IS_VIP_ENABLED 0
 
+#define RELOADING_TIME_IN_CASE_NO_MESSAGE 0.8
+
 #define INBOX @"INBOX"
 #define SENT @"[Gmail]/Sent Mail"
 #define TRASH @"[Gmail]/Trash"
@@ -116,7 +118,8 @@
 #ifdef DEBUG
     #define TIME_FOR_ANIMATION 0
 #else
-    #define TIME_FOR_ANIMATION 1
+    #define TIME_FOR_ANIMATION 1.5
+
 #endif
 
 #define SLIDER_VALUE 0.2
@@ -127,6 +130,7 @@
 #define DONE_BUTTON_BLUE_COLOR @"3878DE"
 #define UNDO_BUTTON_RED_COLOR @"C5000D"
 
+#define SELECTION_ALPHA_FOR_COLLECTION_VIEW @"77"
 
 #define GRID_BUTTON_LIGHT UIColorFromRGB(0x2980B9)
 #define GRID_BUTTON_DARK UIColorFromRGB(0x3498DB)
