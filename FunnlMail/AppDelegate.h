@@ -58,4 +58,5 @@
 //public function for loading VIP funnl View (newly added)
 - (void)loadVIPFunnelViewController;
 - (NSString *)getInitials:(NSString *)string;
+- (void)downloadMessageFromNotification:(NSString *)mesageID;
 @end

@@ -30,7 +30,7 @@
 #define ALL_FUNNL @"Primary"
 #define ALL_OTHER_FUNNL @"All Other"
 #define ALL_OTHER_FUNNL_DISPLAY_NAME @"Secondary"
-
+#define MAX_NUMBER_OF_MESSAGE 1000
 #define CSV_FILE_NAME @"store"
 #define STORE_FUNNL_TABLE_VIEW_SECTION_HEIGHT 30
 

@@ -100,6 +100,26 @@ static MessageService *instance;
   return success;
 }
 
+- (NSString *)isMaxCountReached {
+  __block NSString *flag = @"0";
+  [[SQLiteDatabase sharedInstance].databaseQueue inDatabase:^(FMDatabase *db) {
+    FMResultSet *resultSet = [db executeQuery:@"SELECT COUNT(messageID) as count_message FROM messages;"];
+    while ([resultSet next]) {
+      NSLog(@"----- %d",[resultSet intForColumn:@"count_message"]);
+      if ([resultSet intForColumn:@"count_message"] >= MAX_NUMBER_OF_MESSAGE) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"max_limit_reached"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+      }
+      else {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"max_limit_reached"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        flag = @"0";
+      }
+    }
+  }];
+  return flag;
+}
+
 -(BOOL) insertMessage:(MessageModel *)messageModel{
   __block NSMutableDictionary *paramDict = [[NSMutableDictionary alloc]init];
   

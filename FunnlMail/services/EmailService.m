@@ -992,6 +992,14 @@ static NSString *currentFolder;
     //                 });
                      [self performSelectorInBackground:@selector(displayingButtonTitle) withObject:nil];
                      [self performSelectorInBackground:@selector(syncMessages) withObject:nil];
+                  NSString *tempString = [[MessageService instance] isMaxCountReached];
+                   NSLog(@"%@",tempString);
+                   if (![[NSUserDefaults standardUserDefaults] boolForKey:@"max_limit_reached"]) {
+                     [[EmailService instance] loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD withTableController:fv withFolder:INBOX  withFetchRange:MCORangeEmpty];
+                   }
+                   else {
+                     
+                   }
                  }
              }
          //});

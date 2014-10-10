@@ -43,7 +43,7 @@
 -(NSArray *) retrieveMessages:(NSString *)folderName;
 -(NSArray *) retrieveNewestMessage:(NSString*)folderName;
 -(BOOL) clearAllTables;
-
+- (NSString *)isMaxCountReached;
 - (NSString *)latestSecondaryTT;
 - (NSArray *) retrieveSenderOfNewSecondary;
 - (NSArray *)retrieveAllMessageWithKey:(NSString *)key;

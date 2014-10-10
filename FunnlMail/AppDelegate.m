@@ -21,6 +21,9 @@
 #import <HockeySDK/HockeySDK.h>
 #import "VIPViewController.h"
 #import "MTStatusBarOverlay.h"
+#import "MCTMsgViewController.h"
+#import "EmailService.h"
+#import <mailcore/mailcore.h>
 
 
 @implementation AppDelegate
@@ -31,7 +34,8 @@
 #pragma mark - didFinishLaunchingx
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {   //[[UIApplication sharedApplication] setApplicationIconBadgeNumber:99]; //added by Chad
-    
+  
+  [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalNever];
 
   if (![[NSUserDefaults standardUserDefaults] objectForKey:@"all_notificatio"]) {
     [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"all_notificatio"];
@@ -392,6 +396,7 @@
     if([[NSUserDefaults standardUserDefaults] objectForKey:@"EMAIL_LOGGED_IN"]){
         loggedInEmailAddress = [[NSString alloc] initWithString:[[NSUserDefaults standardUserDefaults] objectForKey:@"EMAIL_LOGGED_IN"]];
       [[EmailService instance] startAutoRefresh];
+      //[self downloadMessageFromNotification:@"1481569857449382388"];
     }
     else{
         loggedInEmailAddress = @"";
@@ -500,10 +505,23 @@
     [currentInstallation saveInBackground];
 }
 
-- (void)application:(UIApplication *)application
-didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    NSLog(@"didReceiveRemoteNotification: %@",userInfo);
-    [PFPush handlePush:userInfo];
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+  NSDictionary *apsInfo = [userInfo objectForKey:@"aps"];
+  if ( application.applicationState == UIApplicationStateActive ) {
+    
+    [self downloadMessageFromNotification:[apsInfo objectForKey:@"messageID"]];
+  }
+  else {
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"notification_received"];
+    if ([apsInfo objectForKey:@"messageID"]) {
+      [[NSUserDefaults standardUserDefaults] setObject:[apsInfo objectForKey:@"messageID"] forKey:@"notification_message_uuid"];
+      [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
+  }
+  /*UIAlertView *alert = [[UIAlertView alloc] initWithTitle:userInfo.description message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+  [alert show];*/
+  [PFPush handlePush:userInfo];
 }
 
 - (NSString *)getInitials:(NSString *)string {
@@ -512,6 +530,94 @@ didReceiveRemoteNotification:(NSDictionary *)userInfo {
         returnString = [string substringWithRange:NSMakeRange(0, 1)];
     }
     return returnString;
+}
+
+- (void)downloadMessageFromNotification:(NSString *)mesageID {
+
+  
+  [[NSUserDefaults standardUserDefaults] setObject:mesageID forKey:@"notification_message_uuid"];
+  [[NSUserDefaults standardUserDefaults] synchronize];
+  if (mesageID && mesageID.length) {
+    
+//    NSNumberFormatter * formatter = [[NSNumberFormatter alloc] init];
+//    [formatter setNumberStyle: NSNumberFormatterDecimalStyle];
+//    NSNumber * myNumber = [formatter numberFromString: mesageID];
+//    unsigned long long mID = [myNumber unsignedLongLongValue];
+    
+
+    
+    if ([EmailService instance].imapSession) {
+      
+      MCOIMAPSearchOperation *searchOperation = [[EmailService instance].imapSession searchOperationWithFolder:INBOX kind:MCOIMAPSearchGmailMessageID searchString:mesageID];
+      [searchOperation start:^(NSError *error, MCOIndexSet *searchResult) {
+        if (error)
+        {
+
+        }
+        else
+        {
+          //            filterLabel.text = [NSString stringWithFormat:@"Search Results : %d",searchResult.count];
+          if (searchResult)
+          {
+            MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)
+            (MCOIMAPMessagesRequestKindHeaders | MCOIMAPMessagesRequestKindStructure |
+             MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject | MCOIMAPMessagesRequestKindGmailThreadID | MCOIMAPMessagesRequestKindGmailMessageID |	 MCOIMAPMessagesRequestKindFlags);
+            MCOIMAPSession *session = [EmailService instance].imapSession;
+            MCOIMAPFetchMessagesOperation * op = [session fetchMessagesByUIDOperationWithFolder:INBOX requestKind:requestKind uids:searchResult];
+            [op start:^(NSError * error, NSArray * messages, MCOIndexSet * vanishedMessages) {
+              if(messages.count){
+                MCOIMAPMessage *m = nil;
+                for (MCOIMAPMessage *messg in messages) {
+                  m = messg;
+                  break;
+                }
+                
+                MessageModel *tempMessageModel = [[MessageModel alloc] init];
+                tempMessageModel.read = m.flags;
+                tempMessageModel.date = m.header.date;
+                tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
+                tempMessageModel.messageJSON = [m serializable];
+                tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
+                
+                MCTMsgViewController *vc = [[MCTMsgViewController alloc] init];
+                vc.folder = INBOX;
+                vc.selectedIndexPath = nil;
+                vc.messageModel = tempMessageModel;
+                vc.address = m.header.from;
+                vc.message = m;
+                vc.session = [EmailService instance].imapSession;
+                [self.mainVCdelegate pushViewController:vc];
+              }
+              
+            }];
+          }
+        }
+      }];
+
+    }//
+    else {
+      NSLog(@"failure");
+      [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"notification_received"];
+      [[NSUserDefaults standardUserDefaults] setObject:mesageID forKey:@"notification_message_uuid"];
+      [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+  }
+  else {
+    
+  }
+}
+
+-(void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
+{
+  NSLog(@"########### Received Backgroudn Fetch ###########");
+  
+  //Increase Badge Number
+  //[[UIApplication sharedApplication].applicationIconBadgeNumber++;
+  
+   [[EmailService instance] startAutoRefresh];
+  //Tell the system that you ar done.
+  completionHandler(UIBackgroundFetchResultNewData);
+  
 }
 
 #pragma mark UIView Animation

@@ -159,16 +159,7 @@ UIView *greyView;
     [[NSUserDefaults standardUserDefaults] synchronize];
     BOOL isFirstTime = [[NSUserDefaults standardUserDefaults ]boolForKey:@"isFirstTime"];
     if( helpButton && isFirstTime == NO){
-//        CABasicAnimation *theAnimation;
-//        theAnimation=[CABasicAnimation animationWithKeyPath:@"opacity"];
-//        theAnimation.duration=1.0;
-//        theAnimation.repeatCount= 50;
-//        theAnimation.autoreverses= YES;
-//        theAnimation.fromValue=[NSNumber numberWithFloat:1.0];
-//        theAnimation.toValue=[NSNumber numberWithFloat:0.2];
-//        [helpButton.layer addAnimation:theAnimation forKey:@"animateOpacity"];
-        
-//        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isFirstTime"];
+
     }
 }
 
