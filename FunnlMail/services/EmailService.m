@@ -376,18 +376,24 @@ static NSString *currentFolder;
              NSArray *tempArray = [[MessageService instance] retrieveOldestMessages];
              if(tempArray.count){
                  oldestMessageID = [[tempArray objectAtIndex:0] integerValue];
+                 NSLog(@"MessageID for oldest ID -------- > %llu",oldestMessageID);
              }
              
              self.totalNumberOfMessages = info.uidNext;
              if(oldestMessageID){
-                 if(oldestMessageID < nMessages){
+                 startRange = oldestMessageID - nMessages;
+                 if (startRange < 0) {
+                     startRange = 0;
+                 }
+                 endRange = nMessages;
+                 /*if(oldestMessageID < nMessages){
                      startRange = 1;
                      endRange = oldestMessageID;
                  }
                  else{
                      startRange = oldestMessageID-nMessages;
                      endRange = oldestMessageID;
-                 }
+                 }*/
              }
              else{
                  if(self.totalNumberOfMessages < nMessages){
@@ -423,6 +429,7 @@ static NSString *currentFolder;
              }
              //return;
          }
+         
          MCOIndexSet *uids = [MCOIndexSet indexSetWithRange:fetchRange];
 
          
@@ -467,6 +474,7 @@ static NSString *currentFolder;
                           tempMessageModel.read = m.flags;
                           tempMessageModel.date = m.header.date;
                           tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
+                          NSLog(@"~~~~~~~~~~Got message ID : %@",tempMessageModel.messageID);
                           tempMessageModel.messageJSON = [m serializable];
                           tempMessageModel.gmailMessageID = [NSString stringWithFormat:@"%llu",m.gmailMessageID];
                           tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
@@ -562,7 +570,9 @@ static NSString *currentFolder;
                               [messageModelArray addObject:tempMessageModel];
                               //[[MessageService instance] insertMessage:tempMessageModel];
                           }
-                          
+                          /*if (tempMessageModel.messageID.integerValue < oldestMessageID) {
+                              [messageModelArray addObject:tempMessageModel];
+                          }*/
                           tempMessageModel = nil;
                       }
                       [[MessageService instance] insertBulkMessages:messageModelArray];
@@ -995,6 +1005,8 @@ static NSString *currentFolder;
                   NSString *tempString = [[MessageService instance] isMaxCountReached];
                    NSLog(@"%@",tempString);
                    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"max_limit_reached"]) {
+                       //MCORange fetchRange;
+                       //fetchRange = MCORangeMake(inDatabaseMessageID,self.totalNumberOfMessages);
                      [[EmailService instance] loadLastNMessages:NUMBER_OF_MESSAGES_TO_LOAD withTableController:fv withFolder:INBOX  withFetchRange:MCORangeEmpty];
                    }
                    else {

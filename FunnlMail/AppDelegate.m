@@ -35,8 +35,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {   //[[UIApplication sharedApplication] setApplicationIconBadgeNumber:99]; //added by Chad
   
-  [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalNever];
-
+  [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
+    
   if (![[NSUserDefaults standardUserDefaults] objectForKey:@"all_notificatio"]) {
     [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"all_notificatio"];
     [[NSUserDefaults standardUserDefaults] synchronize];
