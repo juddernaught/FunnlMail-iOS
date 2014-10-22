@@ -886,7 +886,7 @@ NSMutableArray *emailArr,*searchArray;
 -(void) saveFunnlWithWebhookId:(NSString *) webhookId
 {
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    if(webhookId != nil){
+    /*if(webhookId != nil){
         //---- Added by Krunal to get work PNs
         NSData* jsonData = [webhookId dataUsingEncoding:NSUTF8StringEncoding];
         NSMutableDictionary *webhooks = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:nil]];
@@ -905,7 +905,7 @@ NSMutableArray *emailArr,*searchArray;
     else{
         
     }
-    
+    */
     
     unsigned long temp = [[FunnelService instance] allFunnels].count%8;
     //NSInteger gradientInt = arc4random_uniform((uint32_t)randomColors.count);
@@ -981,26 +981,70 @@ NSMutableArray *emailArr,*searchArray;
     [alertView show];
 }
 
-
+// called from save button
 -(void) createWebhooksAndSaveFunnl
 {
-    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    NSArray *senders = [dictionaryOfConversations allValues];
-    NSArray *subjects = [dictionaryOfSubjects allValues];
-    __block int reqCnt = (int)[senders count];
+    /*__block int reqCnt = (int)[senders count];
     if ([subjects count]) {
         reqCnt *= [subjects count];
     }
-    NSMutableDictionary *webhooks = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary *webhooks = [[NSMutableDictionary alloc] init];*/
     //creation of webhooks
-    for (NSString *sender in senders) {
-        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-        [params setObject:sender forKey:@"filter_from"];
-        //[params setObject:@"0" forKey:@"sync_period"];
+    // using parse code
+    PFQuery *query = [PFQuery queryWithClassName:PARSE_WEBHOOK_CLASS];
+    [query getObjectInBackgroundWithId:[[NSUserDefaults standardUserDefaults] objectForKey:PARSE_WEBHOOK_CLASS] block:^(PFObject *parseWebhookObject, NSError *error) {
+        NSArray *senders = [dictionaryOfConversations allValues];
+        if ([senders count]) {
+            NSArray *senderWebhookArray = parseWebhookObject[PARSE_WEBHOOK_SENDER];
+            senderWebhookArray = [senderWebhookArray arrayByAddingObjectsFromArray:senders];
+            parseWebhookObject[PARSE_WEBHOOK_SENDER] = senderWebhookArray;
+        }
+        
+        NSArray *subjects = [dictionaryOfSubjects allValues];
         if ([subjects count]) {
-            for (NSString *subject in subjects) {
-                [params setObject:subject forKey:@"filter_subject"];
+            NSArray *subjectWebhookArray = parseWebhookObject[PARSE_WEBHOOK_SUBJECT];
+            subjectWebhookArray = [subjectWebhookArray arrayByAddingObjectsFromArray:subjects];
+            parseWebhookObject[PARSE_WEBHOOK_SUBJECT] = subjectWebhookArray;
+        }
+        
+        [parseWebhookObject saveInBackground];
+        [self saveFunnlWithWebhookId:nil];
+    }];
+    
+    /*
+    for (NSString *sender in senders) {
+            NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+            [params setObject:sender forKey:@"filter_from"];
+            //[params setObject:@"0" forKey:@"sync_period"];
+            if ([subjects count]) {
+                for (NSString *subject in subjects) {
+                    [params setObject:subject forKey:@"filter_subject"];
+                    [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
+                        [webhooks setObject:responseDict forKey:sender];
+                        reqCnt--;
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            if (reqCnt == 0) {
+                                NSData *jsonData = [NSJSONSerialization dataWithJSONObject:webhooks options:NSJSONWritingPrettyPrinted error:nil];
+                                NSString *webhookIds = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+                                [self saveFunnlWithWebhookId:webhookIds];
+                            }
+                        });
+                    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                        reqCnt--;
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            NSLog(@"createWebhooksandSaveFunnl --- deleteWebhookWithID : %@",error.userInfo.description);
+                            //[self showAlertForError:error];
+                            if (reqCnt == 0) {
+                                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                            }
+                        });
+                    }];
+                    continue;
+                }
+            } else {
                 [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
+                    parseWebhooks[
+                    
                     [webhooks setObject:responseDict forKey:sender];
                     reqCnt--;
                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -1013,46 +1057,25 @@ NSMutableArray *emailArr,*searchArray;
                 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                     reqCnt--;
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        NSLog(@"createWebhooksandSaveFunnl --- deleteWebhookWithID : %@",error.userInfo.description);
+                        NSLog(@"createWebhooksAndSaveFunnl --- Email : %@",error.userInfo.description);
                         //[self showAlertForError:error];
                         if (reqCnt == 0) {
                             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                            [self saveFunnlWithWebhookId:nil];
                         }
                     });
                 }];
-                continue;
             }
-        } else {
-            [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
-                [webhooks setObject:responseDict forKey:sender];
-                reqCnt--;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (reqCnt == 0) {
-                        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:webhooks options:NSJSONWritingPrettyPrinted error:nil];
-                        NSString *webhookIds = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-                        [self saveFunnlWithWebhookId:webhookIds];
-                    }
-                });
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                reqCnt--;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    NSLog(@"createWebhooksAndSaveFunnl --- Email : %@",error.userInfo.description);
-                    //[self showAlertForError:error];
-                    if (reqCnt == 0) {
-                        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                        [self saveFunnlWithWebhookId:nil];
-                    }
-                });
-            }];
         }
-    }
+
+    */
 }
 
 // TODO: must combine two deletions into one other method that's more sustainable
 -(void)saveButtonPressed
 {
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    NSLog(@"Save Butoon pressed");
+    NSLog(@"Save Button pressed");
     
 #ifdef TRACK_MIXPANEL
     //[[Mixpanel sharedInstance] track:@"Created a new Funnl or modified existing Funnl"];

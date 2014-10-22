@@ -2238,7 +2238,7 @@
         [self.navigationController popViewControllerAnimated:YES];
         if(contactMutableArray.count && ((contactMutableArray.count > 0 || (![[(ContactModel *)[contactMutableArray objectAtIndex:0] name] isEqualToString:ADD_FUNNL] && contactMutableArray.count == 1)) || subjectArray.count)){
 //            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            if (!enableNotification) {
+            /*if (!enableNotification) {
                 if ([oldModel.webhookIds length]) {
                     NSString *webhookJSONString = [oldModel webhookIds];
                     NSData *jsonData = [webhookJSONString dataUsingEncoding:NSUTF8StringEncoding];
@@ -2312,7 +2312,27 @@
                     }
                 }
                 
-            }
+            }*/
+            PFQuery *query = [PFQuery queryWithClassName:PARSE_WEBHOOK_CLASS];
+            NSString *objectID = [[NSUserDefaults standardUserDefaults] objectForKey:PARSE_WEBHOOK_CLASS];
+            [query getObjectInBackgroundWithId:objectID block:^(PFObject *parseWebhookObject, NSError *error) {
+                if ([senderArray count] > 0) {
+                    NSArray *senderWebhookArray = parseWebhookObject[PARSE_WEBHOOK_SENDER];
+                    senderWebhookArray = [senderWebhookArray arrayByAddingObjectsFromArray:senderArray];
+                    parseWebhookObject[PARSE_WEBHOOK_SENDER] = senderWebhookArray;
+                }
+                
+                if ([subjectArray count] > 0) {
+                    NSArray *subjectWebhookArray = parseWebhookObject[PARSE_WEBHOOK_SUBJECT];
+                    subjectWebhookArray = [subjectWebhookArray arrayByAddingObjectsFromArray:subjectArray];
+                    parseWebhookObject[PARSE_WEBHOOK_SUBJECT] = subjectWebhookArray;
+                }
+                
+                [parseWebhookObject saveInBackground];
+                [self saveFunnlWithWebhookId:nil];
+            }];
+
+            
         }else{
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnel" message:@"Please add at least one email or subject" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert show];
@@ -2334,7 +2354,7 @@
         FunnelModel *model;
         AppDelegate *tempAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         //[MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        if(webhookId != nil){
+        /*if(webhookId != nil){
             //---- Added by Krunal to get work PNs
             NSData* jsonData = [webhookId dataUsingEncoding:NSUTF8StringEncoding];
             NSMutableDictionary *webhooks = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:nil]];
@@ -2351,7 +2371,7 @@
         }
         else{
             
-        }
+        }*/
         
         //unsigned long temp = [[FunnelService instance] allFunnels].count%8;
         NSString *colorString = @"#F9F9F9";

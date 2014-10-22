@@ -34,6 +34,13 @@
 #define CSV_FILE_NAME @"store"
 #define STORE_FUNNL_TABLE_VIEW_SECTION_HEIGHT 30
 
+#define PARSE_WEBHOOK_CLASS @"webhookClass"
+
+#define PARSE_WEBHOOK_SENDER @"webhookSender"
+
+#define PARSE_WEBHOOK_SUBJECT @"webhookSubject"
+
+
 #define CONCURRENCY_TASK 2
 
 #define EMPTY_DELIMITER @"#NOT#"

@@ -404,6 +404,7 @@ UIButton *loginButton;
             NSLog(@"vipEmails %@",vipEmails);
          }];*/
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            
 
             NSString *post = [NSString stringWithFormat:@"refresh_token=%@", refreshToken];
             NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
@@ -429,6 +430,7 @@ UIButton *loginButton;
                 [[NSUserDefaults standardUserDefaults] synchronize];
             }];
         });
+    
 
         // Authentication succeeded
         //[self createDemoPageViewController];
@@ -466,16 +468,21 @@ UIButton *loginButton;
                     [currentInstallation setChannels:@[]];
                 }
                 [currentInstallation addUniqueObject:[NSString stringWithFormat:@"account_id_%@", accountID] forKey:@"channels"];
-                NSString *s = [NSString stringWithFormat:@"account_id_%@", accountID];
-
-                NSArray *array = currentInstallation.channels;
 
                 [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                     NSInteger errCode = [error code];
                     if (kPFErrorConnectionFailed == errCode ||  kPFErrorInternalServer == errCode)
                         [currentInstallation saveEventually];
                 }];
-
+                
+                // initialize parse objects to store the subject and sender criteria for webhooks
+                PFObject *webhooksParseObject = [PFObject objectWithClassName:PARSE_WEBHOOK_CLASS];
+                webhooksParseObject[PARSE_WEBHOOK_SENDER] = @[];
+                webhooksParseObject[PARSE_WEBHOOK_SUBJECT] = @[];
+                webhooksParseObject[@"account_id"] = accountID;
+                [webhooksParseObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    [[NSUserDefaults standardUserDefaults] setObject:webhooksParseObject.objectId forKey:PARSE_WEBHOOK_CLASS];
+                }];
                 
                 NSMutableDictionary *newTokenParams = [[NSMutableDictionary alloc] init];
                 [newTokenParams setObject:email forKey:@"email"];
@@ -518,12 +525,18 @@ UIButton *loginButton;
                         [currentInstallation setChannels:@[]];
                     }
                     [currentInstallation addUniqueObject:[NSString stringWithFormat:@"account_id_%@", contextIO_account_id] forKey:@"channels"];
-                    NSArray *array = currentInstallation.channels;
-                    NSString *s = [NSString stringWithFormat:@"account_id_%@", contextIO_account_id] ;
                     [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                         NSInteger errCode = [error code];
                         if (kPFErrorConnectionFailed == errCode ||  kPFErrorInternalServer == errCode)
                             [currentInstallation saveEventually];
+                    }];
+                    // initialize parse objects to store the subject and sender criteria for webhooks
+                    PFObject *webhooksParseObject = [PFObject objectWithClassName:PARSE_WEBHOOK_CLASS];
+                    webhooksParseObject[PARSE_WEBHOOK_SENDER] = @[];
+                    webhooksParseObject[PARSE_WEBHOOK_SUBJECT] = @[];
+                    webhooksParseObject[@"account_id"] = accountID;
+                    [webhooksParseObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                        [[NSUserDefaults standardUserDefaults] setObject:webhooksParseObject.objectId forKey:PARSE_WEBHOOK_CLASS];
                     }];
                     appDelegate.contextIOAPIClient = [[CIOAPIClient alloc] initWithConsumerKey:kContextIOConsumerKey consumerSecret:kContextIOConsumerSecret token:contextIO_access_token tokenSecret:contextIO_access_token_secret accountID:contextIO_account_id];
                     [appDelegate.contextIOAPIClient saveCredentials];
@@ -795,12 +808,13 @@ UIButton *loginButton;
                 });
             }
             else{
-                PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+                /*PFInstallation *currentInstallation = [PFInstallation currentInstallation];
                 if (![currentInstallation channels]) {
                     [currentInstallation setChannels:@[]];
                 }
                 [currentInstallation addUniqueObject:[NSString stringWithFormat:@"account_id_%@", appDelegate.contextIOAPIClient._accountID] forKey:@"channels"];
                 NSString *s = [NSString stringWithFormat:@"account_id_%@", appDelegate.contextIOAPIClient._accountID];
+                
 
                 NSArray *array = currentInstallation.channels;
                 [currentInstallation setObject:currentEmail forKey:@"email"];
@@ -808,7 +822,7 @@ UIButton *loginButton;
                     NSInteger errCode = [error code];
                     if (kPFErrorConnectionFailed == errCode ||  kPFErrorInternalServer == errCode)
                         [currentInstallation saveEventually];
-                }];
+                }];*/
             }
             NSLog(@"what is currntNam: %@",[EmailService instance].currentName);
             
