@@ -2,22 +2,25 @@
 
 url="https://github.com/dinhviethoa/ctemplate"
 
-if xcodebuild -showsdks|grep iphoneos8.0 >/dev/null ; then
-	sdkversion=8.0
+if xcodebuild -showsdks|grep iphoneos8.1 >/dev/null ; then
+  sdkversion=8.1
+    MARCHS="armv7 armv7s arm64"
+elif xcodebuild -showsdks|grep iphoneos8.0 >/dev/null ; then
+  sdkversion=8.0
     MARCHS="armv7 armv7s arm64"
 elif xcodebuild -showsdks|grep iphoneos7.1 >/dev/null ; then
-	sdkversion=7.1
+  sdkversion=7.1
     MARCHS="armv7 armv7s arm64"
 elif xcodebuild -showsdks|grep iphoneos7.0 >/dev/null ; then
- 	sdkversion=7.0
+  sdkversion=7.0
     MARCHS="armv7 armv7s arm64"
 elif xcodebuild -showsdks|grep iphoneos6.1 >/dev/null ; then
-	sdkversion=6.1
+  sdkversion=6.1
     MARCHS="armv7 armv7s"
 else
-	echo SDK not found
-	exit 1
-fi	
+  echo SDK not found
+  exit 1
+fi  
 
 pushd `dirname $0` > /dev/null
 scriptpath=`pwd`
@@ -42,26 +45,26 @@ pushd . >/dev/null
 mkdir -p "$builddir/downloads"
 cd "$builddir/downloads"
 if test -d ctemplate ; then
-	cd ctemplate
-	git pull --rebase
+  cd ctemplate
+  git pull --rebase
 else
-	git clone $url
-	cd ctemplate
+  git clone $url
+  cd ctemplate
 fi
 version=`git rev-parse HEAD | cut -c1-10`
 build_version="$version~2"
 
 if test -f "$resultdir/ctemplate-ios-$build_version.zip" ; then
-	echo install from cache
-	popd >/dev/null
-	rm -rf ../Externals/ctemplate-ios
-	mkdir -p ../Externals/tmp
-	unzip -q "$resultdir/ctemplate-ios-$build_version.zip" -d ../Externals/tmp
-	mv "../Externals/tmp/ctemplate-ios-$build_version/ctemplate-ios" ../Externals
+  echo install from cache
+  popd >/dev/null
+  rm -rf ../Externals/ctemplate-ios
+  mkdir -p ../Externals/tmp
+  unzip -q "$resultdir/ctemplate-ios-$build_version.zip" -d ../Externals/tmp
+  mv "../Externals/tmp/ctemplate-ios-$build_version/ctemplate-ios" ../Externals
   mkdir -p ../Externals/installed
   ln -sf "$resultdir/ctemplate-ios-$build_version.zip" ../Externals/installed
-	rm -rf ../Externals/tmp
-	exit 0
+  rm -rf ../Externals/tmp
+  exit 0
 fi
 popd >/dev/null
 
@@ -96,8 +99,8 @@ for MARCH in $MARCHS; do
   fi
   make install-nodist_ctemplateincludeHEADERS "prefix=$tmpdir/bin/ctemplate-ios" >> "$logdir/ctemplate-build.log"
   if test x$? != x0 ; then
-  	echo install of ctemplate failed
-  	exit 1
+    echo install of ctemplate failed
+    exit 1
   fi
   make distclean
   find . -name *.o | xargs rm
@@ -127,8 +130,8 @@ for MARCH in $MARCHS; do
   fi
   make install-nodist_ctemplateincludeHEADERS "prefix=$tmpdir/bin/ctemplate-ios" >> "$logdir/ctemplate-build.log"
   if test x$? != x0 ; then
-  	echo install of ctemplate failed
-  	exit 1
+    echo install of ctemplate failed
+    exit 1
   fi
   make distclean
   find . -name *.o | xargs rm
