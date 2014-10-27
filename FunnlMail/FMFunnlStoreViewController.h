@@ -20,4 +20,6 @@
     FunnelModel *funnlModel;
     FMFunnlObject *tempObject1;
 }
+-(void)createFabFunnels;
+
 @end
