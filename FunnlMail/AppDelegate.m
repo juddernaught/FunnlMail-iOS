@@ -614,7 +614,8 @@
   //Increase Badge Number
   //[[UIApplication sharedApplication].applicationIconBadgeNumber++;
   
-   [[EmailService instance] startAutoRefresh];
+   //[[EmailService instance] startAutoRefresh];
+    
   //Tell the system that you ar done.
   completionHandler(UIBackgroundFetchResultNewData);
   
