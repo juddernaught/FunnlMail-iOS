@@ -595,7 +595,7 @@ UIButton *loginButton;
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"NOTIFS_ON_FIRST_TIME"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-    [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
+    [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification2" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
         NSString *webhook_id = [responseDict objectForKey:@"webhook_id"];
         [[NSUserDefaults standardUserDefaults] setObject:webhook_id forKey:@"ALL_NOTIFS_ON_WEBHOOK_ID"];
         [[NSUserDefaults standardUserDefaults] synchronize];

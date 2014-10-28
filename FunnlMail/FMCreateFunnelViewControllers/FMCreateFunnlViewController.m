@@ -43,6 +43,9 @@
         emailTempArray = [[NSMutableArray alloc] initWithArray:contactArray];
         subjectArray = [[NSMutableArray alloc] initWithArray:subjects];
         subjectString = name;
+        
+        senderBeforeEditing = contactArray;
+        subjectBeforeEditing = subjects;
     }
     return self;
 }
@@ -130,6 +133,34 @@
 
 #pragma mark -
 #pragma mark Helper
+- (void)fillSenderArray {
+    if (senderArray) {
+        senderArray = nil;
+    }
+    senderArray = [[NSMutableArray alloc] init];
+    for (ContactModel *tempContact in contactMutableArray) {
+        if ([tempContact.name isEqualToString:ADD_FUNNL] || [tempContact.email isEqualToString:@""]) {
+            
+        }
+        else {
+            [senderArray addObject:tempContact.email];
+        }
+    }
+    
+    if (subjectArray) {
+        subjectArray = nil;
+    }
+    subjectArray = [[NSMutableArray alloc] init];
+    for (UITextField *tempTextField in textFieldArray) {
+        if (tempTextField.text.length == 0) {
+            
+        }
+        else {
+            [subjectArray addObject:tempTextField.text];
+        }
+    }
+}
+
 - (void)controllingSuggestionButton:(NSString *)buttonTitle {
     NSArray *tempArray = [suggestionScroll subviews];
     for (id tempView in tempArray) {
@@ -1751,7 +1782,7 @@
 #endif
     
     // if there are webhooks created, delete webhooks first
-    if ([oldModel.webhookIds length]) {
+    /*if ([oldModel.webhookIds length]) {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         
         AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -1791,13 +1822,59 @@
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             [self deleteOperation];
         });
-    }
+    }*/
 #ifdef TRACK_MIXPANEL
     //[[Mixpanel sharedInstance] track:@"Funnl deleteButton pressed"];
 #endif
+    [self deleteOperation];
 }
 
 - (void)deleteOperation {
+    
+    [self fillSenderArray];
+    PFQuery *query = [PFQuery queryWithClassName:PARSE_WEBHOOK_CLASS];
+    NSString *objectID = [[NSUserDefaults standardUserDefaults] objectForKey:PARSE_WEBHOOK_CLASS];
+    [query getObjectInBackgroundWithId:objectID block:^(PFObject *parseWebhookObject, NSError *error) {
+        if ([senderArray count] > 0) {
+            //remove from sender
+            senderWebhookArray = (NSMutableArray *)parseWebhookObject[PARSE_WEBHOOK_SENDER];
+            for (NSString *tempString in senderWebhookArray) {
+                BOOL flag1 = FALSE;
+                for (int counter = 0 ; counter < senderArray.count ; counter++) {
+                    if ([tempString isEqualToString:senderArray[counter]]) {
+                        flag1 = TRUE;
+                        break;
+                    }
+                }
+                if (flag1) {
+                    [senderWebhookArray removeObjectIdenticalTo:tempString];
+                }
+            }
+            parseWebhookObject[PARSE_WEBHOOK_SENDER] = senderWebhookArray;
+        }
+        
+        //changes made by iauro
+        if ([subjectArray count] > 0) {
+            //remove from subject
+            subjectWebhookArray = (NSMutableArray*)parseWebhookObject[PARSE_WEBHOOK_SUBJECT];
+            for (NSString *tempString in subjectWebhookArray) {
+                BOOL flag1 = FALSE;
+                for (int counter = 0 ; counter < senderArray.count ; counter++) {
+                    if ([tempString isEqualToString:senderArray[counter]]) {
+                        flag1 = TRUE;
+                        break;
+                    }
+                }
+                if (flag1) {
+                    [subjectWebhookArray removeObjectIdenticalTo:tempString];
+                }
+            }
+            parseWebhookObject[PARSE_WEBHOOK_SUBJECT] = subjectWebhookArray;
+        }
+        
+        [parseWebhookObject saveEventually];
+    }];
+    
     AppDelegate *tempAppDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     if (oldModel.skipFlag) {
         [[MessageFilterXRefService instance] deleteXRefWithFunnelId:oldModel.funnelId];
@@ -2138,7 +2215,7 @@
 - (void)saveButtonPressed:(UIButton*)sender {
     
     //[self performSelectorInBackground:@selector(showHUD) withObject:nil];
-    if (senderArray) {
+    /*if (senderArray) {
         senderArray = nil;
     }
     senderArray = [[NSMutableArray alloc] init];
@@ -2162,8 +2239,8 @@
         else {
             [subjectArray addObject:tempTextField.text];
         }
-    }
-    
+    }*/
+    [self fillSenderArray];
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     NSLog(@"Save Butoon pressed");
     
@@ -2316,7 +2393,8 @@
             PFQuery *query = [PFQuery queryWithClassName:PARSE_WEBHOOK_CLASS];
             NSString *objectID = [[NSUserDefaults standardUserDefaults] objectForKey:PARSE_WEBHOOK_CLASS];
             [query getObjectInBackgroundWithId:objectID block:^(PFObject *parseWebhookObject, NSError *error) {
-                if ([senderArray count] > 0) {
+                //commented by iauro
+                /*if ([senderArray count] > 0) {
                     senderWebhookArray = parseWebhookObject[PARSE_WEBHOOK_SENDER];
                     senderWebhookArray = [senderWebhookArray arrayByAddingObjectsFromArray:senderArray];
                     parseWebhookObject[PARSE_WEBHOOK_SENDER] = senderWebhookArray;
@@ -2326,10 +2404,115 @@
                     subjectWebhookArray = parseWebhookObject[PARSE_WEBHOOK_SUBJECT];
                     subjectWebhookArray = [subjectWebhookArray arrayByAddingObjectsFromArray:subjectArray];
                     parseWebhookObject[PARSE_WEBHOOK_SUBJECT] = subjectWebhookArray;
+                }*/
+                
+                //newly added by iauro
+                NSMutableArray *senderToBeDeleted = [[NSMutableArray alloc] init];
+                if (senderBeforeEditing) {
+                    for (NSString *tempString in senderBeforeEditing) {
+                        BOOL flag11 = FALSE;
+                        for (NSString *tempString2 in senderArray) {
+                            if ([tempString isEqualToString:tempString2]) {
+                                flag11 = TRUE;
+                            }
+                        }
+                        if (!flag11) {
+                            [senderToBeDeleted addObject:tempString];
+                        }
+                    }
                 }
                 
-                [parseWebhookObject saveInBackground];
-                                
+                NSMutableArray *subjectToBeDeleted = [[NSMutableArray alloc] init];
+                if (subjectBeforeEditing) {
+                    for (NSString *tempString in subjectBeforeEditing) {
+                        BOOL flag11 = FALSE;
+                        for (NSString *tempString2 in subjectArray) {
+                            if ([tempString isEqualToString:tempString2]) {
+                                flag11 = TRUE;
+                            }
+                        }
+                        if (!flag11) {
+                            [subjectToBeDeleted addObject:tempString];
+                        }
+                    }
+                }
+                
+                if ([senderArray count] > 0 && enableNotification) {
+                    NSArray *senderWebhookArray1 = parseWebhookObject[PARSE_WEBHOOK_SENDER];
+                    senderWebhookArray = [[NSMutableArray alloc] initWithArray:[senderWebhookArray1 arrayByAddingObjectsFromArray:senderArray]];
+                    if (senderToBeDeleted && senderToBeDeleted.count) {
+                        [senderWebhookArray removeObjectsInArray:senderToBeDeleted];
+                    }
+                    parseWebhookObject[PARSE_WEBHOOK_SENDER] = senderWebhookArray;
+                }
+                else if ([senderArray count] > 0 && !enableNotification) {
+                    //remove from sender
+                    senderWebhookArray = (NSMutableArray *)parseWebhookObject[PARSE_WEBHOOK_SENDER];
+                    for (NSString *tempString in senderWebhookArray) {
+                        BOOL flag1 = FALSE;
+                        for (int counter = 0 ; counter < senderArray.count ; counter++) {
+                            if ([tempString isEqualToString:senderArray[counter]]) {
+                                flag1 = TRUE;
+                                break;
+                            }
+                        }
+                        if (flag1) {
+                            [senderWebhookArray removeObjectIdenticalTo:tempString];
+                        }
+                    }
+                    if (senderToBeDeleted && senderToBeDeleted.count) {
+                        [senderWebhookArray removeObjectsInArray:senderToBeDeleted];
+                    }
+                    parseWebhookObject[PARSE_WEBHOOK_SENDER] = senderWebhookArray;
+                }
+                
+                //changes made by iauro
+                if ([subjectArray count] > 0 && enableNotification) {
+                    subjectWebhookArray = parseWebhookObject[PARSE_WEBHOOK_SUBJECT];
+                    subjectWebhookArray = (NSMutableArray*)[subjectWebhookArray arrayByAddingObjectsFromArray:subjectArray];
+                    if (subjectToBeDeleted && subjectToBeDeleted.count) {
+                        [subjectWebhookArray removeObjectsInArray:subjectToBeDeleted];
+                    }
+                    parseWebhookObject[PARSE_WEBHOOK_SUBJECT] = subjectWebhookArray;
+                }
+                else if ([subjectArray count] > 0 && !enableNotification) {
+                    //remove from subject
+                    subjectWebhookArray = (NSMutableArray*)parseWebhookObject[PARSE_WEBHOOK_SUBJECT];
+                    for (NSString *tempString in subjectWebhookArray) {
+                        BOOL flag1 = FALSE;
+                        for (int counter = 0 ; counter < senderArray.count ; counter++) {
+                            if ([tempString isEqualToString:senderArray[counter]]) {
+                                flag1 = TRUE;
+                                break;
+                            }
+                        }
+                        if (flag1) {
+                            [subjectWebhookArray removeObjectIdenticalTo:tempString];
+                        }
+                    }
+                    if (subjectToBeDeleted && subjectToBeDeleted.count) {
+                        [subjectWebhookArray removeObjectsInArray:subjectToBeDeleted];
+                    }
+                    parseWebhookObject[PARSE_WEBHOOK_SUBJECT] = subjectWebhookArray;
+                }
+                
+                //as Enable all notification will be on always
+                /*if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"all_notificatio"] isEqualToString:@"1"]) {
+                    [senderArray removeAllObjects];
+                    [subjectArray removeAllObjects];
+                    
+                    [senderWebhookArray removeAllObjects];
+                    [subjectWebhookArray removeAllObjects];
+                }
+                else {
+                    subjectArray = parseWebhookObject[PARSE_WEBHOOK_SUBJECT];
+                    senderArray = parseWebhookObject[PARSE_WEBHOOK_SENDER];
+                }*/
+                
+                //subjectArray = parseWebhookObject[PARSE_WEBHOOK_SUBJECT];
+                //senderArray = parseWebhookObject[PARSE_WEBHOOK_SENDER];
+                [parseWebhookObject saveEventually];
+                [self saveFunnlWithWebhookId:nil];
             }];
 
             
@@ -2502,7 +2685,7 @@
         if ([subjects count]) {
             for (NSString *subject in subjects) {
                 [params setObject:subject forKey:@"filter_subject"];
-                [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
+                [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification2" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
                     [webhooks setObject:responseDict forKey:sender];
                     reqCnt--;
                     //dispatch_async(dispatch_get_main_queue(), ^{
@@ -2525,7 +2708,7 @@
                 continue;
             }
         } else {
-            [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
+            [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification2" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
                 [webhooks setObject:responseDict forKey:sender];
                 reqCnt--;
                 //dispatch_async(dispatch_get_main_queue(), ^{

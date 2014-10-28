@@ -71,6 +71,34 @@
 
 #pragma mark -
 #pragma mark Helper
+- (void)fillSenderArray {
+    if (senderArray) {
+        senderArray = nil;
+    }
+    senderArray = [[NSMutableArray alloc] init];
+    for (ContactModel *tempContact in contactMutableArray) {
+        if ([tempContact.name isEqualToString:ADD_FUNNL] || [tempContact.email isEqualToString:@""]) {
+            
+        }
+        else {
+            [senderArray addObject:tempContact.email];
+        }
+    }
+    
+    if (subjectArray) {
+        subjectArray = nil;
+    }
+    subjectArray = [[NSMutableArray alloc] init];
+    for (UITextField *tempTextField in textFieldArray) {
+        if (tempTextField.text.length == 0) {
+            
+        }
+        else {
+            [subjectArray addObject:tempTextField.text];
+        }
+    }
+}
+
 -(void) createWebhooksAndSaveFunnl
 {
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -89,7 +117,7 @@
         if ([subjects count]) {
             for (NSString *subject in subjects) {
                 [params setObject:subject forKey:@"filter_subject"];
-                [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
+                [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification2" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
                     [webhooks setObject:responseDict forKey:sender];
                     reqCnt--;
                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -112,7 +140,7 @@
                 continue;
             }
         } else {
-            [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
+            [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification2" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
                 [webhooks setObject:responseDict forKey:sender];
                 reqCnt--;
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -819,7 +847,7 @@
 
 - (void)saveButtonPressed:(UIButton*)sender {
 
-    if (senderArray) {
+    /*if (senderArray) {
         senderArray = nil;
     }
     senderArray = [[NSMutableArray alloc] init];
@@ -836,8 +864,8 @@
     if (subjectArray) {
         subjectArray = nil;
     }
-    subjectArray = [[NSMutableArray alloc] init];
-    
+    subjectArray = [[NSMutableArray alloc] init];*/
+    [self fillSenderArray];
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     NSLog(@"Save Butoon pressed");
     
@@ -883,15 +911,68 @@
         if((contactMutableArray.count > 1 || (![[(ContactModel *)[contactMutableArray objectAtIndex:0] name] isEqualToString:ADD_FUNNL] && contactMutableArray.count == 1)) || subjectArray.count){
             [self performSelectorInBackground:@selector(showHUD) withObject:nil];
             if (!enableNotification) {
-                [self saveFunnlWithWebhookId:nil];
-            } else {
                 if (senderArray.count) {
-                    [self createWebhooksAndSaveFunnl];
+                    PFQuery *query = [PFQuery queryWithClassName:PARSE_WEBHOOK_CLASS];
+                    NSString *objectID = [[NSUserDefaults standardUserDefaults] objectForKey:PARSE_WEBHOOK_CLASS];
+                    [query getObjectInBackgroundWithId:objectID block:^(PFObject *parseWebhookObject, NSError *error) {
+                        NSMutableArray *senderWebhookArray = (NSMutableArray *)parseWebhookObject[PARSE_WEBHOOK_SENDER];
+                        for (NSString *tempString in senderWebhookArray) {
+                            BOOL flag1 = FALSE;
+                            for (int counter = 0 ; counter < senderArray.count ; counter++) {
+                                if ([tempString isEqualToString:senderArray[counter]]) {
+                                    flag1 = TRUE;
+                                    break;
+                                }
+                            }
+                            if (flag1) {
+                                [senderWebhookArray removeObjectIdenticalTo:tempString];
+                            }
+                        }
+                        parseWebhookObject[PARSE_WEBHOOK_SENDER] = senderWebhookArray;
+                        senderWebhookArray = nil;
+                        
+                        if (subjectArray.count) {
+                            NSMutableArray* subjectWebhookArray = (NSMutableArray*)parseWebhookObject[PARSE_WEBHOOK_SUBJECT];
+                            for (NSString *tempString in subjectWebhookArray) {
+                                BOOL flag1 = FALSE;
+                                for (int counter = 0 ; counter < senderArray.count ; counter++) {
+                                    if ([tempString isEqualToString:senderArray[counter]]) {
+                                        flag1 = TRUE;
+                                        break;
+                                    }
+                                }
+                                if (flag1) {
+                                    [subjectWebhookArray removeObjectIdenticalTo:tempString];
+                                }
+                            }
+                            parseWebhookObject[PARSE_WEBHOOK_SUBJECT] = subjectWebhookArray;
+                            subjectWebhookArray = nil;
+                        }
+                        [parseWebhookObject saveEventually];
+                    }];
                 }
-                else {
-                    [self saveFunnlWithWebhookId:nil];
-                }
+            } else {
+                PFQuery *query = [PFQuery queryWithClassName:PARSE_WEBHOOK_CLASS];
+                NSString *objectID = [[NSUserDefaults standardUserDefaults] objectForKey:PARSE_WEBHOOK_CLASS];
+                [query getObjectInBackgroundWithId:objectID block:^(PFObject *parseWebhookObject, NSError *error) {
+                    if (senderArray.count) {
+                        NSMutableArray *senderWebhookArray = parseWebhookObject[PARSE_WEBHOOK_SENDER];
+                        senderWebhookArray = (NSMutableArray *)[senderWebhookArray arrayByAddingObjectsFromArray:senderArray];
+                        parseWebhookObject[PARSE_WEBHOOK_SENDER] = senderWebhookArray;
+                        senderWebhookArray = nil;
+                    }
+                    
+                    if (subjectArray.count) {
+                        NSMutableArray *subjectWebhookArray = parseWebhookObject[PARSE_WEBHOOK_SUBJECT];
+                        subjectWebhookArray = (NSMutableArray *)[subjectWebhookArray arrayByAddingObjectsFromArray:subjectArray];
+                        subjectWebhookArray = nil;
+                    }
+                    
+                    [parseWebhookObject saveInBackground];
+                }];
+                
             }
+            [self saveFunnlWithWebhookId:nil];
         }else{
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Funnel" message:@"Please add at least one email or subject" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert show];

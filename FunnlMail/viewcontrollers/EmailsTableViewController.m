@@ -1534,8 +1534,8 @@ UIView *greyView;
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isFirstTime"];
     [helpButton.layer removeAllAnimations];
     [_shimmeringView setShimmering:NO];
-    //if (0) {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"show_vip"]) {
+    //if ([[NSUserDefaults standardUserDefaults] boolForKey:@"show_vip"]) {
+    if (0) {
         /*if (!helpFlag) {
             disclosureArrow.hidden = YES;
             

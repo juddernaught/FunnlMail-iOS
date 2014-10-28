@@ -62,7 +62,8 @@
   
   UITapGestureRecognizer *singleTapGesture;
     
-    NSArray *senderWebhookArray,*subjectWebhookArray;
+    NSMutableArray *senderWebhookArray,*subjectWebhookArray;
+    NSArray *senderBeforeEditing, *subjectBeforeEditing;
 }
 @property (weak) id<MainVCDelegate> mainVCdelegate;
 @property (strong, nonatomic)FunnelModel *oldModel;

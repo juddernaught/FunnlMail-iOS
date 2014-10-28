@@ -129,8 +129,8 @@
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"all_notificatio"] isEqualToString:@"0"]) {
       [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"all_notificatio"];
       [[NSUserDefaults standardUserDefaults] synchronize];
-      NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-      [((AppDelegate *)[[UIApplication sharedApplication] delegate]).contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
+      /*NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+      [((AppDelegate *)[[UIApplication sharedApplication] delegate]).contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification2" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
         NSString *webhook_id = [responseDict objectForKey:@"webhook_id"];
         [[NSUserDefaults standardUserDefaults] setObject:webhook_id forKey:@"ALL_NOTIFS_ON_WEBHOOK_ID"];
         [[NSUserDefaults standardUserDefaults] synchronize];
@@ -161,12 +161,12 @@
         
         tostLabel = nil;
         tostView = nil;
-      }];
+      }];*/
     }
     else if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"all_notificatio"] isEqualToString:@"1"]) {
       [[NSUserDefaults standardUserDefaults] setObject:@"0" forKey:@"all_notificatio"];
       [[NSUserDefaults standardUserDefaults] synchronize];
-      [((AppDelegate *)[[UIApplication sharedApplication] delegate]).contextIOAPIClient deleteWebhookWithID:[[NSUserDefaults standardUserDefaults] stringForKey:@"ALL_NOTIFS_ON_WEBHOOK_ID"] success:^(NSDictionary *responseDict) {
+      /*[((AppDelegate *)[[UIApplication sharedApplication] delegate]).contextIOAPIClient deleteWebhookWithID:[[NSUserDefaults standardUserDefaults] stringForKey:@"ALL_NOTIFS_ON_WEBHOOK_ID"] success:^(NSDictionary *responseDict) {
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"ALL_NOTIFS_ON_WEBHOOK_ID"];
         [[NSUserDefaults standardUserDefaults] synchronize];
       } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -196,7 +196,7 @@
         
         tostLabel = nil;
         tostView = nil;
-      }];
+      }];*/
     }
     [notificationsTable reloadData];
   }
@@ -264,7 +264,7 @@
     if ([subjects count]) {
       for (NSString *subject in subjects) {
         [params setObject:subject forKey:@"filter_subject"];
-        [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
+        [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification2" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
           [webhooks setObject:responseDict forKey:sender];
           reqCnt--;
           //dispatch_async(dispatch_get_main_queue(), ^{
@@ -287,7 +287,7 @@
         continue;
       }
     } else {
-      [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
+      [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification2" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
         [webhooks setObject:responseDict forKey:sender];
         reqCnt--;
         //dispatch_async(dispatch_get_main_queue(), ^{

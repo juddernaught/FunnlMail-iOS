@@ -204,7 +204,7 @@
     /*else if([cell.menuLabel.text isEqualToString:@"Turn On All Alerts"]){
         cell.menuLabel.text = @"Turn Off All Alerts";
         NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-        [((AppDelegate *)[[UIApplication sharedApplication] delegate]).contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
+        [((AppDelegate *)[[UIApplication sharedApplication] delegate]).contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification2" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
             NSString *webhook_id = [responseDict objectForKey:@"webhook_id"];
             [[NSUserDefaults standardUserDefaults] setObject:webhook_id forKey:@"ALL_NOTIFS_ON_WEBHOOK_ID"];
             [[NSUserDefaults standardUserDefaults] synchronize];
