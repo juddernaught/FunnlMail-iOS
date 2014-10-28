@@ -21,7 +21,9 @@
 #import <HockeySDK/HockeySDK.h>
 #import "VIPViewController.h"
 #import "MTStatusBarOverlay.h"
-
+#import "MCTMsgViewController.h"
+#import "EmailService.h"
+#import <mailcore/mailcore.h>
 
 @implementation AppDelegate
 @synthesize menuController,drawerController,appActivityIndicator,currentFunnelString,currentFunnelDS,progressHUD,funnelUpDated,loginViewController,mainVCControllerInstance,internetAvailable,contextIOAPIClient,isAlreadyRequestedRefreshToken,currentSelectedFunnlModel,isPullToRefresh,navControllerForCentralView, hasStartLoginAlreadyOccured;
@@ -480,7 +482,7 @@
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
-    // Store the deviceToken in the current installation and save it to Parse.
+    //Store the deviceToken in the current installation and save it to Parse.
     //NSString* deviceTokenStr = [NSString stringWithUTF8String:[deviceToken bytes]];
     NSLog(@"didRegisterForRemoteNotificationsWithDeviceToken: %@",deviceToken);
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
@@ -502,6 +504,19 @@
 
 - (void)application:(UIApplication *)application
 didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    NSDictionary *apsInfo = [userInfo objectForKey:@"aps"];
+    if ( application.applicationState == UIApplicationStateActive ) {
+        
+        [self downloadMessageFromNotification:[apsInfo objectForKey:@"messageID"]];
+    }
+    else {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"notification_received"];
+        if ([apsInfo objectForKey:@"messageID"]) {
+            [[NSUserDefaults standardUserDefaults] setObject:[apsInfo objectForKey:@"messageID"] forKey:@"notification_message_uuid"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+        
+    }
     NSLog(@"didReceiveRemoteNotification: %@",userInfo);
     [PFPush handlePush:userInfo];
 }
@@ -515,5 +530,83 @@ didReceiveRemoteNotification:(NSDictionary *)userInfo {
 }
 
 #pragma mark UIView Animation
+
+#pragma mark -
+#pragma downloadMessageFromNotification
+//newly added function form iaurodev3
+- (void)downloadMessageFromNotification:(NSString *)mesageID {
+    
+    
+    [[NSUserDefaults standardUserDefaults] setObject:mesageID forKey:@"notification_message_uuid"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    if (mesageID && mesageID.length) {
+        
+        //    NSNumberFormatter * formatter = [[NSNumberFormatter alloc] init];
+        //    [formatter setNumberStyle: NSNumberFormatterDecimalStyle];
+        //    NSNumber * myNumber = [formatter numberFromString: mesageID];
+        //    unsigned long long mID = [myNumber unsignedLongLongValue];
+        
+        
+        
+        if ([EmailService instance].imapSession) {
+            
+            MCOIMAPSearchOperation *searchOperation = [[EmailService instance].imapSession searchOperationWithFolder:INBOX kind:MCOIMAPSearchGmailMessageID searchString:mesageID];
+            [searchOperation start:^(NSError *error, MCOIndexSet *searchResult) {
+                if (error)
+                {
+                    
+                }
+                else
+                {
+                    //            filterLabel.text = [NSString stringWithFormat:@"Search Results : %d",searchResult.count];
+                    if (searchResult)
+                    {
+                        MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)
+                        (MCOIMAPMessagesRequestKindHeaders | MCOIMAPMessagesRequestKindStructure |
+                         MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject | MCOIMAPMessagesRequestKindGmailThreadID | MCOIMAPMessagesRequestKindGmailMessageID |	 MCOIMAPMessagesRequestKindFlags);
+                        MCOIMAPSession *session = [EmailService instance].imapSession;
+                        MCOIMAPFetchMessagesOperation * op = [session fetchMessagesByUIDOperationWithFolder:INBOX requestKind:requestKind uids:searchResult];
+                        [op start:^(NSError * error, NSArray * messages, MCOIndexSet * vanishedMessages) {
+                            if(messages.count){
+                                MCOIMAPMessage *m = nil;
+                                for (MCOIMAPMessage *messg in messages) {
+                                    m = messg;
+                                    break;
+                                }
+                                
+                                MessageModel *tempMessageModel = [[MessageModel alloc] init];
+                                tempMessageModel.read = m.flags;
+                                tempMessageModel.date = m.header.date;
+                                tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
+                                tempMessageModel.messageJSON = [m serializable];
+                                tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
+                                
+                                MCTMsgViewController *vc = [[MCTMsgViewController alloc] init];
+                                vc.folder = INBOX;
+                                vc.selectedIndexPath = nil;
+                                vc.messageModel = tempMessageModel;
+                                vc.address = m.header.from;
+                                vc.message = m;
+                                vc.session = [EmailService instance].imapSession;
+                                [self.mainVCdelegate pushViewController:vc];
+                            }
+                            
+                        }];
+                    }
+                }
+            }];
+            
+        }//
+        else {
+            NSLog(@"failure");
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"notification_received"];
+            [[NSUserDefaults standardUserDefaults] setObject:mesageID forKey:@"notification_message_uuid"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+    }
+    else {
+        
+    }
+}
 
 @end

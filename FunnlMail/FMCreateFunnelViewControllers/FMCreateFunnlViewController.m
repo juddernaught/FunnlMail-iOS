@@ -2317,19 +2317,21 @@
             NSString *objectID = [[NSUserDefaults standardUserDefaults] objectForKey:PARSE_WEBHOOK_CLASS];
             [query getObjectInBackgroundWithId:objectID block:^(PFObject *parseWebhookObject, NSError *error) {
                 if ([senderArray count] > 0) {
-                    NSArray *senderWebhookArray = parseWebhookObject[PARSE_WEBHOOK_SENDER];
+                    senderWebhookArray = parseWebhookObject[PARSE_WEBHOOK_SENDER];
                     senderWebhookArray = [senderWebhookArray arrayByAddingObjectsFromArray:senderArray];
                     parseWebhookObject[PARSE_WEBHOOK_SENDER] = senderWebhookArray;
                 }
                 
                 if ([subjectArray count] > 0) {
-                    NSArray *subjectWebhookArray = parseWebhookObject[PARSE_WEBHOOK_SUBJECT];
+                    subjectWebhookArray = parseWebhookObject[PARSE_WEBHOOK_SUBJECT];
                     subjectWebhookArray = [subjectWebhookArray arrayByAddingObjectsFromArray:subjectArray];
                     parseWebhookObject[PARSE_WEBHOOK_SUBJECT] = subjectWebhookArray;
                 }
                 
                 [parseWebhookObject saveInBackground];
-                [self saveFunnlWithWebhookId:nil];
+                
+                [self deleteAllWebhooksAndCreateNewOne];
+                
             }];
 
             
@@ -2347,6 +2349,71 @@
     [appDelegate.progressHUD removeFromSuperview];
     [MBProgressHUD hideHUDForView:appDelegate.window animated:YES];
 }
+
+-(void)deleteAllWebhooksAndCreateNewOne{
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.contextIOAPIClient getWebhooksWithParams:nil success:^(NSArray *responseArray) {
+        __block int reqCnt = (int)[responseArray count];
+        if ([responseArray count] != 0) {
+            for (NSDictionary *dictionary in responseArray) {
+                NSString *webhookID = [dictionary objectForKey:@"webhook_id"];
+                if(webhookID && webhookID.length){
+                    [appDelegate.contextIOAPIClient deleteWebhookWithID:webhookID success:^(NSDictionary *responseDict) {
+                        reqCnt--;
+                        if(reqCnt == 0){
+                            [self performSelector:@selector(updateWebhook) withObject:nil afterDelay:0.01];
+                        }
+                    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                        reqCnt--;
+                        if(reqCnt == 0){
+                            [self performSelector:@selector(updateWebhook) withObject:nil afterDelay:0.01];
+                        }
+                    }];
+                }
+            }
+        }
+        else {
+            [self performSelector:@selector(updateWebhook) withObject:nil afterDelay:0.01];
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [self performSelector:@selector(updateWebhook) withObject:nil afterDelay:0.01];
+    }];
+}
+
+-(void)updateWebhook{
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"all_notificatio"] isEqualToString:@"1"]) {
+        // turn on all notifs
+        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+        [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
+            NSString *webhook_id = [responseDict objectForKey:@"webhook_id"];
+            [[NSUserDefaults standardUserDefaults] setObject:webhook_id forKey:@"ALL_NOTIFS_ON_WEBHOOK_ID"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            NSLog(@"********* createFirstTimeNotifs: SUCCUSS : %@",webhook_id);
+            [self saveFunnlWithWebhookId:webhook_id];
+
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"createFirstTimeNotifs: FAILURE : %@",error.userInfo.description);
+        }];
+    }
+    else{
+        // turn on selected notification
+        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+        // How to add multiple senders to the params of one webhook - http://context.io/docs/lite/users/webhooks
+        
+        [appDelegate.contextIOAPIClient createWebhookWithCallbackURLString:@"http://funnlmail.parseapp.com/send_notification" failureNotificationURLString:@"http://funnlmail.parseapp.com/failure" params:params success:^(NSDictionary *responseDict) {
+            NSString *webhook_id = [responseDict objectForKey:@"webhook_id"];
+            [[NSUserDefaults standardUserDefaults] setObject:webhook_id forKey:@"ALL_NOTIFS_ON_WEBHOOK_ID"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            NSLog(@"********* createFirstTimeNotifs: SUCCUSS : %@",webhook_id);
+            [self saveFunnlWithWebhookId:webhook_id];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"createFirstTimeNotifs: FAILURE : %@",error.userInfo.description);
+        }];
+
+    }
+}
+
 
 -(void) saveFunnlWithWebhookId:(NSString *) webhookId
 {

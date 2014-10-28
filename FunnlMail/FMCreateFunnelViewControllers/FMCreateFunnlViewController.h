@@ -61,6 +61,8 @@
     CGFloat _keyboardHeight;
   
   UITapGestureRecognizer *singleTapGesture;
+    
+    NSArray *senderWebhookArray,*subjectWebhookArray;
 }
 @property (weak) id<MainVCDelegate> mainVCdelegate;
 @property (strong, nonatomic)FunnelModel *oldModel;
