@@ -583,16 +583,14 @@ static NSString *currentFolder;
                       NSArray *tempArray;
                       AppDelegate *tempAppDelegate = APPDELEGATE;
                       NSString *emailAddress = [[NSUserDefaults standardUserDefaults] objectForKey:@"EMAIL_LOGGED_IN"];
-                      [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"fab"];
-                      FMFunnlStoreViewController *storeController = [[FMFunnlStoreViewController alloc] init];
-                      [storeController createFabFunnels];
-                      /*if ([emailAddress containsString:@"@gmail.com"]) {
+
+                      if ([emailAddress containsString:@"@fabfurnish.com"]) {
                           if (![[NSUserDefaults standardUserDefaults] boolForKey:@"fab"]) {
                               [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"fab"];
                               FMFunnlStoreViewController *storeController = [[FMFunnlStoreViewController alloc] init];
                               [storeController createFabFunnels];
                           }
-                      }*/
+                      }
                       if ([[tempAppDelegate.currentFunnelString.lowercaseString lowercaseString] isEqualToString:[ALL_FUNNL lowercaseString]]) {
                           tempArray = [[MessageService instance] retrieveAllMessages];
                       }
