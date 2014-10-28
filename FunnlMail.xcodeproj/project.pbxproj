@@ -104,6 +104,7 @@
 		66F2C48B18E3293F00CD593E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66F2C46D18E3293E00CD593E /* UIKit.framework */; };
 		66F2C49318E3293F00CD593E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66F2C49118E3293F00CD593E /* InfoPlist.strings */; };
 		66F2C49518E3293F00CD593E /* FunnlMailTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F2C49418E3293F00CD593E /* FunnlMailTests.m */; };
+		66F6F5D919FC882500D5C648 /* fabstore.csv in Resources */ = {isa = PBXBuildFile; fileRef = 66F6F5D819FC882500D5C648 /* fabstore.csv */; };
 		66F8A52319E1FEB40020DBFA /* tap-here@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66F8A52219E1FEB40020DBFA /* tap-here@2x.png */; };
 		B703C50419760E27003037FC /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B703C50319760E27003037FC /* AddressBook.framework */; };
 		B7169C84199C6D78004D8759 /* FAQVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B7169C83199C6D78004D8759 /* FAQVC.m */; };
@@ -601,6 +602,7 @@
 		66F2C49018E3293F00CD593E /* FunnlMailTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FunnlMailTests-Info.plist"; sourceTree = "<group>"; };
 		66F2C49218E3293F00CD593E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		66F2C49418E3293F00CD593E /* FunnlMailTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FunnlMailTests.m; sourceTree = "<group>"; };
+		66F6F5D819FC882500D5C648 /* fabstore.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fabstore.csv; sourceTree = "<group>"; };
 		66F8A52219E1FEB40020DBFA /* tap-here@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tap-here@2x.png"; sourceTree = "<group>"; };
 		6F5A9AD70D888E4EBEB08B93 /* Pods.distribution.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.distribution.xcconfig; path = "Pods/Target Support Files/Pods/Pods.distribution.xcconfig"; sourceTree = "<group>"; };
 		B703C50319760E27003037FC /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
@@ -1335,6 +1337,7 @@
 		66F2C47018E3293E00CD593E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				66F6F5D819FC882500D5C648 /* fabstore.csv */,
 				FAB0759D19D5999C00FFB87E /* store.csv */,
 				66F2C47118E3293E00CD593E /* FunnlMail-Info.plist */,
 				66F2C47218E3293E00CD593E /* InfoPlist.strings */,
@@ -2425,6 +2428,7 @@
 				B7C940E4198D6F49008468E7 /* WHITEsliders5.png in Resources */,
 				2528AF9A19D3E1330020F7AD /* First_Screen@2x.png in Resources */,
 				FA3FC06E19D43CAF00BB928E /* IntroTakeMeToInbox@2x.png in Resources */,
+				66F6F5D919FC882500D5C648 /* fabstore.csv in Resources */,
 				FA3FC07719D43CAF00BB928E /* introTutorial09@2x.png in Resources */,
 				25B5976119D15CD400265978 /* funnlIcon-FunnlOverlay.png in Resources */,
 				FAE644BE19DA820C00EE076C /* storeListIcon.png in Resources */,

@@ -21,6 +21,7 @@
 #import "RNBlurModalView.h"
 #import "MTStatusBarOverlay.h"
 #import <Mixpanel/Mixpanel.h>
+#import "FMFunnlStoreViewController.h"
 
 static EmailService *instance;
 
@@ -571,12 +572,25 @@ static NSString *currentFolder;
                       
                       NSLog(@"***** insert %lu message to db",(unsigned long)messages.count);
         
+                      //
+                      
+                      
+                      
                       
 
                       
                       //retrieving the message from database
                       NSArray *tempArray;
                       AppDelegate *tempAppDelegate = APPDELEGATE;
+                      NSString *emailAddress = [[NSUserDefaults standardUserDefaults] objectForKey:@"EMAIL_LOGGED_IN"];
+
+                      if ([emailAddress containsString:@"@fabfurnish.com"]) {
+                          if (![[NSUserDefaults standardUserDefaults] boolForKey:@"fab"]) {
+                              [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"fab"];
+                              FMFunnlStoreViewController *storeController = [[FMFunnlStoreViewController alloc] init];
+                              [storeController createFabFunnels];
+                          }
+                      }
                       if ([[tempAppDelegate.currentFunnelString.lowercaseString lowercaseString] isEqualToString:[ALL_FUNNL lowercaseString]]) {
                           tempArray = [[MessageService instance] retrieveAllMessages];
                       }

@@ -52,7 +52,7 @@
     } else {
         listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Create Funnel", @"Funnel Store", @"Turn On All Alerts", @"Send Feedback",@"Tutorial",@"Help (FAQs)",@"LogOut",nil];
     }*/
-  listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Create Funnel", @"Funnel Store", @"Alerts", @"Send Feedback",@"Tutorial",@"Help (FAQs)",@"LogOut",nil];
+  listArray =[[NSMutableArray alloc] initWithObjects:@"",@"Create Funnel", @"Funnel Cloud", @"Alerts", @"Send Feedback",@"Tutorial",@"Help (FAQs)",@"LogOut",nil];
     imageArray = [[NSMutableArray alloc] initWithObjects:@"",@"funnlIcon",@"storeListIcon",@"notifyListIcon", @"sendFeedbackListIcon",@"tutorialListIcon",@"helpListIcon", @"logoutListIcon",nil];
     [listView reloadData];
 }
@@ -284,7 +284,7 @@
     
         //[MBProgressHUD hideAllHUDsForView:appDelegate.window animated:YES];
     }
-    else if ([cell.menuLabel.text isEqualToString:@"Funnel Store"]){
+    else if ([cell.menuLabel.text isEqualToString:@"Funnel Cloud"]){
         FMFunnlStoreViewController *controller = [[FMFunnlStoreViewController alloc]init];
         controller.view.backgroundColor = [UIColor clearColor];
         appDelegate.window.backgroundColor = [UIColor whiteColor];

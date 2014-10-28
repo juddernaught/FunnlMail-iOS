@@ -46,7 +46,7 @@
     [tempLabel setTextAlignment:NSTextAlignmentCenter];
     [tempLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:16]];
     [tempLabel setTextColor:[UIColor blackColor]];
-    tempLabel.text = @"Funnel Store";
+    tempLabel.text = @"Funnel Cloud";
     self.navigationItem.titleView = tempLabel;
     tempLabel = nil;
 //    self.title = @"Funnel Store";
@@ -292,7 +292,13 @@
 }
 
 - (void) readFileContent {
-    NSString *sampleString = [[NSBundle mainBundle] pathForResource:CSV_FILE_NAME ofType:@"csv"];
+    NSString *sampleString = @"";
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"fab"]) {
+        sampleString = [[NSBundle mainBundle] pathForResource:CSV_FILE_NAME ofType:@"csv"];
+    }
+    else {
+        sampleString = [[NSBundle mainBundle] pathForResource:@"fabstore" ofType:@"csv"];
+    }
     NSError *error = nil;
     NSString *fileContent = [NSString stringWithContentsOfFile:sampleString encoding:NSUTF8StringEncoding error:&error];
     fileContentString = fileContent;
@@ -328,6 +334,7 @@
             [funnlStorageArray addObject:tempObject];
         }
     }
+    
 }
 
 - (void)processAccordingToCategory {
@@ -361,6 +368,81 @@
     // Dispose of any resources that can be recreated.
 }
 
+-(void)createFabFunnels {
+
+
+    //    self.title = @"Funnel Store";
+    
+    // Do any additional setup after loading the view.
+    funnlStorageArray = [[NSMutableArray alloc] init];
+    funnlStorageAccordingToSection = [[NSMutableArray alloc] init];
+    funnlStoreTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, WIDTH, HEIGHT)];
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 00, 0)];
+    funnlStoreTableView.tableFooterView = footerView;
+    funnlStoreTableView.delegate = self;
+    funnlStoreTableView.dataSource = self;
+    [self readFileContent];
+    [self parseString];
+    [self processAccordingToCategory];
+    flagArray = [[NSMutableArray alloc] init];
+    for (int counter = 0; counter < funnlStorageAccordingToSection.count; counter++) {
+        if (counter % 2 == 0) {
+            [flagArray setObject:@"0" atIndexedSubscript:counter];
+        }
+        else
+            [flagArray setObject:@"1" atIndexedSubscript:counter];
+    }
+    
+    for (int i = 0; i < ((NSMutableArray *)[funnlStorageAccordingToSection objectAtIndex:0]).count; i++) {
+        if (tempObject1) {
+            tempObject1 = nil;
+        }
+        tempObject1 = [[funnlStorageAccordingToSection objectAtIndex:0] objectAtIndex:i];
+        NSString *funnelName = [tempObject1 funnelName];
+        NSMutableArray *senderArray = (NSMutableArray*)[[tempObject1 senderString] componentsSeparatedByString:@"~"];
+        NSMutableArray *subjectArray = (NSMutableArray*)[[tempObject1 subjectString] componentsSeparatedByString:@"~"];
+        //NSString *categoryName = [tempObject1 categoryName];
+        
+        if(senderArray.count == 1){
+            NSString *str = [senderArray objectAtIndex:0];
+            if(str.length == 0){
+                senderArray = nil;
+            }
+        }
+        
+        if(subjectArray.count == 1){
+            NSString *str = [subjectArray objectAtIndex:0];
+            if(str.length == 0){
+                subjectArray = nil;
+            }
+        }
+        
+        
+        NSArray *randomColors = GRADIENT_ARRAY;
+        //NSInteger gradientInt = randomColors.count;
+        NSInteger gradientInt = arc4random_uniform((uint32_t)randomColors.count);
+        NSString *colorString = [randomColors objectAtIndex:gradientInt];
+        UIColor *color = [UIColor colorWithHexString:colorString];
+        if(color == nil){
+            color = [UIColor colorWithHexString:@"#F7F7F7"];
+        }
+        NSLog(@"poop: %@", funnelName);
+        funnlModel = [[FunnelModel alloc] initWithBarColor:color filterTitle:funnelName newMessageCount:0 dateOfLastMessage:nil sendersArray:(NSMutableArray *)senderArray subjectsArray:(NSMutableArray *)subjectArray skipAllFlag:NO funnelColor:colorString];
+        
+        //NSString *categoryName = [tempObject categoryName];
+        
+        AppDelegate *appDeleage = APPDELEGATE;
+        FMCreateFunnlViewController *viewController = [[FMCreateFunnlViewController alloc] initWithSelectedContactArray:senderArray name:nil andSubjects:subjectArray];
+        viewController.isEditFunnel = FALSE;
+        viewController.shareFunnl = true;
+        viewController.isFunnelStore = YES;
+        viewController.oldModel = funnlModel;
+        viewController.mainVCdelegate = appDeleage.mainVCdelegate;
+        [viewController setUpViewForCreatingFunnel];
+        [viewController saveButtonPressed:nil];
+
+    }
+}
 /*
 #pragma mark - Navigation
 
