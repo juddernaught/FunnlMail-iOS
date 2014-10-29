@@ -480,6 +480,14 @@ UIButton *loginButton;
                 webhooksParseObject[PARSE_WEBHOOK_SENDER] = @[];
                 webhooksParseObject[PARSE_WEBHOOK_SUBJECT] = @[];
                 webhooksParseObject[@"account_id"] = accountID;
+                if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"all_notificatio"] isEqualToString:@"1"]) {
+                    webhooksParseObject[PARSE_WEBHOOK_ALL_MAIL_NOTIFICATION] = @"1";
+                }
+                else{
+                    webhooksParseObject[PARSE_WEBHOOK_ALL_MAIL_NOTIFICATION] = @"0";
+                }
+                
+                
                 [webhooksParseObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                     [[NSUserDefaults standardUserDefaults] setObject:webhooksParseObject.objectId forKey:PARSE_WEBHOOK_CLASS];
                 }];
@@ -535,6 +543,13 @@ UIButton *loginButton;
                     webhooksParseObject[PARSE_WEBHOOK_SENDER] = @[];
                     webhooksParseObject[PARSE_WEBHOOK_SUBJECT] = @[];
                     webhooksParseObject[@"account_id"] = accountID;
+                    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"all_notificatio"] isEqualToString:@"1"]) {
+                        webhooksParseObject[PARSE_WEBHOOK_ALL_MAIL_NOTIFICATION] = @"1";
+                    }
+                    else{
+                        webhooksParseObject[PARSE_WEBHOOK_ALL_MAIL_NOTIFICATION] = @"0";
+                    }
+                    
                     [webhooksParseObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                         [[NSUserDefaults standardUserDefaults] setObject:webhooksParseObject.objectId forKey:PARSE_WEBHOOK_CLASS];
                     }];

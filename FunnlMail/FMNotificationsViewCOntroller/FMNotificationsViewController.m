@@ -127,6 +127,13 @@
 - (void)switchValueChanged:(UISwitch *)sender {
   if (sender.tag == -1) {
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"all_notificatio"] isEqualToString:@"0"]) {
+        PFQuery *query = [PFQuery queryWithClassName:PARSE_WEBHOOK_CLASS];
+        NSString *objectID = [[NSUserDefaults standardUserDefaults] objectForKey:PARSE_WEBHOOK_CLASS];
+        [query getObjectInBackgroundWithId:objectID block:^(PFObject *parseWebhookObject, NSError *error) {
+            parseWebhookObject[PARSE_WEBHOOK_ALL_MAIL_NOTIFICATION] = @"1";
+            [parseWebhookObject saveEventually];
+        }];
+        
       [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"all_notificatio"];
       [[NSUserDefaults standardUserDefaults] synchronize];
       /*NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
@@ -164,6 +171,15 @@
       }];*/
     }
     else if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"all_notificatio"] isEqualToString:@"1"]) {
+        
+        PFQuery *query = [PFQuery queryWithClassName:PARSE_WEBHOOK_CLASS];
+        NSString *objectID = [[NSUserDefaults standardUserDefaults] objectForKey:PARSE_WEBHOOK_CLASS];
+        [query getObjectInBackgroundWithId:objectID block:^(PFObject *parseWebhookObject, NSError *error) {
+            parseWebhookObject[PARSE_WEBHOOK_ALL_MAIL_NOTIFICATION] = @"0";
+            [parseWebhookObject saveEventually];
+        }];
+
+        
       [[NSUserDefaults standardUserDefaults] setObject:@"0" forKey:@"all_notificatio"];
       [[NSUserDefaults standardUserDefaults] synchronize];
       /*[((AppDelegate *)[[UIApplication sharedApplication] delegate]).contextIOAPIClient deleteWebhookWithID:[[NSUserDefaults standardUserDefaults] stringForKey:@"ALL_NOTIFS_ON_WEBHOOK_ID"] success:^(NSDictionary *responseDict) {

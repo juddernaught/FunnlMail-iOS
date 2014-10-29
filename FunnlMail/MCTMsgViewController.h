@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 MailCore. All rights reserved.
 //
 
-#include <MailCore/MailCore.h>
+#include "MailCore/MailCore.h"
 #import <MessageUI/MessageUI.h>
 #import "UIColor+HexString.h"
 #import "MessageModel.h"

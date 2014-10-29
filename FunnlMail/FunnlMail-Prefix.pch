@@ -40,6 +40,8 @@
 
 #define PARSE_WEBHOOK_SUBJECT @"webhookSubject"
 
+#define PARSE_WEBHOOK_ALL_MAIL_NOTIFICATION @"webhookAllMailNotifications"
+
 
 #define CONCURRENCY_TASK 2
 
