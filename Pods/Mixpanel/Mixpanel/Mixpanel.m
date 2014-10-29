@@ -25,7 +25,7 @@
 #import "MPWebSocket.h"
 #import "MPABTestDesignerConnection.h"
 
-#define VERSION @"2.5.3"
+#define VERSION @"2.5.4"
 
 #ifdef MIXPANEL_LOG
 #define MixpanelLog(...) NSLog(__VA_ARGS__)
@@ -485,9 +485,6 @@ static Mixpanel *sharedInstance = nil;
     if (!distinctId) {
         NSLog(@"%@ error getting device identifier: falling back to uuid", self);
         distinctId = [[NSUUID UUID] UUIDString];
-    }
-    if (!distinctId) {
-        NSLog(@"%@ error getting uuid: no default distinct id could be generated", self);
     }
     return distinctId;
 }
@@ -971,7 +968,7 @@ static Mixpanel *sharedInstance = nil;
     MixpanelDebug(@"%@ application did become active", self);
     [self startFlushTimer];
 
-    if (self.checkForSurveysOnActive || self.checkForNotificationsOnActive) {
+    if (self.checkForSurveysOnActive || self.checkForNotificationsOnActive || self.checkForVariantsOnActive) {
         NSDate *start = [NSDate date];
 
         [self checkForDecideResponseWithCompletion:^(NSArray *surveys, NSArray *notifications, NSSet *variants) {
@@ -1098,21 +1095,17 @@ static Mixpanel *sharedInstance = nil;
 {
     dispatch_async(self.serialQueue, ^{
         MixpanelDebug(@"%@ decide check started", self);
-        if (!self.people.distinctId) {
-            MixpanelDebug(@"%@ decide check skipped because no user has been identified", self);
-            return;
-        }
 
         NSMutableSet *newVariants = [NSMutableSet set];
 
         if (!useCache || !self.decideResponseCached) {
             MixpanelDebug(@"%@ decide cache not found, starting network request", self);
-
+            NSString *distinctId = self.people.distinctId ? self.people.distinctId : self.distinctId;
             NSData *peoplePropertiesJSON = [NSJSONSerialization dataWithJSONObject:self.people.automaticPeopleProperties options:0 error:nil];
-            NSString *params = [NSString stringWithFormat:@"version=1&lib=iphone&token=%@&distinct_id=%@&properties=%@",
+            NSString *params = [NSString stringWithFormat:@"version=1&lib=iphone&token=%@&properties=%@%@",
                                 self.apiToken,
-                                MPURLEncode(self.people.distinctId),
-                                MPURLEncode([[NSString alloc] initWithData:peoplePropertiesJSON encoding:NSUTF8StringEncoding])
+                                MPURLEncode([[NSString alloc] initWithData:peoplePropertiesJSON encoding:NSUTF8StringEncoding]),
+                                (distinctId ? [NSString stringWithFormat:@"&distinct_id=%@", MPURLEncode(distinctId)] : @"")
                                 ];
             NSURL *URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/decide?%@", self.decideURL, params]];
             NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
@@ -1612,7 +1605,9 @@ static Mixpanel *sharedInstance = nil;
     MixpanelDebug(@"%@ marking variant %@ shown for experiment %@", self, @(variant.ID), @(variant.experimentID));
     NSDictionary *shownVariant = @{[@(variant.experimentID) stringValue]: @(variant.ID)};
     [self track:@"$experiment_started" properties:@{@"$experiment_id" : @(variant.experimentID), @"$variant_id": @(variant.ID)}];
-    [self.people merge:@{@"$experiments": shownVariant}];
+    if (self.people.distinctId) {
+        [self.people merge:@{@"$experiments": shownVariant}];
+    }
 
     dispatch_async(self.serialQueue, ^{
         NSMutableDictionary *superProperties = [NSMutableDictionary dictionaryWithDictionary:self.superProperties];

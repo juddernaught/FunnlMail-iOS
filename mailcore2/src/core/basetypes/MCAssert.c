@@ -1,4 +1,3 @@
-
 #include "MCAssert.h"
 
 #include <stdio.h>

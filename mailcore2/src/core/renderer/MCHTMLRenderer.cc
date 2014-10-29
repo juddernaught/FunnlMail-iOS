@@ -8,7 +8,7 @@
 
 #include "MCHTMLRenderer.h"
 
-#include <ctemplate//template.h>
+#include <ctemplate/template.h>
 #include "MCAddressDisplay.h"
 #include "MCDateFormatter.h"
 #include "MCSizeFormatter.h"
@@ -313,7 +313,7 @@ static String * htmlForAbstractSinglePart(AbstractPart * part, htmlRendererConte
                 return NULL;
             
             String * str = data->stringWithDetectedCharset(charset, true);
-            str = str->cleanedHTMLString();
+            str = context->htmlCallback->cleanHTMLForPart(str);
             str = context->htmlCallback->filterHTMLForPart(str);
             context->firstRendered = true;
             return str;

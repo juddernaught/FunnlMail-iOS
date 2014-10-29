@@ -421,6 +421,7 @@
 		FAE644BF19DA820C00EE076C /* notifyListIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FAE644BB19DA820C00EE076C /* notifyListIcon@2x.png */; };
 		FAE644C019DA820C00EE076C /* notifyListIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = FAE644BC19DA820C00EE076C /* notifyListIcon.png */; };
 		FAE644C219DA823700EE076C /* VIPConfirmBox@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FAE644C119DA823700EE076C /* VIPConfirmBox@2x.png */; };
+		FAF1B2F61A0108D200E59DD3 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = FAF1B2F51A0108D200E59DD3 /* libicucore.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -472,6 +473,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = C6BA2B091705F4E6003F0E9E;
 			remoteInfo = "static mailcore2 ios";
+		};
+		FAB4D2951A00EEFE00356204 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FA4B9FBC1999FBFD00955678 /* mailcore2.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 27780C3A19CF9CD100C77E44;
+			remoteInfo = "mailcore ios";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -1016,6 +1024,7 @@
 		FAE644BB19DA820C00EE076C /* notifyListIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "notifyListIcon@2x.png"; sourceTree = "<group>"; };
 		FAE644BC19DA820C00EE076C /* notifyListIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notifyListIcon.png; sourceTree = "<group>"; };
 		FAE644C119DA823700EE076C /* VIPConfirmBox@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "VIPConfirmBox@2x.png"; sourceTree = "<group>"; };
+		FAF1B2F51A0108D200E59DD3 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1023,6 +1032,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAF1B2F61A0108D200E59DD3 /* libicucore.dylib in Frameworks */,
 				FA5627FA193C5F5200238F40 /* QuartzCore.framework in Frameworks */,
 				B72C2FB819A19721000E5D5B /* Accelerate.framework in Frameworks */,
 				FAA9ED3C199A13EB00CD72D2 /* libMailCore-ios.a in Frameworks */,
@@ -1279,6 +1289,7 @@
 		66F2C46818E3293E00CD593E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FAF1B2F51A0108D200E59DD3 /* libicucore.dylib */,
 				66D3FE5319AD575600837ADA /* HockeySDK.framework */,
 				B72C2FB719A19721000E5D5B /* Accelerate.framework */,
 				D152BB72199145B100058903 /* Crashlytics.framework */,
@@ -1821,6 +1832,7 @@
 				FA4B9FC91999FBFE00955678 /* tests */,
 				FA4B9FCB1999FBFE00955678 /* test-ios.app */,
 				FA4B9FCD1999FBFE00955678 /* MailCore.framework */,
+				FAB4D2961A00EEFE00356204 /* MailCore.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2263,6 +2275,13 @@
 			fileType = wrapper.framework;
 			path = MailCore.framework;
 			remoteRef = FA4B9FCC1999FBFE00955678 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FAB4D2961A00EEFE00356204 /* MailCore.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = MailCore.framework;
+			remoteRef = FAB4D2951A00EEFE00356204 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -2867,17 +2886,14 @@
 					"\"${PODS_ROOT}/Headers/SSKeychain\"",
 				);
 				OTHER_LDFLAGS = (
+					"-luchardet-ios",
 					"-lctemplate-ios",
 					"-letpan-ios",
-					"-licudata",
-					"-licui18n",
-					"-licuuc",
 					"-lxml2",
 					"-lsasl2",
 					"-liconv",
 					"-ltidy",
 					"-lz",
-					"-licucore",
 					"-lstdc++",
 					"-stdlib=libstdc++",
 					"-ObjC",
@@ -2934,17 +2950,14 @@
 					"\"${PODS_ROOT}/Headers/SSKeychain\"",
 				);
 				OTHER_LDFLAGS = (
+					"-luchardet-ios",
 					"-lctemplate-ios",
 					"-letpan-ios",
-					"-licudata",
-					"-licui18n",
-					"-licuuc",
 					"-lxml2",
 					"-lsasl2",
 					"-liconv",
 					"-ltidy",
 					"-lz",
-					"-licucore",
 					"-lstdc++",
 					"-stdlib=libstdc++",
 					"-ObjC",
@@ -3076,17 +3089,14 @@
 					"\"${PODS_ROOT}/Headers/SSKeychain\"",
 				);
 				OTHER_LDFLAGS = (
+					"-luchardet-ios",
 					"-lctemplate-ios",
 					"-letpan-ios",
-					"-licudata",
-					"-licui18n",
-					"-licuuc",
 					"-lxml2",
 					"-lsasl2",
 					"-liconv",
 					"-ltidy",
 					"-lz",
-					"-licucore",
 					"-lstdc++",
 					"-stdlib=libstdc++",
 					"-ObjC",
@@ -3195,17 +3205,14 @@
 					"\"${PODS_ROOT}/Headers/SSKeychain\"",
 				);
 				OTHER_LDFLAGS = (
+					"-luchardet-ios",
 					"-lctemplate-ios",
 					"-letpan-ios",
-					"-licudata",
-					"-licui18n",
-					"-licuuc",
 					"-lxml2",
 					"-lsasl2",
 					"-liconv",
 					"-ltidy",
 					"-lz",
-					"-licucore",
 					"-lstdc++",
 					"-stdlib=libstdc++",
 					"-ObjC",

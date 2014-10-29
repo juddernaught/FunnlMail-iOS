@@ -28,7 +28,7 @@
 #include "MCIMAPCopyMessagesOperation.h"
 #include "MCIMAPFetchMessagesOperation.h"
 #include "MCIMAPFetchContentOperation.h"
-#include "MCIMAPFetchContentOperation.h"
+#include "MCIMAPFetchParsedContentOperation.h"
 #include "MCIMAPStoreFlagsOperation.h"
 #include "MCIMAPStoreLabelsOperation.h"
 #include "MCIMAPSearchOperation.h"
@@ -52,7 +52,7 @@ IMAPAsyncSession::IMAPAsyncSession()
     mSessions = new Array();
     mMaximumConnections = DEFAULT_MAX_CONNECTIONS;
     mAllowsFolderConcurrentAccessEnabled = true;
-    
+
     mHostname = NULL;
     mPort = 0;
     mUsername = NULL;
@@ -244,7 +244,7 @@ IMAPAsyncConnection * IMAPAsyncSession::session()
     session->setConnectionLogger(mConnectionLogger);
     session->setOwner(this);
     session->autorelease();
-    
+
     session->setHostname(mHostname);
     session->setPort(mPort);
     session->setUsername(mUsername);
@@ -265,7 +265,7 @@ IMAPAsyncConnection * IMAPAsyncSession::session()
         session->setAutomaticConfigurationEnabled(false);
     }
 #endif
-    
+
     return session;
 }
 
@@ -283,7 +283,7 @@ IMAPAsyncConnection * IMAPAsyncSession::sessionForFolder(String * folder, bool u
                 return s;
             }
         }
-        
+
         s = matchingSessionForFolder(folder);
         s->setLastFolder(folder);
         return s;
@@ -524,7 +524,54 @@ IMAPFetchContentOperation * IMAPAsyncSession::fetchMessageAttachmentByUIDOperati
     return op;
 }
 
-IMAPOperation * IMAPAsyncSession::storeFlagsOperation(String * folder, IndexSet * uids, IMAPStoreFlagsRequestKind kind, MessageFlag flags, Array * customFlags)
+IMAPFetchContentOperation * IMAPAsyncSession::fetchMessageByNumberOperation(String * folder, uint32_t number, bool urgent)
+{
+    IMAPFetchContentOperation * op = new IMAPFetchContentOperation();
+    op->setMainSession(this);
+    op->setFolder(folder);
+    op->setNumber(number);
+    op->setUrgent(urgent);
+    op->autorelease();
+    return op;
+}
+
+IMAPFetchContentOperation * IMAPAsyncSession::fetchMessageAttachmentByNumberOperation(String * folder, uint32_t number, String * partID,
+                                                                                      Encoding encoding, bool urgent)
+{
+    IMAPFetchContentOperation * op = new IMAPFetchContentOperation();
+    op->setMainSession(this);
+    op->setFolder(folder);
+    op->setNumber(number);
+    op->setPartID(partID);
+    op->setEncoding(encoding);
+    op->setUrgent(urgent);
+    op->autorelease();
+    return op;
+}
+
+IMAPFetchParsedContentOperation * IMAPAsyncSession::fetchParsedMessageByUIDOperation(String * folder, uint32_t uid, bool urgent)
+{
+    IMAPFetchParsedContentOperation * op = new IMAPFetchParsedContentOperation();
+    op->setMainSession(this);
+    op->setFolder(folder);
+    op->setUid(uid);
+    op->setUrgent(urgent);
+    op->autorelease();
+    return op;
+}
+
+IMAPFetchParsedContentOperation * IMAPAsyncSession::fetchParsedMessageByNumberOperation(String * folder, uint32_t number, bool urgent)
+{
+    IMAPFetchParsedContentOperation * op = new IMAPFetchParsedContentOperation();
+    op->setMainSession(this);
+    op->setFolder(folder);
+    op->setNumber(number);
+    op->setUrgent(urgent);
+    op->autorelease();
+    return op;
+}
+
+IMAPOperation * IMAPAsyncSession::storeFlagsByUIDOperation(String * folder, IndexSet * uids, IMAPStoreFlagsRequestKind kind, MessageFlag flags, Array * customFlags)
 {
     IMAPStoreFlagsOperation * op = new IMAPStoreFlagsOperation();
     op->setMainSession(this);
@@ -537,12 +584,37 @@ IMAPOperation * IMAPAsyncSession::storeFlagsOperation(String * folder, IndexSet 
     return op;
 }
 
-IMAPOperation * IMAPAsyncSession::storeLabelsOperation(String * folder, IndexSet * uids, IMAPStoreFlagsRequestKind kind, Array * labels)
+IMAPOperation * IMAPAsyncSession::storeFlagsByNumberOperation(String * folder, IndexSet * numbers, IMAPStoreFlagsRequestKind kind, MessageFlag flags, Array * customFlags)
+{
+    IMAPStoreFlagsOperation * op = new IMAPStoreFlagsOperation();
+    op->setMainSession(this);
+    op->setFolder(folder);
+    op->setNumbers(numbers);
+    op->setKind(kind);
+    op->setFlags(flags);
+    op->setCustomFlags(customFlags);
+    op->autorelease();
+    return op;
+}
+
+IMAPOperation * IMAPAsyncSession::storeLabelsByUIDOperation(String * folder, IndexSet * uids, IMAPStoreFlagsRequestKind kind, Array * labels)
 {
     IMAPStoreLabelsOperation * op = new IMAPStoreLabelsOperation();
     op->setMainSession(this);
     op->setFolder(folder);
     op->setUids(uids);
+    op->setKind(kind);
+    op->setLabels(labels);
+    op->autorelease();
+    return op;
+}
+
+IMAPOperation * IMAPAsyncSession::storeLabelsByNumberOperation(String * folder, IndexSet * numbers, IMAPStoreFlagsRequestKind kind, Array * labels)
+{
+    IMAPStoreLabelsOperation * op = new IMAPStoreLabelsOperation();
+    op->setMainSession(this);
+    op->setFolder(folder);
+    op->setNumbers(numbers);
     op->setKind(kind);
     op->setLabels(labels);
     op->autorelease();
