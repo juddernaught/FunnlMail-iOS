@@ -516,7 +516,9 @@ UIView *greyView;
                 }
                 else {
                     message = [MCOIMAPMessage importSerializable:[(MessageModel*)[EmailService instance].filterMessages[indexPath.row] messageJSON]];
-                    cellMessageModel = [EmailService instance].filterMessages[indexPath.row];
+                    if ([EmailService instance].filterMessages.count > indexPath.row) {
+                        cellMessageModel = [EmailService instance].filterMessages[indexPath.row];
+                    }
                 }
                 MessageModel *messageModel =tempMessageArray[indexPath.row];
                 NSMutableDictionary *funnlLabelDictionary= [self getFunnlsDictionary:messageModel];

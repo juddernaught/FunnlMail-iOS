@@ -15,7 +15,6 @@
     #import <Foundation/Foundation.h>
 #endif
 
-
 #define kKeychainItemName @"OAuth2 Sample: Gmail"
 #define kMyClientID @"655269106649-rkom4nvj3m9ofdpg6sk53pi65mpivv7d.apps.googleusercontent.com"
 #define kMyClientSecret @"1ggvIxWh-rV_Eb9OX9so7aCt"

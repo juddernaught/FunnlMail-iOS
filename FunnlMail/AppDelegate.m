@@ -502,17 +502,16 @@
     [currentInstallation saveInBackground];
 }
 
-- (void)application:(UIApplication *)application
-didReceiveRemoteNotification:(NSDictionary *)userInfo {
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     NSDictionary *apsInfo = [userInfo objectForKey:@"aps"];
     if ( application.applicationState == UIApplicationStateActive ) {
         
-        [self downloadMessageFromNotification:[apsInfo objectForKey:@"messageID"]];
+        [self downloadMessageFromNotification:[userInfo objectForKey:@"subject"]];
     }
     else {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"notification_received"];
         if ([apsInfo objectForKey:@"messageID"]) {
-            [[NSUserDefaults standardUserDefaults] setObject:[apsInfo objectForKey:@"messageID"] forKey:@"notification_message_uuid"];
+            [[NSUserDefaults standardUserDefaults] setObject:[userInfo objectForKey:@"messageID"] forKey:@"notification_message_uuid"];
             [[NSUserDefaults standardUserDefaults] synchronize];
         }
         
@@ -550,7 +549,7 @@ didReceiveRemoteNotification:(NSDictionary *)userInfo {
         
         if ([EmailService instance].imapSession) {
             
-            MCOIMAPSearchOperation *searchOperation = [[EmailService instance].imapSession searchOperationWithFolder:INBOX kind:MCOIMAPSearchGmailMessageID searchString:mesageID];
+            MCOIMAPSearchOperation *searchOperation = [[EmailService instance].imapSession searchOperationWithFolder:INBOX kind:MCOIMAPSearchKindSubject searchString:mesageID];
             [searchOperation start:^(NSError *error, MCOIndexSet *searchResult) {
                 if (error)
                 {
