@@ -20,11 +20,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FunnlMail/AppDelegate.m"
-            timestampString = "436346241.602669"
+            timestampString = "436443202.464152"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "540"
-            endingLineNumber = "540"
+            startingLineNumber = "545"
+            endingLineNumber = "545"
             landmarkName = "-downloadMessageFromNotification:"
             landmarkType = "5">
          </BreakpointContent>
@@ -36,12 +36,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FunnlMail/AppDelegate.m"
-            timestampString = "436346476.851964"
+            timestampString = "436443635.57887"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "507"
-            endingLineNumber = "507"
-            landmarkName = "-application:didReceiveRemoteNotification:"
+            startingLineNumber = "393"
+            endingLineNumber = "393"
+            landmarkName = "-applicationDidBecomeActive:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

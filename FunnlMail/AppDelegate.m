@@ -487,8 +487,8 @@
     NSLog(@"didRegisterForRemoteNotificationsWithDeviceToken: %@",deviceToken);
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     NSString *loggedInEmail = [EmailService instance].userEmailID;
-    [currentInstallation setChannels:@[]];
-    [currentInstallation setObject:@"" forKey:@"email"];
+//    [currentInstallation setChannels:@[]];
+//    [currentInstallation setObject:@"" forKey:@"email"];
     //[currentInstallation addUniqueObject:@"testers2" forKey:@"channels"];
     
     if ([loggedInEmail length]) {
@@ -504,14 +504,15 @@
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     NSDictionary *apsInfo = [userInfo objectForKey:@"aps"];
+    [self downloadMessageFromNotification:[userInfo objectForKey:@"subject"]];
+
     if ( application.applicationState == UIApplicationStateActive ) {
         
-        [self downloadMessageFromNotification:[userInfo objectForKey:@"subject"]];
     }
     else {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"notification_received"];
         if ([apsInfo objectForKey:@"messageID"]) {
-            [[NSUserDefaults standardUserDefaults] setObject:[userInfo objectForKey:@"messageID"] forKey:@"notification_message_uuid"];
+            [[NSUserDefaults standardUserDefaults] setObject:[userInfo objectForKey:@"subject"] forKey:@"notification_message_uuid"];
             [[NSUserDefaults standardUserDefaults] synchronize];
         }
         
@@ -535,20 +536,49 @@
 //newly added function form iaurodev3
 - (void)downloadMessageFromNotification:(NSString *)mesageID {
     
+    /*MCOIMAPMessagesRequestKind requestKind = (MCOIMAPMessagesRequestKind)(MCOIMAPMessagesRequestKindHeaders | MCOIMAPMessagesRequestKindStructure |MCOIMAPMessagesRequestKindInternalDate | MCOIMAPMessagesRequestKindHeaderSubject | MCOIMAPMessagesRequestKindGmailThreadID | MCOIMAPMessagesRequestKindGmailMessageID |	 MCOIMAPMessagesRequestKindFlags);
+    MCOIMAPSession *session = [EmailService instance].imapSession;
+    uint32_t uid = [mesageID integerValue];
+    MCOIndexSet *indexSet = [MCOIndexSet indexSetWithIndex:uid];
+    MCOIMAPFetchMessagesOperation * op = [session fetchMessagesOperationWithFolder:INBOX requestKind:requestKind uids:indexSet];
+    [op start:^(NSError * error, NSArray * messages, MCOIndexSet * vanishedMessages) {
+        if(messages && messages.count){
+            MCOIMAPMessage *m = nil;
+            for (MCOIMAPMessage *messg in messages) {
+                m = messg;
+                break;
+            }
+            
+            MessageModel *tempMessageModel = [[MessageModel alloc] init];
+            tempMessageModel.read = m.flags;
+            tempMessageModel.date = m.header.date;
+            tempMessageModel.messageID = [NSString stringWithFormat:@"%d",m.uid];
+            tempMessageModel.messageJSON = [m serializable];
+            tempMessageModel.gmailThreadID = [NSString stringWithFormat:@"%llu",m.gmailThreadID];
+            
+            MCTMsgViewController *vc = [[MCTMsgViewController alloc] init];
+            vc.folder = INBOX;
+            vc.selectedIndexPath = nil;
+            vc.messageModel = tempMessageModel;
+            vc.address = m.header.from;
+            vc.message = m;
+            vc.session = [EmailService instance].imapSession;
+            [self.mainVCdelegate pushViewController:vc];
+        }
+        
+    }];*/
     
     [[NSUserDefaults standardUserDefaults] setObject:mesageID forKey:@"notification_message_uuid"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     if (mesageID && mesageID.length) {
-        
+     
         //    NSNumberFormatter * formatter = [[NSNumberFormatter alloc] init];
         //    [formatter setNumberStyle: NSNumberFormatterDecimalStyle];
         //    NSNumber * myNumber = [formatter numberFromString: mesageID];
         //    unsigned long long mID = [myNumber unsignedLongLongValue];
-        
-        
-        
+     
         if ([EmailService instance].imapSession) {
-            
+     
             MCOIMAPSearchOperation *searchOperation = [[EmailService instance].imapSession searchOperationWithFolder:INBOX kind:MCOIMAPSearchKindSubject searchString:mesageID];
             [searchOperation start:^(NSError *error, MCOIndexSet *searchResult) {
                 if (error)
